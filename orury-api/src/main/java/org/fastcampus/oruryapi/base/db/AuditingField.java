@@ -1,12 +1,12 @@
-package org.fastcampus.oruryapi.db;
+package org.fastcampus.oruryapi.base.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,7 +22,7 @@ public abstract class AuditingField {
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdAt;
 
-    @CreatedBy
-    @Column(nullable = false, length = 100, updatable = false)
-    protected String createdBy;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @LastModifiedDate
+    protected LocalDateTime updatedAt;
 }
