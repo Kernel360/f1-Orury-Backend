@@ -1,0 +1,72 @@
+server.port: 8080
+debug: false
+management.endpoints.web.exposure.include: "*"
+
+logging:
+  level:
+    org.task-tracker.project: info
+    org.springframework.web.servlet: info
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+springdoc:
+  show-actuator: true
+spring:
+  mvc:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET, POST, PUT, DELETE"
+  application.name: orury-api
+  datasource:
+    url: ${LOCAL_DB_NAME}
+    username: ${LOCAL_USER_NAME}
+    password: ${LOCAL_USER_PASSWORD}
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+  sql.init.mode: always
+  data.rest:
+    base-path: /api
+    detection-strategy: annotated
+    #  flyway:
+    #    enabled: false
+    #    url: ${LOCAL_DB_NAME}
+    #    user: ${LOCAL_USER_NAME}
+    #    password: ${LOCAL_USER_PASSWORD}
+    #    schemas: flyway
+    #    locations: classpath:/db/migration
+  #    baseline-version: 1
+  #    baseline-on-migrate: true
+  devtools:
+    livereload:
+      enabled: true
+  freemarker:
+    cache: false
+  thymeleaf:
+    cache: false
+    prefix=file: src/main/resources/templates/
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          kakao:
+#            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+#            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+#            client-authentication-method: client_secret_post
+#        provider:
+#          kakao:
+#            authorization-uri: https://kauth.kakao.com/oauth/authorize
+#            token-uri: https://kauth.kakao.com/oauth/token
+#            user-info-uri: https://kapi.kakao.com/v2/user/me
+#            user-name-attribute: id
+
+---
+
+spring:
+  config.activate.on-profile: test
+  datasource.url: jdbc:h2:mem:testdb
