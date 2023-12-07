@@ -81,6 +81,13 @@ project(':orury-batch') {
     }
 }
 project(':orury-admin') {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
     dependencies {
         implementation project(':orury-api')
     }
