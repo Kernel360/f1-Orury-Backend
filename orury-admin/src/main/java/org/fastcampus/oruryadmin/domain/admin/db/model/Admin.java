@@ -1,0 +1,55 @@
+package org.fastcampus.oruryadmin.domain.admin.db.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Objects;
+
+@Slf4j
+@ToString
+@Getter
+@EntityListeners(AuditingEntityListener.class)
+@Entity
+public class Admin extends AuditingField {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    private String email;
+
+    private String content;
+
+    private String password;
+
+    private Admin(String name, String email, String content, String password) {
+        this.name = name;
+        this.email = email;
+        this.content = content;
+        this.password = password;
+    }
+
+    public static Admin of(String name, String email, String content, String password) {
+        return new Admin(name, email, content, password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Admin admin)) return false;
+        return Objects.equals(id, admin.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    protected Admin() {
+    }
+}
