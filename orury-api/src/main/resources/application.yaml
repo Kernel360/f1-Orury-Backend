@@ -17,8 +17,8 @@ spring:
   application.name: orury-api
   datasource:
     url: ${LOCAL_DB_NAME}
-    username: ${LOCAL_USER_NAME}
-    password: ${LOCAL_USER_PASSWORD}
+    username: ${LOCAL_DB_USER_NAME}
+    password: ${LOCAL_DB_USER_PASSWORD}
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
@@ -31,15 +31,7 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
-#  flyway:
-#    enabled: false
-#    url: ${LOCAL_DB_NAME}
-#    user: ${LOCAL_USER_NAME}
-#    password: ${LOCAL_USER_PASSWORD}
-    #    schemas: flyway
-    #    locations: classpath:/db/migration
-#    baseline-version: 1
-#    baseline-on-migrate: true
+    baseline-on-migrate: true
   devtools:
     livereload:
       enabled: true

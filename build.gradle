@@ -63,11 +63,6 @@ subprojects {
         testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-        //flyway
-//    implementation 'org.flywaydb:flyway-mysql'
-//    implementation 'org.flywaydb:flyway-core'
-
-
         //lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -109,6 +104,9 @@ project(':orury-core') {
         //db
         runtimeOnly 'com.h2database:h2'
         runtimeOnly 'com.mysql:mysql-connector-j'
+        //flyway
+        implementation 'org.flywaydb:flyway-mysql'
+        implementation 'org.flywaydb:flyway-core'
 
         //Spring-Web
         implementation 'org.springframework.boot:spring-boot-starter-web'

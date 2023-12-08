@@ -1,9 +1,11 @@
 package org.fastcampus.oruryapi;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"org.fastcampus.orurycore", "org.fastcampus.oruryapi"}, exclude = FlywayAutoConfiguration.class)
 public class OruryApiApplication {
 
     public static void main(String[] args) {
