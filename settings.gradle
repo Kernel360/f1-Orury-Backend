@@ -1,2 +1,5 @@
 rootProject.name = 'orury'
-include 'orury-api', 'orury-admin', 'orury-batch'
+include 'orury-api'
+include 'orury-batch'
+include 'orury-admin'
+include 'orury-core'

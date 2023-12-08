@@ -6,89 +6,161 @@ plugins {
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
-allprojects {
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+//    apply plugin: 'org.asciidoctor.jvm.convert'
+
     group = 'org.fastcampus'
     version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '17'
+
+    java {
+        sourceCompatibility = '17'
+        targetCompatibility = '17'
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
 
     repositories {
         mavenCentral()
     }
 
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-subprojects { // 각 모듈에 적용할 공통 설정
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.asciidoctor.jvm.convert'
-
     dependencies {
+        implementation platform('org.springframework.boot:spring-boot-dependencies:3.1.6')
+
+        //boot start
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        //jakarta.xml.bind
+        implementation 'jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.0'
+
+        //swagger
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
+        implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+        implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
+
+        //validation
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        testImplementation 'io.projectreactor:reactor-test'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+        //flyway
+//    implementation 'org.flywaydb:flyway-mysql'
+//    implementation 'org.flywaydb:flyway-core'
+
+
+        //lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        //spring boot starter
-
-        implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-        //security 임시 제거
+        //Security
 //    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.springframework.security:spring-security-test'
 
-        //flyway
-//    implementation 'org.flywaydb:flyway-core'
-        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        //    junit5
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.6.2")
 
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-//        testImplementation 'org.springframework.security:spring-security-test'
-
-        runtimeOnly 'com.h2database:h2'
-        runtimeOnly 'com.mysql:mysql-connector-j'
+        //m1 mac unable load solved
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     }
 
+    test {
+        useJUnitPlatform()
+    }
+
+    tasks.named('bootBuildImage') {
+        builder = 'paketobuildpacks/builder-jammy-base:latest'
+    }
+}
+
+project(':orury-core') {
     tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
         enabled = false
+    }
+
+    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
+        enabled = true
+    }
+
+    dependencies {
+        //db
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+
+        //Spring-Web
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        //Jdbc, Jpa
+        implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    }
+}
+
+project(':orury-api') {
+    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
+        enabled = true
     }
 
     tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
         enabled = false
     }
 
-    tasks.named('test') {
-        useJUnitPlatform()
+    dependencies {
+        implementation project(':orury-core')
+        //SSE setting
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
     }
 }
 
-project(':orury-api') {
-    dependencies {
+project('orury-admin') {
+    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
+        enabled = true
+    }
 
-    }
-}
-project(':orury-batch') {
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-batch'
-        testImplementation 'org.springframework.batch:spring-batch-test'
-    }
-}
-project(':orury-admin') {
-    bootJar {
+    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
         enabled = false
     }
 
-    jar {
+    dependencies {
+        implementation project(':orury-core')
+        implementation project(':orury-api')
+    }
+}
+project(':orury-batch') {
+    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
         enabled = true
     }
+
+    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
+        enabled = false
+    }
+
     dependencies {
-        implementation project(':orury-api')
+        implementation project(':orury-core')
+        implementation 'org.springframework.boot:spring-boot-starter-batch'
+        testImplementation 'org.springframework.batch:spring-batch-test'
     }
 }
