@@ -1,4 +1,4 @@
-server.port: 8080
+server.port: 8082
 debug: false
 management.endpoints.web.exposure.include: "*"
 
@@ -31,7 +31,6 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
-    baseline-on-migrate: true
   devtools:
     livereload:
       enabled: true

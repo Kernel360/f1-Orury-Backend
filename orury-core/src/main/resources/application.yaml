@@ -20,8 +20,9 @@ spring:
     password: ${LOCAL_DB_USER_PASSWORD}
   jpa:
     open-in-view: false
-    defer-datasource-initialization: true
-    hibernate.ddl-auto: update
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -30,15 +31,15 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
-    #  flyway:
-    #    enabled: false
-    #    url: ${LOCAL_DB_NAME}
-    #    user: ${LOCAL_USER_NAME}
-    #    password: ${LOCAL_USER_PASSWORD}
-    #    schemas: flyway
-    #    locations: classpath:/db/migration
-  #    baseline-version: 1
-  #    baseline-on-migrate: true
+  flyway:
+    enabled: true
+    url: ${LOCAL_DB_NAME}
+    user: ${LOCAL_DB_USER_NAME}
+    password: ${LOCAL_DB_USER_PASSWORD}
+#      schemas: flyway
+#      locations: classpath:/db/migration
+    baseline-version: 1
+    baseline-on-migrate: true
   devtools:
     livereload:
       enabled: true
