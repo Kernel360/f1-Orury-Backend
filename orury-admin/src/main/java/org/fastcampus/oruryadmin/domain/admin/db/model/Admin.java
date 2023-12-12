@@ -23,19 +23,16 @@ public class Admin extends AuditingField {
 
     private String email;
 
-    private String content;
-
     private String password;
 
-    private Admin(String name, String email, String content, String password) {
+    private Admin(String name, String email, String password) {
         this.name = name;
         this.email = email;
-        this.content = content;
         this.password = password;
     }
 
-    public static Admin of(String name, String email, String content, String password) {
-        return new Admin(name, email, content, password);
+    public static Admin of(String name, String email, String password) {
+        return new Admin(name, email, password);
     }
 
     @Override

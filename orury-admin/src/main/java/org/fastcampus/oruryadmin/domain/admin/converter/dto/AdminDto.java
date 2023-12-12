@@ -11,7 +11,6 @@ public record AdminDto(
         Long id,
         String name,
         String email,
-        String content,
         String password,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -20,7 +19,6 @@ public record AdminDto(
             Long id,
             String name,
             String email,
-            String content,
             String password,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
@@ -29,7 +27,6 @@ public record AdminDto(
                 id,
                 name,
                 email,
-                content,
                 password,
                 createdAt,
                 updatedAt
@@ -41,7 +38,6 @@ public record AdminDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),
-                entity.getContent(),
                 entity.getPassword(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
@@ -52,7 +48,6 @@ public record AdminDto(
         return Admin.of(
                 name,
                 email,
-                content,
                 password
         );
     }
