@@ -1,4 +1,4 @@
-package org.fastcampus.orurycore.config;
+package org.fastcampus.oruryapi.global.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
