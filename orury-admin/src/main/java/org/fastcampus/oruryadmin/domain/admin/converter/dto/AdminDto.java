@@ -12,14 +12,33 @@ public record AdminDto(
         String name,
         String email,
         String password,
+        RoleType role,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    public static AdminDto of(
+            String name,
+            String email,
+            String password,
+            RoleType role
+    ) {
+        return AdminDto.of(
+                null,
+                name,
+                email,
+                password,
+                role,
+                null,
+                null
+        );
+    }
+
     public static AdminDto of(
             Long id,
             String name,
             String email,
             String password,
+            RoleType role,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -28,6 +47,7 @@ public record AdminDto(
                 name,
                 email,
                 password,
+                role,
                 createdAt,
                 updatedAt
         );
@@ -39,6 +59,7 @@ public record AdminDto(
                 entity.getName(),
                 entity.getEmail(),
                 entity.getPassword(),
+                entity.getRole(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
@@ -48,7 +69,8 @@ public record AdminDto(
         return Admin.of(
                 name,
                 email,
-                password
+                password,
+                role
         );
     }
 }
