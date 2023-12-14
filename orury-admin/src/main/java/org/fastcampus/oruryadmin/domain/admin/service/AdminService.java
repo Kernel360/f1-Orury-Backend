@@ -3,47 +3,49 @@ package org.fastcampus.oruryadmin.domain.admin.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryadmin.domain.admin.converter.dto.AdminDto;
-import org.fastcampus.oruryadmin.domain.admin.converter.request.RequestAdmin;
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
+import org.fastcampus.oruryadmin.domain.admin.converter.request.RequestLogin;
+import org.fastcampus.oruryadmin.domain.admin.converter.response.LoginResponse;
 import org.fastcampus.oruryadmin.domain.admin.db.repository.AdminRepository;
-import org.fastcampus.oruryadmin.util.SecurityUtil;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.fastcampus.oruryadmin.global.security.jwt.JwtToken;
+import org.fastcampus.oruryadmin.global.security.jwt.JwtTokenProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class AdminService {
     private final AdminRepository adminRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Transactional(readOnly = true)
     public Optional<AdminDto> findAdminByEmail(String email) {
         return adminRepository.findByEmail(email).map(AdminDto::from);
     }
 
-    @Transactional(readOnly = true)
     public AdminDto findAdminById(Long id) {
         return adminRepository.findById(id)
                 .map(AdminDto::from)
                 .orElseThrow();
     }
 
-    public AdminDto signup(RequestAdmin request) {
-        Admin admin = adminRepository.save(Admin.of(request.name(), request.email(), request.password()));
-        return AdminDto.from(admin);
-    }
+    public LoginResponse login(RequestLogin request) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-    @Transactional(readOnly = true)
-    public AdminDto getMyUserWithAuthorities() {
-        return AdminDto.from(
-                SecurityUtil.getCurrentUsername()
-                        .flatMap(adminRepository::findOneWithAuthoritiesByName)
-                        .orElseThrow(() -> new UsernameNotFoundException("Admin not found"))
-        );
-    }
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
 
+        JwtToken jwtToken = jwtTokenProvider.createJwtToken(request.email(), authorities);
+        return LoginResponse.of(jwtToken);
+    }
 }
