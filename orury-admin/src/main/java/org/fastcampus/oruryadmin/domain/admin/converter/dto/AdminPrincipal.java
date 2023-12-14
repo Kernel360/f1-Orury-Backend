@@ -5,8 +5,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,25 +21,8 @@ public record AdminPrincipal(
             String email,
             String password
     ) {
-        return AdminPrincipal.of(
-                id,
-                name,
-                email,
-                password,
-                Map.of()
-        );
-    }
+        Set<RoleType> roleTypes = Set.of(RoleType.ROLE_ADMIN);
 
-    public static AdminPrincipal of(
-            Long id,
-            String name,
-            String email,
-            String password,
-            Map<String, Object> oAuthAttributes
-    ) {
-        Set<RoleType> roleTypes = new HashSet<>();
-        roleTypes.add(RoleType.ADMIN);
-        roleTypes.add(RoleType.USER);
         return new AdminPrincipal(
                 id,
                 name,
