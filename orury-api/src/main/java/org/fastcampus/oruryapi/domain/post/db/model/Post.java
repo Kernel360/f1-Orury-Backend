@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.domain.notice.db.model;
+package org.fastcampus.oruryapi.domain.post.db.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
-import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
+import org.fastcampus.oruryapi.base.db.AuditingField;
+import org.fastcampus.oruryapi.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Notice extends AuditingField {
+public class Post extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,28 +27,36 @@ public class Notice extends AuditingField {
 
     private String content;
 
-    @ManyToOne(optional = false)
-    private Admin admin;
+    private int viewCount;
 
-    private Notice(String title, String content, Admin admin) {
+    private String images;
+
+    private int category;
+
+    @ManyToOne(optional = false)
+    private User user;
+
+    private Post(String title, String content, String images, int category, User user) {
         this.title = title;
         this.content = content;
-        this.admin = admin;
+        this.images = images;
+        this.category = category;
+        this.user = user;
     }
 
-    public static Notice of(String title, String content, Admin admin) {
-        return new Notice(title, content, admin);
+    public static Post of(String title, String content, String images, int category, User user) {
+        return new Post(title, content, images, category, user);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Notice notice)) return false;
-        return Objects.equals(id, notice.id);
+        if (!(o instanceof Post post)) return false;
+        return Objects.equals(id, post.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hashCode(id);
     }
 }
