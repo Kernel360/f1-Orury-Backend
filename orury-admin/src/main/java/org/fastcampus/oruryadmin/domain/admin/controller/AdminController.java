@@ -3,8 +3,8 @@ package org.fastcampus.oruryadmin.domain.admin.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryadmin.domain.admin.converter.dto.AdminDto;
-import org.fastcampus.oruryadmin.domain.admin.converter.request.RequestLogin;
-import org.fastcampus.oruryadmin.domain.admin.converter.response.LoginResponse;
+import org.fastcampus.oruryadmin.global.security.dto.login.request.LoginRequest;
+import org.fastcampus.oruryadmin.global.security.dto.login.response.LoginResponse;
 import org.fastcampus.oruryadmin.domain.admin.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class AdminController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<LoginResponse> login(@RequestBody RequestLogin loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = adminService.login(loginRequest);
         return ResponseEntity.ok().body(loginResponse);
     }

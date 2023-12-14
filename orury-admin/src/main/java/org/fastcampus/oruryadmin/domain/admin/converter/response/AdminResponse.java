@@ -1,18 +1,18 @@
 package org.fastcampus.oruryadmin.domain.admin.converter.response;
 
-public record ResponseAdmin(
+public record AdminResponse(
         String name,
         String email,
         String password,
         String accessToken
 ) {
-    public static ResponseAdmin of(
+    public static AdminResponse of(
             String name,
             String email,
             String password,
             String accessToken
     ) {
-        return new ResponseAdmin(
+        return new AdminResponse(
                 name,
                 email,
                 password,

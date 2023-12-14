@@ -1,5 +1,6 @@
 package org.fastcampus.oruryadmin.domain.admin.converter.dto;
 
+import org.fastcampus.oruryadmin.global.security.dto.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.domain.admin.converter.response;
+package org.fastcampus.oruryadmin.global.security.dto.login.response;
 
 import lombok.Builder;
 import lombok.Getter;

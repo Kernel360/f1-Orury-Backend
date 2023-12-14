@@ -3,7 +3,7 @@ package org.fastcampus.oruryadmin.domain.admin.db.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.admin.converter.dto.RoleType;
+import org.fastcampus.oruryadmin.global.security.dto.RoleType;
 import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

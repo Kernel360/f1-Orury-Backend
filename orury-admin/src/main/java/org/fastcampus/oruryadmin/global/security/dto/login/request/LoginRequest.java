@@ -1,6 +1,6 @@
-package org.fastcampus.oruryadmin.domain.admin.converter.request;
+package org.fastcampus.oruryadmin.global.security.dto.login.request;
 
-public record RequestLogin(
+public record LoginRequest(
         String email,
         String password
 ) {

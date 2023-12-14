@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.domain.admin.converter.dto;
+package org.fastcampus.oruryadmin.global.security.dto;
 
 import lombok.Getter;
 

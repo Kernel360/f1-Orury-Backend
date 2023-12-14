@@ -3,8 +3,8 @@ package org.fastcampus.oruryadmin.domain.admin.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryadmin.domain.admin.converter.dto.AdminDto;
-import org.fastcampus.oruryadmin.domain.admin.converter.request.RequestLogin;
-import org.fastcampus.oruryadmin.domain.admin.converter.response.LoginResponse;
+import org.fastcampus.oruryadmin.global.security.dto.login.request.LoginRequest;
+import org.fastcampus.oruryadmin.global.security.dto.login.response.LoginResponse;
 import org.fastcampus.oruryadmin.domain.admin.db.repository.AdminRepository;
 import org.fastcampus.oruryadmin.global.security.jwt.JwtToken;
 import org.fastcampus.oruryadmin.global.security.jwt.JwtTokenProvider;
@@ -37,7 +37,7 @@ public class AdminService {
                 .orElseThrow();
     }
 
-    public LoginResponse login(RequestLogin request) {
+    public LoginResponse login(LoginRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
