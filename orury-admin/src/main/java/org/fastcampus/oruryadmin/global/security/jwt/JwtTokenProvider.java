@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtTokenProvider {
 
-    @Value("${custom.jwt.token.access-expiration-time}")
+    @Value("${jwt.token-validity-in-seconds}")
     private long accessExpirationTime;
     private final Key key;
 
     @Autowired
-    public JwtTokenProvider(@Value("${custom.jwt.token.secret}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
