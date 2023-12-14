@@ -1,7 +1,9 @@
 package org.fastcampus.oruryadmin.domain.notice.db.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
@@ -13,6 +15,7 @@ import java.util.Objects;
 @Slf4j
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Notice extends AuditingField {
@@ -47,8 +50,5 @@ public class Notice extends AuditingField {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    protected Notice() {
     }
 }
