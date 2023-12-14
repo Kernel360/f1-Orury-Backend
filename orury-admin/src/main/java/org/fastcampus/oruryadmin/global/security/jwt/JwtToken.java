@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.jwt;
+package org.fastcampus.oruryadmin.global.security.jwt;
 
 public record JwtToken(
         String accessToken,

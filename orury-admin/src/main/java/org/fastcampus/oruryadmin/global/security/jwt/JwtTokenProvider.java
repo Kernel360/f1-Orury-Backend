@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.jwt;
+package org.fastcampus.oruryadmin.global.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -31,6 +31,7 @@ public class JwtTokenProvider {
 
     @Value("${jwt.token-validity-in-seconds}")
     private long accessExpirationTime;
+    private final long refreshExpirationTime = 86400000L * 30L;
     private final Key key;
 
     @Autowired
@@ -51,7 +52,14 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return new JwtToken(accessToken, "refreshToken");
+        String refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationTime))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return JwtToken.of(accessToken, refreshToken);
     }
 
     public boolean validateAccessToken(String accessToken) {

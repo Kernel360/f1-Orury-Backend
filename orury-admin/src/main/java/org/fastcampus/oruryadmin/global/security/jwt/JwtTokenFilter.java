@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.jwt;
+package org.fastcampus.oruryadmin.global.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,7 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/members/join", "/api/members/login"};
+        String[] excludePath = {"/api/signin", "/api/refresh"};
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
