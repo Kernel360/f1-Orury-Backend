@@ -6,15 +6,15 @@ CREATE TABLE `post` (
                         `images`	varchar(255)	NULL	COMMENT 'List<String>',
                         `category`	int	NOT NULL	COMMENT '1 : 자유게시판 2 : Q&A',
                         `user_id`	bigint(32)	NOT NULL,
-                        `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                        `update_at`	DATE	NULL
+                        `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                        `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `post_like` (
                              `user_id`	bigint(32)	NOT NULL,
                              `post_id`	bigint(32)	NOT NULL	COMMENT '게시글 아이디',
-                             `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                             `update_at`	DATE	NULL
+                             `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                             `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `user` (
@@ -27,15 +27,15 @@ CREATE TABLE `user` (
                         `birthday`	date	NOT NULL,
                         `type`	int	NOT NULL	DEFAULT 1	COMMENT '1 : 유저 2 : 어드민 3 : 사장님',
                         `profile_image`	varchar(50)	NULL,
-                        `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                        `update_at`	DATE	NULL
+                        `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                        `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `comment_like` (
                                 `user_id`	bigint(32)	NOT NULL,
                                 `comment_id`	bigint(32)	NOT NULL,
-                                `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                                `update_at`	DATE	NULL
+                                `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                                `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `comment` (
@@ -44,8 +44,8 @@ CREATE TABLE `comment` (
                            `parent_id`	BIGINT(32)	NOT NULL	DEFAULT 0	COMMENT '부모 댓글이 없으면 일반 댓글, 있으면 대댓',
                            `post_id`	BIGINT(32)	NOT NULL	COMMENT '게시글 아이디',
                            `user_id`	BIGINT(32)	NOT NULL,
-                           `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                           `update_at`	DATE	NULL
+                           `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                           `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `refresh_token` (
@@ -53,8 +53,8 @@ CREATE TABLE `refresh_token` (
                                  `user_id`	bigint(32)	NOT NULL,
                                  `value`	varchar(255)	NOT NULL,
                                  `expiration_time`	datetime	NOT NULL,
-                                 `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                                 `update_at`	DATE	NULL
+                                 `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                                 `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `Notice` (
@@ -62,8 +62,8 @@ CREATE TABLE `Notice` (
                           `title`	VARCHAR(50)	NOT NULL,
                           `content`	VARCHAR(50)	NOT NULL,
                           `admin_id`	BIGINT(32)	NOT NULL,
-                          `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                          `update_at`	DATE	NULL
+                          `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                          `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `Admin` (
@@ -71,8 +71,9 @@ CREATE TABLE `Admin` (
                          `name`	VARCHAR(50)	NOT NULL,
                          `email`	VARCHAR(50)	NOT NULL,
                          `password`	VARCHAR(50)	NOT NULL,
-                         `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                         `update_at`	DATE	NULL
+                         `role` VARCHAR(50) NOT NULL,
+                         `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                         `updated_at`	DATETIME	NULL
 );
 
 CREATE TABLE `user_withdrawal` (
@@ -83,8 +84,8 @@ CREATE TABLE `user_withdrawal` (
                                    `signup_type`	int	NOT NULL	COMMENT '1 : 카카오 로그인 2 : 구글 로그인',
                                    `gender`	int	NOT NULL	COMMENT '1 : 남성 2: 여성',
                                    `birthday`	date	NOT NULL,
-                                   `created_at`	DATE	NOT NULL	COMMENT '@CreatedDate',
-                                   `update_at`	DATE	NULL
+                                   `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
+                                   `updated_at`	DATETIME	NULL
 );
 
 ALTER TABLE `post` ADD CONSTRAINT `PK_POST` PRIMARY KEY (
