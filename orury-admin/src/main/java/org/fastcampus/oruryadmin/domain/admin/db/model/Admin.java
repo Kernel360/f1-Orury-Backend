@@ -1,7 +1,9 @@
 package org.fastcampus.oruryadmin.domain.admin.db.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
@@ -12,6 +14,7 @@ import java.util.Objects;
 @Slf4j
 @ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Admin extends AuditingField {
@@ -45,8 +48,5 @@ public class Admin extends AuditingField {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    protected Admin() {
     }
 }

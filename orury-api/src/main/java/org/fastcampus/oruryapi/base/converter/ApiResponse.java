@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ApiResponse<T> {
-    private int code;
+    private int status;
 
     private String message;
 
