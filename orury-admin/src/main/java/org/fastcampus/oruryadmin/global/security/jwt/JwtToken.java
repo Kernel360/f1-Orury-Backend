@@ -1,5 +1,11 @@
 package org.fastcampus.oruryadmin.global.security.jwt;
 
+/**
+ * JWT 토큰 Record 클래스
+ *
+ * @param accessToken
+ * @param refreshToken
+ */
 public record JwtToken(
         String accessToken,
         String refreshToken

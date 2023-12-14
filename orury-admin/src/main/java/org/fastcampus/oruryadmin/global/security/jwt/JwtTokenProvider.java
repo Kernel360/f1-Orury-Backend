@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * JWT 토큰 생성 및 유효성 검증을 위한 Provider
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +34,7 @@ public class JwtTokenProvider {
 
     @Value("${jwt.token-validity-in-seconds}")
     private long accessExpirationTime;
-    private final long refreshExpirationTime = 86400000L * 30L;
+    private final long refreshExpirationTime = 86400000L * 30L; // 30일
     private final Key key;
 
     @Autowired
@@ -40,6 +43,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // JWT 토큰 생성
     public JwtToken createJwtToken(String email, String authorities) {
 
         Claims claims = Jwts.claims().setSubject(email);
@@ -62,6 +66,7 @@ public class JwtTokenProvider {
         return JwtToken.of(accessToken, refreshToken);
     }
 
+    // JWT 토큰에서 인증 정보 조회
     public boolean validateAccessToken(String accessToken) {
         try {
             parseToken(accessToken);
@@ -79,6 +84,8 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    //해당 부분은 저도 잘 모릅니다 ㅠㅠ
+    // 토큰 정보 조회하고 권한을 추출해서 Authentication 객체를 리턴하는 메서드인 것 같습니다.
     public Authentication getAuthenticationByAccessToken(String accessToken) {
 
         Claims claims = parseToken(accessToken);
