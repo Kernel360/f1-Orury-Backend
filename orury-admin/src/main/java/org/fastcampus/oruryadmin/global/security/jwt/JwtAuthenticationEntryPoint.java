@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.jwt;
+package org.fastcampus.oruryadmin.global.security.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

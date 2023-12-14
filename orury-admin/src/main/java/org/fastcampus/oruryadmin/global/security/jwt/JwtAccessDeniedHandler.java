@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.jwt;
+package org.fastcampus.oruryadmin.global.security.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
