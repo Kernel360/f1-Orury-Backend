@@ -1,11 +1,9 @@
 package org.fastcampus.oruryadmin.domain.admin.db.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.oruryadmin.global.security.dto.RoleType;
 import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -28,14 +26,18 @@ public class Admin extends AuditingField {
 
     private String password;
 
-    private Admin(String name, String email, String password) {
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
+    private Admin(String name, String email, String password, RoleType role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public static Admin of(String name, String email, String password) {
-        return new Admin(name, email, password);
+    public static Admin of(String name, String email, String password, RoleType role) {
+        return new Admin(name, email, password, role);
     }
 
     @Override
