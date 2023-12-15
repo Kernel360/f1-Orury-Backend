@@ -15,7 +15,7 @@ subprojects {
     apply plugin: 'idea'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
-//    apply plugin: 'org.asciidoctor.jvm.convert'
+    apply plugin: 'org.asciidoctor.jvm.convert'
 
     group = 'org.fastcampus'
     version = '0.0.1-SNAPSHOT'
@@ -48,8 +48,19 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+        //Security
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        testImplementation 'org.springframework.security:spring-security-test'
+
+        //security jwt
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+        runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
         //jakarta.xml.bind
         implementation 'jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.0'
+        compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
 
         //swagger
         implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
@@ -66,11 +77,6 @@ subprojects {
         //lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
-
-        //Security
-//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-//    testImplementation 'org.springframework.security:spring-security-test'
 
         //    junit5
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")

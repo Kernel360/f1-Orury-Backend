@@ -17,23 +17,30 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Entity
+@Entity(name = "post")
 public class Post extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "view_count", nullable = false)
     private int viewCount;
 
+    @Column(name = "images")
     private String images;
 
+    @Column(name = "category", nullable = false)
     private int category;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private Post(String title, String content, String images, int category, User user) {

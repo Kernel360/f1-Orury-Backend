@@ -21,29 +21,38 @@ import java.util.Objects;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class User extends AuditingField{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
+    @Column(name = "password", nullable = false)
     private String password;
 
-    private int signupType;
+    @Column(name = "sign_up_type", nullable = false)
+    private int signUpType;
 
+    @Column(name = "gender", nullable = false)
     private int gender;
 
+    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
+    @Column(name = "profile_image")
     private String profileImage;
 
-    private User(String email, String nickname, String password, int signupType, int gender, LocalDate birthday, String profileImage) {
+    private User(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-        this.signupType = signupType;
+        this.signUpType = signUpType;
         this.gender = gender;
         this.birthday = birthday;
         this.profileImage = profileImage;
@@ -58,8 +67,8 @@ public class User extends AuditingField{
     }
 
 
-    public static User of(String email, String nickname, String password, int signupType, int gender, LocalDate birthday, String profileImage) {
-        return new User(email, nickname, password, signupType, gender, birthday, profileImage);
+    public static User of(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
+        return new User(email, nickname, password, signUpType, gender, birthday, profileImage);
     }
 
     @Override
