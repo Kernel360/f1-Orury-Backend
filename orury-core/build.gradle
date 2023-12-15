@@ -1,16 +1,16 @@
-//build.gradle 파일
+dependencies {
+    //db
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    //flyway
+    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-core'
 
-//plugins {
-//    id 'java'
-//    id 'org.springframework.boot' version '3.1.6'
-//    id 'io.spring.dependency-management' version '1.1.4'
-//    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-//}
-//
-//tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
-//    enabled = false
-//}
-//dependencies {
-//
-//
-//}
+    //Spring-Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //Jdbc, Jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
