@@ -29,7 +29,7 @@ public class AuthController {
 
         return ApiResponse.<UserDto>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.USER_LOGIN_SUCCESS.toString())
+                .message(InfoMessage.USER_LOGIN_SUCCESS.getMessage())
                 .data(userDto)
                 .build();
     }

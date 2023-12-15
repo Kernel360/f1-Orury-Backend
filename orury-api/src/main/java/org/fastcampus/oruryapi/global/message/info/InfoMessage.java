@@ -1,5 +1,8 @@
 package org.fastcampus.oruryapi.global.message.info;
 
+import lombok.Getter;
+
+@Getter
 public enum InfoMessage {
 
     // 게시글
@@ -18,7 +21,10 @@ public enum InfoMessage {
     USER_LOGIN_SUCCESS("정상적으로 로그인 되었습니다.")
     ;
 
+    private final String message;
+
     InfoMessage(String message) {
+        this.message = message;
     }
 
 }

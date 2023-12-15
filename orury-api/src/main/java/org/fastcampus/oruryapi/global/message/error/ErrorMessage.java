@@ -1,5 +1,8 @@
 package org.fastcampus.oruryapi.global.message.error;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorMessage {
 
     // 게시글
@@ -9,6 +12,9 @@ public enum ErrorMessage {
     USER_INVALID_ACCOUNT("유효하지 않은 계정입니다.")
     ;
 
+    private final String message;
+
     ErrorMessage(String message) {
+        this.message = message;
     }
 }
