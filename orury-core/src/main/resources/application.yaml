@@ -36,8 +36,8 @@ spring:
     url: ${LOCAL_DB_NAME}
     user: ${LOCAL_DB_USER_NAME}
     password: ${LOCAL_DB_USER_PASSWORD}
-#      schemas: flyway
-#      locations: classpath:/db/migration
+    schemas: flyway
+    locations: classpath:/db/migration
     baseline-version: 1
     baseline-on-migrate: true
   devtools:
@@ -48,23 +48,6 @@ spring:
   thymeleaf:
     cache: false
     prefix=file: src/main/resources/templates/
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          kakao:
-#            client-id: ${KAKAO_OAUTH_CLIENT_ID}
-#            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
-#            authorization-grant-type: authorization_code
-#            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
-#            client-authentication-method: client_secret_post
-#        provider:
-#          kakao:
-#            authorization-uri: https://kauth.kakao.com/oauth/authorize
-#            token-uri: https://kauth.kakao.com/oauth/token
-#            user-info-uri: https://kapi.kakao.com/v2/user/me
-#            user-name-attribute: id
-
 ---
 
 spring:
