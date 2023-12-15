@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.domain.base.db;
+    package org.fastcampus.oruryadmin.domain.base.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

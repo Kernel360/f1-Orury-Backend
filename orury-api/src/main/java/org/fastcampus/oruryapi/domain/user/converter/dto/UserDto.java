@@ -3,6 +3,7 @@ package org.fastcampus.oruryapi.domain.user.converter.dto;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * DTO for {@link User}
@@ -14,7 +15,9 @@ public record UserDto(
         int signupType,
         int gender,
         LocalDate birthday,
-        String profileImage
+        String profileImage,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
     public static UserDto of(
             Long id,
@@ -23,7 +26,9 @@ public record UserDto(
             int signupType,
             int gender,
             LocalDate birthday,
-            String profileImage
+            String profileImage,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
         return new UserDto(
                 id,
@@ -32,26 +37,9 @@ public record UserDto(
                 signupType,
                 gender,
                 birthday,
-                profileImage
-        );
-    }
-
-    public static UserDto of(
-            String email,
-            String nickname,
-            int signupType,
-            int gender,
-            LocalDate birthday,
-            String profileImage
-    ) {
-        return new UserDto(
-                null,
-                email,
-                nickname,
-                signupType,
-                gender,
-                birthday,
-                profileImage
+                profileImage,
+                createdAt,
+                updatedAt
         );
     }
 
@@ -60,10 +48,12 @@ public record UserDto(
                 entity.getId(),
                 entity.getEmail(),
                 entity.getNickname(),
-                entity.getSignupType(),
+                entity.getSignUpType(),
                 entity.getGender(),
                 entity.getBirthday(),
-                entity.getProfileImage()
+                entity.getProfileImage(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 
