@@ -1,5 +1,6 @@
 package org.fastcampus.oruryapi.global.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -36,9 +37,12 @@ public class SecurityConfig {
                                 antMatcher("/"),
                                 antMatcher("/auth/**"),
                                 antMatcher("/swagger-ui/**"),
-                                antMatcher("/swagger-resources/**")
+                                antMatcher("/swagger-resources/**"),
+                                PathRequest.toH2Console(),
+                                PathRequest.toStaticResources().atCommonLocations()
                         ).permitAll()
                 )
+
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

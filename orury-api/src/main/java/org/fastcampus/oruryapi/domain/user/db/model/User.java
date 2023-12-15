@@ -52,7 +52,6 @@ public class User extends AuditingField {
         this.profileImage = profileImage;
     }
 
-
     public static User of(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         return new User(email, nickname, password, signUpType, gender, birthday, profileImage);
     }
