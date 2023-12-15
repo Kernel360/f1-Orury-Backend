@@ -16,6 +16,8 @@ public enum Constants {
     // header 종류
     AUTHORIZATION("Authorization"),
     REFRESH_HEADER("Refresh-token")
+
+
     ;
 
     private final String message;
