@@ -29,7 +29,7 @@ public class FlywayConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
         emfb.setDataSource(dataSource);
-        emfb.setPackagesToScan("org.fastcampus.orurycore");
+        emfb.setPackagesToScan("org.fastcampus.orurycore","org.fastcampus.oruryapi", "org.fastcampus.oruryadmin");
         emfb.setJpaVendorAdapter(jpaVendorAdapter);
         return emfb;
     }

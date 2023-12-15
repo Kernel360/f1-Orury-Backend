@@ -5,7 +5,7 @@ import org.fastcampus.oruryapi.domain.user.db.model.User;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public record UserResponse(
+public record ResponseMypage(
         Long id,
         String email,
         String nickname,
@@ -14,7 +14,7 @@ public record UserResponse(
         LocalDate birthday,
         String profileImage
 ){
-    public static UserResponse of(
+    public static ResponseMypage of(
             Long id,
             String email,
             String nickname,
@@ -23,7 +23,7 @@ public record UserResponse(
             LocalDate birthday,
             String profileImage
     ){
-        return new UserResponse(
+        return new ResponseMypage(
                 id,
                 email,
                 nickname,
@@ -34,8 +34,8 @@ public record UserResponse(
         );
     }
 
-    public static UserResponse from(User entity){
-        return UserResponse.of(
+    public static ResponseMypage from(User entity){
+        return ResponseMypage.of(
                 entity.getId(),
                 entity.getEmail(),
                 entity.getNickname(),
@@ -44,17 +44,5 @@ public record UserResponse(
                 entity.getBirthday(),
                 entity.getProfileImage()
         );
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserResponse that)) return false;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

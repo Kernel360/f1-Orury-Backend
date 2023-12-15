@@ -3,13 +3,13 @@ package org.fastcampus.oruryapi.domain.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.base.converter.ApiResponse;
-import org.fastcampus.oruryapi.domain.user.converter.response.UserResponse;
+import org.fastcampus.oruryapi.domain.user.converter.request.RequestId;
+import org.fastcampus.oruryapi.domain.user.converter.request.RequestProfileImage;
+import org.fastcampus.oruryapi.domain.user.converter.request.RequestUserInfo;
+import org.fastcampus.oruryapi.domain.user.converter.response.ResponseMypage;
 import org.fastcampus.oruryapi.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,14 +21,47 @@ public class UserController {
 
     @GetMapping("/mypage/{id}")
     public ApiResponse<Object> readMypage(@PathVariable Long id){
-        UserResponse userResponse = userService.readMypage(id);
+        ResponseMypage responseMypage = userService.readMypage(id);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("OK")
-                .data(userResponse)
+                .data(responseMypage)
                 .build();
     }
+
+
+    @PatchMapping("/mypage/profile-image")
+    public ApiResponse<Object> updateProfileImage(@RequestBody RequestProfileImage requestProfileImage){
+       userService.updateProfileImage(requestProfileImage);
+
+       return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("OK")
+                .build();
+    }
+
+    @PatchMapping("/mypage")
+    public ApiResponse<Object> updateUserInfo(@RequestBody RequestUserInfo requestUserInfo){
+        userService.updateUserInfo(requestUserInfo);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("OK")
+                .build();
+
+    }
+
+    @DeleteMapping("/user")
+    public ApiResponse<Object> deleteUser(@RequestBody RequestId requestId){
+        userService.deleteUser(requestId);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("OK")
+                .build();
+    }
+
 
 
 }
