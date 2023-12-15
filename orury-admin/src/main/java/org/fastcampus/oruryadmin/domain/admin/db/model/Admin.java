@@ -25,7 +25,7 @@ public class Admin extends AuditingField {
     @Column(name = "email", length = 20, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 30, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", length = 20, nullable = false)

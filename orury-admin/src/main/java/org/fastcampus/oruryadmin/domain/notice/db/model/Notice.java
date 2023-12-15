@@ -19,10 +19,10 @@ public class Notice extends AuditingField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", length = 100, nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", length = 1000, nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     //추후에 추가 예정
