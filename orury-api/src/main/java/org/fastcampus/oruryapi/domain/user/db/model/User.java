@@ -1,21 +1,18 @@
 package org.fastcampus.oruryapi.domain.user.db.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "user")
 public class User extends AuditingField {
@@ -45,7 +42,7 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    private User(String email, String nickname, String Password, int signUpType, int gender, LocalDate birthday, String profileImage) {
+    private User(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -57,17 +54,5 @@ public class User extends AuditingField {
 
     public static User of(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         return new User(email, nickname, password, signUpType, gender, birthday, profileImage);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }
