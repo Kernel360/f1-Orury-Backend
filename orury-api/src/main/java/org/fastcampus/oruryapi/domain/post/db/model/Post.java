@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Entity(name = "POST")
+@Entity(name = "post")
 public class Post extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Entity(name = "POST_LIKE")
+@Entity(name = "post_like")
 public class PostLike {
     @EmbeddedId
     private PostLikePK postLikePK;
