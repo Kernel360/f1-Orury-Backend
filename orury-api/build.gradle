@@ -1,4 +1,46 @@
-dependencies {
+tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
+    enabled = true
+}
 
-implementation 'org.springframework.boot:spring-boot-starter-web'
+tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
+    enabled = false
+}
+
+dependencies {
+    implementation project(':orury-core')
+    //boot start
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    //security jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    //jakarta.xml.bind
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.0'
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
+
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    //SSE setting
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
