@@ -1,22 +1,18 @@
 package org.fastcampus.oruryapi.domain.comment.db.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.fastcampus.oruryapi.domain.post.db.model.Post;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Objects;
-
 @Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "comment")
 public class Comment extends AuditingField {
@@ -48,18 +44,5 @@ public class Comment extends AuditingField {
 
     public static Comment of(String content, Long parentId, Post post, User user) {
         return new Comment(content, parentId, post, user);
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Comment comment)) return false;
-        return Objects.equals(id, comment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }
