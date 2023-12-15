@@ -18,19 +18,24 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Entity
+@Entity(name = "comment")
 public class Comment extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "parent_id", nullable = false)
     private Long parentId;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false)
     private User user;
 
