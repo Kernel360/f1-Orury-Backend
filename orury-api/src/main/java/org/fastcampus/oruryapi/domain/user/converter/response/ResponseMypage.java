@@ -1,5 +1,6 @@
 package org.fastcampus.oruryapi.domain.user.converter.response;
 
+import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 
 import java.time.LocalDate;
@@ -9,40 +10,20 @@ public record ResponseMypage(
         Long id,
         String email,
         String nickname,
-        int signupType,
+        int signUpType,
         int gender,
         LocalDate birthday,
         String profileImage
 ){
-    public static ResponseMypage of(
-            Long id,
-            String email,
-            String nickname,
-            int signupType,
-            int gender,
-            LocalDate birthday,
-            String profileImage
-    ){
+    public static ResponseMypage toDto(UserDto userDto){
         return new ResponseMypage(
-                id,
-                email,
-                nickname,
-                signupType,
-                gender,
-                birthday,
-                profileImage
-        );
-    }
-
-    public static ResponseMypage from(User entity){
-        return ResponseMypage.of(
-                entity.getId(),
-                entity.getEmail(),
-                entity.getNickname(),
-                entity.getSignupType(),
-                entity.getGender(),
-                entity.getBirthday(),
-                entity.getProfileImage()
+                userDto.id(),
+                userDto.email(),
+                userDto.nickname(),
+                userDto.signUpType(),
+                userDto.gender(),
+                userDto.birthday(),
+                userDto.profileImage()
         );
     }
 }

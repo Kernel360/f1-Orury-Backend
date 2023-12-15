@@ -19,9 +19,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/mypage/{id}")
-    public ApiResponse<Object> readMypage(@PathVariable Long id){
-        ResponseMypage responseMypage = userService.readMypage(id);
+    @GetMapping("/mypage")
+    public ApiResponse<Object> readMypage(@RequestBody RequestId requestId){
+        ResponseMypage responseMypage = userService.readMypage(requestId);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
