@@ -21,6 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "마이페이지 조회", description = "request에 담긴 id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
     @GetMapping("/mypage")
     public ApiResponse<Object> readMypage(@RequestBody RequestId requestId){
         ResponseMypage responseMypage = userService.readMypage(requestId);
@@ -33,6 +34,7 @@ public class UserController {
     }
 
 
+    @Operation(summary = "프로필 사진 수정", description = "request에 담긴 id에 해당하는 유저의 프로필 사진을 수정합니다.")
     @PatchMapping("/mypage/profile-image")
     public ApiResponse<Object> updateProfileImage(@RequestBody RequestProfileImage requestProfileImage){
        userService.updateProfileImage(requestProfileImage);
@@ -43,6 +45,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "유저 정보 수정", description = "request에 담긴 id에 해당하는 유저의 정보를 수정합니다. 현재 닉네임만 수정 가능합니다. ")
     @PatchMapping("/mypage")
     public ApiResponse<Object> updateUserInfo(@RequestBody RequestUserInfo requestUserInfo){
         userService.updateUserInfo(requestUserInfo);
@@ -54,6 +57,7 @@ public class UserController {
 
     }
 
+    @Operation(summary = "회원 탈퇴", description = "request에 담긴 id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping("/user")
     public ApiResponse<Object> deleteUser(@RequestBody RequestId requestId){
         userService.deleteUser(requestId);
