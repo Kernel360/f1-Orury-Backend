@@ -45,7 +45,7 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    private User(String email, String nickname, String Password, int signUpType, int gender, LocalDate birthday, String profileImage) {
+    private User(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
