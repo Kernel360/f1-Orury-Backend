@@ -3,15 +3,15 @@ package org.fastcampus.oruryapi.domain.user.converter.request;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 
-public record RequestUserInfo(
+public record UserInfoRequest(
         Long id,
         String nickname
 ) {
-    public static UserDto toDto(User user, RequestUserInfo requestUserInfo){
+    public static UserDto toDto(User user, UserInfoRequest userInfoRequest){
         return UserDto.of(
-                requestUserInfo.id(),
+                userInfoRequest.id(),
                 user.getEmail(),
-                requestUserInfo.nickname(),
+                userInfoRequest.nickname(),
                 user.getPassword(),
                 user.getSignUpType(),
                 user.getGender(),

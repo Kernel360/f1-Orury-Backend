@@ -1,6 +1,6 @@
 package org.fastcampus.oruryapi.domain.user.converter.request;
 
-public record RequestId(
+public record IdRequest(
         Long id
 ) {
 }

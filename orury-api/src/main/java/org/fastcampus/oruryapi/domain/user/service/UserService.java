@@ -3,10 +3,10 @@ package org.fastcampus.oruryapi.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryapi.domain.user.converter.request.RequestId;
-import org.fastcampus.oruryapi.domain.user.converter.request.RequestProfileImage;
-import org.fastcampus.oruryapi.domain.user.converter.request.RequestUserInfo;
-import org.fastcampus.oruryapi.domain.user.converter.response.ResponseMypage;
+import org.fastcampus.oruryapi.domain.user.converter.request.IdRequest;
+import org.fastcampus.oruryapi.domain.user.converter.request.ProfileImageRequest;
+import org.fastcampus.oruryapi.domain.user.converter.request.UserInfoRequest;
+import org.fastcampus.oruryapi.domain.user.converter.response.MypageResponse;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 import org.fastcampus.oruryapi.domain.user.db.repository.UserRepository;
 import org.fastcampus.oruryapi.global.error.BusinessException;
@@ -16,28 +16,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class UserService {
     private final UserRepository userRepository;
 
-    public ResponseMypage readMypage(RequestId requestId){
-        User user = userRepository.findById(requestId.id()).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
-        return ResponseMypage.toDto(UserDto.from(user));
+    @Transactional
+    public MypageResponse readMypage(IdRequest idRequest){
+        User user = userRepository.findById(idRequest.id()).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
+        return MypageResponse.toDto(UserDto.from(user));
     }
 
-    public void updateProfileImage(RequestProfileImage requestProfileImage){
-        User user = userRepository.findById(requestProfileImage.id()).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
-        userRepository.save((RequestProfileImage.toDto(user,requestProfileImage)).toEntity());
+    @Transactional
+    public void updateProfileImage(ProfileImageRequest profileImageRequest){
+        User user = userRepository.findById(profileImageRequest.id()).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
+        userRepository.save((ProfileImageRequest.toDto(user, profileImageRequest)).toEntity());
     }
 
-    public void updateUserInfo(RequestUserInfo requestUserInfo){
-        User user = userRepository.findById(requestUserInfo.id()).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
-        userRepository.save((RequestUserInfo.toDto(user,requestUserInfo)).toEntity());
+    @Transactional
+    public void updateUserInfo(UserInfoRequest userInfoRequest){
+        User user = userRepository.findById(userInfoRequest.id()).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
+        userRepository.save((UserInfoRequest.toDto(user, userInfoRequest)).toEntity());
     }
 
-    public void deleteUser(RequestId requestId) {
-        User user = userRepository.findById(requestId.id()).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
+    @Transactional
+    public void deleteUser(IdRequest idRequest) {
+        User user = userRepository.findById(idRequest.id()).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
         userRepository.delete(user);
     }
 }
