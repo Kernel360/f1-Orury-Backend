@@ -9,6 +9,7 @@ import org.fastcampus.oruryapi.domain.user.converter.request.RequestProfileImage
 import org.fastcampus.oruryapi.domain.user.converter.request.RequestUserInfo;
 import org.fastcampus.oruryapi.domain.user.converter.response.ResponseMypage;
 import org.fastcampus.oruryapi.domain.user.service.UserService;
+import org.fastcampus.oruryapi.domain.user.util.UserMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class UserController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("OK")
+                .message(UserMessage.USER_READ.getMessage())
                 .data(responseMypage)
                 .build();
     }
@@ -38,7 +39,7 @@ public class UserController {
 
        return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("OK")
+                .message(UserMessage.USER_PROFILEIMAGE_UPDATED.getMessage())
                 .build();
     }
 
@@ -48,7 +49,7 @@ public class UserController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("OK")
+                .message(UserMessage.USER_UPDATED.getMessage())
                 .build();
 
     }
@@ -59,7 +60,7 @@ public class UserController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("OK")
+                .message(UserMessage.USER_DELETED.getMessage())
                 .build();
     }
 
