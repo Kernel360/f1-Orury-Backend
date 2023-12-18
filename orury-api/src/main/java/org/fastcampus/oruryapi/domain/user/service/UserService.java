@@ -21,8 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public MypageResponse readMypage(IdRequest idRequest){
-        User user = userRepository.findById(idRequest.id()).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
+    public MypageResponse readMypage(Long id){
+        User user = userRepository.findById(id).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));
         return MypageResponse.toDto(UserDto.from(user));
     }
 
@@ -39,8 +39,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(IdRequest idRequest) {
-        User user = userRepository.findById(idRequest.id()).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new BusinessException(UserErrorCode.NOT_FOUND));
         userRepository.delete(user);
     }
 }

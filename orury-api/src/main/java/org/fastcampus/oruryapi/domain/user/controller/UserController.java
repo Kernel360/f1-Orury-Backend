@@ -21,10 +21,10 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "마이페이지 조회", description = "request에 담긴 id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
+    @Operation(summary = "마이페이지 조회", description = "id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
     @GetMapping("/mypage")
-    public ApiResponse<Object> readMypage(@RequestBody IdRequest idRequest){
-        MypageResponse mypageResponse = userService.readMypage(idRequest);
+    public ApiResponse<Object> readMypage(@PathVariable Long id){
+        MypageResponse mypageResponse = userService.readMypage(id);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -57,10 +57,10 @@ public class UserController {
 
     }
 
-    @Operation(summary = "회원 탈퇴", description = "request에 담긴 id에 해당하는 회원을 탈퇴합니다. ")
+    @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping("/user")
-    public ApiResponse<Object> deleteUser(@RequestBody IdRequest idRequest){
-        userService.deleteUser(idRequest);
+    public ApiResponse<Object> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
