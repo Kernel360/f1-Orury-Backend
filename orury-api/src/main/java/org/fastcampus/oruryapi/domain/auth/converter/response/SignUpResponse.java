@@ -1,4 +1,4 @@
 package org.fastcampus.oruryapi.domain.auth.converter.response;
 
-public class Test {
+public class SignUpResponse {
 }

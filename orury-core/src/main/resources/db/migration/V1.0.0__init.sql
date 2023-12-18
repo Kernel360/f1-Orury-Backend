@@ -25,6 +25,7 @@ CREATE TABLE `user` (
                         `sign_up_type`	int	NOT NULL	COMMENT '1 : 카카오 로그인 2 : 구글 로그인',
                         `gender`	int	NOT NULL	COMMENT '1 : 남성 2: 여성',
                         `birthday`	date	NOT NULL,
+                        `type`	int	NOT NULL	DEFAULT 1	COMMENT '1 : 유저 2 : 어드민 3 : 사장님',
                         `profile_image`	varchar(50)	NULL,
                         `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
                         `updated_at`	DATETIME	NULL
