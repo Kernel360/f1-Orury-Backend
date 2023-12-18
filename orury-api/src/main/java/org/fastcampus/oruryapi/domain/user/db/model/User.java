@@ -7,14 +7,15 @@ import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "user")
+@EqualsAndHashCode(of={"id"}, callSuper = false)
 public class User extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,5 +55,17 @@ public class User extends AuditingField {
 
     public static User of(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
         return new User(email, nickname, password, signUpType, gender, birthday, profileImage);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
