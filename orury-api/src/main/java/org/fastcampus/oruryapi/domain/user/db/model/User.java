@@ -1,10 +1,7 @@
 package org.fastcampus.oruryapi.domain.user.db.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "user")
+@EqualsAndHashCode(of={"id"}, callSuper = false)
 public class User extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
