@@ -18,7 +18,8 @@ public enum InfoMessage {
     COMMENT_LIKE_UPDATED("댓글 좋아요 상태가 업데이트 되었습니다."),
 
     // 유저
-    USER_LOGIN_SUCCESS("정상적으로 로그인 되었습니다.")
+    USER_LOGIN_SUCCESS("정상적으로 로그인 되었습니다."),
+    USER_SIGNUP_SUCCESS("회원가입이 정상적으로 완료되었습니다.")
     ;
 
     private final String message;
