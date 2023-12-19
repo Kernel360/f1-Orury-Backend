@@ -80,13 +80,16 @@ public record UserDto(
 
     public User toEntity() {
         return User.of(
+                id,
                 email,
                 nickname,
                 password,
                 signUpType,
                 gender,
                 birthday,
-                profileImage
+                profileImage,
+                createdAt,
+                updatedAt
         );
     }
 }

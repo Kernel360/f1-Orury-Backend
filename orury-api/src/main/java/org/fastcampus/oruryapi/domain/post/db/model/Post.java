@@ -7,6 +7,8 @@ import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @ToString
 @Getter
@@ -39,15 +41,19 @@ public class Post extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Post(String title, String content, String images, int category, User user) {
+    private Post(Long id, String title, String content, int viewCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.title = title;
         this.content = content;
+        this.viewCount = viewCount;
         this.images = images;
         this.category = category;
         this.user = user;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public static Post of(String title, String content, String images, int category, User user) {
-        return new Post(title, content, images, category, user);
+    public static Post of(Long id, String title, String content, int viewCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new Post(id, title, content, viewCount, images, category, user, createdAt, updatedAt);
     }
 }

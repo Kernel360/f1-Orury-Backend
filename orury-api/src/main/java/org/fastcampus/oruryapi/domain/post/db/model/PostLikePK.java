@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.fastcampus.oruryapi.domain.user.db.model.User;
 
 import java.io.Serializable;
 
@@ -26,10 +25,10 @@ public class PostLikePK implements Serializable {
         this.postId = postId;
     }
 
-    public PostLikePK of(User user, Post post) {
+    public static PostLikePK of(Long userId, Long postId) {
         return new PostLikePK(
-                user.getId(),
-                post.getId()
+                userId,
+                postId
         );
     }
 }

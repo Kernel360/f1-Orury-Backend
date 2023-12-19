@@ -7,7 +7,7 @@ import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Slf4j
 @ToString
@@ -43,7 +43,8 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    private User(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
+    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -51,21 +52,11 @@ public class User extends AuditingField {
         this.gender = gender;
         this.birthday = birthday;
         this.profileImage = profileImage;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public static User of(String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage) {
-        return new User(email, nickname, password, signUpType, gender, birthday, profileImage);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
+    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt);
     }
 }
