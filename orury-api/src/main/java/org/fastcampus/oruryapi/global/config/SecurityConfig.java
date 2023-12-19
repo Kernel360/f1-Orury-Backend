@@ -59,6 +59,8 @@ public class SecurityConfig {
                                 antMatcher("/auth/**"),
                                 antMatcher("/swagger-ui/**"),
                                 antMatcher("/swagger-resources/**"),
+                                antMatcher("/post/**"),
+                                antMatcher("/posts/**"),
                                 PathRequest.toH2Console(),
                                 PathRequest.toStaticResources().atCommonLocations()
                         ).permitAll()
