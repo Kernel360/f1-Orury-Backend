@@ -1,6 +1,7 @@
-package org.fastcampus.oruryapi.global.error.code;
+package org.fastcampus.oruryapi.domain.post.error;
 
 import lombok.AllArgsConstructor;
+import org.fastcampus.oruryapi.global.error.code.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor

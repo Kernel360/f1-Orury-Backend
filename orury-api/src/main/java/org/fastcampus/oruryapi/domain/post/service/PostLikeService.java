@@ -11,7 +11,7 @@ import org.fastcampus.oruryapi.domain.post.db.repository.PostRepository;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 import org.fastcampus.oruryapi.domain.user.db.repository.UserRepository;
 import org.fastcampus.oruryapi.global.error.BusinessException;
-import org.fastcampus.oruryapi.global.error.code.PostErrorCode;
+import org.fastcampus.oruryapi.domain.post.error.PostErrorCode;
 import org.fastcampus.oruryapi.global.error.code.UserErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
