@@ -9,8 +9,8 @@ import org.fastcampus.oruryapi.domain.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostResponse;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostsWithCursorResponse;
 import org.fastcampus.oruryapi.domain.post.service.PostService;
+import org.fastcampus.oruryapi.domain.post.util.PostMessage;
 import org.fastcampus.oruryapi.global.constants.NumberConstants;
-import org.fastcampus.oruryapi.global.message.info.InfoMessage;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_CREATED.getMessage())
+                .message(PostMessage.POST_CREATED.getMessage())
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class PostController {
 
         return ApiResponse.<PostResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_READ.getMessage())
+                .message(PostMessage.POST_READ.getMessage())
                 .data(response)
                 .build();
     }
@@ -53,7 +53,7 @@ public class PostController {
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POSTS_READ.getMessage())
+                .message(PostMessage.POSTS_READ.getMessage())
                 .data(responses)
                 .build();
     }
@@ -65,7 +65,7 @@ public class PostController {
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POSTS_READ.getMessage())
+                .message(PostMessage.POSTS_READ.getMessage())
                 .data(responses)
                 .build();
     }
@@ -77,7 +77,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_UPDATED.getMessage())
+                .message(PostMessage.POST_UPDATED.getMessage())
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.COMMENT_DELETED.getMessage())
+                .message(PostMessage.POST_DELETED.getMessage())
                 .build();
     }
 }

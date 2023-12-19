@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryapi.base.converter.ApiResponse;
 import org.fastcampus.oruryapi.domain.post.converter.request.PostLikeRequest;
 import org.fastcampus.oruryapi.domain.post.service.PostLikeService;
-import org.fastcampus.oruryapi.global.message.info.InfoMessage;
+import org.fastcampus.oruryapi.domain.post.util.PostMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class PostLikeController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_LIKE_CREATED.getMessage())
+                .message(PostMessage.POST_LIKE_CREATED.getMessage())
                 .build();
     }
 
@@ -35,7 +35,7 @@ public class PostLikeController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_LIKE_DELETED.getMessage())
+                .message(PostMessage.POST_LIKE_DELETED.getMessage())
                 .build();
     }
 }
