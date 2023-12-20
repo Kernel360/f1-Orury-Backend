@@ -1,20 +1,19 @@
 package org.fastcampus.oruryapi.domain.post.db.model;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.oruryapi.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"postLikePK"})
+@EqualsAndHashCode(of = {"postLikePK"}, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "post_like")
-public class PostLike {
+public class PostLike extends AuditingField {
     @EmbeddedId
     private PostLikePK postLikePK;
 

@@ -59,11 +59,15 @@ public record PostDto(
 
     public Post toEntity() {
         return Post.of(
+                id,
                 title,
                 content,
+                viewCount,
                 images,
                 category,
-                userDto.toEntity()
+                userDto.toEntity(),
+                createdAt,
+                updatedAt
         );
     }
 }
