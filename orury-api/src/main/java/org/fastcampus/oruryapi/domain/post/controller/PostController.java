@@ -9,7 +9,8 @@ import org.fastcampus.oruryapi.domain.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostResponse;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostsWithCursorResponse;
 import org.fastcampus.oruryapi.domain.post.service.PostService;
-import org.fastcampus.oruryapi.global.message.info.InfoMessage;
+import org.fastcampus.oruryapi.domain.post.util.PostMessage;
+import org.fastcampus.oruryapi.global.constants.NumberConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_CREATED.getMessage())
+                .message(PostMessage.POST_CREATED.getMessage())
                 .build();
     }
 
@@ -40,7 +41,7 @@ public class PostController {
 
         return ApiResponse.<PostResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_READ.getMessage())
+                .message(PostMessage.POST_READ.getMessage())
                 .data(response)
                 .build();
     }
@@ -48,11 +49,11 @@ public class PostController {
     @Operation(summary = "카테고리별 게시글 목록 조회", description = "카테고리(1: 자유게시판, 2: Q&A게시판)와 cursor값을 받아, '카테고리와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts/{category}")
     public ApiResponse<PostsWithCursorResponse> getPostsByCategory(@PathVariable int category, @RequestParam Long cursor) {
-        PostsWithCursorResponse responses = postService.getPostsByCategory(category, cursor, PageRequest.of(0, 10));
+        PostsWithCursorResponse responses = postService.getPostsByCategory(category, cursor, PageRequest.of(0, NumberConstants.PAGINATION_SIZE));
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POSTS_READ.getMessage())
+                .message(PostMessage.POSTS_READ.getMessage())
                 .data(responses)
                 .build();
     }
@@ -60,11 +61,11 @@ public class PostController {
     @Operation(summary = "검색어에 따른 게시글 목록 조회", description = "검색어와 cursor값을 받아, '검색어와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts")
     public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, Long cursor) {
-        PostsWithCursorResponse responses = postService.getPostsBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
+        PostsWithCursorResponse responses = postService.getPostsBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.PAGINATION_SIZE));
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POSTS_READ.getMessage())
+                .message(PostMessage.POSTS_READ.getMessage())
                 .data(responses)
                 .build();
     }
@@ -76,7 +77,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.POST_UPDATED.getMessage())
+                .message(PostMessage.POST_UPDATED.getMessage())
                 .build();
     }
 
@@ -87,7 +88,7 @@ public class PostController {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message(InfoMessage.COMMENT_DELETED.getMessage())
+                .message(PostMessage.POST_DELETED.getMessage())
                 .build();
     }
 }

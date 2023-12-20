@@ -1,5 +1,7 @@
 package org.fastcampus.oruryapi.domain.post.converter.response;
 
+import org.fastcampus.oruryapi.global.constants.NumberConstants;
+
 import java.util.List;
 
 public record PostsWithCursorResponse(
@@ -9,7 +11,7 @@ public record PostsWithCursorResponse(
     public static PostsWithCursorResponse of(List<PostsResponse> posts) {
 
         Long cursor = (posts.isEmpty())
-                ? -1L // -1L
+                ? NumberConstants.LAST_CURSOR
                 : posts.get(posts.size() - 1).id();
 
         return new PostsWithCursorResponse(posts, cursor);
