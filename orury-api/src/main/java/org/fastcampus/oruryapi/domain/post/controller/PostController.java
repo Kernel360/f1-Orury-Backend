@@ -49,7 +49,7 @@ public class PostController {
     @Operation(summary = "카테고리별 게시글 목록 조회", description = "카테고리(1: 자유게시판, 2: Q&A게시판)와 cursor값을 받아, '카테고리와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts/{category}")
     public ApiResponse<PostsWithCursorResponse> getPostsByCategory(@PathVariable int category, @RequestParam Long cursor) {
-        PostsWithCursorResponse responses = postService.getPostsByCategory(category, cursor, PageRequest.of(0, NumberConstants.PAGINATION_SIZE));
+        PostsWithCursorResponse responses = postService.getPostsByCategory(category, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -61,7 +61,7 @@ public class PostController {
     @Operation(summary = "검색어에 따른 게시글 목록 조회", description = "검색어와 cursor값을 받아, '검색어와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts")
     public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, Long cursor) {
-        PostsWithCursorResponse responses = postService.getPostsBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.PAGINATION_SIZE));
+        PostsWithCursorResponse responses = postService.getPostsBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())

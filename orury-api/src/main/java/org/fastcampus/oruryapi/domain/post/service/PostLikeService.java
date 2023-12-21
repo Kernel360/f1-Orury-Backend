@@ -16,6 +16,8 @@ import org.fastcampus.oruryapi.global.error.code.UserErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -40,8 +42,9 @@ public class PostLikeService {
                 .orElseThrow(() -> new BusinessException(UserErrorCode.NOT_FOUND)));
         PostDto postDto = PostDto.from(postRepository.findById(postLikeRequest.postId())
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND)));
-        PostLike postLike = postLikeRepository.findByPostLikePK_UserIdAndPostLikePK_PostId(userDto.id(), postDto.id());
+        Optional<PostLike> postLike = postLikeRepository.findByPostLikePK_UserIdAndPostLikePK_PostId(userDto.id(), postDto.id());
+        if (postLike.isEmpty()) return;
 
-        postLikeRepository.delete(postLike);
+        postLikeRepository.delete(postLike.get());
     }
 }
