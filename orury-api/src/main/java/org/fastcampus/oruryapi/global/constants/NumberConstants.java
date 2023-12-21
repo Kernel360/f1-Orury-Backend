@@ -10,6 +10,17 @@ public final class NumberConstants {
     public static final Long FIRST_CURSOR = 0L;
     // Last Pagination Cursor Return Value
     public static final Long LAST_CURSOR = -1L;
-    // Pagination Size
-    public static final int PAGINATION_SIZE = 10;
+    // Post pagination Size
+    public static final int POST_PAGINATION_SIZE = 10;
+    // Comment pagination Size
+    public static final int COMMENT_PAGINATION_SIZE = 10;
+    // int Value of Not Deleted Object`s Status
+    public static final int IS_NOT_DELETED = 0;
+    // int Value of Deleted Object`s Status
+    public static final int IS_DELETED = 1;
+    // long Value of P
+    public static final long PARENT_COMMENT = 0L;
+
+    //default values
+    public static final long DELETED_USER_ID = -9999L;
 }
