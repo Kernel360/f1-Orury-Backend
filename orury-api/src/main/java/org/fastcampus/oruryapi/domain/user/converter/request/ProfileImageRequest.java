@@ -22,7 +22,7 @@ public record ProfileImageRequest(
                 userDto.birthday(),
                 profileImageRequest.profileImage(),
                 userDto.createdAt(),
-                userDto.updatedAt()
+                null
         );
     }
 }

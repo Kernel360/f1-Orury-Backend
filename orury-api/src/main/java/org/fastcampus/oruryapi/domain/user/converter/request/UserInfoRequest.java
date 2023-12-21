@@ -20,7 +20,7 @@ public record UserInfoRequest(
                 userdto.birthday(),
                 userdto.profileImage(),
                 userdto.createdAt(),
-                userdto.updatedAt()
+                null
         );
     }
 }
