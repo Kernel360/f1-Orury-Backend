@@ -40,4 +40,30 @@ public record CommentDto(
                 updatedAt
         );
     }
+
+    public static CommentDto from(Comment entity) {
+        return CommentDto.of(
+                entity.getId(),
+                entity.getContent(),
+                entity.getParentId(),
+                PostDto.from(entity.getPost()),
+                UserDto.from(entity.getUser()),
+                entity.getDeleted(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
+    public Comment toEntity() {
+        return Comment.of(
+                id,
+                content,
+                parentId,
+                postDto.toEntity(),
+                userDto.toEntity(),
+                deleted,
+                createdAt,
+                updatedAt
+        );
+    }
 }

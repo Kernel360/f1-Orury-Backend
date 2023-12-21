@@ -8,6 +8,8 @@ import org.fastcampus.oruryapi.domain.post.db.model.Post;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @ToString
 @Getter
@@ -31,18 +33,25 @@ public class Comment extends AuditingField {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Comment(String content, Long parentId, Post post, User user) {
+    @Column(name = "deleted", nullable = false)
+    private int deleted;
+
+    private Comment(Long id, String content, Long parentId, Post post, User user, int deleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.content = content;
         this.parentId = parentId;
         this.post = post;
         this.user = user;
+        this.deleted = deleted;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public static Comment of(String content, Long parentId, Post post, User user) {
-        return new Comment(content, parentId, post, user);
+    public static Comment of(Long id, String content, Long parentId, Post post, User user, int deleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new Comment(id, content, parentId, post, user, deleted, createdAt, updatedAt);
     }
 }
