@@ -45,6 +45,7 @@ CREATE TABLE `comment` (
                            `parent_id`	BIGINT(32)	NOT NULL	DEFAULT 0	COMMENT '부모 댓글이 없으면 일반 댓글, 있으면 대댓',
                            `post_id`	BIGINT(32)	NOT NULL	COMMENT '게시글 아이디',
                            `user_id`	BIGINT(32)	NOT NULL,
+                           `deleted`    INT NOT NULL DEFAULT 0 COMMENT '삭제되면 1, 기본값 0',
                            `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
                            `updated_at`	DATETIME	NULL,
                            PRIMARY KEY(`id`)
