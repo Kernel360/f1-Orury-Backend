@@ -13,11 +13,11 @@ public enum UserErrorCode implements ErrorCode{
     private final String message;
     @Override
     public int getStatus() {
-        return 0;
+        return status;
     }
 
     @Override
     public String getMessage() {
-        return null;
+        return message;
     }
 }

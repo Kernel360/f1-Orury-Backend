@@ -1,26 +1,28 @@
 package org.fastcampus.oruryapi.domain.user.converter.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryapi.domain.user.db.model.User;
 
-
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProfileImageRequest(
         Long id,
         String profileImage
 ){
 
-    public static UserDto toDto(User user, ProfileImageRequest profileImageRequest){
+
+    public static UserDto toDto(UserDto userDto, ProfileImageRequest profileImageRequest){
         return UserDto.of(
                 profileImageRequest.id(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getPassword(),
-                user.getSignUpType(),
-                user.getGender(),
-                user.getBirthday(),
+                userDto.email(),
+                userDto.nickname(),
+                userDto.password(),
+                userDto.signUpType(),
+                userDto.gender(),
+                userDto.birthday(),
                 profileImageRequest.profileImage(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
+                userDto.createdAt(),
+                userDto.updatedAt()
         );
     }
 }
