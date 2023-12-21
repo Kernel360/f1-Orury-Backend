@@ -26,10 +26,10 @@ public class CommentLikePK implements Serializable {
         this.commentId = commentId;
     }
 
-    public CommentLikePK of(User user, Comment comment) {
+    public static CommentLikePK of(Long userId, Long commentId) {
         return new CommentLikePK(
-                user.getId(),
-                comment.getId()
+                userId,
+                commentId
         );
     }
 }
