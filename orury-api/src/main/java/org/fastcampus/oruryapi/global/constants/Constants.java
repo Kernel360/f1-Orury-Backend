@@ -11,8 +11,16 @@ public enum Constants {
 
     // header 종류
     AUTHORIZATION("Authorization"),
-    REFRESH_HEADER("Refresh-token")
+    REFRESH_HEADER("Refresh-token"),
 
+    // default values
+    DEFAULT_IMAGE("default image"),
+    DEFAULT_NICKNAME("default nickname"),
+
+    // deleted values
+    DELETED_USER("deleted user")
+
+    //
 
     ;
 
