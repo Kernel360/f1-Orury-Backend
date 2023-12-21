@@ -1,8 +1,8 @@
 package org.fastcampus.oruryapi.domain.comment.converter.dto;
 
 import org.fastcampus.oruryapi.domain.comment.db.model.Comment;
-import org.fastcampus.oruryapi.domain.post.db.model.Post;
-import org.fastcampus.oruryapi.domain.user.db.model.User;
+import org.fastcampus.oruryapi.domain.post.converter.dto.PostDto;
+import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 
 import java.time.LocalDateTime;
 
@@ -13,8 +13,9 @@ public record CommentDto(
         Long id,
         String content,
         Long parentId,
-        Post post,
-        User user,
+        PostDto postDto,
+        UserDto userDto,
+        int deleted,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -22,8 +23,9 @@ public record CommentDto(
             Long id,
             String content,
             Long parentId,
-            Post post,
-            User user,
+            PostDto postDto,
+            UserDto userDto,
+            int deleted,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -31,8 +33,9 @@ public record CommentDto(
                 id,
                 content,
                 parentId,
-                post,
-                user,
+                postDto,
+                userDto,
+                deleted,
                 createdAt,
                 updatedAt
         );
