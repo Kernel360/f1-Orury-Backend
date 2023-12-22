@@ -13,9 +13,7 @@ CREATE TABLE `post` (
 
 CREATE TABLE `post_like` (
                              `user_id`	bigint(32)	NOT NULL,
-                             `post_id`	bigint(32)	NOT NULL	COMMENT '게시글 아이디',
-                             `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
-                             `updated_at`	DATETIME	NULL
+                             `post_id`	bigint(32)	NOT NULL	COMMENT '게시글 아이디'
 );
 
 CREATE TABLE `user` (
@@ -34,9 +32,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `comment_like` (
                                 `user_id`	bigint(32)	NOT NULL,
-                                `comment_id`	bigint(32)	NOT NULL,
-                                `created_at`	DATETIME	NOT NULL	COMMENT '@CreatedDate',
-                                `updated_at`	DATETIME	NULL
+                                `comment_id`	bigint(32)	NOT NULL
 );
 
 CREATE TABLE `comment` (
