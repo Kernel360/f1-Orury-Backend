@@ -9,17 +9,17 @@ public record UserInfoRequest(
         Long id,
         String nickname
 ) {
-    public static UserDto toDto(UserDto userdto, UserInfoRequest userInfoRequest){
+    public static UserDto toDto(UserDto userDto, UserInfoRequest userInfoRequest){
         return UserDto.of(
                 userInfoRequest.id(),
-                userdto.email(),
+                userDto.email(),
                 userInfoRequest.nickname(),
-                userdto.password(),
-                userdto.signUpType(),
-                userdto.gender(),
-                userdto.birthday(),
-                userdto.profileImage(),
-                userdto.createdAt(),
+                userDto.password(),
+                userDto.signUpType(),
+                userDto.gender(),
+                userDto.birthday(),
+                userDto.profileImage(),
+                userDto.createdAt(),
                 null
         );
     }

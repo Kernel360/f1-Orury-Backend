@@ -52,7 +52,6 @@ public record UserDto(
                 entity.getNickname(),
                 entity.getPassword(),
                 entity.getSignUpType(),
-
                 entity.getGender(),
                 entity.getBirthday(),
                 entity.getProfileImage(),

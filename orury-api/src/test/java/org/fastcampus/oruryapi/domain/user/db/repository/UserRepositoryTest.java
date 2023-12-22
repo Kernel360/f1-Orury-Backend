@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
 
     @Autowired
-    public UserRepository userRepository;
+    private UserRepository userRepository;
 
     @DisplayName("생성된 유저를 저장할 때 id, createdAt, updatedAt을 자동으로 생성해주는지 테스트")
     @Test
