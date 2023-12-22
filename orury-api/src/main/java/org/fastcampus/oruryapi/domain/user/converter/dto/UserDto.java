@@ -1,7 +1,4 @@
 package org.fastcampus.oruryapi.domain.user.converter.dto;
-
-import org.fastcampus.oruryapi.domain.auth.converter.request.SignUpRequest;
-import org.fastcampus.oruryapi.domain.auth.converter.response.SignInResponse;
 import org.fastcampus.oruryapi.domain.user.db.model.User;
 
 import java.time.LocalDate;
@@ -45,21 +42,6 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt
-        );
-    }
-
-    public static UserDto from(SignUpRequest request) {
-        return UserDto.of(
-                null,
-                request.email(),
-                request.nickname(),
-                null,
-                request.signUpType(),
-                request.gender(),
-                request.birthday(),
-                request.profileImage(),
-                null,
-                null
         );
     }
 

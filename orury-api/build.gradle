@@ -6,6 +6,10 @@ tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
     enabled = false
 }
 
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation project(':orury-core')
     //boot start
@@ -41,6 +45,7 @@ dependencies {
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     //SSE setting
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
