@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentLikeController {
     private final CommentLikeService commentLikeService;
 
-    @Operation(summary = "댓글 좋아요 생성", description = "유저 id와 게시글 id를 받아, 댓글 좋아요를 생성한다.")
+    @Operation(summary = "댓글 좋아요 생성", description = "댓글 id를 받아, 댓글 좋아요를 생성한다.")
     @PostMapping("/comment/like")
     public ApiResponse<Object> createCommentLike(@RequestBody CommentLikeRequest request) {
         // 추후 시큐리티로 ID 할당 필요
@@ -32,7 +32,7 @@ public class CommentLikeController {
                 .build();
     }
 
-    @Operation(summary = "댓글 좋아요 삭제", description = "유저 id와 게시글 id를 받아, 댓글 좋아요를 삭제한다.")
+    @Operation(summary = "댓글 좋아요 삭제", description = "댓글 id를 받아, 댓글 좋아요를 삭제한다.")
     @DeleteMapping("/comment/like")
     public ApiResponse<Object> deleteCommentLike(@RequestBody CommentLikeRequest request) {
         // 추후 시큐리티로 ID 할당 필요
