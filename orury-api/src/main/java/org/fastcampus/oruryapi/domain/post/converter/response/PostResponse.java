@@ -1,14 +1,19 @@
 package org.fastcampus.oruryapi.domain.post.converter.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryapi.domain.post.converter.dto.PostDto;
 
 import java.time.LocalDateTime;
 
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PostResponse(
         Long id,
         String title,
         String content,
         int viewCount,
+        int commentCount,
+        int likeCount,
         String images,
         int category,
         LocalDateTime createdAt,
@@ -16,16 +21,16 @@ public record PostResponse(
         Long userId,
         String userNickname,
         String userProfileImage,
-        int likeCount,
-        int commentCount,
         boolean isLike
 ) {
-    public static PostResponse of(PostDto postDto, int likeCount, int commentCount, boolean isLike) {
+    public static PostResponse of(PostDto postDto, boolean isLike) {
         return new PostResponse(
                 postDto.id(),
                 postDto.title(),
                 postDto.content(),
                 postDto.viewCount(),
+                postDto.commentCount(),
+                postDto.likeCount(),
                 postDto.images(),
                 postDto.category(),
                 postDto.createdAt(),
@@ -33,8 +38,6 @@ public record PostResponse(
                 postDto.userDto().id(),
                 postDto.userDto().nickname(),
                 postDto.userDto().profileImage(),
-                likeCount,
-                commentCount,
                 isLike
         );
     }

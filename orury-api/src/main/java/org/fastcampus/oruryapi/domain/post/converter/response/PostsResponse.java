@@ -9,32 +9,32 @@ public record PostsResponse(
         String title,
         String content,
         int viewCount,
+        int commentCount,
+        int likeCount,
         String thumbnailImage,
         int category,
         Long userId,
         String userNickname,
         String userProfileImage,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        int likeCount,
-        int commentCount
+        LocalDateTime updatedAt
 ) {
-    public static PostsResponse of(PostDto postDto, int likeCount, int commentCount) {
+    public static PostsResponse of(PostDto postDto) {
 
         return new PostsResponse(
                 postDto.id(),
                 postDto.title(),
                 postDto.content(),
                 postDto.viewCount(),
+                postDto.commentCount(),
+                postDto.likeCount(),
                 postDto.images(),
                 postDto.category(),
                 postDto.userDto().id(),
                 postDto.userDto().nickname(),
                 postDto.userDto().profileImage(),
                 postDto.createdAt(),
-                postDto.updatedAt(),
-                likeCount,
-                commentCount
+                postDto.updatedAt()
         );
     }
 }
