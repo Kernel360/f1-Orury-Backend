@@ -101,6 +101,7 @@ public class PostController {
     public ApiResponse<Object> updatePost(@RequestBody PostUpdateRequest request) {
         UserDto userDto = userService.getUserDtoById(request.userId());
         PostDto postDto = postService.getPostDtoById(request.id());
+        postService.isValidate(postDto, userDto);
 
         postDto = request.toDto(postDto, userDto);
 

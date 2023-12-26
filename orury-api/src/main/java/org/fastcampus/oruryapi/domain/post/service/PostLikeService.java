@@ -47,4 +47,22 @@ public class PostLikeService {
 
         postLikeRepository.delete(postLike.get());
     }
+
+    public boolean isLiked(Long userId, Long postId){
+        return postLikeRepository.existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
+    }
+
+    public void isValidate(Long userId, Long postId){
+        postRepository.findById(postId)
+                .ifPresentOrElse(
+                        post -> {},
+                        () -> {throw new BusinessException(PostErrorCode.NOT_FOUND);}
+                );
+        userRepository.findById(userId)
+                .ifPresentOrElse(
+                        user -> {},
+                        () -> {throw new BusinessException(PostErrorCode.NOT_FOUND);}
+
+                );
+    }
 }
