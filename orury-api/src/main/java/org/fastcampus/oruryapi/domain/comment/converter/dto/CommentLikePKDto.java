@@ -13,7 +13,7 @@ public record CommentLikePKDto(
         );
     }
 
-    public CommentLikePKDto from(CommentLikePK entity) {
+    public static CommentLikePKDto from(CommentLikePK entity) {
         return CommentLikePKDto.of(
                 entity.getUserId(),
                 entity.getCommentId()
