@@ -11,11 +11,11 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByCategoryOrderByIdDesc(int category, Pageable pageable);
 
-    List<Post> findByCategoryAndIdLessThanOrderByIdDesc(int category, Long id, Pageable pageable);
+    List<Post> findByCategoryAndIdLessThanOrderByIdDesc(int category, Long cursor, Pageable pageable);
 
     List<Post> findByTitleContainingOrContentContainingOrderByIdDesc(String titleSearchWord, String contentSearchWord, Pageable pageable);
 
-    List<Post> findByTitleContainingOrContentContainingAndIdLessThanOrderByIdDesc(String titleSearchWord, String contentSearchWord, Long id, Pageable pageable);
+    List<Post> findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(Long cursor1, String titleSearchWord, Long cursor2, String contentSearchWord, Pageable pageable);
 
     @Modifying
     @Query("UPDATE post SET viewCount = viewCount + 1 WHERE id = :id")
