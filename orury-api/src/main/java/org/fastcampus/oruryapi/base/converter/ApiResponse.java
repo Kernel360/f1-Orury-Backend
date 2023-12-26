@@ -19,14 +19,4 @@ public class ApiResponse<T> {
 
     @Valid
     private T data;
-
-    private Error error;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Error {
-        private List<String> errorMessages;
-    }
 }

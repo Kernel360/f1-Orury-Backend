@@ -31,6 +31,12 @@ public class Post extends AuditingField {
     @Column(name = "view_count", nullable = false)
     private int viewCount;
 
+    @Column(name = "comment_count", nullable = false)
+    private int commentCount;
+
+    @Column(name = "like_count", nullable = false)
+    private int likeCount;
+
     @Column(name = "images")
     private String images;
 
@@ -41,11 +47,13 @@ public class Post extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Post(Long id, String title, String content, int viewCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private Post(Long id, String title, String content, int viewCount, int commentCount, int likeCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;
+        this.commentCount = commentCount;
+        this.likeCount = likeCount;
         this.images = images;
         this.category = category;
         this.user = user;
@@ -53,7 +61,7 @@ public class Post extends AuditingField {
         this.updatedAt = updatedAt;
     }
 
-    public static Post of(Long id, String title, String content, int viewCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new Post(id, title, content, viewCount, images, category, user, createdAt, updatedAt);
+    public static Post of(Long id, String title, String content, int viewCount, int commentCount, int likeCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new Post(id, title, content, viewCount, commentCount, likeCount, images, category, user, createdAt, updatedAt);
     }
 }

@@ -25,6 +25,8 @@ public record PostCreateRequest(
                 title,
                 content,
                 0,
+                0,
+                0,
                 images,
                 category,
                 userDto,

@@ -28,7 +28,7 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "소셜 로그인을 통해 전달받은 정보를 기반으로 회원가입 수행")
     @PostMapping("/sign-up")
     public ApiResponse<Object> signUp(@RequestBody SignUpRequest request) {
-        UserDto userDto = UserDto.from(request);
+        UserDto userDto = request.toDto();
 
         authService.signUp(userDto);
 
