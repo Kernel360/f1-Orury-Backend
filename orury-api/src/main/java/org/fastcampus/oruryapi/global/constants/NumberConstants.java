@@ -20,6 +20,10 @@ public final class NumberConstants {
     public static final int IS_DELETED = 1;
     // long Value of P
     public static final long PARENT_COMMENT = 0L;
+    // Last Pagination Page Return Value
+    public static final int LAST_PAGE = -1;
+    // Minimun LikeCount for Hot Posts
+    public static final int HOT_POSTS_BOUNDARY = 10;
 
     //default values
     public static final long DELETED_USER_ID = -9999L;
