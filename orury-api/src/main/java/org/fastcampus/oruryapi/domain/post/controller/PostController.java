@@ -10,12 +10,14 @@ import org.fastcampus.oruryapi.domain.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostResponse;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostsResponse;
 import org.fastcampus.oruryapi.domain.post.converter.response.PostsWithCursorResponse;
+import org.fastcampus.oruryapi.domain.post.converter.response.PostsWithPageResponse;
 import org.fastcampus.oruryapi.domain.post.service.PostLikeService;
 import org.fastcampus.oruryapi.domain.post.service.PostService;
 import org.fastcampus.oruryapi.domain.post.util.PostMessage;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 import org.fastcampus.oruryapi.domain.user.service.UserService;
 import org.fastcampus.oruryapi.global.constants.NumberConstants;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +69,7 @@ public class PostController {
     public ApiResponse<PostsWithCursorResponse> getPostsByCategory(@PathVariable int category, @RequestParam Long cursor) {
         List<PostDto> postDtos = postService.getPostDtosByCategory(category, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<PostsResponse> postsResponses = postDtos.stream()
-                .map(PostsResponse::of)
-                .toList();
+                .map(PostsResponse::of).toList();
 
         PostsWithCursorResponse responses = PostsWithCursorResponse.of(postsResponses);
 
@@ -84,12 +85,28 @@ public class PostController {
     public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, Long cursor) {
         List<PostDto> postDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<PostsResponse> postsResponses = postDtos.stream()
-                .map(PostsResponse::of)
-                .toList();
+                .map(PostsResponse::of).toList();
 
         PostsWithCursorResponse responses = PostsWithCursorResponse.of(postsResponses);
 
         return ApiResponse.<PostsWithCursorResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(PostMessage.POSTS_READ.getMessage())
+                .data(responses)
+                .build();
+    }
+
+    @Operation(summary = "인기 게시글 목록 조회", description = "page값을 받아, 'page번호에 따른 인기 게시글 목록'과 'page값(다음으로 조회할 page 번호 / 현재 마지막 페이지를 반환한다면 -1)'을 돌려준다.")
+    @GetMapping("/posts/hot")
+    public ApiResponse<PostsWithPageResponse> getHotPosts(@RequestParam int page) {
+        Page<PostDto> postDtos = postService.getHotPostDtos(PageRequest.of(page, NumberConstants.POST_PAGINATION_SIZE));
+        List<PostsResponse> postsResponses = postDtos.stream()
+                .map(PostsResponse::of).toList();
+
+        int nextPage = postService.getNextPage(postDtos, page);
+        PostsWithPageResponse responses = PostsWithPageResponse.of(postsResponses, nextPage);
+
+        return ApiResponse.<PostsWithPageResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(PostMessage.POSTS_READ.getMessage())
                 .data(responses)

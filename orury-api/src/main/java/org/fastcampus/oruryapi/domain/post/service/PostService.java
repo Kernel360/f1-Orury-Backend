@@ -9,10 +9,12 @@ import org.fastcampus.oruryapi.domain.post.error.PostErrorCode;
 import org.fastcampus.oruryapi.domain.user.converter.dto.UserDto;
 import org.fastcampus.oruryapi.global.constants.NumberConstants;
 import org.fastcampus.oruryapi.global.error.BusinessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +47,13 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
+    public Page<PostDto> getHotPostDtos(Pageable pageable) {
+        Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
+                (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now().minusMonths(1L), pageable);
+
+        return posts.map(PostDto::from);
+    }
+
     @Transactional
     public void updatePost(PostDto postDto) {
         postRepository.save(postDto.toEntity());
@@ -68,5 +77,11 @@ public class PostService {
     public void isValidate(PostDto postDto, UserDto userDto){
         if(!Objects.equals(postDto.userDto().id(), userDto.id()))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
+    }
+
+    public int getNextPage(Page<PostDto> postDtos, int page) {
+        return (postDtos.hasNext())
+                ? page + 1
+                : NumberConstants.LAST_PAGE;
     }
 }
