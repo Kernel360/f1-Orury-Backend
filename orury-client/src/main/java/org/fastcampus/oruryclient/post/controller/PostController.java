@@ -71,12 +71,12 @@ public class PostController {
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
 
-        PostsWithCursorResponse responses = PostsWithCursorResponse.of(postsResponses);
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses);
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(PostMessage.POSTS_READ.getMessage())
-                .data(responses)
+                .data(response)
                 .build();
     }
 
@@ -87,12 +87,12 @@ public class PostController {
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
 
-        PostsWithCursorResponse responses = PostsWithCursorResponse.of(postsResponses);
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses);
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(PostMessage.POSTS_READ.getMessage())
-                .data(responses)
+                .data(response)
                 .build();
     }
 
@@ -104,12 +104,12 @@ public class PostController {
                 .map(PostsResponse::of).toList();
 
         int nextPage = postService.getNextPage(postDtos, page);
-        PostsWithPageResponse responses = PostsWithPageResponse.of(postsResponses, nextPage);
+        PostsWithPageResponse response = PostsWithPageResponse.of(postsResponses, nextPage);
 
         return ApiResponse.<PostsWithPageResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(PostMessage.POSTS_READ.getMessage())
-                .data(responses)
+                .data(response)
                 .build();
     }
 
@@ -120,9 +120,9 @@ public class PostController {
         PostDto postDto = postService.getPostDtoById(request.id());
         postService.isValidate(postDto, userDto);
 
-        postDto = request.toDto(postDto, userDto);
+        PostDto updatingPostDto = request.toDto(postDto, userDto);
 
-        postService.updatePost(postDto);
+        postService.updatePost(updatingPostDto);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

@@ -26,6 +26,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     void updateViewCount(Long id);
 
     @Modifying
+    @Query("UPDATE post SET commentCount = commentCount + 1 WHERE id = :id")
+    void increaseCommentCount(Long id);
+
+    @Modifying
+    @Query("UPDATE post SET commentCount = commentCount - 1 WHERE id = :id")
+    void decreaseCommentCount(Long id);
+
+    @Modifying
     @Query("UPDATE post SET likeCount = likeCount + 1 WHERE id = :id")
     void increaseLikeCount(Long id);
 

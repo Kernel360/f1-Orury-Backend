@@ -2,13 +2,17 @@ package org.fastcampus.oruryclient.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurydomain.post.dto.PostDto;
-import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostRepository;
-import org.fastcampus.oruryclient.post.error.PostErrorCode;
-import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.oruryclient.post.error.PostErrorCode;
+import org.fastcampus.orurydomain.comment.db.model.Comment;
+import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
+import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
+import org.fastcampus.orurydomain.post.db.model.Post;
+import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
+import org.fastcampus.orurydomain.post.db.repository.PostRepository;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,9 @@ import java.util.Objects;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
     public void createPost(PostDto postDto) {
@@ -62,6 +69,15 @@ public class PostService {
     @Transactional
     public void deletePost(PostDto postDto) {
         postRepository.delete(postDto.toEntity());
+        postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
+
+        List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
+        comments.forEach(
+                comment -> {
+                    commentRepository.delete(comment);
+                    commentLikeRepository.deleteByCommentLikePK_CommentId(comment.getId());
+                }
+        );
     }
 
     @Transactional
