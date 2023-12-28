@@ -6,7 +6,7 @@ public record PostLikePKDto(
         Long userId,
         Long postId
 ) {
-    private static PostLikePKDto of(
+    public static PostLikePKDto of(
             Long userId,
             Long postId
     ) {

@@ -9,7 +9,7 @@ import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 public record PostLikeDto(
         PostLikePK postLikePK
 ) {
-    private static PostLikeDto of(
+    public static PostLikeDto of(
             PostLikePK postLikePK
     ) {
         return new PostLikeDto(
