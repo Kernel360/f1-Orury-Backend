@@ -1,0 +1,83 @@
+package org.fastcampus.oruryclient.domain.post.converter.dto;
+
+import org.fastcampus.oruryclient.domain.post.db.model.Post;
+import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+
+import java.time.LocalDateTime;
+
+/**
+ * DTO for {@link Post}
+ */
+public record PostDto(
+        Long id,
+        String title,
+        String content,
+        int viewCount,
+        int commentCount,
+        int likeCount,
+        String images,
+        int category,
+        UserDto userDto,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
+    public static PostDto of(
+            Long id,
+            String title,
+            String content,
+            int viewCount,
+            int commentCount,
+            int likeCount,
+            String images,
+            int category,
+            UserDto userDto,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {
+        return new PostDto(
+                id,
+                title,
+                content,
+                viewCount,
+                commentCount,
+                likeCount,
+                images,
+                category,
+                userDto,
+                createdAt,
+                updatedAt
+        );
+    }
+
+    public static PostDto from(Post entity) {
+        return PostDto.of(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getViewCount(),
+                entity.getCommentCount(),
+                entity.getLikeCount(),
+                entity.getImages(),
+                entity.getCategory(),
+                UserDto.from(entity.getUser()),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
+    public Post toEntity() {
+        return Post.of(
+                id,
+                title,
+                content,
+                viewCount,
+                commentCount,
+                likeCount,
+                images,
+                category,
+                userDto.toEntity(),
+                createdAt,
+                updatedAt
+        );
+    }
+}
