@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 public class PostLikeController {
     private final PostLikeService postLikeService;
 
-    @Operation(summary = "게시글 좋아요 생성", description = "유저 id와 게시글 id를 받아, 게시글 좋아요를 생성한다.")
-    @PutMapping("/post/like")
+    @Operation(summary = "게시글 좋아요 생성", description = "게시글 id를 받아, 게시글 좋아요를 생성한다.")
+    @PostMapping("/post/like")
     public ApiResponse<Object> createPostLike(@RequestBody PostLikeRequest postLikeRequest) {
         PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postLikeRequest.postId())));
 
@@ -34,7 +34,7 @@ public class PostLikeController {
                 .build();
     }
 
-    @Operation(summary = "게시글 좋아요 삭제", description = "유저 id와 게시글 id를 받아, 게시글 좋아요를 삭제한다.")
+    @Operation(summary = "게시글 좋아요 삭제", description = "게시글 id를 받아, 게시글 좋아요를 삭제한다.")
     @DeleteMapping("/post/like")
     public ApiResponse<Object> deletePostLike(@RequestBody PostLikeRequest postLikeRequest) {
         PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postLikeRequest.postId())));
