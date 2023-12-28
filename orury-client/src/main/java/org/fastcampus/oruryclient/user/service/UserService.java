@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserDto getUserDtoById(Long id){
         User user = userRepository.findById(id).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));

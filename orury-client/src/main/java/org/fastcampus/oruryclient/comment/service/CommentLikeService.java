@@ -19,9 +19,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class CommentLikeService {
-    private CommentLikeRepository commentLikeRepository;
-    private UserRepository userRepository;
-    private CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public void createCommentLike(Long userId, CommentLikeRequest request) {
         isValidate(userId, request.commentId());

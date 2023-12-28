@@ -22,7 +22,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Service
 public class PostService {
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public void createPost(PostDto postDto) {
@@ -69,13 +69,13 @@ public class PostService {
         postRepository.updateViewCount(postDto.id());
     }
 
-    public PostDto getPostDtoById(Long id){
-        Post post = postRepository.findById(id).orElseThrow(()->new BusinessException(PostErrorCode.NOT_FOUND));
+    public PostDto getPostDtoById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         return PostDto.from(post);
     }
 
-    public void isValidate(PostDto postDto, UserDto userDto){
-        if(!Objects.equals(postDto.userDto().id(), userDto.id()))
+    public void isValidate(PostDto postDto, UserDto userDto) {
+        if (!Objects.equals(postDto.userDto().id(), userDto.id()))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
     }
 
