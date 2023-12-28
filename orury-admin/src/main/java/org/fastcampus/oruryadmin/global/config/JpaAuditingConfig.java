@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.config;
+package org.fastcampus.oruryadmin.global.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

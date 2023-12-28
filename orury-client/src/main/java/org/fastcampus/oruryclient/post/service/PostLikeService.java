@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class PostLikeService {
-    private PostLikeRepository postLikeRepository;
-    private PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     public void createPostLike(PostLikeDto postLikeDto) {
         postRepository.findById(postLikeDto.postLikePK().getPostId())

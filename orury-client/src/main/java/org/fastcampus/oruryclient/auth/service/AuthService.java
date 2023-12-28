@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * 회원가입

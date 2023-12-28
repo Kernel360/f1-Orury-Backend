@@ -32,10 +32,10 @@ import java.util.Objects;
 @Service
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
-    private UserRepository userRepository;
-    private PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public void createComment(CommentCreateRequest request, Long userId) {
