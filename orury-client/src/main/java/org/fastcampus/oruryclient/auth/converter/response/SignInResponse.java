@@ -1,6 +1,6 @@
-package org.fastcampus.orurydomain.auth.converter.response;
+package org.fastcampus.oruryclient.auth.converter.response;
 
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 
 public record SignInResponse(
         Long id,

@@ -1,15 +1,15 @@
-package org.fastcampus.oruryclient.domain.comment.controller;
+package org.fastcampus.oruryclient.comment.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.converter.ApiResponse;
-import org.fastcampus.oruryclient.domain.comment.converter.request.CommentCreateRequest;
-import org.fastcampus.oruryclient.domain.comment.converter.request.CommentUpdateRequest;
-import org.fastcampus.oruryclient.domain.comment.converter.response.CommentsWithCursorResponse;
-import org.fastcampus.oruryclient.domain.comment.error.CommentErrorCode;
-import org.fastcampus.oruryclient.domain.comment.service.CommentService;
-import org.fastcampus.oruryclient.domain.comment.util.CommentMessage;
+import org.fastcampus.oruryclient.comment.converter.response.CommentsWithCursorResponse;
+import org.fastcampus.oruryclient.comment.service.CommentService;
+import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.oruryclient.comment.converter.request.CommentCreateRequest;
+import org.fastcampus.oruryclient.comment.converter.request.CommentUpdateRequest;
+import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
+import org.fastcampus.oruryclient.comment.util.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.springframework.data.domain.PageRequest;

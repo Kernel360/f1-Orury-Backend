@@ -1,7 +1,7 @@
-package org.fastcampus.oruryclient.domain.comment.converter.dto;
+package org.fastcampus.orurydomain.comment.dto;
 
-import org.fastcampus.oruryclient.domain.comment.db.model.CommentLike;
-import org.fastcampus.oruryclient.domain.comment.db.model.CommentLikePK;
+import org.fastcampus.orurydomain.comment.db.model.CommentLike;
+import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
 
 /**
  * DTO for {@link CommentLike}

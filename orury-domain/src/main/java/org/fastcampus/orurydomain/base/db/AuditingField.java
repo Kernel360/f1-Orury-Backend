@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.base.db;
+package org.fastcampus.orurydomain.base.db;
 
 import jakarta.persistence.*;
 import lombok.Getter;

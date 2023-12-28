@@ -1,12 +1,12 @@
-package org.fastcampus.oruryclient.domain.post.service;
+package org.fastcampus.oruryclient.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostDto;
-import org.fastcampus.oruryclient.domain.post.db.model.Post;
-import org.fastcampus.oruryclient.domain.post.db.repository.PostRepository;
-import org.fastcampus.oruryclient.domain.post.error.PostErrorCode;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.post.db.model.Post;
+import org.fastcampus.orurydomain.post.db.repository.PostRepository;
+import org.fastcampus.oruryclient.post.error.PostErrorCode;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Service
 public class PostService {
-    private final PostRepository postRepository;
+    private PostRepository postRepository;
 
     @Transactional
     public void createPost(PostDto postDto) {

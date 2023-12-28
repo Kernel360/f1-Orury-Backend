@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.comment.util;
+package org.fastcampus.oruryclient.comment.util;
 
 import lombok.Getter;
 

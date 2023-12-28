@@ -1,14 +1,14 @@
-package org.fastcampus.oruryadmin.domain.notice.converter.dto;
+package org.fastcampus.orurydomain.notice.dto;
 
-import org.fastcampus.oruryadmin.domain.admin.converter.dto.AdminDto;
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
-import org.fastcampus.oruryadmin.domain.notice.db.model.Notice;
 
-import java.io.Serializable;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
+import org.fastcampus.orurydomain.admin.dto.AdminDto;
+import org.fastcampus.orurydomain.notice.db.model.Notice;
+
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link org.fastcampus.oruryadmin.domain.notice.db.model.Notice}
+ * DTO for {@link Notice}
  */
 public record NoticeDto(
         Long id,

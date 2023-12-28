@@ -1,6 +1,6 @@
-package org.fastcampus.oruryadmin.domain.admin.db.repository;
+package org.fastcampus.orurydomain.admin.db.repository;
 
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

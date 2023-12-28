@@ -1,6 +1,6 @@
-package org.fastcampus.oruryapi.global.error;
+package org.fastcampus.oruryclient.global.error;
 
-import org.fastcampus.oruryapi.global.error.dto.ErrorResponse;
+import org.fastcampus.oruryclient.global.error.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

@@ -1,7 +1,7 @@
-package org.fastcampus.oruryclient.domain.post.converter.dto;
+package org.fastcampus.orurydomain.post.dto;
 
-import org.fastcampus.oruryclient.domain.post.db.model.PostLike;
-import org.fastcampus.oruryclient.domain.post.db.model.PostLikePK;
+import org.fastcampus.orurydomain.post.db.model.PostLike;
+import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 
 /**
  * DTO for {@link PostLike}

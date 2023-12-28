@@ -1,10 +1,10 @@
-package org.fastcampus.oruryclient.domain.user.service;
+package org.fastcampus.oruryclient.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryclient.domain.user.db.model.User;
-import org.fastcampus.oruryclient.domain.user.db.repository.UserRepository;
+import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.orurydomain.user.db.model.User;
+import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.global.error.code.UserErrorCode;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     public UserDto getUserDtoById(Long id){
         User user = userRepository.findById(id).orElseThrow(()->new BusinessException(UserErrorCode.NOT_FOUND));

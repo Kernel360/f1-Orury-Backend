@@ -1,12 +1,12 @@
-package org.fastcampus.oruryclient.domain.comment.controller;
+package org.fastcampus.oruryclient.comment.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.converter.ApiResponse;
-import org.fastcampus.oruryclient.domain.comment.converter.request.CommentLikeRequest;
-import org.fastcampus.oruryclient.domain.comment.service.CommentLikeService;
-import org.fastcampus.oruryclient.domain.comment.util.CommentMessage;
+import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.oruryclient.comment.converter.request.CommentLikeRequest;
+import org.fastcampus.oruryclient.comment.service.CommentLikeService;
+import org.fastcampus.oruryclient.comment.util.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.comment.error;
+package org.fastcampus.oruryclient.comment.error;
 
 import lombok.AllArgsConstructor;
 import org.fastcampus.oruryclient.global.error.code.ErrorCode;

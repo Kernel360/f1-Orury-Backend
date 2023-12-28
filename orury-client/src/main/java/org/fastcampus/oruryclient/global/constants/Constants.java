@@ -1,4 +1,4 @@
-package org.fastcampus.oruryapi.global.constants;
+package org.fastcampus.oruryclient.global.constants;
 
 import lombok.Getter;
 

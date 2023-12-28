@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.user.service;
+package org.fastcampus.oruryclient.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

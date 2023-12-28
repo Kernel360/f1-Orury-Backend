@@ -1,4 +1,4 @@
-package org.fastcampus.oruryapi.global.message.info;
+package org.fastcampus.oruryclient.global.message.info;
 
 import lombok.Getter;
 

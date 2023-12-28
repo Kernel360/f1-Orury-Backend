@@ -1,6 +1,6 @@
-package org.fastcampus.oruryclient.domain.post.db.repository;
+package org.fastcampus.orurydomain.post.db.repository;
 
-import org.fastcampus.oruryclient.domain.post.db.model.Post;
+import org.fastcampus.orurydomain.post.db.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

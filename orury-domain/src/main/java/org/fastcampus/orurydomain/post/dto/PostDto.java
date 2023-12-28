@@ -1,7 +1,7 @@
-package org.fastcampus.oruryclient.domain.post.converter.dto;
+package org.fastcampus.orurydomain.post.dto;
 
-import org.fastcampus.oruryclient.domain.post.db.model.Post;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+import org.fastcampus.orurydomain.post.db.model.Post;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 

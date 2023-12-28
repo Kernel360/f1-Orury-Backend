@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.domain.admin.converter.response;
+package org.fastcampus.oruryadmin.admin.converter.response;
 
 public record AdminResponse(
         String name,

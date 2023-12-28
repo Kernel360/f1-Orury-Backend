@@ -1,11 +1,11 @@
-package org.fastcampus.oruryadmin.domain.admin.service;
+package org.fastcampus.oruryadmin.admin.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.admin.converter.dto.AdminDto;
+import org.fastcampus.orurydomain.admin.dto.AdminDto;
 import org.fastcampus.oruryadmin.global.security.dto.login.request.LoginRequest;
 import org.fastcampus.oruryadmin.global.security.dto.login.response.LoginResponse;
-import org.fastcampus.oruryadmin.domain.admin.db.repository.AdminRepository;
+import org.fastcampus.orurydomain.admin.db.repository.AdminRepository;
 import org.fastcampus.oruryadmin.global.security.jwt.JwtToken;
 import org.fastcampus.oruryadmin.global.security.jwt.JwtTokenProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

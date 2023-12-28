@@ -1,6 +1,6 @@
-package org.fastcampus.oruryclient.domain.post.converter.dto;
+package org.fastcampus.orurydomain.post.dto;
 
-import org.fastcampus.oruryclient.domain.post.db.model.PostLikePK;
+import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 
 public record PostLikePKDto(
         Long userId,

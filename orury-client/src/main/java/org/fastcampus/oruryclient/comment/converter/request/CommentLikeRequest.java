@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.comment.converter.request;
+package org.fastcampus.oruryclient.comment.converter.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

@@ -2,8 +2,8 @@ package org.fastcampus.oruryadmin.global.security.service;
 
 import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryadmin.global.security.dto.AuthenticationAdmin;
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
-import org.fastcampus.oruryadmin.domain.admin.db.repository.AdminRepository;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
+import org.fastcampus.orurydomain.admin.db.repository.AdminRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
-package org.fastcampus.oruryclient.domain.user.db.repository;
+package org.fastcampus.orurydomain.user.db.repository;
 
-import org.fastcampus.oruryclient.domain.user.db.model.User;
+import org.fastcampus.orurydomain.user.db.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

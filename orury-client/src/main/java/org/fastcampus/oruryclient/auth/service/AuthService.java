@@ -1,9 +1,9 @@
-package org.fastcampus.oruryclient.domain.auth.service;
+package org.fastcampus.oruryclient.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.fastcampus.orurydomain.auth.converter.request.SignInRequest;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryclient.domain.user.db.repository.UserRepository;
+import org.fastcampus.oruryclient.auth.converter.request.SignInRequest;
+import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.global.error.code.UserErrorCode;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     /**
      * 회원가입

@@ -1,11 +1,11 @@
-package org.fastcampus.oruryclient.domain.post.converter.request;
+package org.fastcampus.oruryclient.post.converter.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostDto;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostLikePKDto;
-import org.fastcampus.oruryclient.domain.post.db.model.PostLikePK;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.post.dto.PostLikePKDto;
+import org.fastcampus.orurydomain.post.db.model.PostLikePK;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PostLikeRequest(

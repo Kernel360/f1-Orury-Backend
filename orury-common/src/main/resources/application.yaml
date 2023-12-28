@@ -18,7 +18,7 @@ spring:
     cors:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
-  application.name: orury-core
+  application.name: orury-common
   datasource:
     url: ${LOCAL_DB_NAME}
     username: ${LOCAL_DB_USER_NAME}
@@ -27,7 +27,7 @@ spring:
     open-in-view: false
     defer-datasource-initialization: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate.format_sql: true

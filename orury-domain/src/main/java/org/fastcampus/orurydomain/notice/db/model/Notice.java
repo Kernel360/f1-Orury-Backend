@@ -1,10 +1,10 @@
-package org.fastcampus.oruryadmin.domain.notice.db.model;
+package org.fastcampus.orurydomain.notice.db.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
-import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
+import org.fastcampus.orurydomain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Slf4j

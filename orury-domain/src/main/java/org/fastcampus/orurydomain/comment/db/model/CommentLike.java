@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.comment.db.model;
+package org.fastcampus.orurydomain.comment.db.model;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

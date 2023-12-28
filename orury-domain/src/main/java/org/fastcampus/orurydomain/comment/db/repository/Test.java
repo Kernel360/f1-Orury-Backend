@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.comment.db.repository;
+package org.fastcampus.orurydomain.comment.db.repository;
 
 public class Test {
 }

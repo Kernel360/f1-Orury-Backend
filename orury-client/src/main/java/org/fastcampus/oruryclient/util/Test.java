@@ -1,4 +1,4 @@
-package org.fastcampus.oruryapi.util;
+package org.fastcampus.oruryclient.util;
 
 public class Test {
 }

@@ -1,10 +1,10 @@
-package org.fastcampus.oruryclient.domain.post.converter.request;
+package org.fastcampus.oruryclient.post.converter.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostDto;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 
 @Slf4j
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)

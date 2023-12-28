@@ -1,23 +1,23 @@
-package org.fastcampus.oruryclient.domain.comment.service;
+package org.fastcampus.oruryclient.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.comment.converter.dto.CommentDto;
-import org.fastcampus.oruryclient.domain.comment.converter.request.CommentCreateRequest;
-import org.fastcampus.oruryclient.domain.comment.converter.request.CommentUpdateRequest;
-import org.fastcampus.oruryclient.domain.comment.converter.response.ChildCommentResponse;
-import org.fastcampus.oruryclient.domain.comment.converter.response.CommentResponse;
-import org.fastcampus.oruryclient.domain.comment.converter.response.CommentsWithCursorResponse;
-import org.fastcampus.oruryclient.domain.comment.db.model.Comment;
-import org.fastcampus.oruryclient.domain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.oruryclient.domain.comment.db.repository.CommentRepository;
-import org.fastcampus.oruryclient.domain.comment.error.CommentErrorCode;
-import org.fastcampus.oruryclient.domain.comment.util.CommentMessage;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostDto;
-import org.fastcampus.oruryclient.domain.post.db.repository.PostRepository;
-import org.fastcampus.oruryclient.domain.post.error.PostErrorCode;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryclient.domain.user.db.repository.UserRepository;
+import org.fastcampus.orurydomain.comment.dto.CommentDto;
+import org.fastcampus.oruryclient.comment.converter.request.CommentCreateRequest;
+import org.fastcampus.oruryclient.comment.converter.request.CommentUpdateRequest;
+import org.fastcampus.oruryclient.comment.converter.response.ChildCommentResponse;
+import org.fastcampus.oruryclient.comment.converter.response.CommentResponse;
+import org.fastcampus.oruryclient.comment.converter.response.CommentsWithCursorResponse;
+import org.fastcampus.orurydomain.comment.db.model.Comment;
+import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
+import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
+import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
+import org.fastcampus.oruryclient.comment.util.CommentMessage;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.post.db.repository.PostRepository;
+import org.fastcampus.oruryclient.post.error.PostErrorCode;
+import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +32,10 @@ import java.util.Objects;
 @Service
 public class CommentService {
 
-    private final CommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
+    private CommentRepository commentRepository;
+    private CommentLikeRepository commentLikeRepository;
+    private UserRepository userRepository;
+    private PostRepository postRepository;
 
     @Transactional
     public void createComment(CommentCreateRequest request, Long userId) {
@@ -65,7 +65,7 @@ public class CommentService {
                 NumberConstants.IS_DELETED,
                 comment.getCreatedAt(),
                 null
-                );
+        );
 
         commentRepository.save(commentDto.toEntity());
     }
@@ -73,8 +73,11 @@ public class CommentService {
     public CommentsWithCursorResponse getCommentsByPost(Long userId, Long postId, Long cursor, Pageable pageable) {
         postRepository.findById(postId)
                 .ifPresentOrElse(
-                        post -> {},
-                        () -> { throw new BusinessException(PostErrorCode.NOT_FOUND); }
+                        post -> {
+                        },
+                        () -> {
+                            throw new BusinessException(PostErrorCode.NOT_FOUND);
+                        }
                 );
         List<Comment> comments = commentRepository.findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(postId, NumberConstants.PARENT_COMMENT, cursor, pageable);
 
@@ -94,7 +97,7 @@ public class CommentService {
         return CommentsWithCursorResponse.of(commentResponses);
     }
 
-    private List<ChildCommentResponse> getChildCommentResponses(Long userId, Long commentId){
+    private List<ChildCommentResponse> getChildCommentResponses(Long userId, Long commentId) {
         List<Comment> childComments = commentRepository.findByParentIdOrderByIdAsc(commentId);
 
         return childComments.stream()
@@ -107,7 +110,7 @@ public class CommentService {
                 }).toList();
     }
 
-    public boolean isValidate(Long userId, Long commentId){
+    public boolean isValidate(Long userId, Long commentId) {
         var comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         var user = userRepository.findUserById(userId);

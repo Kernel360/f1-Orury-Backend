@@ -1,4 +1,4 @@
-package org.fastcampus.orurycommon.config;
+package org.fastcampus.orurydomain;
 
 import jakarta.annotation.PostConstruct;
 import org.flywaydb.core.Flyway;

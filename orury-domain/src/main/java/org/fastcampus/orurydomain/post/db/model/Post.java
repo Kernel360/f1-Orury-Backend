@@ -1,11 +1,10 @@
-package org.fastcampus.oruryclient.domain.post.db.model;
+package org.fastcampus.orurydomain.post.db.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.db.AuditingField;
-import org.fastcampus.oruryclient.domain.user.db.model.User;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.fastcampus.orurydomain.base.db.AuditingField;
+import org.fastcampus.orurydomain.user.db.model.User;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-@EntityListeners(AuditingEntityListener.class)
 @Entity(name = "post")
 public class Post extends AuditingField {
     @Id

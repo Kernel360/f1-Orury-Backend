@@ -1,10 +1,10 @@
-//package org.fastcampus.orurycore;
+//package org.fastcampus.orurycommon;
 //
 //import org.junit.jupiter.api.Test;
 //import org.springframework.boot.test.context.SpringBootTest;
 //
 //@SpringBootTest
-//class OruryCoreApplicationTests {
+//class orurycommonApplicationTests {
 //
 //    @Test
 //    void contextLoads() {

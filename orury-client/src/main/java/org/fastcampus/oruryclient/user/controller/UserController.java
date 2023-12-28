@@ -1,15 +1,15 @@
-package org.fastcampus.oruryclient.domain.user.controller;
+package org.fastcampus.oruryclient.user.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.converter.ApiResponse;
-import org.fastcampus.oruryclient.domain.user.converter.dto.UserDto;
-import org.fastcampus.oruryclient.domain.user.converter.request.ProfileImageRequest;
-import org.fastcampus.oruryclient.domain.user.converter.request.UserInfoRequest;
-import org.fastcampus.oruryclient.domain.user.converter.response.MypageResponse;
-import org.fastcampus.oruryclient.domain.user.service.UserService;
-import org.fastcampus.oruryclient.domain.user.util.UserMessage;
+import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.oruryclient.user.converter.request.ProfileImageRequest;
+import org.fastcampus.oruryclient.user.converter.request.UserInfoRequest;
+import org.fastcampus.oruryclient.user.converter.response.MypageResponse;
+import org.fastcampus.oruryclient.user.service.UserService;
+import org.fastcampus.oruryclient.user.util.UserMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

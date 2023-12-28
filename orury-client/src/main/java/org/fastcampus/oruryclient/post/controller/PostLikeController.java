@@ -1,15 +1,15 @@
-package org.fastcampus.oruryclient.domain.post.controller;
+package org.fastcampus.oruryclient.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.converter.ApiResponse;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostLikeDto;
-import org.fastcampus.oruryclient.domain.post.converter.request.PostLikeRequest;
-import org.fastcampus.oruryclient.domain.post.db.model.PostLike;
-import org.fastcampus.oruryclient.domain.post.db.model.PostLikePK;
-import org.fastcampus.oruryclient.domain.post.service.PostLikeService;
-import org.fastcampus.oruryclient.domain.post.util.PostMessage;
+import org.fastcampus.oruryclient.post.service.PostLikeService;
+import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.orurydomain.post.dto.PostLikeDto;
+import org.fastcampus.oruryclient.post.converter.request.PostLikeRequest;
+import org.fastcampus.orurydomain.post.db.model.PostLike;
+import org.fastcampus.orurydomain.post.db.model.PostLikePK;
+import org.fastcampus.oruryclient.post.util.PostMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

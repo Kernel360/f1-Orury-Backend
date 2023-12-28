@@ -1,6 +1,6 @@
-package org.fastcampus.oruryclient.domain.comment.converter.dto;
+package org.fastcampus.orurydomain.comment.dto;
 
-import org.fastcampus.oruryclient.domain.comment.db.model.CommentLikePK;
+import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
 
 public record CommentLikePKDto(
         Long userId,

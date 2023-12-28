@@ -1,8 +1,8 @@
-package org.fastcampus.oruryadmin.domain.notice.service;
+package org.fastcampus.oruryadmin.notice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.notice.db.repository.NoticeRepository;
+import org.fastcampus.orurydomain.notice.db.repository.NoticeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

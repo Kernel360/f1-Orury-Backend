@@ -1,7 +1,7 @@
-package org.fastcampus.oruryclient.domain.comment.db.repository;
+package org.fastcampus.orurydomain.comment.db.repository;
 
-import org.fastcampus.oruryclient.domain.comment.db.model.CommentLike;
-import org.fastcampus.oruryclient.domain.comment.db.model.CommentLikePK;
+import org.fastcampus.orurydomain.comment.db.model.CommentLike;
+import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

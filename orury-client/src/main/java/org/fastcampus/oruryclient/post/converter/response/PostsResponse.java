@@ -1,8 +1,8 @@
-package org.fastcampus.oruryclient.domain.post.converter.response;
+package org.fastcampus.oruryclient.post.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostDto;
+import org.fastcampus.orurydomain.post.dto.PostDto;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.post.db.model;
+package org.fastcampus.orurydomain.post.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

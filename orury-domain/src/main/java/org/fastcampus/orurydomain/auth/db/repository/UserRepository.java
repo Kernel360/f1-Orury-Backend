@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.auth.db.repository;
+package org.fastcampus.orurydomain.auth.db.repository;
 
 public class UserRepository {
 }

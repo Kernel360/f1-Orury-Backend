@@ -1,11 +1,11 @@
-package org.fastcampus.oruryclient.domain.post.service;
+package org.fastcampus.oruryclient.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.post.converter.dto.PostLikeDto;
-import org.fastcampus.oruryclient.domain.post.db.repository.PostLikeRepository;
-import org.fastcampus.oruryclient.domain.post.db.repository.PostRepository;
-import org.fastcampus.oruryclient.domain.post.error.PostErrorCode;
+import org.fastcampus.orurydomain.post.dto.PostLikeDto;
+import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
+import org.fastcampus.orurydomain.post.db.repository.PostRepository;
+import org.fastcampus.oruryclient.post.error.PostErrorCode;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class PostLikeService {
-    private final PostLikeRepository postLikeRepository;
-    private final PostRepository postRepository;
+    private PostLikeRepository postLikeRepository;
+    private PostRepository postRepository;
 
     public void createPostLike(PostLikeDto postLikeDto) {
         postRepository.findById(postLikeDto.postLikePK().getPostId())

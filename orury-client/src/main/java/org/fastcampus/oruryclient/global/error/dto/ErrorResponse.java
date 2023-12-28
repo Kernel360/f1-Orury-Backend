@@ -1,9 +1,9 @@
-package org.fastcampus.oruryapi.global.error.dto;
+package org.fastcampus.oruryclient.global.error.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.fastcampus.oruryapi.global.error.code.ErrorCode;
+import org.fastcampus.oruryclient.global.error.code.ErrorCode;
 
 @Getter
 @NoArgsConstructor

@@ -1,18 +1,16 @@
-package org.fastcampus.oruryadmin.domain.admin.db.model;
+package org.fastcampus.orurydomain.admin.db.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryadmin.domain.base.db.AuditingField;
-import org.fastcampus.oruryadmin.global.security.dto.RoleType;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.fastcampus.orurydomain.admin.dto.RoleType;
+import org.fastcampus.orurydomain.base.db.AuditingField;
 
 @Slf4j
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Admin extends AuditingField {
     @Id

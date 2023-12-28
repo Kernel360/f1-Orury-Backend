@@ -1,7 +1,6 @@
-package org.fastcampus.oruryadmin.domain.admin.converter.dto;
+package org.fastcampus.orurydomain.admin.dto;
 
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
-import org.fastcampus.oruryadmin.global.security.dto.RoleType;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
 
 import java.time.LocalDateTime;
 

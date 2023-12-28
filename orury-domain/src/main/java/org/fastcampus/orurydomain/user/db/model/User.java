@@ -1,9 +1,9 @@
-package org.fastcampus.oruryclient.domain.user.db.model;
+package org.fastcampus.orurydomain.user.db.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.domain.base.db.AuditingField;
+import org.fastcampus.orurydomain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
