@@ -6,58 +6,18 @@ plugins {
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
-allprojects {
-    group = 'org.fastcampus'
-    version = '0.0.1-SNAPSHOT'
-    java {
-        sourceCompatibility = '17'
-        targetCompatibility = '17'
-    }
-    compileJava.options.encoding = 'UTF-8'
-    repositories {
-        mavenCentral()
-    }
-
+java {
+    sourceCompatibility = '17'
 }
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+
+repositories {
+    mavenCentral()
 }
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'org.asciidoctor.jvm.convert'
-
-    group = 'org.fastcampus'
-    version = '0.0.1-SNAPSHOT'
 
 
-    dependencies {
-        //lombok
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
+dependencies {
+}
 
-        //    junit5
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.6.2")
-
-        //m1 mac unable load solved
-        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
-    }
-
-    tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미
-        enabled = false
-    }
-
-    tasks.named('jar') { //빌드할 때 jar 파일로 하겠다는 의미
-        enabled = true
-    }
-
-    tasks.named('bootBuildImage') {
-        builder = 'paketobuildpacks/builder-jammy-base:latest'
-    }
+tasks.named('test') {
+    useJUnitPlatform()
 }

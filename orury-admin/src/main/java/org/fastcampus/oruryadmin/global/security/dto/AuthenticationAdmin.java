@@ -1,6 +1,6 @@
 package org.fastcampus.oruryadmin.global.security.dto;
 
-import org.fastcampus.oruryadmin.domain.admin.db.model.Admin;
+import org.fastcampus.orurydomain.admin.db.model.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
