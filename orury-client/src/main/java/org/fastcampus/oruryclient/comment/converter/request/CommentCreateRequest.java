@@ -24,6 +24,7 @@ public record CommentCreateRequest(
                 null,
                 content,
                 parentId,
+                0,
                 postDto,
                 userDto,
                 NumberConstants.IS_NOT_DELETED,
