@@ -33,7 +33,7 @@ class PostLikeServiceTest {
 
     @DisplayName("유저가 게시글에 좋아요를 누르면 게시물에 좋아요 개수가 증가하고 좋아요 테이블에 데이터가 생성")
     @Test
-    void should_CreatePostLikeAndIncreasePostLikeCount() {
+    void when_UserPostLike_Then_CreatePostLikeAndIncreasePostLikeCount() {
         //given
         PostLikePK postLikePK = createPostLikePK();
         PostLikeDto postLike = createPostLike(postLikePK);
@@ -51,7 +51,7 @@ class PostLikeServiceTest {
 
     @DisplayName("유저가 게시글에 좋아요를 누르면 게시물에 좋아요 개수가 감소하고 좋아요 테이블에 데이터가 삭제")
     @Test
-    void should_DeletePostLikeAndDecreasePostLikeCount() {
+    void when_UserPostLike_Then_DeletePostLikeAndDecreasePostLikeCount() {
         //given
         PostLikePK postLikePK = createPostLikePK();
         PostLikeDto postLike = createPostLike(postLikePK);
