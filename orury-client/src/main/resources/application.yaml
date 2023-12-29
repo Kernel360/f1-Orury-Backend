@@ -1,4 +1,4 @@
-server.port: 8080
+server.port: 8085
 debug: false
 management.endpoints.web.exposure.include: "*"
 
@@ -21,9 +21,9 @@ spring:
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
   datasource:
-    url: ${LOCAL_DB_NAME}
-    username: ${LOCAL_DB_USER_NAME}
-    password: ${LOCAL_DB_USER_PASSWORD}
+    url: jdbc:mysql://43.203.51.54:3306/orury
+    username: root
+    password: 123
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
