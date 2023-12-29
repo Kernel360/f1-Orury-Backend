@@ -121,7 +121,7 @@ class PostServiceTest {
                 LocalDateTime.now()
         );
 
-        when(postRepository.findById(1L)).thenReturn(Optional.of(existingPostDto.toEntity()));
+        when(postRepository.findById(any())).thenReturn(Optional.of(existingPostDto.toEntity()));
 
         // when
         postService.getPostDtoById(1L);
@@ -162,7 +162,7 @@ class PostServiceTest {
                 LocalDateTime.now()
         );
 
-        when(postRepository.findById(1L)).thenReturn(Optional.of(existingPostDto.toEntity()));
+        when(postRepository.findById(any())).thenReturn(Optional.of(existingPostDto.toEntity()));
 
         // when
         PostDto resultPostDto = postService.getPostDtoById(1L);
@@ -203,7 +203,7 @@ class PostServiceTest {
                 LocalDateTime.now()
         );
 
-        when(postRepository.findById(1000L)).thenReturn(Optional.empty());
+        when(postRepository.findById(any())).thenReturn(Optional.empty());
 
         // when & then
         BusinessException exception = assertThrows(
