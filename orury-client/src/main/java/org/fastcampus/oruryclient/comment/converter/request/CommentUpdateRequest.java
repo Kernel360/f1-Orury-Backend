@@ -23,6 +23,7 @@ public record CommentUpdateRequest(
             commentDto.id(),
                 content,
                 commentDto.parentId(),
+                commentDto.likeCount(),
                 commentDto.postDto(),
                 commentDto.userDto(),
                 commentDto.deleted(),

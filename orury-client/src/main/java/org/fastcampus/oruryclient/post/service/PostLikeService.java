@@ -21,6 +21,7 @@ public class PostLikeService {
     public void createPostLike(PostLikeDto postLikeDto) {
         postRepository.findById(postLikeDto.postLikePK().getPostId())
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
+        if (postLikeRepository.existsByPostLikePK(postLikeDto.postLikePK())) return;
 
         postLikeRepository.save(postLikeDto.toEntity());
         postRepository.increaseLikeCount(postLikeDto.postLikePK().getPostId());
