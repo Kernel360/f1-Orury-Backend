@@ -53,7 +53,7 @@ public class CommentController {
     @GetMapping("/comments/{postId}")
     public ApiResponse<CommentsWithCursorResponse> getCommentsByPostId(@PathVariable Long postId, @RequestParam Long cursor) {
         PostDto postDto = postService.getPostDtoById(postId);
-        List<CommentDto> commentDtos = commentService.getParentCommentDtosByPost(postDto, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE));
+        List<CommentDto> commentDtos = commentService.getCommentDtosByPost(postDto, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE));
 
         List<CommentResponse> commentResponses = commentDtos.stream()
                 .map(commentDto -> {

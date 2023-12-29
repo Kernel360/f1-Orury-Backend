@@ -41,7 +41,7 @@ public class CommentService {
         postRepository.increaseCommentCount(commentDto.postDto().id());
     }
 
-    public List<CommentDto> getParentCommentDtosByPost(PostDto postDto, Long cursor, Pageable pageable) {
+    public List<CommentDto> getCommentDtosByPost(PostDto postDto, Long cursor, Pageable pageable) {
         List<Comment> parentComments = (cursor.equals(NumberConstants.LAST_CURSOR))
                 ? new ArrayList<>()
                 : commentRepository.findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(postDto.id(), NumberConstants.PARENT_COMMENT, cursor, pageable);
