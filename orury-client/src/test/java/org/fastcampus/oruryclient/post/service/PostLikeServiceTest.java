@@ -19,8 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("게시글 좋아요 관련 테스트")
@@ -47,8 +46,8 @@ class PostLikeServiceTest {
         postLikeService.createPostLike(postLike);
 
         //then
-        verify(postLikeRepository).save(postLike.toEntity());
-        verify(postRepository).increaseLikeCount(postLikePK.getPostId());
+        verify(postLikeRepository, times(1)).save(postLike.toEntity());
+        verify(postRepository, times(1)).increaseLikeCount(postLikePK.getPostId());
     }
 
     @DisplayName("좋아요시 게시글이 존재하지 않으면 NOT_FOUND 예외 발생")
@@ -88,8 +87,8 @@ class PostLikeServiceTest {
         postLikeService.deletePostLike(postLike);
 
         //then
-        verify(postLikeRepository).delete(postLike.toEntity());
-        verify(postRepository).decreaseLikeCount(postLikePK.getPostId());
+        verify(postLikeRepository, times(1)).delete(postLike.toEntity());
+        verify(postRepository, times(1)).decreaseLikeCount(postLikePK.getPostId());
     }
 
     @DisplayName("유저가 해당 게시물에 좋아요를 눌렀는지 확인 -> 좋아요")
@@ -104,7 +103,7 @@ class PostLikeServiceTest {
         postLikeService.isLiked(userId, postId);
 
         //then
-        verify(postLikeRepository).existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
+        verify(postLikeRepository, times(1)).existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
     }
 
     private static Post createPost() {
