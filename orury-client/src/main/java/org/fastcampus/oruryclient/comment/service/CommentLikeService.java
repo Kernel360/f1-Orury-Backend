@@ -2,58 +2,43 @@ package org.fastcampus.oruryclient.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.comment.converter.request.CommentLikeRequest;
-import org.fastcampus.orurydomain.comment.db.model.CommentLike;
-import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
+import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
+import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
-import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
-import org.fastcampus.orurydomain.user.db.repository.UserRepository;
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.global.error.code.UserErrorCode;
+import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    public void createCommentLike(Long userId, CommentLikeRequest request) {
-        isValidate(userId, request.commentId());
-        CommentLike commentLike = CommentLike.of(CommentLikePK.of(userId, request.commentId()));
+    @Transactional
+    public void createCommentLike(CommentLikeDto commentLikeDto) {
+        commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
+                        .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+        if (commentLikeRepository.existsById(commentLikeDto.commentLikePK())) return;
 
-        commentLikeRepository.save(commentLike);
+        commentLikeRepository.save(commentLikeDto.toEntity());
+        commentRepository.increaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
     }
 
-    public void deleteCommentLike(Long userId, CommentLikeRequest request) {
-        Optional<CommentLike> commentLike = commentLikeRepository.findByCommentLikePK_UserIdAndCommentLikePK_CommentId(userId, request.commentId());
-        if (commentLike.isEmpty()) return;
+    @Transactional
+    public void deleteCommentLike(CommentLikeDto commentLikeDto) {
+        commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+        if (!commentLikeRepository.existsById(commentLikeDto.commentLikePK())) return;
 
-        commentLikeRepository.delete(commentLike.get());
+        commentLikeRepository.delete(commentLikeDto.toEntity());
+        commentRepository.decreaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
     }
 
-    public void isValidate(Long userId, Long commentId) {
-        commentRepository.findById(commentId)
-                .ifPresentOrElse(
-                        comment -> {
-                        },
-                        () -> {
-                            throw new BusinessException(CommentErrorCode.NOT_FOUND);
-                        }
-                );
-        userRepository.findById(userId)
-                .ifPresentOrElse(
-                        user -> {
-                        },
-                        () -> {
-                            throw new BusinessException(UserErrorCode.NOT_FOUND);
-                        }
-
-                );
+    @Transactional(readOnly = true)
+    public boolean isLiked(Long userId, Long commentId) {
+        return commentLikeRepository.existsCommentLikeByCommentLikePK_UserIdAndCommentLikePK_CommentId(userId, commentId);
     }
 }
