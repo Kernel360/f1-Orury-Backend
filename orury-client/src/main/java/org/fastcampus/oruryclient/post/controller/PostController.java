@@ -36,7 +36,7 @@ public class PostController {
     @Operation(summary = "게시글 생성", description = "게시글 정보를 받아, 게시글을 생성한다.")
     @PostMapping("/post")
     public ApiResponse<Object> createPost(@RequestBody PostCreateRequest request) {
-        UserDto userDto = userService.getUserDtoById(request.userId());
+        UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
         PostDto postDto = request.toDto(userDto);
 
         postService.createPost(postDto);
@@ -116,7 +116,7 @@ public class PostController {
     @Operation(summary = "게시글 수정", description = "게시글 정보를 받아, 게시글을 수정한다.")
     @PatchMapping("/post")
     public ApiResponse<Object> updatePost(@RequestBody PostUpdateRequest request) {
-        UserDto userDto = userService.getUserDtoById(request.userId());
+        UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
         PostDto postDto = postService.getPostDtoById(request.id());
         postService.isValidate(postDto, userDto);
 
