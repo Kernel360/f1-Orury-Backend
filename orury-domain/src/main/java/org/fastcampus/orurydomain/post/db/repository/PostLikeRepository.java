@@ -8,4 +8,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike, PostLikePK> 
     boolean existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(Long userId, Long postId);
 
     boolean existsByPostLikePK(PostLikePK postLikePK);
+
+    void deleteByPostLikePK_PostId(Long postId);
 }
