@@ -32,7 +32,6 @@ dependencies {
 //    implementation 'org.flywaydb:flyway-core'
 
 }
-tasks.register("prepareKotlinBuildScriptModel") {}
 
 tasks.named('bootJar') {
     enabled = false
