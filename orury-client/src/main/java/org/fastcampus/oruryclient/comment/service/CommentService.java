@@ -41,6 +41,7 @@ public class CommentService {
         postRepository.increaseCommentCount(commentDto.postDto().id());
     }
 
+    @Transactional(readOnly = true)
     public List<CommentDto> getCommentDtosByPost(PostDto postDto, Long cursor, Pageable pageable) {
         List<Comment> parentComments = (cursor.equals(NumberConstants.LAST_CURSOR))
                 ? new ArrayList<>()
@@ -86,6 +87,7 @@ public class CommentService {
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
     }
 
+    @Transactional(readOnly = true)
     public void isValidate(CommentLikeDto commentLikeDto) {
         Comment comment = commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
@@ -93,6 +95,7 @@ public class CommentService {
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
     }
 
+    @Transactional(readOnly = true)
     public CommentDto getCommentDtoById(Long id){
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(CommentErrorCode.NOT_FOUND));

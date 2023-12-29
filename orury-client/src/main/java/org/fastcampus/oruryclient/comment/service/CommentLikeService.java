@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
 
+    @Transactional
     public void createCommentLike(CommentLikeDto commentLikeDto) {
         commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
                         .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
@@ -27,6 +27,7 @@ public class CommentLikeService {
         commentRepository.increaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
     }
 
+    @Transactional
     public void deleteCommentLike(CommentLikeDto commentLikeDto) {
         commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
@@ -36,6 +37,7 @@ public class CommentLikeService {
         commentRepository.decreaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
     }
 
+    @Transactional(readOnly = true)
     public boolean isLiked(Long userId, Long commentId) {
         return commentLikeRepository.existsCommentLikeByCommentLikePK_UserIdAndCommentLikePK_CommentId(userId, commentId);
     }

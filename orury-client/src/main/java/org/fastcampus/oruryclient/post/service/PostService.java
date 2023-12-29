@@ -36,6 +36,7 @@ public class PostService {
         postRepository.save(postDto.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByCategory(int category, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? postRepository.findByCategoryOrderByIdDesc(category, pageable)
@@ -45,6 +46,7 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? postRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, searchWord, pageable)
@@ -54,6 +56,7 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
+    @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
         Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
                 (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now().minusMonths(1L), pageable);
@@ -85,6 +88,7 @@ public class PostService {
         postRepository.updateViewCount(postDto.id());
     }
 
+    @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         return PostDto.from(post);
