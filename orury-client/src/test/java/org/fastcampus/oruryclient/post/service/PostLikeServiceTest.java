@@ -6,6 +6,7 @@ import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostLikeDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,11 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,8 +82,8 @@ class PostLikeServiceTest {
         Post post = createPost();
 
         //when
-        when(postRepository.findById(postLikePK.getPostId())).thenReturn(Optional.of(post));
-        when(postLikeRepository.existsByPostLikePK(postLikePK)).thenReturn(true);
+        when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
+        when(postLikeRepository.existsByPostLikePK(any(PostLikePK.class))).thenReturn(true);
 
         postLikeService.deletePostLike(postLike);
 
@@ -116,7 +117,22 @@ class PostLikeServiceTest {
                 1,
                 "image",
                 1,
-                any(),
+                createUser().toEntity(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+    }
+
+    private static UserDto createUser() {
+        return UserDto.of(
+                1L,
+                "test@test.com",
+                "test",
+                "password",
+                1,
+                1,
+                LocalDate.now(),
+                "test.jpg",
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
