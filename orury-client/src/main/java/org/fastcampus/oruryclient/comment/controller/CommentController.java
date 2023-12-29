@@ -58,7 +58,7 @@ public class CommentController {
         List<CommentResponse> commentResponses = commentDtos.stream()
                 .map(commentDto -> {
                     boolean isLike = commentLikeService.isLiked(NumberConstants.USER_ID, commentDto.id());
-                    return CommentResponse.of(commentDto, isLike);
+                    return CommentResponse.of(commentDto, NumberConstants.USER_ID, isLike);
                 }).toList();
 
         CommentsWithCursorResponse response = CommentsWithCursorResponse.of(commentResponses);

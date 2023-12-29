@@ -2,22 +2,19 @@ package org.fastcampus.oruryclient.post.converter.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
-@Slf4j
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PostUpdateRequest(
         Long id,
         String title,
         String content,
         String images,
-        int category,
-        Long userId
+        int category
 ) {
-    public static PostUpdateRequest of(Long id, String title, String content, String images, int category, Long userId) {
-        return new PostUpdateRequest(id, title, content, images, category, userId);
+    public static PostUpdateRequest of(Long id, String title, String content, String images, int category) {
+        return new PostUpdateRequest(id, title, content, images, category);
     }
 
     public PostDto toDto(PostDto postDto, UserDto userDto) {

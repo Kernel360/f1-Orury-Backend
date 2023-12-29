@@ -18,12 +18,12 @@ public record PostResponse(
         int category,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long userId,
+        boolean isMine,
         String userNickname,
         String userProfileImage,
         boolean isLike
 ) {
-    public static PostResponse of(PostDto postDto, boolean isLike) {
+    public static PostResponse of(PostDto postDto, Long userId, boolean isLike) {
         return new PostResponse(
                 postDto.id(),
                 postDto.title(),
@@ -35,7 +35,7 @@ public record PostResponse(
                 postDto.category(),
                 postDto.createdAt(),
                 postDto.updatedAt(),
-                postDto.userDto().id(),
+                postDto.userDto().id().equals(userId),
                 postDto.userDto().nickname(),
                 postDto.userDto().profileImage(),
                 isLike
