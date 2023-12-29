@@ -55,7 +55,7 @@ public class PostController {
         postService.addViewCount(postDto);
 
         boolean isLike = postLikeService.isLiked(NumberConstants.USER_ID, id);
-        PostResponse response = PostResponse.of(postDto, isLike);
+        PostResponse response = PostResponse.of(postDto, NumberConstants.USER_ID, isLike);
 
         return ApiResponse.<PostResponse>builder()
                 .status(HttpStatus.OK.value())
