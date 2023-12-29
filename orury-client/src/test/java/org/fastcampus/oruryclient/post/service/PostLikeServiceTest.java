@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.post.service;
 
+import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +49,28 @@ class PostLikeServiceTest {
         //then
         verify(postLikeRepository).save(postLike.toEntity());
         verify(postRepository).increaseLikeCount(postLikePK.getPostId());
+    }
+
+    @DisplayName("좋아요시 게시글이 존재하지 않으면 NOT_FOUND 예외 발생")
+    @Test
+    void verify_UserPostLikeIncreaseNotExistPost_Then_ExceptionNotFound() {
+        //given
+        PostLikePK postLikePK = createPostLikePK();
+        PostLikeDto postLike = createPostLike(postLikePK);
+
+        //then
+        assertThrows(BusinessException.class, () -> postLikeService.createPostLike(postLike));
+    }
+
+    @DisplayName("좋아요 취소시 게시글이 존재하지 않으면 NOT_FOUND 예외 발생")
+    @Test
+    void verify_UserPostLikeDecreaseNotExistPost_Then_ExceptionNotFound() {
+        //given
+        PostLikePK postLikePK = createPostLikePK();
+        PostLikeDto postLike = createPostLike(postLikePK);
+
+        //then
+        assertThrows(BusinessException.class, () -> postLikeService.deletePostLike(postLike));
     }
 
     @DisplayName("유저가 게시글에 좋아요를 누르면 게시물에 좋아요 개수가 감소하고 좋아요 테이블에 데이터가 삭제")
