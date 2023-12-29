@@ -81,7 +81,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 }
-tasks.register("prepareKotlinBuildScriptModel") {}
 
 tasks.named('bootJar') {
     enabled = true
