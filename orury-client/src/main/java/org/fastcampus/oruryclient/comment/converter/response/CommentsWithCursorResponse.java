@@ -15,7 +15,7 @@ public record CommentsWithCursorResponse(
     public static CommentsWithCursorResponse of(List<CommentResponse> comments) {
 
         Long cursor = comments.stream()
-                .filter(commentResponse -> commentResponse.parentId() == 0)
+                .filter(commentResponse -> commentResponse.parentId() == NumberConstants.PARENT_COMMENT)
                 .map(CommentResponse::id)
                 .max(Comparator.naturalOrder())
                 .orElse(NumberConstants.LAST_CURSOR);
