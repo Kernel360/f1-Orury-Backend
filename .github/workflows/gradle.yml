@@ -5,6 +5,7 @@ env:
   BUCKET_NAME: orury-bucket
   CODE_DEPLOY_APP_NAME: orury-deploy
   DEPLOYMENT_GROUP_NAME: orury-deploy-group
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   #  push:
@@ -28,28 +29,27 @@ jobs:
           distribution: 'temurin'
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean build
-
-  close-pr:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ failure() }}
-    steps:
-      - name: Close Pull Request
-        uses: peter-evans/close-pull@v3
+      - name: Close Pull Request if Build Fails
+        if: ${{ failure() }}
+        uses: peter-evans/close-pull-request@v1
         with:
-          pull-request-number: ${{ github.event.number }}
-          comment: Auto-closing pull request due to gradle build failure
-          delete-branch: false
-      - name: Upload log file
-        uses: actions/upload-artifact@v2
-        with:
-          name: gradle-build-log
-          path: build/reports
+          comment: "이 PR은 빌드에 실패했습니다. 수정 후 다시 열어주세요."
+#  close-pr:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    if: ${{ failure() }}
+#    steps:
+#      - name: Close Pull
+#        run: gh pr close --comment "Auto-closing pull request" --delete-branch ${{ github.event.number }}
+#      - name: Upload log file
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: gradle-build-log
+#          path: build/reports
 
     # Build JAR file instead of zipping the entire project
 #    - name: Build JAR
