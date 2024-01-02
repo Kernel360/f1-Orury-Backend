@@ -5,7 +5,7 @@ env:
   BUCKET_NAME: orury-bucket
   CODE_DEPLOY_APP_NAME: orury-deploy
   DEPLOYMENT_GROUP_NAME: orury-deploy-group
-
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 on:
 #  push:
@@ -14,7 +14,7 @@ on:
     branches: [ "develop" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -42,7 +42,6 @@ jobs:
       - name: Close Pull Request
         uses: peter-evans/close-pull@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ github.event.number }}
           comment: Auto-closing pull request due to gradle build failure
           delete-branch: false
