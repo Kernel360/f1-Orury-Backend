@@ -22,6 +22,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+bootJar {
+    enabled = false
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
