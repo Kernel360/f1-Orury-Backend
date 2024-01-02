@@ -65,7 +65,7 @@ class CommentServiceTest {
 
     @Test
     @DisplayName("게시글에 따른 부모댓글과 자녀댓글이 정렬된 채로 조회되어야 한다.")
-    void should_GetSortedCoummentsOfPost() {
+    void should_GetSortedCommentsOfPost() {
         // given
         Post post = createPost();
         Long cursor = NumberConstants.FIRST_CURSOR;
