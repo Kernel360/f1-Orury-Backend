@@ -15,11 +15,10 @@ import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,14 +38,18 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 class CommentServiceTest {
 
-    @Mock
     private CommentRepository commentRepository;
-    @Mock
     private CommentLikeRepository commentLikeRepository;
-    @Mock
     private PostRepository postRepository;
-    @InjectMocks
     private CommentService commentService;
+
+    @BeforeEach
+    void setUp() {
+        commentRepository = mock(CommentRepository.class);
+        commentLikeRepository = mock(CommentLikeRepository.class);
+        postRepository = mock(PostRepository.class);
+        commentService = new CommentService(commentRepository, commentLikeRepository, postRepository);
+    }
 
     @Test
     @DisplayName("댓글이 생성되고 게시글의 댓글수가 증가되어야 한다")
@@ -229,7 +233,7 @@ class CommentServiceTest {
     }
 
     @Test
-    @DisplayName("검증할 댓글좋아요의 댓글이 존재하지 않하면, NOT_FOUND 예외를 발생시킨다.")
+    @DisplayName("검증할 댓글좋아요의 댓글이 존재하지 않으면, NOT_FOUND 예외를 발생시킨다.")
     void when_CommentOfCommentLikeDoesNoTExists_Then_NotFoundException() {
         // given
         CommentLike commentLike = createCommentLike(createCommentLikePK());

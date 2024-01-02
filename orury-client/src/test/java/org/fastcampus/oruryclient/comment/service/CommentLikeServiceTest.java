@@ -11,11 +11,10 @@ import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.user.db.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -31,12 +30,17 @@ import static org.mockito.Mockito.*;
 @DisplayName("CommentLikeServiceTest")
 @ActiveProfiles("test")
 class CommentLikeServiceTest {
-    @Mock
+
     private CommentLikeRepository commentLikeRepository;
-    @Mock
     private CommentRepository commentRepository;
-    @InjectMocks
     private CommentLikeService commentLikeService;
+
+    @BeforeEach
+    void setUp() {
+        commentLikeRepository = mock(CommentLikeRepository.class);
+        commentRepository = mock(CommentRepository.class);
+        commentLikeService = new CommentLikeService(commentLikeRepository, commentRepository);
+    }
 
     @Test
     @DisplayName("댓글에 좋아요를 누르면, DB에 데이터가 생성되고 댓글에 좋아요 개수를 증가시킨다.")
