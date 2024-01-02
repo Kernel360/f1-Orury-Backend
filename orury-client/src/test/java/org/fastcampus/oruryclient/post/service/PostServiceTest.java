@@ -2,11 +2,7 @@ package org.fastcampus.oruryclient.post.service;
 
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.post.error.PostErrorCode;
-import org.fastcampus.orurydomain.comment.db.model.Comment;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -34,18 +30,12 @@ import static org.mockito.Mockito.*;
 class PostServiceTest {
 
     private PostRepository postRepository;
-    private PostLikeRepository postLikeRepository;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
     private PostService postService;
 
     @BeforeEach
     public void setUp() {
         postRepository = mock(PostRepository.class);
-        postLikeRepository = mock(PostLikeRepository.class);
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
-        postService = new PostService(postRepository, postLikeRepository, commentRepository, commentLikeRepository);
+        postService = new PostService(postRepository);
     }
 
     @Test
@@ -225,8 +215,8 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글이 삭제되면, 게시글과 게시글 좋아요가 성공적으로 삭제되어야 한다.")
-    void when_DeletePost_Then_DeletePostAndPostLikeSuccessfully() {
+    @DisplayName("게시글이 성공적으로 삭제되어야 한다.")
+    void should_PostDeleteSuccessfully() {
         // given
         UserDto userDto = UserDto.of(
                 1L,
@@ -254,59 +244,12 @@ class PostServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
+
         // when
         postService.deletePost(postDto);
 
         // then
-        verify(postRepository, times(1)).delete(postDto.toEntity());
-        verify(postLikeRepository, times(1)).deleteByPostLikePK_PostId(anyLong());
-        verify(commentRepository).findByPost_Id(postDto.id());
-    }
-
-    @Test
-    @DisplayName("게시글이 삭제될 때, 댓글이 있다면 댓글/댓글좋아요도 삭제된다.")
-    void when_DeletePost_Then_DeletePostAndCommentAndCommentLike() {
-        // given
-        UserDto userDto = UserDto.of(
-                1L,
-                "test@test.com",
-                "test",
-                "password",
-                1,
-                1,
-                LocalDate.now(),
-                "test.jpg",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-
-        PostDto postDto = PostDto.of(
-                1L,
-                "title",
-                "content",
-                0,
-                0,
-                0,
-                "image.jpg",
-                1,
-                userDto,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        Comment comment1 = Comment.of(1L, "content1", null, 10, null, null, 0, null, null);
-        Comment comment2 = Comment.of(2L, "content2", null, 20, null, null, 0, null, null);
-        List<Comment> comments = Arrays.asList(comment1, comment2);
-
-        // when
-        when(commentRepository.findByPost_Id(postDto.id())).thenReturn(comments);
-        postService.deletePost(postDto);
-
-        // then
-        verify(commentRepository, times(1)).findByPost_Id(postDto.id());
-        verify(commentLikeRepository, times(1)).deleteByCommentLikePK_CommentId(comment1.getId());
-        verify(commentLikeRepository, times(1)).deleteByCommentLikePK_CommentId(comment2.getId());
-        verify(commentRepository, times(1)).delete(comment1);
-        verify(commentRepository, times(1)).delete(comment2);
+        verify(postRepository).delete(postDto.toEntity());
     }
 
     @Test
