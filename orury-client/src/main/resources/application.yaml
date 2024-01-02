@@ -26,7 +26,7 @@ spring:
 #      username: ${LOCAL_DB_USER_NAME}
     username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
 #      password: ${LOCAL_DB_USER_PASSWORD}
-    password: ENC(P3FgiBpYsLiWGJ4JNJE4Cw==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
