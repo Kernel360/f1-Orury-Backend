@@ -52,7 +52,6 @@ class PostServiceTest {
     @DisplayName("게시글이 성공적으로 생성되어야 한다.")
     void should_PostCreateSuccessfully() {
         // given
-        
         UserDto userDto = UserDto.of(
                 1L,
                 "test@test.com",
