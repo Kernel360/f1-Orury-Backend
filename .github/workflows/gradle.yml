@@ -7,8 +7,8 @@ env:
   DEPLOYMENT_GROUP_NAME: orury-deploy-group
 
 on:
-  push:
-    branches: [ "develop" ]
+#  push:
+#    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -17,9 +17,7 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -33,7 +31,24 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: clean build
+        arguments: clean build --debug
+
+  close-pr:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ failure() }}
+    steps:
+      - name: Close Pull Request
+        uses: peter-evans/close-pull@v3
+        with:
+          pull-request-number: ${{ github.event.number }}
+          comment: Auto-closing pull request due to gradle build failure
+          delete-branch: false
+      - name: Upload log file
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradle-build-log
+          path: build/reports
 
     # Build JAR file instead of zipping the entire project
 #    - name: Build JAR
