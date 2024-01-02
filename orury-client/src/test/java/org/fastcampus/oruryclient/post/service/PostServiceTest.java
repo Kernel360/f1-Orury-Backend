@@ -139,7 +139,7 @@ class PostServiceTest {
         postService.updatePost(modifiedPostDto);
 
         // then
-        verify(postRepository, times(1)).save(any());
+        verify(postRepository).save(any());
     }
 
     @Test
@@ -259,8 +259,8 @@ class PostServiceTest {
         postService.deletePost(postDto);
 
         // then
-        verify(postRepository, times(1)).delete(postDto.toEntity());
-        verify(postLikeRepository, times(1)).deleteByPostLikePK_PostId(anyLong());
+        verify(postRepository).delete(postDto.toEntity());
+        verify(postLikeRepository).deleteByPostLikePK_PostId(anyLong());
         verify(commentRepository).findByPost_Id(postDto.id());
     }
 
@@ -303,11 +303,11 @@ class PostServiceTest {
         postService.deletePost(postDto);
 
         // then
-        verify(commentRepository, times(1)).findByPost_Id(postDto.id());
-        verify(commentLikeRepository, times(1)).deleteByCommentLikePK_CommentId(comment1.getId());
-        verify(commentLikeRepository, times(1)).deleteByCommentLikePK_CommentId(comment2.getId());
-        verify(commentRepository, times(1)).delete(comment1);
-        verify(commentRepository, times(1)).delete(comment2);
+        verify(commentRepository).findByPost_Id(postDto.id());
+        verify(commentLikeRepository).deleteByCommentLikePK_CommentId(comment1.getId());
+        verify(commentLikeRepository).deleteByCommentLikePK_CommentId(comment2.getId());
+        verify(commentRepository).delete(comment1);
+        verify(commentRepository).delete(comment2);
     }
 
     @Test
