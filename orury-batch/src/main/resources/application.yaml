@@ -14,7 +14,7 @@ spring:
     cors:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
-  application.name: orury-client
+  application.name: orury-batch
   datasource:
     url: ${LOCAL_DB_NAME}
     username: ${LOCAL_DB_USER_NAME}
@@ -39,6 +39,11 @@ spring:
   thymeleaf:
     cache: false
     prefix=file: src/main/resources/templates/
+  kakao:
+    schema: https
+    host: dapi.kakao.com
+    path: /v2/local/search/keyword.json
+    key: ${KAKAO_MAP_API_KEY}
 #  security:
 #    oauth2:
 #      client:
