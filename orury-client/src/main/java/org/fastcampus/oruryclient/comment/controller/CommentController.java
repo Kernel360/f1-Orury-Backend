@@ -39,6 +39,7 @@ public class CommentController {
     public ApiResponse<Object> createComment(@RequestBody CommentCreateRequest request) {
         UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
         PostDto postDto = postService.getPostDtoById(request.postId());
+        commentService.validateParentComment(request.parentId());
         CommentDto commentDto = request.toDto(userDto, postDto);
 
         commentService.createComment(commentDto);

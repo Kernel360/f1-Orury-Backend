@@ -34,9 +34,6 @@ public class CommentService {
 
     @Transactional
     public void createComment(CommentDto commentDto) {
-        if (!commentDto.parentId().equals(NumberConstants.PARENT_COMMENT))
-            commentRepository.findById(commentDto.parentId())
-                            .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         commentRepository.save(commentDto.toEntity());
         postRepository.increaseCommentCount(commentDto.postDto().id());
     }
@@ -93,6 +90,15 @@ public class CommentService {
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         if (comment.getDeleted() == NumberConstants.IS_DELETED)
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
+    }
+
+    @Transactional(readOnly = true)
+    public void validateParentComment(Long parentCommentId) {
+        if (!parentCommentId.equals(NumberConstants.PARENT_COMMENT)) {
+            Comment parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+            if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT)) throw new BusinessException(CommentErrorCode.BAD_REQUEST);
+        }
     }
 
     @Transactional(readOnly = true)
