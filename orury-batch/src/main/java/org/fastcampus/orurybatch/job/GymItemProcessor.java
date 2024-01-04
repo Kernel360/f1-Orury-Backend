@@ -1,28 +1,14 @@
 package org.fastcampus.orurybatch.job;
 
-//@Slf4j
-//public class GymItemProcessor implements ItemProcessor<KakaoMapGymResponse, GymDto> {
-//    @Override
-//    public GymDto process(GymResponse item) throws Exception {
-//        log.info("item processor item: {}", item);
-//        return GymDto.of(
-//                null,
-//                item.getPlaceName(),
-//                item.getRoadAddressName(),
-//                item.getAddressName(),
-//                null,
-//                null,
-//                item.getX(),
-//                item.getY(),
-//                null,
-//                null,
-//                null,
-//                item.getPhone(),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//    }
-//}
+import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.orurybatch.dto.GymResponse;
+import org.fastcampus.orurydomain.gym.db.model.Gym;
+import org.springframework.batch.item.ItemProcessor;
+
+@Slf4j
+public class GymItemProcessor implements ItemProcessor<GymResponse, Gym> {
+    @Override
+    public Gym process(GymResponse item) throws Exception {
+        return item.toDto().toEntity();
+    }
+}
