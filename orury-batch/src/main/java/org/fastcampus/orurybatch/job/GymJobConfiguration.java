@@ -2,82 +2,99 @@ package org.fastcampus.orurybatch.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.orurybatch.client.KakaoMapClient;
 import org.fastcampus.orurybatch.config.JobCompletionNotificationListener;
+import org.fastcampus.orurybatch.dto.GymResponse;
 import org.fastcampus.orurybatch.dto.KakaoMapGymResponse;
+import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class GymJobConfiguration {
     private final KakaoMapClient kakaoMapClient;
+    private final JobRepository jobRepository;
+    private final JobCompletionNotificationListener listener;
+    private final PlatformTransactionManager transactionManager;
+    private final DataSource dataSource;
+    private final List<String> locations = List.of(
+            "강남구", "강동구", "강북구", "강서구", "관악구",
+            "광진구", "구로구", "금천구", "노원구", "도봉구",
+            "동대문구", "동작구", "마포구", "서대문구", "서초구",
+            "성동구", "성북구", "송파구", "양천구", "영등포구",
+            "용산구", "은평구", "종로구", "중구", "중랑구"
+    );
 
     @Bean
-    public Job job(
-            JobRepository jobRepository,
-            JobCompletionNotificationListener listener,
-            Step step
-    ) {
+    public Job job() throws Exception {
         return new JobBuilder("job", jobRepository)
                 .listener(listener)
-                .start(step)
+                .start(step())
                 .incrementer(new RunIdIncrementer())
                 .build();
     }
 
     @Bean
-    public Step step(
-            JobRepository jobRepository,
-            PlatformTransactionManager transactionManager,
-            GymItemReader itemReader,
-//            GymItemProcessor itemProcessor,
-            ItemWriter<KakaoMapGymResponse> itemWriter
-    ) {
+    public Step step() throws Exception {
         return new StepBuilder("step", jobRepository)
-                .<KakaoMapGymResponse, KakaoMapGymResponse>chunk(1, transactionManager)
-                .reader(itemReader)
-//                .processor(itemProcessor)
-                .writer(itemWriter)
+                .<GymResponse, Gym>chunk(100, transactionManager)
+                .reader(itemReader())
+                .processor(itemProcessor())
+                .writer(itemWriter())
                 .build();
     }
 
     @Bean
     public GymItemReader itemReader() {
-        log.info("itemReader()");
-        return new GymItemReader(kakaoMapClient);
+        return new GymItemReader(getItems());
     }
-
-//    @Bean
-//    public GymItemProcessor itemProcessor() {
-//        return new GymItemProcessor();
-//    }
 
     @Bean
-    public ItemWriter<KakaoMapGymResponse> itemWriter() {
-        return items -> {
-            for (KakaoMapGymResponse item : items) {
-                item.getDocuments().forEach(doc -> {
-                    log.info("item = {}", doc.getPlace_name());
-                });
-            }
-        };
+    public GymItemProcessor itemProcessor() {
+        return new GymItemProcessor();
     }
-//    @Bean
-//    public JpaItemWriter<List<GymDto>> itemWriter(
-//            EntityManagerFactory entityManagerFactory
-//    ) throws Exception {
-//        return new JpaItemWriterBuilder<List<GymDto>>()
-//                .entityManagerFactory(entityManagerFactory)
-//                .build();
-//    }
 
+    @Bean
+    public JdbcBatchItemWriter<Gym> itemWriter() throws Exception {
+        return new JdbcBatchItemWriterBuilder<Gym>()
+                .dataSource(dataSource)
+                .sql("INSERT INTO gym (name, road_address, address, latitude, longitude, phone_number, kakao_id, created_at, updated_at) " +
+                        "VALUES (:name, :roadAddress, :address, :latitude, :longitude, :phoneNumber, :kakaoId, now(), now()) " +
+                        "ON DUPLICATE KEY UPDATE kakao_id = :kakaoId")
+                .beanMapped()
+                .build();
+    }
+
+    private List<GymResponse> getItems() {
+        List<KakaoMapGymResponse> items = new ArrayList<>();
+        locations.forEach(location -> {
+            for (int page = 1; page <= 3; page++) {
+                var response = kakaoMapClient.searchGyms(location, page);
+                items.add(response);
+                if (response.getMeta().getIs_end()) break;
+            }
+        });
+
+        return items.stream()
+                .map(KakaoMapGymResponse::getDocuments)
+                .flatMap(List::stream)
+                .map(GymResponse::from)
+                .collect(Collectors.toList());
+    }
 }
