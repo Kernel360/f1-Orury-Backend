@@ -5,27 +5,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public record CustomUserDetails(
+public record UserPrincipal(
         Long id,
         String email,
         String nickname,
         String password,
-        int signUpType,
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
-    public static CustomUserDetails of(
+    public static UserPrincipal of(
             Long id,
             String email,
             String nickname,
-            String password,
-            int signUpType
+            String password
     ) {
-        return CustomUserDetails.of(
+        return UserPrincipal.of(
                 id,
                 email,
                 nickname,
-                password,
-                signUpType
+                password
+        );
+    }
+
+    public static UserPrincipal from(UserDto userDto) {
+        return UserPrincipal.of(
+                userDto.id(),
+                userDto.email(),
+                userDto.nickname(),
+                userDto.password()
         );
     }
 
