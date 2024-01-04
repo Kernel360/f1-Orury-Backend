@@ -16,8 +16,12 @@ public class Gym extends AuditingField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "kakao_id", nullable = false)
+    private String kakaoId;
+
     @Column(name = "name", nullable = false)
     private String name;
+
 
     @Column(name = "road_address", nullable = false)
     private String roadAddress;
@@ -57,6 +61,7 @@ public class Gym extends AuditingField {
 
     private Gym(
             String name,
+            String kakaoId,
             String roadAddress,
             String address,
             Float scoreAverage,
@@ -71,6 +76,7 @@ public class Gym extends AuditingField {
             String settingDay
     ) {
         this.name = name;
+        this.kakaoId = kakaoId;
         this.roadAddress = roadAddress;
         this.address = address;
         this.scoreAverage = scoreAverage;
@@ -87,6 +93,7 @@ public class Gym extends AuditingField {
 
     public static Gym of(
             String name,
+            String kakaoId,
             String roadAddress,
             String address,
             Float scoreAverage,
@@ -102,6 +109,7 @@ public class Gym extends AuditingField {
     ) {
         return new Gym(
                 name,
+                kakaoId,
                 roadAddress,
                 address,
                 scoreAverage,
