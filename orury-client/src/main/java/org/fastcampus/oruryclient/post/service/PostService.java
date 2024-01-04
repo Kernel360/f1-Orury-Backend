@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.oruryclient.global.logging.Logging;
 import org.fastcampus.oruryclient.post.error.PostErrorCode;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
@@ -31,11 +32,13 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
+    @Logging
     @Transactional
     public void createPost(PostDto postDto) {
         postRepository.save(postDto.toEntity());
     }
 
+    @Logging
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByCategory(int category, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
@@ -46,6 +49,7 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
+    @Logging
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
@@ -56,6 +60,7 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
+    @Logging
     @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
         Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
@@ -64,11 +69,13 @@ public class PostService {
         return posts.map(PostDto::from);
     }
 
+    @Logging
     @Transactional
     public void updatePost(PostDto postDto) {
         postRepository.save(postDto.toEntity());
     }
 
+    @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
         postRepository.delete(postDto.toEntity());
@@ -90,7 +97,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         return PostDto.from(post);
     }
 
