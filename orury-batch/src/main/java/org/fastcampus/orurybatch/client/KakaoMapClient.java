@@ -1,4 +1,4 @@
-package org.fastcampus.orurybatch.job;
+package org.fastcampus.orurybatch.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurybatch.dto.KakaoMapGymResponse;
