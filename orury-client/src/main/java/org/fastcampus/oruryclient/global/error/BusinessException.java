@@ -5,9 +5,11 @@ import org.fastcampus.oruryclient.global.error.code.ErrorCode;
 
 @Getter
 public class BusinessException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final int status;
+    private final String message;
 
     public BusinessException(ErrorCode errorCode) {
-        this.errorCode = errorCode;
+        this.status = errorCode.getStatus();
+        this.message = errorCode.getMessage();
     }
 }
