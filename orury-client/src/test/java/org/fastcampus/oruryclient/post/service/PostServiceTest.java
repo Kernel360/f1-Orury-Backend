@@ -221,7 +221,7 @@ class PostServiceTest {
                 () -> postService.getPostDtoById(1000L)
         );
 
-        assertEquals(PostErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(PostErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
     }
 
     @Test
