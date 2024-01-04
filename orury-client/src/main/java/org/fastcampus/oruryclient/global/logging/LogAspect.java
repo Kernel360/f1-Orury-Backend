@@ -19,7 +19,6 @@ public class LogAspect {
 
     @Around("methodRuntime()")
     public Object serviceLoggingProcess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        Object res = new Object();
 
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
@@ -27,11 +26,11 @@ public class LogAspect {
         log.info("### Method Start : {} , Parameters : {} ", methodSignature.toShortString(), objects);
 
         try {
-            res = proceedingJoinPoint.proceed();
+            Object res = proceedingJoinPoint.proceed();
             log.info("### Method End : {} , Result : {} ", methodSignature.toShortString(), res);
             return res;
         } catch (Throwable throwable) {
-            log.error("### Error Occurred in Method : {} , Message : {} ", methodSignature.toShortString(), throwable.getLocalizedMessage());
+            log.error("### Error Occurred in Method : {} , Message : {} ", methodSignature.toShortString(), throwable.getMessage());
             throw throwable;
         }
     }
