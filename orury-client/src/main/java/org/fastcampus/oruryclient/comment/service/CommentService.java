@@ -40,7 +40,6 @@ public class CommentService {
         postRepository.increaseCommentCount(commentDto.postDto().id());
     }
 
-    @Logging
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentDtosByPost(PostDto postDto, Long cursor, Pageable pageable) {
         List<Comment> parentComments = (cursor.equals(NumberConstants.LAST_CURSOR))

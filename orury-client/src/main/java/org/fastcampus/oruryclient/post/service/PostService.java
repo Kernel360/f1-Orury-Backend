@@ -38,7 +38,6 @@ public class PostService {
         postRepository.save(postDto.toEntity());
     }
 
-    @Logging
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByCategory(int category, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
@@ -49,7 +48,6 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
-    @Logging
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable) {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
@@ -60,7 +58,6 @@ public class PostService {
                 .map(PostDto::from).toList();
     }
 
-    @Logging
     @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
         Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
