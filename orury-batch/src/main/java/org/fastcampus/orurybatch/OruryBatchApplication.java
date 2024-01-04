@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 
-@SpringBootApplication(scanBasePackages = {"org.fastcampus.orurydomain", "org.fastcampus.orurybatch"}, exclude = FlywayAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = {"org.fastcampus.orurybatch", "org.fastcampus.orurydomain", "org.fastcampus.orurycommon"}, exclude = FlywayAutoConfiguration.class)
 public class OruryBatchApplication {
     public static void main(String[] args) {
-        SpringApplication.run(OruryBatchApplication.class, args);
+        System.exit(SpringApplication.exit(SpringApplication.run(OruryBatchApplication.class, args)));
     }
-
 }

@@ -31,18 +31,14 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
+    baseline-on-migrate: true
   devtools:
     livereload:
       enabled: true
   freemarker:
     cache: false
-  thymeleaf:
-    cache: false
-    prefix=file: src/main/resources/templates/
   kakao:
-    schema: https
-    host: dapi.kakao.com
-    path: /v2/local/search/keyword.json
+    baseurl: https://dapi.kakao.com/v2/local/search/keyword.json
     key: ${KAKAO_MAP_API_KEY}
 #  security:
 #    oauth2:
