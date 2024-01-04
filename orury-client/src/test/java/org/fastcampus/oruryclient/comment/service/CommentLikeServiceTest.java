@@ -83,7 +83,7 @@ class CommentLikeServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentLikeService.createCommentLike(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLikePK.getCommentId());
@@ -163,7 +163,7 @@ class CommentLikeServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentLikeService.deleteCommentLike(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLikePK.getCommentId());

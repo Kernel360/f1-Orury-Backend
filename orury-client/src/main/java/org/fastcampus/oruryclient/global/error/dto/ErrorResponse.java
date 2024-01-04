@@ -3,7 +3,6 @@ package org.fastcampus.oruryclient.global.error.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.fastcampus.oruryclient.global.error.code.ErrorCode;
 
 @Getter
 @NoArgsConstructor
@@ -17,10 +16,10 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public static ErrorResponse of(ErrorCode errorCode) {
+    public static ErrorResponse of(int status, String message) {
         return ErrorResponse.builder()
-            .status(errorCode.getStatus())
-            .message(errorCode.getMessage())
-            .build();
+                .status(status)
+                .message(message)
+                .build();
     }
 }

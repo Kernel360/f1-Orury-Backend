@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.post.error.PostErrorCode;
+import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -31,6 +32,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
+    @Logging
     @Transactional
     public void createPost(PostDto postDto) {
         postRepository.save(postDto.toEntity());
@@ -64,11 +66,13 @@ public class PostService {
         return posts.map(PostDto::from);
     }
 
+    @Logging
     @Transactional
     public void updatePost(PostDto postDto) {
         postRepository.save(postDto.toEntity());
     }
 
+    @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
         postRepository.delete(postDto.toEntity());
@@ -90,7 +94,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         return PostDto.from(post);
     }
 

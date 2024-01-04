@@ -122,7 +122,7 @@ class CommentServiceTest {
                 .thenReturn(childCommentsFor3);
 
         // when
-        List<CommentDto> commentDtos =  commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);
+        List<CommentDto> commentDtos = commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);
 
         // then
         assertEquals(expectedCommentDtos, commentDtos);
@@ -142,7 +142,7 @@ class CommentServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<CommentDto> commentDtos =  commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);
+        List<CommentDto> commentDtos = commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);
 
         // then
         assertEquals(0, commentDtos.size());
@@ -211,7 +211,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.isValidate(CommentDto.from(comment), UserDto.from(justUser)));
 
-        assertEquals(CommentErrorCode.FORBIDDEN, exception.getErrorCode());
+        assertEquals(CommentErrorCode.FORBIDDEN.getStatus(), exception.getStatus());
     }
 
     @Test
@@ -245,7 +245,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.isValidate(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLike.getCommentLikePK().getCommentId());
@@ -275,7 +275,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.isValidate(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.FORBIDDEN, exception.getErrorCode());
+        assertEquals(CommentErrorCode.FORBIDDEN.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLike.getCommentLikePK().getCommentId());
@@ -326,7 +326,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.validateParentComment(parentCommentId));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(parentCommentId);
@@ -346,7 +346,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.validateParentComment(parentCommentId));
 
-        assertEquals(CommentErrorCode.BAD_REQUEST, exception.getErrorCode());
+        assertEquals(CommentErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(parentCommentId);
@@ -386,7 +386,7 @@ class CommentServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentService.getCommentDtoById(id));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(id);
