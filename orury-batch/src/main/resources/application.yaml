@@ -10,6 +10,8 @@ logging:
 springdoc:
   show-actuator: true
 spring:
+  main:
+    allow-bean-definition-overriding: true
   mvc:
     cors:
       allowed-origins: "*"
