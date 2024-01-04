@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.logging;
+package org.fastcampus.orurycommon.log;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

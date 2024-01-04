@@ -6,7 +6,7 @@ import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
 import org.fastcampus.oruryclient.comment.util.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.global.logging.Logging;
+import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;

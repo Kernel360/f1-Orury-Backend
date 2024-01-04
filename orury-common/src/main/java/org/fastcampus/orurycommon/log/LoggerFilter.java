@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.logging;
+package org.fastcampus.orurycommon.log;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

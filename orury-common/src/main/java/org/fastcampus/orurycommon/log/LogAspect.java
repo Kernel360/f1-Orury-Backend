@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.logging;
+package org.fastcampus.orurycommon.log;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
 
-    @Pointcut("@annotation(org.fastcampus.oruryclient.global.logging.Logging)")
+    @Pointcut("@annotation(org.fastcampus.orurycommon.log.Logging)")
     public void methodRuntime() {
     }
 
