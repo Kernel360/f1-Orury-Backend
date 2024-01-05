@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.jwt;
+package org.fastcampus.oruryclient.auth.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

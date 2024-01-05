@@ -4,7 +4,7 @@ import org.fastcampus.oruryclient.auth.filter.CustomAuthFailureHandler;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthSuccessHandler;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationProvider;
-import org.fastcampus.oruryclient.global.jwt.JwtAuthorizationFilter;
+import org.fastcampus.oruryclient.auth.jwt.JwtAuthorizationFilter;
 import org.fastcampus.oruryclient.user.service.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
