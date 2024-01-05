@@ -1,6 +1,9 @@
 package org.fastcampus.oruryclient.global.config;
 
+import org.fastcampus.oruryclient.auth.filter.CustomAuthFailureHandler;
+import org.fastcampus.oruryclient.auth.filter.CustomAuthSuccessHandler;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
+import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationProvider;
 import org.fastcampus.oruryclient.global.jwt.JwtAuthorizationFilter;
 import org.fastcampus.oruryclient.user.service.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -13,6 +16,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,15 +31,13 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Supplier;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-
-//    @Autowired
-//    private CustomUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +46,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(
-            HttpSecurity http
+            HttpSecurity http,
+            CustomAuthenticationFilter customAuthenticationFilter,
+            JwtAuthorizationFilter jwtAuthorizationFilter
     ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable
