@@ -76,7 +76,15 @@ public class GymJobConfiguration {
                 .dataSource(dataSource)
                 .sql("INSERT INTO gym (name, road_address, address, latitude, longitude, phone_number, kakao_id, created_at, updated_at) " +
                         "VALUES (:name, :roadAddress, :address, :latitude, :longitude, :phoneNumber, :kakaoId, now(), now()) " +
-                        "ON DUPLICATE KEY UPDATE kakao_id = :kakaoId")
+                        "ON DUPLICATE KEY UPDATE " +
+                        "name = :name, " +
+                        "road_address = :roadAddress, " +
+                        "address = :address, " +
+                        "latitude = :latitude, " +
+                        "longitude = :longitude, " +
+                        "phone_number = :phoneNumber, " +
+                        "updated_at = now()"
+                )
                 .beanMapped()
                 .build();
     }
@@ -87,7 +95,7 @@ public class GymJobConfiguration {
             for (int page = 1; page <= 3; page++) {
                 var response = kakaoMapClient.searchGyms(location, page);
                 items.add(response);
-                if (response.getMeta().getIs_end()) break;
+                if (response.getMeta().getIsEnd()) break;
             }
         });
 
