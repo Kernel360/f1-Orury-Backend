@@ -1,7 +1,7 @@
 package org.fastcampus.oruryclient.post.service;
 
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.post.error.PostErrorCode;
+import org.fastcampus.orurycommon.error.code.PostErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;

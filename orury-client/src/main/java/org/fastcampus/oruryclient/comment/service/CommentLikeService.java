@@ -2,8 +2,8 @@ package org.fastcampus.oruryclient.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurycommon.error.code.CommentErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
@@ -20,7 +20,7 @@ public class CommentLikeService {
     @Transactional
     public void createCommentLike(CommentLikeDto commentLikeDto) {
         commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
-                        .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         if (commentLikeRepository.existsById(commentLikeDto.commentLikePK())) return;
 
         commentLikeRepository.save(commentLikeDto.toEntity());
