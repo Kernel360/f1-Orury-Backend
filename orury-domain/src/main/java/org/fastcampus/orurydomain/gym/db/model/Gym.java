@@ -16,7 +16,7 @@ public class Gym extends AuditingField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "kakao_id", nullable = false)
+    @Column(name = "kakao_id", nullable = false, unique = true)
     private String kakaoId;
 
     @Column(name = "name", nullable = false)
