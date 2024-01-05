@@ -1,15 +1,19 @@
 package org.fastcampus.orurybatch.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+@Data
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoMapGymResponse {
     private List<Documents> documents;
 
@@ -18,17 +22,18 @@ public class KakaoMapGymResponse {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Documents {
-        private String address_name;
-        private String category_group_code;
-        private String category_group_name;
-        private String category_name;
+        private String addressName;
+        private String categoryGroupCode;
+        private String categoryGroupName;
+        private String categoryName;
         private String distance;
         private String id;
         private String phone;
-        private String place_name;
-        private String place_url;
-        private String road_address_name;
+        private String placeName;
+        private String placeUrl;
+        private String roadAddressName;
         private String x;
         private String y;
     }
@@ -36,20 +41,22 @@ public class KakaoMapGymResponse {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Meta {
-        private Boolean is_end;
-        private Integer pageable_count;
-        private Same_name same_name;
+        private Boolean isEnd;
+        private Integer pageableCount;
+        private SameName sameName;
 
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class Same_name {
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class SameName {
             private String keyword;
             private List<String> region;
-            private String selected_region;
+            private String selectedRegion;
         }
 
-        private Integer total_count;
+        private Integer totalCount;
     }
 }
