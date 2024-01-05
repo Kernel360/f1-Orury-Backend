@@ -1,14 +1,25 @@
 package org.fastcampus.oruryclient.global.config;
 
+import org.fastcampus.oruryclient.user.service.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -34,21 +45,24 @@ public class SecurityConfig {
             HttpSecurity http
     ) throws Exception {
         return http
-                .csrf((csrfConfig) ->
-                        csrfConfig.disable()
+                .csrf(AbstractHttpConfigurer::disable
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                antMatcher("/**"),
                                 antMatcher("/auth/**"),
                                 antMatcher("/swagger-ui/**"),
                                 antMatcher("/swagger-resources/**"),
-                                antMatcher("/post/**"),
-                                antMatcher("/posts/**"),
                                 PathRequest.toH2Console(),
                                 PathRequest.toStaticResources().atCommonLocations()
                         ).permitAll()
                 )
+                .formLogin(login -> login
+                        .loginPage("/login")
+                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/post/2"))
+                        .permitAll()
+                )
+                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -66,6 +80,59 @@ public class SecurityConfig {
             config.setAllowCredentials(true);
             return config;
         };
+    }
+
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter(
+            AuthenticationManager authenticationManager,
+            CustomAuthSuccessHandler customAuthSuccessHandler,
+            CustomAuthFailureHandler customAuthFailureHandler
+    ) {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
+        // "/user/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
+        customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+        customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
+        customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
+        customAuthenticationFilter.afterPropertiesSet();
+        return customAuthenticationFilter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(CustomAuthenticationProvider customAuthenticationProvider) {
+        return new ProviderManager(Collections.singletonList(customAuthenticationProvider));
+    }
+
+    @Bean
+    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailsService userDetailsService) {
+        return new CustomAuthenticationProvider(
+                userDetailsService
+        );
+    }
+
+    @Bean
+    public CustomAuthSuccessHandler customLoginSuccessHandler() {
+        return new CustomAuthSuccessHandler();
+    }
+
+    @Bean
+    public CustomAuthFailureHandler customLoginFailureHandler() {
+        return new CustomAuthFailureHandler();
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter(CustomUserDetailsService userDetailsService) {
+        return new JwtAuthorizationFilter(userDetailsService);
+    }
+
+    private AuthorizationDecision isAdmin(
+            Supplier<Authentication> authenticationSupplier,
+            RequestAuthorizationContext requestAuthorizationContext
+    ) {
+        return new AuthorizationDecision(
+                authenticationSupplier.get()
+                        .getAuthorities()
+                        .contains(new SimpleGrantedAuthority("ADMIN"))
+        );
     }
 
 //    @Bean
