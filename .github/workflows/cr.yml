@@ -6,18 +6,16 @@ permissions:
 
 on:
   pull_request:
-    types: [ opened, reopened, synchronize, labeled ]
+    types: [ opened, synchronize, labeled ]
 
 jobs:
   test:
-    if: contains (github.event.pull_request.labels.*.name, 'GPT-REVIEW')
+    if: ${{ contains(github.event.*.labels.*.name, '💵 GPT REVIEW') }}
     runs-on: ubuntu-latest
-    if: contains (github.event.pull_request.labels.*.name, 'GPT-REVIEW')
     steps:
       - uses: anc95/ChatGPT-CodeReview@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # optional
           LANGUAGE: Korean
-          PROMPT: 한국어로 작성할 것
+          PROMPT: 당신은 10년차 시니어 개발자입니다. 우리가 작성한 코드에 문제가 없는지 리뷰해주세요. 대답은 한국어로 작성해주시고 단순한 부분이나 큰 이슈가 없는 부분은 리뷰해주지 않아도 되요.
