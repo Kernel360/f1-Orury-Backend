@@ -63,7 +63,7 @@ public class SecurityConfig {
                         ).permitAll()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")
+                        .loginPage("/auth/login")
                         .successHandler(new SimpleUrlAuthenticationSuccessHandler("/post/2"))
                         .permitAll()
                 )
