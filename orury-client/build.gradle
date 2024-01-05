@@ -82,6 +82,9 @@ dependencies {
     //Jasypt
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.4'
 
+    //json
+    implementation 'org.json:json:20231013'
+
 }
 
 tasks.named('bootJar') {
