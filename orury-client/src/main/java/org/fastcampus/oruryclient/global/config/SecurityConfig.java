@@ -1,5 +1,7 @@
 package org.fastcampus.oruryclient.global.config;
 
+import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
+import org.fastcampus.oruryclient.global.jwt.JwtAuthorizationFilter;
 import org.fastcampus.oruryclient.user.service.CustomUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
