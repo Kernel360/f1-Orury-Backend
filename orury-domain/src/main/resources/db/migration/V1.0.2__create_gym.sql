@@ -1,5 +1,5 @@
 CREATE TABLE `gym` (
-	`id`	bigint	NOT NULL, AUTO_INCREMENT,
+	`id`	bigint	NOT NULL AUTO_INCREMENT,
 	`name`	varchar(50)	NOT NULL	COMMENT '암장 이름',
 	`road_address`	varchar(100)	NOT NULL	COMMENT '도로명주소',
 	`address`	varchar(100)	NOT NULL	COMMENT '지번 주소',
