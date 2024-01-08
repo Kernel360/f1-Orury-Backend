@@ -1,7 +1,5 @@
 package org.fastcampus.oruryclient.review.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.review.error.ReviewErrorCode;
@@ -16,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,22 +40,23 @@ public class ReviewService {
         reviewRepository.save(reviewDto.toEntity());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ReviewDto getReviewDtoById(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
         return ReviewDto.from(review);
     }
 
-    @Transactional(readOnly = true)
     public void isValidate(Long id1, Long id2) {
         if (!Objects.equals(id1, id2)) throw new BusinessException(ReviewErrorCode.FORBIDDEN);
     }
 
+    @Transactional
     public void deleteReview(ReviewDto reviewDto) {
         reviewRepository.delete(reviewDto.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public List<ReviewDto> getReviewDtosByGymId(Long gymId, Long cursor, Pageable pageable) {
         List<Review> reviews = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? reviewRepository.findByGymIdOrderByIdDesc(gymId, pageable)
