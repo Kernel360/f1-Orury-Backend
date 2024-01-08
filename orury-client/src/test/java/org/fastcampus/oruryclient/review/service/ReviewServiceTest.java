@@ -1,5 +1,13 @@
 package org.fastcampus.oruryclient.review.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.then;
+
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.global.error.BusinessException;
 import org.fastcampus.oruryclient.review.error.ReviewErrorCode;
@@ -23,10 +31,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
@@ -103,8 +107,8 @@ public class ReviewServiceTest {
     }
 
     @Test
-    @DisplayName("리뷰 수정을 위해 기존 리뷰를 성공적으로 불러와야 한다.")
-    void when_UpdateReview_Then_GetOriginalReview() {
+    @DisplayName("리뷰 id에 해당하는 ReviewDto를 반환해야 한다.")
+    void should_GetReviewByid() {
         //given
         Review review = createReview(1L);
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(review));
