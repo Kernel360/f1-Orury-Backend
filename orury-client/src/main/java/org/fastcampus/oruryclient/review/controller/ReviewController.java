@@ -57,7 +57,7 @@ public class ReviewController {
 
         ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
 
-        ReviewResponse response = ReviewResponse.of(reviewDto);
+        ReviewResponse response = ReviewResponse.of(reviewDto, NumberConstants.USER_ID);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -105,7 +105,8 @@ public class ReviewController {
     public ApiResponse<Object> getReviews(@PathVariable Long gymId, @RequestParam Long cursor) {
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
-                .map(ReviewsResponse::of).toList();
+                .map(reviewDto -> ReviewsResponse.of(reviewDto, NumberConstants.USER_ID))
+                .toList();
 
         ReviewsWithCursorResponse response = ReviewsWithCursorResponse.of(reviewsResponses);
 

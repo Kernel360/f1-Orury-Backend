@@ -22,10 +22,13 @@ public record ReviewsResponse(
         Long userId,
         String userNickname,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        boolean isMine
+
 ) {
-    public static ReviewsResponse of(ReviewDto reviewDto) {
+    public static ReviewsResponse of(ReviewDto reviewDto, Long userId) {
         List<String> imagesAsList = ImageUrlConverter.convertToList(reviewDto.images());
+        boolean isMine = reviewDto.userDto().id().equals(userId);
 
         return new ReviewsResponse(
                 reviewDto.id(),
@@ -40,7 +43,8 @@ public record ReviewsResponse(
                 reviewDto.userDto().id(),
                 reviewDto.userDto().nickname(),
                 reviewDto.createdAt(),
-                reviewDto.updatedAt()
+                reviewDto.updatedAt(),
+                isMine
         );
     }
 }
