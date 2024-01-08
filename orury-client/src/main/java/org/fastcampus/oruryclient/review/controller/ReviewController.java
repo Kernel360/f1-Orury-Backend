@@ -7,7 +7,7 @@ import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.gym.service.GymService;
 import org.fastcampus.oruryclient.review.converter.request.ReviewCreateRequest;
 import org.fastcampus.oruryclient.review.converter.request.ReviewUpdateRequest;
-import org.fastcampus.oruryclient.review.converter.response.ReviewGetResponse;
+import org.fastcampus.oruryclient.review.converter.response.ReviewResponse;
 import org.fastcampus.oruryclient.review.converter.response.ReviewsResponse;
 import org.fastcampus.oruryclient.review.converter.response.ReviewsWithCursorResponse;
 import org.fastcampus.oruryclient.review.service.ReviewService;
@@ -57,7 +57,7 @@ public class ReviewController {
 
         ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
 
-        ReviewGetResponse response = ReviewGetResponse.of(reviewDto);
+        ReviewResponse response = ReviewResponse.of(reviewDto);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

@@ -8,16 +8,16 @@ import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import java.util.List;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record ReviewGetResponse(
+public record ReviewResponse(
         Long id,
         String content,
         List<String> images,
         float score
 ) {
-    public static ReviewGetResponse of(ReviewDto reviewDto) {
+    public static ReviewResponse of(ReviewDto reviewDto) {
         List<String> imagesAsList = ImageUrlConverter.convertToList(reviewDto.images());
 
-        return new ReviewGetResponse(
+        return new ReviewResponse(
                 reviewDto.id(),
                 reviewDto.content(),
                 imagesAsList,
