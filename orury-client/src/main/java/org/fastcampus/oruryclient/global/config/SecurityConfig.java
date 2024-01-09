@@ -1,75 +1,58 @@
 package org.fastcampus.oruryclient.global.config;
 
-import org.fastcampus.oruryclient.auth.filter.CustomAuthFailureHandler;
-import org.fastcampus.oruryclient.auth.filter.CustomAuthSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
-import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationProvider;
-import org.fastcampus.oruryclient.auth.jwt.JwtAuthorizationFilter;
-import org.fastcampus.oruryclient.user.service.CustomUserDetailsService;
+import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Supplier;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationConfiguration authenticationConfiguration;
+
 
     @Bean
     public SecurityFilterChain filterChain(
-            HttpSecurity http,
-            CustomAuthenticationFilter customAuthenticationFilter,
-            JwtAuthorizationFilter jwtAuthorizationFilter
+            HttpSecurity http
     ) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable
-                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 antMatcher("/auth/**"),
                                 antMatcher("/swagger-ui/**"),
                                 antMatcher("/swagger-resources/**"),
-                                PathRequest.toH2Console(),
                                 PathRequest.toStaticResources().atCommonLocations()
                         ).permitAll()
                 )
-                .formLogin(login -> login
-                        .loginPage("/auth/login")
-                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/post/2"))
-                        .permitAll()
-                )
-                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+                .addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -89,57 +72,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(
-            AuthenticationManager authenticationManager,
-            CustomAuthSuccessHandler customAuthSuccessHandler,
-            CustomAuthFailureHandler customAuthFailureHandler
-    ) {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
-        // "/user/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
-        customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
-        customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
-        customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
-        customAuthenticationFilter.afterPropertiesSet();
-        return customAuthenticationFilter;
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
+    //AuthenticationManager Bean 등록
     @Bean
-    public AuthenticationManager authenticationManager(CustomAuthenticationProvider customAuthenticationProvider) {
-        return new ProviderManager(Collections.singletonList(customAuthenticationProvider));
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+
+        return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider(UserDetailsService userDetailsService) {
-        return new CustomAuthenticationProvider(
-                userDetailsService
-        );
-    }
 
-    @Bean
-    public CustomAuthSuccessHandler customLoginSuccessHandler() {
-        return new CustomAuthSuccessHandler();
-    }
-
-    @Bean
-    public CustomAuthFailureHandler customLoginFailureHandler() {
-        return new CustomAuthFailureHandler();
-    }
-
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter(CustomUserDetailsService userDetailsService) {
-        return new JwtAuthorizationFilter(userDetailsService);
-    }
-
-    private AuthorizationDecision isAdmin(
-            Supplier<Authentication> authenticationSupplier,
-            RequestAuthorizationContext requestAuthorizationContext
-    ) {
-        return new AuthorizationDecision(
-                authenticationSupplier.get()
-                        .getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ADMIN"))
-        );
-    }
+//    private AuthorizationDecision isAdmin(
+//            Supplier<Authentication> authenticationSupplier,
+//            RequestAuthorizationContext requestAuthorizationContext
+//    ) {
+//        return new AuthorizationDecision(
+//                authenticationSupplier.get()
+//                        .getAuthorities()
+//                        .contains(new SimpleGrantedAuthority("ADMIN"))
+//        );
+//    }
 
 //    @Bean
 //    public UserDetailsService userDetailsService(UserService service) {

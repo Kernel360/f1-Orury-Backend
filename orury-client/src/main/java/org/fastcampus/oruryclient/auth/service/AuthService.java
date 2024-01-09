@@ -7,6 +7,7 @@ import org.fastcampus.oruryclient.user.error.UserErrorCode;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 회원가입

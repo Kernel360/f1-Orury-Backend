@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -36,9 +35,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(email);
 
         // 대소문자를 구분하는 matches() 메서드로 db와 사용자가 제출한 비밀번호를 비교
-        if (!bCryptPasswordEncoder().matches(userPassword, userPrincipal.getPassword())) {
-            throw new BadCredentialsException(userPrincipal.getUsername() + "Invalid password");
-        }
+//        if (!bCryptPasswordEncoder().matches(userPassword, userPrincipal.getPassword())) {
+//            throw new BadCredentialsException(userPrincipal.getUsername() + "Invalid password");
+//        }
 
         // 인증이 성공하면 인증된 사용자의 정보와 권한을 담은 새로운 UsernamePasswordAuthenticationToken을 반환한다.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userPrincipal, userPassword, userPrincipal.getAuthorities());

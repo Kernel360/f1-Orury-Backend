@@ -1,4 +1,4 @@
-package org.fastcampus.oruryadmin.global.security.jwt;
+package org.fastcampus.oruryclient.auth.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,3 +21,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
+

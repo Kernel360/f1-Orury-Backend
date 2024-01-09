@@ -3,7 +3,7 @@ package org.fastcampus.oruryclient.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.global.error.code.UserErrorCode;
+import org.fastcampus.oruryclient.user.error.UserErrorCode;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
