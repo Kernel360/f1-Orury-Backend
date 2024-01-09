@@ -15,8 +15,8 @@ public record MypageResponse(
         int gender,
         LocalDate birthday,
         String profileImage
-){
-    public static MypageResponse toDto(UserDto userDto){
+) {
+    public static MypageResponse of(UserDto userDto) {
         return new MypageResponse(
                 userDto.id(),
                 userDto.email(),

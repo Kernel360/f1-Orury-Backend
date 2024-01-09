@@ -1,6 +1,5 @@
-package org.fastcampus.oruryclient.domain.auth.service;
+package org.fastcampus.oruryclient.auth.service;
 
-import org.fastcampus.oruryclient.auth.service.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
