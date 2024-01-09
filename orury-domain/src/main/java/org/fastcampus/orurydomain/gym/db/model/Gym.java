@@ -10,10 +10,11 @@ import org.fastcampus.orurydomain.base.db.AuditingField;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-@Entity
+@Entity(name = "gym")
 public class Gym extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "kakao_id", nullable = false, unique = true)
@@ -21,7 +22,6 @@ public class Gym extends AuditingField {
 
     @Column(name = "name", nullable = false)
     private String name;
-
 
     @Column(name = "road_address", nullable = false)
     private String roadAddress;
@@ -60,6 +60,7 @@ public class Gym extends AuditingField {
     private String settingDay;
 
     private Gym(
+            Long id,
             String name,
             String kakaoId,
             String roadAddress,
@@ -75,6 +76,7 @@ public class Gym extends AuditingField {
             String instagramLink,
             String settingDay
     ) {
+        this.id = id;
         this.name = name;
         this.kakaoId = kakaoId;
         this.roadAddress = roadAddress;
@@ -92,6 +94,7 @@ public class Gym extends AuditingField {
     }
 
     public static Gym of(
+            Long id,
             String name,
             String kakaoId,
             String roadAddress,
@@ -108,6 +111,7 @@ public class Gym extends AuditingField {
             String settingDay
     ) {
         return new Gym(
+                id,
                 name,
                 kakaoId,
                 roadAddress,

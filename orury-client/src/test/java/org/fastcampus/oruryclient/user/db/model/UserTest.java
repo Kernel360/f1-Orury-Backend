@@ -1,19 +1,21 @@
-package org.fastcampus.oruryclient.domain.user.db.model;
+package org.fastcampus.oruryclient.user.db.model;
+
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class UserTest {
 
     @DisplayName("유저 생성 테스트")
     @Test
-    void createUser(){
+    void createUser() {
         //given
-        User user = User.of(null,"abc@gmail.com","testnick", "1234", 1,2, LocalDate.of(2023, 12, 21),"orury.png",null, null);
+        User user = User.of(null, "abc@gmail.com", "testnick", "1234", 1, 2, LocalDate.of(2023, 12, 21), "orury.png", null, null);
 
         //when
 
