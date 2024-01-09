@@ -26,15 +26,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // 1. userRepository로부터 loginId로 유저정보를 받아온다.
-        User byLoginId = userRepository.findByEmail(loginId)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new BusinessException(UserErrorCode.NOT_FOUND)
                 );
 
         // 2.user를 dto로 변환시켜준다.
-        UserDto userDto = UserDto.from(byLoginId);
+        UserDto userDto = UserDto.from(user);
         List<GrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority("ROLE_USER") // 예시 권한
         );
