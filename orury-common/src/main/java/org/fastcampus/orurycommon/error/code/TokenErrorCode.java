@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum InvalidTokenException implements ErrorCode {
+public enum TokenErrorCode implements ErrorCode {
     EXPIRED_TOKEN(990, "만료된 access token 입니다."),
     EXPIRED_REFRESH_TOKEN(999, "만료된 refresh token 입니다."),
     ;
