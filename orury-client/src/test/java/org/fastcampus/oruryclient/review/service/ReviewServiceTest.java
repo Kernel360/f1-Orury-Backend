@@ -1,16 +1,8 @@
 package org.fastcampus.oruryclient.review.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.mock;
-import static org.mockito.BDDMockito.then;
-
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.review.error.ReviewErrorCode;
+import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
@@ -31,6 +23,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
