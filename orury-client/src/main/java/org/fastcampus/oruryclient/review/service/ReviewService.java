@@ -1,8 +1,10 @@
 package org.fastcampus.oruryclient.review.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.review.error.ReviewErrorCode;
+import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
 import org.fastcampus.orurydomain.review.db.repository.ReviewRepository;
@@ -14,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor

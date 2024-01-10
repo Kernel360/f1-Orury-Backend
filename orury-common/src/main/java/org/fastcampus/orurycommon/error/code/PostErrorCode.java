@@ -1,9 +1,10 @@
-package org.fastcampus.oruryclient.post.error;
+package org.fastcampus.orurycommon.error.code;
 
 import lombok.AllArgsConstructor;
-import org.fastcampus.oruryclient.global.error.code.ErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 @AllArgsConstructor
 public enum PostErrorCode implements ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND.value(), "게시글이 존재하지 않습니다."),
@@ -12,14 +13,4 @@ public enum PostErrorCode implements ErrorCode {
 
     private final int status;
     private final String message;
-
-    @Override
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
 }

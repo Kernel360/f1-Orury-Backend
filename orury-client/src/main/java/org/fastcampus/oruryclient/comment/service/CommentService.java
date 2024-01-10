@@ -2,10 +2,10 @@ package org.fastcampus.oruryclient.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
 import org.fastcampus.oruryclient.comment.util.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurycommon.error.code.CommentErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;

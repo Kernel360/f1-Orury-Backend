@@ -4,11 +4,37 @@ plugins {
     id 'org.springframework.boot' version '3.1.6'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'jacoco'
 }
 group = 'org.fastcampus'
 version = '0.0.1-SNAPSHOT'
 java {
     sourceCompatibility = '17'
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        xml {
+            enabled true
+            destination file("${buildDir}/jacoco/index.xml")
+        }
+        csv {
+            enabled true
+            destination file("${buildDir}/jacoco/index.csv")
+        }
+        html {
+            enabled true
+            destination file("${buildDir}/jacoco/index.html")
+        }
+    }
+}
+
+test {
+    finalizedBy 'jacocoTestReport'
 }
 
 repositories {

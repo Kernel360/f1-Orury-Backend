@@ -2,8 +2,8 @@ package org.fastcampus.oruryclient.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.user.error.UserErrorCode;
+import org.fastcampus.orurycommon.error.code.UserErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.dao.DataIntegrityViolationException;

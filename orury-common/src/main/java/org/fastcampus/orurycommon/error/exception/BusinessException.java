@@ -1,7 +1,7 @@
-package org.fastcampus.oruryclient.global.error;
+package org.fastcampus.orurycommon.error.exception;
 
 import lombok.Getter;
-import org.fastcampus.oruryclient.global.error.code.ErrorCode;
+import org.fastcampus.orurycommon.error.code.ErrorCode;
 
 @Getter
 public class BusinessException extends RuntimeException {
