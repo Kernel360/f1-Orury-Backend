@@ -2,8 +2,8 @@ package org.fastcampus.oruryclient.gym.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.global.error.BusinessException;
-import org.fastcampus.oruryclient.gym.error.GymErrorCode;
+import org.fastcampus.orurycommon.error.code.GymErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;

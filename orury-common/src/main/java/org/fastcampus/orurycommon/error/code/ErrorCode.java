@@ -1,6 +1,7 @@
-package org.fastcampus.oruryclient.global.error.code;
+package org.fastcampus.orurycommon.error.code;
 
 public interface ErrorCode {
     int getStatus();
+
     String getMessage();
 }

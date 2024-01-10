@@ -1,9 +1,10 @@
-package org.fastcampus.oruryclient.user.error;
+package org.fastcampus.orurycommon.error.code;
 
 import lombok.AllArgsConstructor;
-import org.fastcampus.oruryclient.global.error.code.ErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 @AllArgsConstructor
 public enum UserErrorCode implements ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND.value(), "유저를 찾을 수 없습니다."),
@@ -12,14 +13,4 @@ public enum UserErrorCode implements ErrorCode {
 
     private final int status;
     private final String message;
-
-    @Override
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
 }
