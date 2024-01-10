@@ -10,6 +10,8 @@ public final class NumberConstants {
     public static final Long FIRST_CURSOR = 0L;
     // Last Pagination Cursor Return Value
     public static final Long LAST_CURSOR = -1L;
+    // First Page But Nothing Cursor Return Value
+    public static final Long NOTHING_CURSOR = -2L;
     // Post pagination Size
     public static final int POST_PAGINATION_SIZE = 10;
     // Comment pagination Size
