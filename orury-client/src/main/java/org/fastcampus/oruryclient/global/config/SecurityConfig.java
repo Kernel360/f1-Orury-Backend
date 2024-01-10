@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.global.config;
 
 import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
+import org.fastcampus.oruryclient.auth.jwt.JwtTokenFilter;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +48,9 @@ public class SecurityConfig {
                                 antMatcher("/swagger-resources/**"),
                                 PathRequest.toStaticResources().atCommonLocations()
                         ).permitAll()
+                        .anyRequest().authenticated()
                 )
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), CustomAuthenticationFilter.class)
                 .addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 //                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement ->
@@ -79,45 +82,4 @@ public class SecurityConfig {
 
         return configuration.getAuthenticationManager();
     }
-
-
-//    private AuthorizationDecision isAdmin(
-//            Supplier<Authentication> authenticationSupplier,
-//            RequestAuthorizationContext requestAuthorizationContext
-//    ) {
-//        return new AuthorizationDecision(
-//                authenticationSupplier.get()
-//                        .getAuthorities()
-//                        .contains(new SimpleGrantedAuthority("ADMIN"))
-//        );
-//    }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(UserService service) {
-//        return username -> service
-//                .getUser(username)
-//                .map(UserPrincipal::from)
-//                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
-//    }
-
-//    @Bean
-//    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
-//            AuthService service,
-//            PasswordEncoder encoder
-//    ) {
-//        final DefaultOAuth2UserService defaultService = new DefaultOAuth2UserService();
-//        return userRequest -> {
-//            OAuth2User user = defaultService.loadUser(userRequest);
-//            KakaoResponse kakaoResponse = KakaoResponse.from(user.getAttributes());
-//            String email = kakaoResponse.email();
-//            String dummyPassword = encoder.encode("{bcrypt}" + UUID.randomUUID());
-//            String nickname = kakaoResponse.nickname();
-//            return service.getUserInfo(email)
-//                    .map(UserPrincipal::from)
-//                    .orElseGet(() ->
-//                            UserPrincipal.from(
-//                                    service.saveUser(email, dummyPassword, nickname)
-//                            ));
-//        };
-//    }
 }

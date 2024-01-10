@@ -59,6 +59,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
+        Long id = userPrincipal.id();
         String email = userPrincipal.email();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -67,7 +68,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String role = auth.getAuthority();
 
-        String token = jwtTokenProvider.createJwt(email, role, 86400000L * 10L); // 10일
+        String token = jwtTokenProvider.createJwt(id, email, role, 86400000L * 10L); // 10일
 
         response.addHeader("Authorization", "Bearer " + token);
     }
