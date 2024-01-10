@@ -44,7 +44,7 @@ public record UserPrincipal(
 
         // 생성자의 마지막 인자로 authorities를 전달하여 UserPrincipal 인스턴스를 생성합니다.
         return new UserPrincipal(
-                id, // 토큰으로부터 ID를 추출할 수 없으므로 임시 값으로 설정
+                id,
                 email,
                 "temp", // 토큰으로부터 닉네임을 추출할 수 없으므로 임시 값으로 설정
                 "1", // 토큰으로부터 비밀번호를 추출할 수 없으므로 임시 값으로 설정
