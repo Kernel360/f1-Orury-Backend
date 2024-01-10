@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.domain.user.db.repository;
+package org.fastcampus.oruryclient.user.db.repository;
 
 //@SpringBootTest
 //class UserRepositoryTest {

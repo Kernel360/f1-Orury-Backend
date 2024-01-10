@@ -75,16 +75,17 @@ public class PostService {
     @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
-        postRepository.delete(postDto.toEntity());
         postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
 
         List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
         comments.forEach(
                 comment -> {
-                    commentRepository.delete(comment);
                     commentLikeRepository.deleteByCommentLikePK_CommentId(comment.getId());
+                    commentRepository.delete(comment);
                 }
         );
+
+        postRepository.delete(postDto.toEntity());
     }
 
     @Transactional

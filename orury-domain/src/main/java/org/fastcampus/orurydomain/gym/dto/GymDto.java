@@ -99,20 +99,43 @@ public record GymDto(
 
     public Gym toEntity() {
         return Gym.of(
-                name,
-                kakaoId,
-                roadAddress,
-                address,
-                scoreAverage,
-                images,
-                latitude,
-                longitude,
-                openTime,
-                closeTime,
-                brand,
-                phoneNumber,
-                instagramLink,
-                settingDay
+                this.id,
+                this.name,
+                this.kakaoId,
+                this.roadAddress,
+                this.address,
+                this.scoreAverage,
+                this.images,
+                this.latitude,
+                this.longitude,
+                this.openTime,
+                this.closeTime,
+                this.brand,
+                this.phoneNumber,
+                this.instagramLink,
+                this.settingDay
+        );
+    }
+
+    public static GymDto from(Gym entity) {
+        return GymDto.of(
+                entity.getId(),
+                entity.getName(),
+                entity.getKakaoId(),
+                entity.getRoadAddress(),
+                entity.getAddress(),
+                entity.getScoreAverage(),
+                entity.getImages(),
+                entity.getLatitude(),
+                entity.getLongitude(),
+                entity.getOpenTime(),
+                entity.getCloseTime(),
+                entity.getBrand(),
+                entity.getPhoneNumber(),
+                entity.getInstagramLink(),
+                entity.getSettingDay(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 }
