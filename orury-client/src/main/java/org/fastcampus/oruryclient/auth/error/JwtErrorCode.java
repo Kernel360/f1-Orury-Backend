@@ -1,7 +1,7 @@
 package org.fastcampus.oruryclient.auth.error;
 
 import lombok.AllArgsConstructor;
-import org.fastcampus.oruryclient.global.error.code.ErrorCode;
+import org.fastcampus.orurycommon.error.code.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor

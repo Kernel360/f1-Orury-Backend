@@ -52,7 +52,6 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), CustomAuthenticationFilter.class)
                 .addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
