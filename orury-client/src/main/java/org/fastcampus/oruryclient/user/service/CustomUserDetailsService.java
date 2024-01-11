@@ -1,26 +1,52 @@
 package org.fastcampus.oruryclient.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.orurycommon.error.code.UserErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.user.db.model.User;
+import org.fastcampus.orurydomain.user.db.repository.UserRepository;
+import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.orurydomain.user.dto.UserPrincipal;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.Collections;
+import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 사용자 정보를 조회하는 로직을 구현합니다.
-        // 실제로는 DB에서 사용자 정보를 조회해야 하지만, 여기서는 간단하게 처리하기 위해 직접 생성한 사용자 정보를 반환합니다.
-        String password = passwordEncoder.encode(UUID.randomUUID().toString());
-        return User.builder().username(username).password(password).authorities("ROLE_USER").build();
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // 1. userRepository로부터 loginId로 유저정보를 받아온다.
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new BusinessException(UserErrorCode.NOT_FOUND)
+                );
+
+        // 2.user를 dto로 변환시켜준다.
+        UserDto userDto = UserDto.from(user);
+        List<GrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_USER") // 예시 권한
+        );
+
+        // 3. 사용자 정보를 기반으로 SecurityUserDetailsDto 객체를 생성한다.
+        return new UserPrincipal(
+                userDto.id(),
+                userDto.email(),
+                userDto.nickname(),
+                userDto.password(),
+                authorities
+        );
     }
+
 }
