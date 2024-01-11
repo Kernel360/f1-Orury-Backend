@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenFilter;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,12 +39,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                antMatcher("/auth/**"),
-                                antMatcher("/swagger-ui/**"),
-                                antMatcher("/swagger-resources/**"),
-                                PathRequest.toStaticResources().atCommonLocations()
-                        ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), CustomAuthenticationFilter.class)
