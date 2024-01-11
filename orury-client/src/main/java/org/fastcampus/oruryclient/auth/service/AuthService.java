@@ -24,9 +24,8 @@ public class AuthService {
      */
     @Transactional
     public void signUp(UserDto userDto) {
-        userRepository.save(userDto.toEntity());
         try {
-            userRepository.flush();
+            userRepository.save(userDto.toEntity());
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(UserErrorCode.DUPLICATED_USER);
         }
