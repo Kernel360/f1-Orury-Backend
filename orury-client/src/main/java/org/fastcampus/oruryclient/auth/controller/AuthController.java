@@ -3,13 +3,13 @@ package org.fastcampus.oruryclient.auth.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.auth.converter.request.SignInRequest;
+import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
-import org.fastcampus.oruryclient.auth.converter.response.SignInResponse;
+import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
 import org.fastcampus.oruryclient.auth.service.AuthService;
+import org.fastcampus.oruryclient.global.message.info.InfoMessage;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.user.dto.UserDto;
-import org.fastcampus.oruryclient.global.message.info.InfoMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,15 +37,15 @@ public class AuthController {
     }
 
     @Operation(summary = "로그인", description = "유저 정보를 받아 로그인 후, 로그인 성공 여부를 돌려준다.")
-    @PostMapping("/sign-in")
-    public ApiResponse<SignInResponse> signIn(@RequestBody SignInRequest request) {
-        UserDto userDto = authService.signIn(request);
-        SignInResponse signInResponse = SignInResponse.of(userDto);
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+        UserDto userDto = authService.login(request);
+        LoginResponse loginResponse = LoginResponse.of(userDto);
 
-        return ApiResponse.<SignInResponse>builder()
+        return ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(InfoMessage.USER_LOGIN_SUCCESS.getMessage())
-                .data(signInResponse)
+                .data(loginResponse)
                 .build();
     }
 }

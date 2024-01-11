@@ -1,12 +1,13 @@
 package org.fastcampus.oruryclient.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.fastcampus.oruryclient.auth.converter.request.SignInRequest;
+import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 회원가입
@@ -22,9 +24,8 @@ public class AuthService {
      */
     @Transactional
     public void signUp(UserDto userDto) {
-        userRepository.save(userDto.toEntity());
         try {
-            userRepository.flush();
+            userRepository.save(userDto.toEntity());
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(UserErrorCode.DUPLICATED_USER);
         }
@@ -37,7 +38,7 @@ public class AuthService {
      * @return
      */
     @Transactional
-    public UserDto signIn(SignInRequest request) {
+    public UserDto login(LoginRequest request) {
         // 카카오 토큰 전달받아서 유효한 토큰인지 확인 하는 절차 필요
         return userRepository.findByEmailAndSignUpType(request.email(), request.signUpType())
                 .map(UserDto::from)
