@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.oruryclient.post.converter.message.PostMessage;
 import org.fastcampus.oruryclient.post.converter.request.PostCreateRequest;
 import org.fastcampus.oruryclient.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryclient.post.converter.response.PostResponse;
@@ -12,7 +13,6 @@ import org.fastcampus.oruryclient.post.converter.response.PostsWithCursorRespons
 import org.fastcampus.oruryclient.post.converter.response.PostsWithPageResponse;
 import org.fastcampus.oruryclient.post.service.PostLikeService;
 import org.fastcampus.oruryclient.post.service.PostService;
-import org.fastcampus.oruryclient.post.util.PostMessage;
 import org.fastcampus.oruryclient.user.service.UserService;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.post.dto.PostDto;

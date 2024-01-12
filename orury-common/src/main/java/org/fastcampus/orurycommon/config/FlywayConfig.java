@@ -1,4 +1,4 @@
-package org.fastcampus.orurydomain;
+package org.fastcampus.orurycommon.config;
 
 import jakarta.annotation.PostConstruct;
 import org.flywaydb.core.Flyway;
@@ -29,7 +29,7 @@ public class FlywayConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
         emfb.setDataSource(dataSource);
-        emfb.setPackagesToScan("org.fastcampus.orurydomain", "org.fastcampus.orurybatch", "org.fastcampus.oruryclient");
+        emfb.setPackagesToScan("org.fastcampus.orurydomain");
         emfb.setJpaVendorAdapter(jpaVendorAdapter);
         return emfb;
     }

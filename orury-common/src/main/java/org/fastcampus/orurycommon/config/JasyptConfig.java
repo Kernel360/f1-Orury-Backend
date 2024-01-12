@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.config;
+package org.fastcampus.orurycommon.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;
