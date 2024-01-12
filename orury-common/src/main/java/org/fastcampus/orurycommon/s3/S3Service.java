@@ -21,7 +21,7 @@ import java.util.Arrays;
 @Service
 public class S3Service {
     private final AmazonS3 amazonS3;
-    private final Snowflake snowflake = new Snowflake(System.currentTimeMillis());
+    private final Snowflake snowflake = new Snowflake(System.currentTimeMillis() % 1023 + 1);
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
