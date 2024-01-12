@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.s3.S3Service;
@@ -18,6 +19,7 @@ public class ImageController {
 
     private final S3Service s3Service;
 
+    @Operation(summary = "이미지 업로드", description = "이미지를 업로드하고, URL을 반환한다.")
     @PostMapping("/image")
     public ResponseEntity<String> uploadImage(
             @RequestParam("userId") Long userId,
