@@ -1,13 +1,10 @@
 package org.fastcampus.oruryclient.global.config;
 
 import lombok.RequiredArgsConstructor;
-import org.fastcampus.oruryclient.auth.filter.CustomAuthenticationFilter;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenFilter;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -27,7 +24,6 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public SecurityFilterChain filterChain(
@@ -44,8 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), CustomAuthenticationFilter.class)
-                .addFilterAt(new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -67,12 +62,5 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    //AuthenticationManager Bean 등록
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
-        return configuration.getAuthenticationManager();
     }
 }
