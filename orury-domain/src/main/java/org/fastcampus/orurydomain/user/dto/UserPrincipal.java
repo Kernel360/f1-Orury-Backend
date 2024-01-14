@@ -11,30 +11,17 @@ import java.util.List;
 public record UserPrincipal(
         Long id,
         String email,
-        String nickname,
-        String password,
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
     public static UserPrincipal of(
             Long id,
             String email,
-            String nickname,
-            String password
+            Collection<? extends GrantedAuthority> authorities
     ) {
-        return UserPrincipal.of(
+        return new UserPrincipal(
                 id,
                 email,
-                nickname,
-                password
-        );
-    }
-
-    public static UserPrincipal from(UserDto userDto) {
-        return UserPrincipal.of(
-                userDto.id(),
-                userDto.email(),
-                userDto.nickname(),
-                userDto.password()
+                authorities
         );
     }
 
@@ -43,11 +30,9 @@ public record UserPrincipal(
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
         // 생성자의 마지막 인자로 authorities를 전달하여 UserPrincipal 인스턴스를 생성합니다.
-        return new UserPrincipal(
+        return UserPrincipal.of(
                 id,
                 email,
-                "temp", // 토큰으로부터 닉네임을 추출할 수 없으므로 임시 값으로 설정
-                "1", // 토큰으로부터 비밀번호를 추출할 수 없으므로 임시 값으로 설정
                 authorities // 생성한 권한 리스트
         );
     }
@@ -59,7 +44,7 @@ public record UserPrincipal(
 
     @Override
     public String getPassword() {
-        return password;
+        return email;
     }
 
     @Override
