@@ -1,7 +1,11 @@
 package org.fastcampus.oruryclient.auth.converter.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import org.fastcampus.oruryclient.auth.jwt.JwtToken;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record LoginResponse(
         Long id,
         String email,
@@ -25,13 +29,13 @@ public record LoginResponse(
         );
     }
 
-    public static LoginResponse of(UserDto userDto) {
+    public static LoginResponse of(UserDto userDto, JwtToken jwtToken) {
         return new LoginResponse(
                 userDto.id(),
                 userDto.email(),
                 userDto.nickname(),
-                "",
-                ""
+                jwtToken.accessToken(),
+                jwtToken.refreshToken()
         );
     }
 }
