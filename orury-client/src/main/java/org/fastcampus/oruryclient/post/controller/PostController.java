@@ -71,7 +71,7 @@ public class PostController {
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
 
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses);
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses, cursor);
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -87,7 +87,7 @@ public class PostController {
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
 
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses);
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postsResponses, cursor);
 
         return ApiResponse.<PostsWithCursorResponse>builder()
                 .status(HttpStatus.OK.value())

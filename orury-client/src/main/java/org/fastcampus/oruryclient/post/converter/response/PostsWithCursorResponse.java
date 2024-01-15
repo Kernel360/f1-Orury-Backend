@@ -11,12 +11,18 @@ public record PostsWithCursorResponse(
         List<PostsResponse> posts,
         Long cursor
 ) {
-    public static PostsWithCursorResponse of(List<PostsResponse> posts) {
+    public static PostsWithCursorResponse of(List<PostsResponse> posts, Long cursor) {
 
-        Long cursor = (posts.isEmpty())
-                ? NumberConstants.LAST_CURSOR
+        Long newCursor = (posts.isEmpty())
+                ? determineCursorWhenEmpty(cursor)
                 : posts.get(posts.size() - 1).id();
 
-        return new PostsWithCursorResponse(posts, cursor);
+        return new PostsWithCursorResponse(posts, newCursor);
+    }
+
+    private static Long determineCursorWhenEmpty(Long cursor) {
+        return cursor.equals(NumberConstants.FIRST_CURSOR)
+                ? NumberConstants.NOTHING_CURSOR
+                : NumberConstants.LAST_CURSOR;
     }
 }

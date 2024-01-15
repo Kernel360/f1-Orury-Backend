@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.post.util;
+package org.fastcampus.oruryclient.post.converter.message;
 
 import lombok.Getter;
 

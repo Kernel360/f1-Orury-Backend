@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.util.image.converter;
+package org.fastcampus.orurycommon.util;
 
 import java.util.Arrays;
 import java.util.List;
