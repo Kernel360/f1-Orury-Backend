@@ -3,8 +3,7 @@ package org.fastcampus.oruryclient.post.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurydomain.base.converter.ApiResponse;
-import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.post.converter.request.PostCreateRequest;
 import org.fastcampus.oruryclient.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryclient.post.converter.response.PostResponse;
@@ -14,9 +13,10 @@ import org.fastcampus.oruryclient.post.converter.response.PostsWithPageResponse;
 import org.fastcampus.oruryclient.post.service.PostLikeService;
 import org.fastcampus.oruryclient.post.service.PostService;
 import org.fastcampus.oruryclient.post.util.PostMessage;
-import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.oruryclient.user.service.UserService;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.orurydomain.post.dto.PostDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -82,7 +82,7 @@ public class PostController {
 
     @Operation(summary = "검색어에 따른 게시글 목록 조회", description = "검색어와 cursor값을 받아, '검색어와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts")
-    public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, Long cursor) {
+    public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, @RequestParam Long cursor) {
         List<PostDto> postDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
