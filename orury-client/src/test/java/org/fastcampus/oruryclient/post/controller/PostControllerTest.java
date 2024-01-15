@@ -2,12 +2,12 @@ package org.fastcampus.oruryclient.post.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.oruryclient.post.converter.message.PostMessage;
 import org.fastcampus.oruryclient.post.converter.request.PostCreateRequest;
 import org.fastcampus.oruryclient.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryclient.post.converter.response.PostsResponse;
 import org.fastcampus.oruryclient.post.converter.response.PostsWithCursorResponse;
 import org.fastcampus.oruryclient.post.converter.response.PostsWithPageResponse;
-import org.fastcampus.oruryclient.post.util.PostMessage;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -306,7 +306,7 @@ class PostControllerTest extends ControllerTest {
         int category = 1;
         Long cursor = 1L;
         for (int i = 1; i <= NumberConstants.POST_PAGINATION_SIZE; i++) postDtos.add(createPostDto((long) i));
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList());
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList(), cursor);
         PostMessage code = PostMessage.POSTS_READ;
         given(postService.getPostDtosByCategory(
                 1,
@@ -341,7 +341,7 @@ class PostControllerTest extends ControllerTest {
         List<PostDto> postDtos = new ArrayList<>();
         int category = 1;
         Long cursor = 1L;
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList());
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList(), cursor);
         PostMessage code = PostMessage.POSTS_READ;
         given(postService.getPostDtosByCategory(
                 1,
@@ -376,7 +376,7 @@ class PostControllerTest extends ControllerTest {
         List<PostDto> postDtos = new ArrayList<>();
 
         for (int i = 1; i <= NumberConstants.POST_PAGINATION_SIZE; i++) postDtos.add(createPostDto((long) i));
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList());
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList(), cursor);
         PostMessage code = PostMessage.POSTS_READ;
         given(postService.getPostDtosBySearchWord(
                 searchWord,
@@ -413,7 +413,7 @@ class PostControllerTest extends ControllerTest {
         String searchWord = "title";
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<PostDto> postDtos = new ArrayList<>();
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList());
+        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream().map(PostsResponse::of).toList(), cursor);
         PostMessage code = PostMessage.POSTS_READ;
         given(postService.getPostDtosBySearchWord(
                 searchWord,
