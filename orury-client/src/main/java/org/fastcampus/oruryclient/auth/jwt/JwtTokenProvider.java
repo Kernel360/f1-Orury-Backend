@@ -67,7 +67,7 @@ public class JwtTokenProvider {
     public JwtToken reissueJwtTokens(String refreshToken) {
         // Refresh 토큰 헤더가 없거나 Bearer 토큰이 아닌 경우
         if (refreshToken == null || !refreshToken.startsWith("Bearer ")) {
-            throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
+            throw new AuthException(TokenErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // Refresh 토큰 추출

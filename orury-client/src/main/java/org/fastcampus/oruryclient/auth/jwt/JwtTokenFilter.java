@@ -30,15 +30,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String accessToken = null;
-        try {
-            accessToken = jwtTokenProvider.getTokenFromRequest(request);
-        } catch (AuthException e) {
-            jwtExceptionHandler(response, e);
-            return;
-        }
-
         Authentication authentication = null;
         try {
+            accessToken = jwtTokenProvider.getTokenFromRequest(request);
             authentication = jwtTokenProvider.getAuthenticationFromAccessToken(accessToken);
         } catch (AuthException e) {
             jwtExceptionHandler(response, e);
