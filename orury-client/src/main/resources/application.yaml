@@ -67,6 +67,15 @@ spring:
   jwt:
     secret:
       ENC(s+e66U0YV1+iNWMLFl0LCHmARANd5yCv3k41u0iPDpCyfG7+PUgpsYNyUP7SFk/PUNPuK/wnNod399PK2kW+qllbWZzqNwp6msfDx1xP8DCiTHCZXE4rcNZDYji0bM9uzyxIDCGMyDE=)
+cloud:
+  aws:
+    s3:
+      bucket: orury-image
+    credentials:
+      accessKey: ${AWS_S3_ACCESS_KEY}
+      secretKey: ${AWS_S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
 ---
 
 spring:
