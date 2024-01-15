@@ -1,4 +1,4 @@
-package org.fastcampus.orurycommon.s3;
+package org.fastcampus.orurycommon.util;
 
 import java.net.NetworkInterface;
 import java.security.SecureRandom;

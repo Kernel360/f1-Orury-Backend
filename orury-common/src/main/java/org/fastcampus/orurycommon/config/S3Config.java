@@ -1,4 +1,4 @@
-package org.fastcampus.orurycommon.s3;
+package org.fastcampus.orurycommon.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

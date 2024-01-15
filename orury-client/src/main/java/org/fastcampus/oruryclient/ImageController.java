@@ -3,7 +3,7 @@ package org.fastcampus.oruryclient;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurycommon.s3.S3Service;
+import org.fastcampus.orurycommon.util.S3Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

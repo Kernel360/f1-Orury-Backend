@@ -1,4 +1,4 @@
-package org.fastcampus.orurycommon.s3;
+package org.fastcampus.orurycommon.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

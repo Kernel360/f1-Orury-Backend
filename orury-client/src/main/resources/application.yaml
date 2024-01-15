@@ -72,8 +72,8 @@ cloud:
     s3:
       bucket: orury-image
     credentials:
-      accessKey: ${AWS_S3_ACCESS_KEY}
-      secretKey: ${AWS_S3_SECRET_KEY}
+      accessKey: ENC(yfr+1GPLxMHuTbbID6K7Jbs0Dm9iuuK9yFjrOJv8jCU=)
+      secretKey: ENC(nnQ4XTkipeaA+bE6zKD6kI04Axa+E2Qjmw081EgZHpPXhPEBV/dgwqf9YeN1a0vJebMq0yceQJQ=)
     region:
       static: ap-northeast-2
 ---
