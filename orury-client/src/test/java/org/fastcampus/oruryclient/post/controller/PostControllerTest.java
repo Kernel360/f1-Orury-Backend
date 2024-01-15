@@ -81,6 +81,9 @@ class PostControllerTest extends ControllerTest {
 
         //then
         then(postService).should().getPostDtoById(postId);
+        then(postService).should(never()).addViewCount(any());
+        then(postLikeService).should(never()).isLiked(any(), any());
+
     }
 
     @DisplayName("[POST] 유저 정보와 게시글 정보를 받아 게시글 생성시 예외 처리 - 성공")
