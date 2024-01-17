@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("ReviewServiceTest")
+@DisplayName("[Service] 리뷰 Service 테스트")
 @ActiveProfiles("test")
 public class ReviewServiceTest {
 

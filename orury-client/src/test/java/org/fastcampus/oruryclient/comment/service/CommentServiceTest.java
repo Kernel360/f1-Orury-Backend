@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("CommentServiceTest")
+@DisplayName("[Service] 댓글 Service 테스트")
 @ActiveProfiles("test")
 class CommentServiceTest {
 

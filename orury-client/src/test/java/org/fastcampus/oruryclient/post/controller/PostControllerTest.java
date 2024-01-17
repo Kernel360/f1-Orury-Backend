@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("[Controller] 게시글 관련 테스트")
+@DisplayName("[Controller] 게시글 Controller 테스트")
 class PostControllerTest extends ControllerTest {
 
     @DisplayName("[GET] 게시글 id로 게시글 상세 조회 - 성공")
