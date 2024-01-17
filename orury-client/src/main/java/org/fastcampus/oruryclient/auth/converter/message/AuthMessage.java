@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.auth.util;
+package org.fastcampus.oruryclient.auth.converter.message;
 
 import lombok.Getter;
 
