@@ -9,6 +9,7 @@ import org.fastcampus.orurydomain.user.dto.UserDto;
 public record LoginResponse(
         Long id,
         String email,
+        int signUpType,
         String nickname,
         String accessToken,
         String refreshToken
@@ -16,6 +17,7 @@ public record LoginResponse(
     public static LoginResponse of(
             Long id,
             String email,
+            int signUpType,
             String nickname,
             String accessToken,
             String refreshToken
@@ -23,6 +25,7 @@ public record LoginResponse(
         return new LoginResponse(
                 id,
                 email,
+                signUpType,
                 nickname,
                 accessToken,
                 refreshToken
@@ -33,6 +36,7 @@ public record LoginResponse(
         return new LoginResponse(
                 userDto.id(),
                 userDto.email(),
+                userDto.signUpType(),
                 userDto.nickname(),
                 jwtToken.accessToken(),
                 jwtToken.refreshToken()
