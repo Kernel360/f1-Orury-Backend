@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.Constants;
 import org.fastcampus.orurycommon.error.code.TokenErrorCode;
 import org.fastcampus.orurycommon.error.exception.AuthException;
-import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,7 +35,7 @@ public class JwtTokenProvider {
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
-        String accessTokenHeader = request.getHeader("accessToken");
+        String accessTokenHeader = request.getHeader("Authorization");
 
         // AccessToken 헤더가 없거나 Bearer 토큰이 아닌 경우
         if (accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
@@ -97,9 +96,9 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-    public JwtToken createJwtToken(UserDto userDto) {
-        String accessToken = createAccessToken(userDto.id(), userDto.email());
-        String refreshToken = createRefreshToken(userDto.id(), userDto.email());
+    public JwtToken createJwtToken(Long id, String email) {
+        String accessToken = createAccessToken(id, email);
+        String refreshToken = createRefreshToken(id, email);
 
         return JwtToken.of(accessToken, refreshToken);
     }
