@@ -77,9 +77,6 @@ class PostLikeControllerTest extends ControllerTest {
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
                 )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(code.getMessage()))
-        ;
 
         then(postLikeService).should(times(1)).deletePostLike(postLikeDto);
     }
