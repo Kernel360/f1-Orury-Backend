@@ -74,9 +74,12 @@ class PostLikeControllerTest extends ControllerTest {
 
         //when & then
         mvc.perform(delete("/post/like/" + 1L)
-                .with(csrf())
-                .contentType(APPLICATION_JSON_VALUE)
-        );
+                        .with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(code.getMessage()))
+        ;
 
         then(postLikeService).should(times(1)).deletePostLike(postLikeDto);
     }
