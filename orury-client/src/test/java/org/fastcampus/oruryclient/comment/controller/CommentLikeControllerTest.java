@@ -1,7 +1,6 @@
 package org.fastcampus.oruryclient.comment.controller;
 
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
-import org.fastcampus.oruryclient.comment.converter.request.CommentLikeRequest;
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -27,14 +26,12 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndCommentId_When_CreateCommentLike_Then_Successfully() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentMessage code = CommentMessage.COMMENT_LIKE_CREATED;
 
         //when & then
-        mvc.perform(post("/comment/like")
+        mvc.perform(post("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -50,16 +47,14 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndCommentIdIsInvalidValue_When_CreateCommentLike_Then_NotFoundException() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentErrorCode code = CommentErrorCode.NOT_FOUND;
 
         willThrow(new BusinessException(code)).given(commentService).isValidate(any(CommentLikeDto.class));
 
         //when & then
-        mvc.perform(post("/comment/like")
+        mvc.perform(post("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -74,16 +69,14 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndDeletedCommentId_When_CreateCommentLike_Then_ForbiddenException() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentErrorCode code = CommentErrorCode.FORBIDDEN;
 
         willThrow(new BusinessException(code)).given(commentService).isValidate(any(CommentLikeDto.class));
 
         //when & then
-        mvc.perform(post("/comment/like")
+        mvc.perform(post("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -98,14 +91,12 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndCommentId_When_DeleteCommentLike_Then_Successfully() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentMessage code = CommentMessage.COMMENT_LIKE_DELETED;
 
         //when & then
-        mvc.perform(delete("/comment/like")
+        mvc.perform(delete("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -121,16 +112,14 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndCommentIdIsInvalidValue_When_DeleteCommentLike_Then_NotFoundException() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentErrorCode code = CommentErrorCode.NOT_FOUND;
 
         willThrow(new BusinessException(code)).given(commentService).isValidate(any(CommentLikeDto.class));
 
         //when & then
-        mvc.perform(delete("/comment/like")
+        mvc.perform(delete("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -145,16 +134,14 @@ class CommentLikeControllerTest extends ControllerTest {
     @Test
     void given_UserIdAndDeletedCommentId_When_DeleteCommentLike_Then_ForbiddenException() throws Exception {
         //given
-        CommentLikeRequest request = createCommentLikeRequest();
         CommentErrorCode code = CommentErrorCode.FORBIDDEN;
 
         willThrow(new BusinessException(code)).given(commentService).isValidate(any(CommentLikeDto.class));
 
         //when & then
-        mvc.perform(post("/comment/like")
+        mvc.perform(delete("/comment/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
                 )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
@@ -162,9 +149,5 @@ class CommentLikeControllerTest extends ControllerTest {
 
         then(commentService).should(times(1)).isValidate(any(CommentLikeDto.class));
         then(commentLikeService).should(times(0)).deleteCommentLike(any(CommentLikeDto.class));
-    }
-
-    private CommentLikeRequest createCommentLikeRequest() {
-        return CommentLikeRequest.of(1L);
     }
 }
