@@ -1,6 +1,7 @@
 package org.fastcampus.oruryclient.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.fastcampus.oruryclient.auth.controller.AuthController;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
@@ -14,6 +15,8 @@ import org.fastcampus.oruryclient.post.controller.PostLikeController;
 import org.fastcampus.oruryclient.post.service.PostLikeService;
 import org.fastcampus.oruryclient.post.service.PostService;
 import org.fastcampus.oruryclient.review.controller.ReviewController;
+import org.fastcampus.oruryclient.review.controller.ReviewReactionController;
+import org.fastcampus.oruryclient.review.service.ReviewReactionService;
 import org.fastcampus.oruryclient.review.service.ReviewService;
 import org.fastcampus.oruryclient.user.controller.UserController;
 import org.fastcampus.oruryclient.user.service.UserService;
@@ -35,7 +38,8 @@ import org.springframework.test.web.servlet.MockMvc;
         PostController.class,
         PostLikeController.class,
         ReviewController.class,
-        UserController.class
+        UserController.class,
+        ReviewReactionController.class
 })
 @ActiveProfiles("test")
 public abstract class ControllerTest {
@@ -68,7 +72,10 @@ public abstract class ControllerTest {
 
     @MockBean
     protected GymService gymService;
-    
+
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    protected ReviewReactionService reviewReactionService;
 }
