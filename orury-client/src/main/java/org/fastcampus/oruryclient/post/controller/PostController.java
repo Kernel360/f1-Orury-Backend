@@ -82,7 +82,7 @@ public class PostController {
 
     @Operation(summary = "검색어에 따른 게시글 목록 조회", description = "검색어와 cursor값을 받아, '검색어와 cursor값에 따른 다음 게시글 목록'과 'cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
     @GetMapping("/posts")
-    public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, Long cursor) {
+    public ApiResponse<PostsWithCursorResponse> getPostsBySearchWord(@RequestParam String searchWord, @RequestParam Long cursor) {
         List<PostDto> postDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<PostsResponse> postsResponses = postDtos.stream()
                 .map(PostsResponse::of).toList();
