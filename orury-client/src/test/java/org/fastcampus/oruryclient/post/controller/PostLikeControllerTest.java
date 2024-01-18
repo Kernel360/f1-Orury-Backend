@@ -2,7 +2,6 @@ package org.fastcampus.oruryclient.post.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.post.converter.message.PostMessage;
-import org.fastcampus.oruryclient.post.converter.request.PostLikeRequest;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.post.db.model.PostLikePK;
@@ -34,10 +33,10 @@ class PostLikeControllerTest extends ControllerTest {
         PostMessage code = PostMessage.POST_LIKE_CREATED;
 
         //when & then
-        mvc.perform(post("/post/like")
+        mvc.perform(post("/post/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(createPostLikeRequest())))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data").isEmpty())
@@ -56,10 +55,10 @@ class PostLikeControllerTest extends ControllerTest {
                 .given(postLikeService).createPostLike(any());
 
         //when & then
-        mvc.perform(post("/post/like")
+        mvc.perform(post("/post/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(createInvalidPostLikeRequest())))
+                )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
@@ -74,13 +73,10 @@ class PostLikeControllerTest extends ControllerTest {
         PostMessage code = PostMessage.POST_LIKE_DELETED;
 
         //when & then
-        mvc.perform(delete("/post/like")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(createPostLikeRequest())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(code.getMessage()))
-        ;
+        mvc.perform(delete("/post/like/" + 1L)
+                .with(csrf())
+                .contentType(APPLICATION_JSON_VALUE)
+        );
 
         then(postLikeService).should(times(1)).deletePostLike(postLikeDto);
     }
@@ -95,10 +91,10 @@ class PostLikeControllerTest extends ControllerTest {
                 .given(postLikeService).deletePostLike(any());
 
         //when & then
-        mvc.perform(delete("/post/like")
+        mvc.perform(delete("/post/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(createInvalidPostLikeRequest())))
+                )
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
@@ -110,13 +106,5 @@ class PostLikeControllerTest extends ControllerTest {
 
     private PostLikeDto createPostLikeDto() {
         return PostLikeDto.of(createPostLikePK());
-    }
-
-    private PostLikeRequest createPostLikeRequest() {
-        return PostLikeRequest.of(1L);
-    }
-
-    private PostLikeRequest createInvalidPostLikeRequest() {
-        return PostLikeRequest.of(-1L);
     }
 }
