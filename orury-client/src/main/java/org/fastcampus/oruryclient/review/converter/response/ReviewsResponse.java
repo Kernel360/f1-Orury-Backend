@@ -73,9 +73,9 @@ public record ReviewsResponse(
         }
     }
 
-    public static record ReviewReactionCount(String type, int count) {
+    private static record ReviewReactionCount(String type, int count) {
     }
 
-    public static record Writer(Long id, String nickname, String profileImage) {
+    private static record Writer(Long id, String nickname, String profileImage) {
     }
 }
