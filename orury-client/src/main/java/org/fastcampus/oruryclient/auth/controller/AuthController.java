@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
-import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
-import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
 import org.fastcampus.oruryclient.auth.jwt.JwtToken;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
@@ -36,21 +34,6 @@ public class AuthController {
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(AuthMessage.SIGNUP_SUCCESS.getMessage())
-                .build();
-    }
-
-    @Operation(summary = "로그인", description = "유저 정보를 받아 로그인 후, 로그인 성공 여부를 돌려준다.")
-    @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
-        UserDto userDto = authService.getUserDtoByEmail(request.email());
-        JwtToken jwtToken = jwtTokenProvider.createJwtToken(userDto);
-
-        LoginResponse loginResponse = LoginResponse.of(userDto, jwtToken);
-
-        return ApiResponse.<LoginResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(AuthMessage.LOGIN_SUCCESS.getMessage())
-                .data(loginResponse)
                 .build();
     }
 
