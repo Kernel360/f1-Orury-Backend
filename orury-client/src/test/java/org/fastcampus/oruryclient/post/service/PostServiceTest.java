@@ -33,7 +33,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[Service] 게시글 Service 테스트")
+@DisplayName("[Service] 게시글 테스트")
 @ActiveProfiles("test")
 class PostServiceTest {
 
