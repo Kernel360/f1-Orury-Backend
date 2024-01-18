@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.post.converter.message.PostMessage;
-import org.fastcampus.oruryclient.post.converter.request.PostLikeRequest;
 import org.fastcampus.oruryclient.post.service.PostLikeService;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.post.db.model.PostLike;
@@ -22,9 +21,9 @@ public class PostLikeController {
     private final PostLikeService postLikeService;
 
     @Operation(summary = "게시글 좋아요 생성", description = "게시글 id를 받아, 게시글 좋아요를 생성한다.")
-    @PostMapping("/post/like")
-    public ApiResponse<Object> createPostLike(@RequestBody PostLikeRequest postLikeRequest) {
-        PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postLikeRequest.postId())));
+    @PostMapping("/post/like/{postId}")
+    public ApiResponse<Object> createPostLike(@PathVariable Long postId) {
+        PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postId)));
 
         postLikeService.createPostLike(postLikeDto);
 
@@ -35,9 +34,9 @@ public class PostLikeController {
     }
 
     @Operation(summary = "게시글 좋아요 삭제", description = "게시글 id를 받아, 게시글 좋아요를 삭제한다.")
-    @DeleteMapping("/post/like")
-    public ApiResponse<Object> deletePostLike(@RequestBody PostLikeRequest postLikeRequest) {
-        PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postLikeRequest.postId())));
+    @DeleteMapping("/post/like/{postId}")
+    public ApiResponse<Object> deletePostLike(@PathVariable Long postId) {
+        PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(NumberConstants.USER_ID, postId)));
 
         postLikeService.deletePostLike(postLikeDto);
 
