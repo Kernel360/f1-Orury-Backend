@@ -27,8 +27,8 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private final SecretKey secretKey;
-    static final long ACCESS_TOKEN_EXPIRATION_TIME = 300000L; // 5분 (1000 * 60 * 5)
-    static final long REFRESH_TOKEN_EXPIRATION_TIME = 1200000L; // 20분 (1000 * 60 * 20)
+    static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
+    static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
 
     public JwtTokenProvider(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -104,7 +104,7 @@ public class JwtTokenProvider {
     }
 
     private String createAccessToken(Long id, String email) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -114,7 +114,7 @@ public class JwtTokenProvider {
     }
 
     private String createRefreshToken(Long id, String email) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -124,7 +124,7 @@ public class JwtTokenProvider {
     }
 
     private String reissueRefreshToken(Long id, String email, Date issuedAt, Date expiredAt) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(issuedAt)

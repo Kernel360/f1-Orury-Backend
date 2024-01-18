@@ -27,11 +27,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         // 클라이언트 등록 ID(google, naver, kakao)를 가져온다.
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String provider = userRequest.getClientRegistration().getRegistrationId();
 
         // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(
-                registrationId,
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.from(
+                provider,
                 oAuth2User.getAttributes()
         );
 
