@@ -3,6 +3,7 @@ package org.fastcampus.oruryclient.auth.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.Constants;
@@ -26,19 +27,23 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
+    private static final String JWT_TOKEN_PREFIX = "Bearer ";
+    private static final String ACCESS_TOKEN_HEADER_NAME = "Authorization";
+
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
+
     private final SecretKey secretKey;
-    static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
-    static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
 
     public JwtTokenProvider(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
-        String accessTokenHeader = request.getHeader("Authorization");
+        String accessTokenHeader = request.getHeader(ACCESS_TOKEN_HEADER_NAME);
 
         // AccessToken 헤더가 없거나 Bearer 토큰이 아닌 경우
-        if (accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
+        if (accessTokenHeader == null || !accessTokenHeader.startsWith(JWT_TOKEN_PREFIX)) {
             throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
         }
 
@@ -51,21 +56,23 @@ public class JwtTokenProvider {
 
         try {
             claims = parseToken(accessToken);
-        } catch (final JwtException | IllegalArgumentException exception) {
-            log.error("Error parsing token: {}", exception.getMessage());
+        } catch (final MalformedJwtException | IllegalArgumentException exception) {
+            log.error("Error with token: {}", exception.getMessage());
+            throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
+        } catch (final JwtException exception) {
+            log.error("Error when token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
 
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
-
         UserPrincipal userDetails = UserPrincipal.fromToken((long) (int) claims.get("id"), claims.getSubject(), Constants.ROLE_USER.getMessage());
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
     public JwtToken reissueJwtTokens(String refreshToken) {
         // Refresh 토큰 헤더가 없거나 Bearer 토큰이 아닌 경우
-        if (refreshToken == null || !refreshToken.startsWith("Bearer ")) {
+        if (refreshToken == null || !refreshToken.startsWith(JWT_TOKEN_PREFIX)) {
             throw new AuthException(TokenErrorCode.INVALID_REFRESH_TOKEN);
         }
 
@@ -76,16 +83,16 @@ public class JwtTokenProvider {
         Claims claims;
         try {
             claims = parseToken(refreshToken);
-        } catch (final JwtException | IllegalArgumentException exception) {
-            log.error("Error parsing token: {}", exception.getMessage());
+        } catch (final MalformedJwtException | IllegalArgumentException exception) {
+            log.error("Error with token: {}", exception.getMessage());
+            throw new AuthException(TokenErrorCode.INVALID_REFRESH_TOKEN);
+        } catch (final JwtException exception) {
+            log.error("Error when parsing: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         // Access 토큰, Refresh 토큰 모두 재발급
-        String createdAccessToken = createAccessToken((long) (int) claims.get("id"), claims.getSubject());
-        String reissuedRefreshToken = reissueRefreshToken((long) (int) claims.get("id"), claims.getSubject(), claims.getIssuedAt(), claims.getExpiration());
-
-        return JwtToken.of(createdAccessToken, reissuedRefreshToken);
+        return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
     }
 
     private Claims parseToken(String token) {
@@ -96,39 +103,19 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-    public JwtToken createJwtToken(Long id, String email) {
-        String accessToken = createAccessToken(id, email);
-        String refreshToken = createRefreshToken(id, email);
+    public JwtToken issueJwtTokens(Long id, String email) {
+        String accessToken = createJwtToken(id, email, ACCESS_TOKEN_EXPIRATION_TIME);
+        String refreshToken = createJwtToken(id, email, REFRESH_TOKEN_EXPIRATION_TIME);
 
         return JwtToken.of(accessToken, refreshToken);
     }
 
-    private String createAccessToken(Long id, String email) {
+    private String createJwtToken(Long id, String email, long expirationTime) {
         return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-                .signWith(secretKey)
-                .compact();
-    }
-
-    private String createRefreshToken(Long id, String email) {
-        return Jwts.builder()
-                .subject(email)
-                .claim("id", id)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-                .signWith(secretKey)
-                .compact();
-    }
-
-    private String reissueRefreshToken(Long id, String email, Date issuedAt, Date expiredAt) {
-        return Jwts.builder()
-                .subject(email)
-                .claim("id", id)
-                .issuedAt(issuedAt)
-                .expiration(expiredAt)
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(secretKey)
                 .compact();
     }
