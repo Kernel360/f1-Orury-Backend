@@ -27,10 +27,4 @@ public class AuthService {
             throw new BusinessException(UserErrorCode.DUPLICATED_USER);
         }
     }
-
-    @Transactional
-    public UserDto getUserDtoByEmail(String email) {
-        return UserDto.from(userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(UserErrorCode.NOT_FOUND)));
-    }
 }
