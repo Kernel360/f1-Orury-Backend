@@ -1,6 +1,7 @@
 package org.fastcampus.oruryclient.post.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
+import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.post.converter.message.PostMessage;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -8,7 +9,6 @@ import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 import org.fastcampus.orurydomain.post.dto.PostLikeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -22,10 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("[Controller] 게시글 좋아요 관련 테스트")
+@WithUserPrincipal
 class PostLikeControllerTest extends ControllerTest {
 
     @DisplayName("[POST] 게시글 id를 가지고 게시글 좋아요를 생성한다. - 성공")
-    @WithMockUser
     @Test
     void givenPostId_When_CreatePostLike_Then_Successfully() throws Exception {
         //given
@@ -46,7 +46,6 @@ class PostLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[POST] 존재하지 않는 게시글 id를 가지고 게시글 좋아요를 생성시 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_InvalidPostId_When_CreatePostLike_Then_NotFoundException() throws Exception {
         //given
@@ -65,7 +64,6 @@ class PostLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 게시글 id를 가지고 게시글 좋아요를 삭제 - 성공")
-    @WithMockUser
     @Test
     void given_PostId_When_DeletePostLike_Then_Successfully() throws Exception {
         //given
@@ -85,7 +83,6 @@ class PostLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 존재하지 않는 게시글 id를 가지고 게시글 좋아요를 삭제시 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_InvalidPostId_When_DeletePostLike_Then_NotFoundException() throws Exception {
         //given
