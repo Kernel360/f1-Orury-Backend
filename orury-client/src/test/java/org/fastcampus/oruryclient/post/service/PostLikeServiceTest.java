@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("게시글 좋아요 관련 테스트")
+@DisplayName("[Service] 게시글 좋아요 테스트")
 @ActiveProfiles("test")
 class PostLikeServiceTest {
     private PostLikeRepository postLikeRepository;
