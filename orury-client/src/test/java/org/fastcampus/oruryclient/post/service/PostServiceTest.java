@@ -66,21 +66,16 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("존재하는 게시글을 수정하면, 게시글이 정상적으로 수정되어야 한다.")
-    void when_ModifyExistingPost_Then_ModifySuccessfully() {
+    @DisplayName("게시글을 수정하면, 정상적으로 반영된다.")
+    void when_UpdatePost_Then_SavePost() {
         // given
-        UserDto userDto = createUserDto(1L);
         PostDto existingPostDto = createPostDto(1L, 1L);
-        PostDto modifiedPostDto = createPostDto(1L, 1L);
-
-        when(postRepository.findById(any())).thenReturn(Optional.of(existingPostDto.toEntity()));
 
         // when
-        postService.getPostDtoById(1L);
-        postService.updatePost(modifiedPostDto);
+        postService.updatePost(existingPostDto);
 
         // then
-        verify(postRepository).save(any());
+        then(postRepository).should(times(1)).save(existingPostDto.toEntity());
     }
 
     @Test
