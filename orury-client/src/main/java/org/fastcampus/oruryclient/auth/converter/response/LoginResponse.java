@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.auth.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.auth.jwt.JwtToken;
+import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
