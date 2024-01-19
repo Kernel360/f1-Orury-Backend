@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.Constants;
 import org.fastcampus.orurycommon.error.code.TokenErrorCode;
 import org.fastcampus.orurycommon.error.exception.AuthException;
-import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,15 +27,15 @@ import java.util.List;
 public class JwtTokenProvider {
 
     private final SecretKey secretKey;
-    static final long ACCESS_TOKEN_EXPIRATION_TIME = 300000L; // 5분 (1000 * 60 * 5)
-    static final long REFRESH_TOKEN_EXPIRATION_TIME = 1200000L; // 20분 (1000 * 60 * 20)
+    static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
+    static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
 
     public JwtTokenProvider(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
-        String accessTokenHeader = request.getHeader("accessToken");
+        String accessTokenHeader = request.getHeader("Authorization");
 
         // AccessToken 헤더가 없거나 Bearer 토큰이 아닌 경우
         if (accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
@@ -97,15 +96,15 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-    public JwtToken createJwtToken(UserDto userDto) {
-        String accessToken = createAccessToken(userDto.id(), userDto.email());
-        String refreshToken = createRefreshToken(userDto.id(), userDto.email());
+    public JwtToken createJwtToken(Long id, String email) {
+        String accessToken = createAccessToken(id, email);
+        String refreshToken = createRefreshToken(id, email);
 
         return JwtToken.of(accessToken, refreshToken);
     }
 
     private String createAccessToken(Long id, String email) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -115,7 +114,7 @@ public class JwtTokenProvider {
     }
 
     private String createRefreshToken(Long id, String email) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -125,7 +124,7 @@ public class JwtTokenProvider {
     }
 
     private String reissueRefreshToken(Long id, String email, Date issuedAt, Date expiredAt) {
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(issuedAt)
