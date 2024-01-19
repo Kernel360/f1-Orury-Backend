@@ -6,12 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.oruryclient.comment.service.CommentLikeService;
 import org.fastcampus.oruryclient.comment.service.CommentService;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.comment.db.model.CommentLike;
 import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
+import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -24,8 +25,8 @@ public class CommentLikeController {
 
     @Operation(summary = "댓글 좋아요 생성", description = "댓글 id를 받아, 댓글 좋아요를 생성한다.")
     @PostMapping("/comment/like/{commentId}")
-    public ApiResponse<Object> createCommentLike(@PathVariable Long commentId) {
-        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(NumberConstants.USER_ID, commentId)));
+    public ApiResponse<Object> createCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
         commentService.isValidate(commentLikeDto);
 
         commentLikeService.createCommentLike(commentLikeDto);
@@ -38,8 +39,8 @@ public class CommentLikeController {
 
     @Operation(summary = "댓글 좋아요 삭제", description = "댓글 id를 받아, 댓글 좋아요를 삭제한다.")
     @DeleteMapping("/comment/like/{commentId}")
-    public ApiResponse<Object> deleteCommentLike(@PathVariable Long commentId) {
-        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(NumberConstants.USER_ID, commentId)));
+    public ApiResponse<Object> deleteCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
         commentService.isValidate(commentLikeDto);
 
         commentLikeService.deleteCommentLike(commentLikeDto);
