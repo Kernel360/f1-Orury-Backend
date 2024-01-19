@@ -1,6 +1,7 @@
 package org.fastcampus.oruryclient.post.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
+import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.post.converter.message.PostMessage;
 import org.fastcampus.oruryclient.post.converter.request.PostCreateRequest;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("[Controller] 게시글 관련 테스트")
+@WithUserPrincipal
 class PostControllerTest extends ControllerTest {
 
     @DisplayName("[GET] 게시글 id로 게시글 상세 조회 - 성공")
-    @WithMockUser
     @Test
     void when_PostId_Then_PostDetailSuccessfully() throws Exception {
         //given
@@ -64,7 +64,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 게시글 id로 게시글 상세 조회 - 실패 (존재하지 않는 게시글)")
-    @WithMockUser
     @Test
     void when_PostId_Then_PostDetailFailed() throws Exception {
         //given
@@ -87,7 +86,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[POST] 유저 정보와 게시글 정보를 받아 게시글 생성시 예외 처리 - 성공")
-    @WithMockUser
     @Test
     void should_CreatePostSuccessfully() throws Exception {
         //given
@@ -115,7 +113,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[POST] 권한 없는 유저 정보와 게시글 정보를 받아 게시글 생성 - 실패")
-    @WithMockUser
     @Test
     void when_InvalidUserAndCreatePost_Then_ThrowBusinessException() throws Exception {
         //given
@@ -139,7 +136,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[PATCH] 게시글 정보를 받아 게시글을 수정 - 성공")
-    @WithMockUser
     @Test
     void given_PostInformation_Then_PostUpdateSuccessfully() throws Exception {
         //given
@@ -166,7 +162,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[PATCH] 없는 게시글 아이디를 가지고 게시글 수정할 경우 예외 처리  - 실패")
-    @WithMockUser
     @Test
     void given_InvalidPostId_When_UpdatePost_Then_NotFoundException() throws Exception {
         //given
@@ -193,7 +188,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[PATCH] 게시글 수정 권한이 없는 유저가 게시글 수정 요청할 경우 예외 처리  - 실패")
-    @WithMockUser
     @Test
     void given_NotAuthorizationUserRequest_When_UpdatedPost_Then_ForbiddenException() throws Exception {
         //given
@@ -221,7 +215,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 게시글 id를 받아 게시글을 삭제  - 성공")
-    @WithMockUser
     @Test
     void given_PostId_When_DeletePostSuccessFully() throws Exception {
         //given
@@ -248,7 +241,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 없는 게시글 id를 받아 게시글을 삭제 요청시 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_InvalidPostId_When_DeletePost_Then_NotFoundException() throws Exception {
         //given
@@ -274,7 +266,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_NotAuthorizationUserRequest_When_DeletePost_Then_ForbiddenException() throws Exception {
         //given
@@ -302,7 +293,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 카테고리: 자유게시판, '카테고리와 cursor값에 따른 다음 게시글 목록' 조회")
-    @WithMockUser
     @Test
     void given_CategoryAndCursor_When_GetPostsByCategory_Then_ResponsePagingPosts() throws Exception {
         List<PostDto> postDtos = new ArrayList<>();
@@ -338,7 +328,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 카테고리: 자유게시판, '카테고리와 cursor값에 따른 다음 게시글 목록' 조회 cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
-    @WithMockUser
     @Test
     void given_CategoryAndCursor_When_GetPostsByCategory_Then_ResponseNotFoundPostValue() throws Exception {
         List<PostDto> postDtos = new ArrayList<>();
@@ -370,7 +359,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 검색어와 cursor값을 가지고 게시글 목록 및 cursor값 조회")
-    @WithMockUser
     @Test
     void given_SearchWordAndCursor_When_GetPostsBySearchWord_Then_ResponsePagingPosts() throws Exception {
         Long cursor = 1L;
@@ -409,7 +397,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 검색어와 cursor값을 가지고 게시글 목록 및 cursor값 조회 cursor값(목록의 마지막 게시글 id / 조회된 게시글 없다면 -1L)'을 돌려준다.")
-    @WithMockUser
     @Test
     void given_SearchWordAndCursor_When_GetPostsBySearchWord_Then_ResponseNotFoundPostValue() throws Exception {
         Long cursor = 1L;
@@ -443,7 +430,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 인기 게시글 목록 조회 - page값을 받아, 'page번호에 따른 인기 게시글 목록'과 page값 반환")
-    @WithMockUser
     @Test
     void given_PageNumber_When_GetHotPosts_Then_ResponseHotPostsAndPageValue() throws Exception {
         //given
@@ -473,7 +459,6 @@ class PostControllerTest extends ControllerTest {
     }
 
     @DisplayName("[GET] 인기 게시글 목록 조회 - page값을 받아, 'page번호에 따른 인기 게시글 목록'과 마지막 page number인 -1 반환")
-    @WithMockUser
     @Test
     void given_PageNumber_When_GetHotPosts_Then_ResponseHotPostsAndLastPageValue() throws Exception {
         //given
