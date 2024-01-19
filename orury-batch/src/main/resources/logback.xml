@@ -96,11 +96,11 @@
     </root>
 
     <logger name="org.hibernate.SQL" level="DEBUG">
-        <appender-ref ref="DEBUG_ROLLING"/>
+        <appender-ref ref="INFO_ROLLING"/>
     </logger>
 
     <logger name="org.hibernate.type.descriptor.sql" level="DEBUG">
-        <appender-ref ref="DEBUG_ROLLING"/>
+        <appender-ref ref="INFO_ROLLING"/>
     </logger>
 
 

@@ -95,13 +95,13 @@
         <appender-ref ref="ERROR_ROLLING"/>
     </root>
 
-    <logger name="org.hibernate.SQL" level="DEBUG">
-        <appender-ref ref="INFO_ROLLING"/>
-    </logger>
+    <!--    <logger name="org.hibernate.SQL" level="DEBUG">-->
+    <!--        <appender-ref ref="INFO_ROLLING"/>-->
+    <!--    </logger>-->
 
-    <logger name="org.hibernate.type.descriptor.sql" level="DEBUG">
-        <appender-ref ref="INFO_ROLLING"/>
-    </logger>
+    <!--    <logger name="org.hibernate.type.descriptor.sql" level="DEBUG">-->
+    <!--        <appender-ref ref="INFO_ROLLING"/>-->
+    <!--    </logger>-->
 
 
 </configuration>
