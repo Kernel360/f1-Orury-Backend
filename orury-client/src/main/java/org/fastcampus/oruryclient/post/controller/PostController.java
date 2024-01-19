@@ -17,9 +17,11 @@ import org.fastcampus.oruryclient.user.service.UserService;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
+import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +37,8 @@ public class PostController {
 
     @Operation(summary = "게시글 생성", description = "게시글 정보를 받아, 게시글을 생성한다.")
     @PostMapping("/post")
-    public ApiResponse<Object> createPost(@RequestBody PostCreateRequest request) {
-        UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
+    public ApiResponse<Object> createPost(@RequestBody PostCreateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = request.toDto(userDto);
 
         postService.createPost(postDto);
@@ -49,13 +51,13 @@ public class PostController {
 
     @Operation(summary = "게시글 상세 조회", description = "게시글 id를 받아, 게시글 상세 정보를 돌려준다.")
     @GetMapping("/post/{id}")
-    public ApiResponse<PostResponse> getPostById(@PathVariable Long id) {
+    public ApiResponse<PostResponse> getPostById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         PostDto postDto = postService.getPostDtoById(id);
 
         postService.addViewCount(postDto);
 
-        boolean isLike = postLikeService.isLiked(NumberConstants.USER_ID, id);
-        PostResponse response = PostResponse.of(postDto, NumberConstants.USER_ID, isLike);
+        boolean isLike = postLikeService.isLiked(userPrincipal.id(), id);
+        PostResponse response = PostResponse.of(postDto, userPrincipal.id(), isLike);
 
         return ApiResponse.<PostResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -115,8 +117,8 @@ public class PostController {
 
     @Operation(summary = "게시글 수정", description = "게시글 정보를 받아, 게시글을 수정한다.")
     @PatchMapping("/post")
-    public ApiResponse<Object> updatePost(@RequestBody PostUpdateRequest request) {
-        UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
+    public ApiResponse<Object> updatePost(@RequestBody PostUpdateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = postService.getPostDtoById(request.id());
         postService.isValidate(postDto, userDto);
 
@@ -132,8 +134,8 @@ public class PostController {
 
     @Operation(summary = "게시글 삭제", description = "게시글 id를 받아, 게시글을 삭제한다.")
     @DeleteMapping("/post/{id}")
-    public ApiResponse<Object> deletePost(@PathVariable Long id) {
-        UserDto userDto = userService.getUserDtoById(NumberConstants.USER_ID);
+    public ApiResponse<Object> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = postService.getPostDtoById(id);
         postService.isValidate(postDto, userDto);
 

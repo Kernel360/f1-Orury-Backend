@@ -2,12 +2,12 @@ package org.fastcampus.oruryclient.comment.controller;
 
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.oruryclient.config.ControllerTest;
+import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("[Controller] 댓글 좋아요 관련 테스트")
+@WithUserPrincipal
 class CommentLikeControllerTest extends ControllerTest {
 
     @DisplayName("[POST] 유저 id, 댓글 id를 가지고 댓글 좋아요를 생성한다. - 성공")
-    @WithMockUser
     @Test
     void given_UserIdAndCommentId_When_CreateCommentLike_Then_Successfully() throws Exception {
         //given
@@ -43,7 +43,6 @@ class CommentLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[POST] 유저 id, 댓글 id 중에 올바르지 않은 값을 가지고 댓글 좋아요를 생성하는 경우 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_UserIdAndCommentIdIsInvalidValue_When_CreateCommentLike_Then_NotFoundException() throws Exception {
         //given
@@ -65,7 +64,6 @@ class CommentLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[POST] 유저 id, 삭제된 댓글 id 가지고 댓글 좋아요를 생성하는 경우 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_UserIdAndDeletedCommentId_When_CreateCommentLike_Then_ForbiddenException() throws Exception {
         //given
@@ -87,7 +85,6 @@ class CommentLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 유저 id, 댓글 id를 가지고 댓글 좋아요를 삭제한다. - 성공")
-    @WithMockUser
     @Test
     void given_UserIdAndCommentId_When_DeleteCommentLike_Then_Successfully() throws Exception {
         //given
@@ -108,7 +105,6 @@ class CommentLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 유저 id, 댓글 id 중에 올바르지 않은 값을 가지고 댓글 좋아요 삭제시 예외 발생 - 실패")
-    @WithMockUser
     @Test
     void given_UserIdAndCommentIdIsInvalidValue_When_DeleteCommentLike_Then_NotFoundException() throws Exception {
         //given
@@ -130,7 +126,6 @@ class CommentLikeControllerTest extends ControllerTest {
     }
 
     @DisplayName("[DELETE] 유저 id, 삭제된 댓글 id 가지고 댓글 좋아요를 삭제하는 경우 예외 처리 - 실패")
-    @WithMockUser
     @Test
     void given_UserIdAndDeletedCommentId_When_DeleteCommentLike_Then_ForbiddenException() throws Exception {
         //given
