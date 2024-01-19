@@ -106,10 +106,9 @@ class PostControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(message.getMessage()))
         ;
 
-        postService.createPost(postDto);
-
         //then
         then(userService).should().getUserDtoById(userId);
+        then(postService).should().createPost(any());
     }
 
     @DisplayName("[POST] 권한 없는 유저 정보와 게시글 정보를 받아 게시글 생성 - 실패")
@@ -133,6 +132,7 @@ class PostControllerTest extends ControllerTest {
 
         //then
         then(userService).should().getUserDtoById(userId);
+        then(postService).should(never()).createPost(any());
     }
 
     @DisplayName("[PATCH] 게시글 정보를 받아 게시글을 수정 - 성공")
@@ -159,6 +159,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should().updatePost(any());
     }
 
     @DisplayName("[PATCH] 없는 게시글 아이디를 가지고 게시글 수정할 경우 예외 처리  - 실패")
@@ -185,6 +186,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should(never()).updatePost(any());
     }
 
     @DisplayName("[PATCH] 게시글 수정 권한이 없는 유저가 게시글 수정 요청할 경우 예외 처리  - 실패")
@@ -212,6 +214,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should(never()).updatePost(any());
     }
 
     @DisplayName("[DELETE] 게시글 id를 받아 게시글을 삭제  - 성공")
@@ -238,6 +241,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should().deletePost(any());
     }
 
     @DisplayName("[DELETE] 없는 게시글 id를 받아 게시글을 삭제 요청시 예외 처리 - 실패")
@@ -263,6 +267,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should(never()).deletePost(any());
     }
 
     @DisplayName("[DELETE] 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외 처리 - 실패")
@@ -290,6 +295,7 @@ class PostControllerTest extends ControllerTest {
         //then
         then(userService).should().getUserDtoById(any());
         then(postService).should().getPostDtoById(any());
+        then(postService).should(never()).deletePost(any());
     }
 
     @DisplayName("[GET] 카테고리: 자유게시판, '카테고리와 cursor값에 따른 다음 게시글 목록' 조회")
