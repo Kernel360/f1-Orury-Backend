@@ -6,8 +6,3 @@ CREATE TABLE `refresh_token`
     `updated_at`      DATETIME     NULL,
     PRIMARY KEY (`user_id`)
 );
-
-ALTER TABLE `refresh_token`
-    ADD CONSTRAINT `FK_user_TO_refresh_token_1`
-        FOREIGN KEY (`user_id`)
-            REFERENCES `user` (`id`);
