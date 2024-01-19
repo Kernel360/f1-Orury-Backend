@@ -4,16 +4,13 @@ management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    org.task-tracker.project: info
+    org.hibernate.SQL: debug
     org.springframework.web.servlet: info
     org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+    org.hibernate.type.descriptor.sql: trace
 springdoc:
   show-actuator: true
+
 spring:
   mvc:
     cors:
@@ -28,13 +25,14 @@ spring:
     #      password: ${LOCAL_DB_USER_PASSWORD}
     password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
+    show-sql: true
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate.ddl-auto: none
-    show-sql: true
+    generate-ddl: true
     properties:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
+    hibernate.ddl-auto: none
   sql.init.mode: always
   data.rest:
     base-path: /api
@@ -44,8 +42,6 @@ spring:
     livereload:
       enabled: true
   freemarker:
-    cache: false
-  thymeleaf:
     cache: false
     prefix=file: src/main/resources/templates/
   security:
