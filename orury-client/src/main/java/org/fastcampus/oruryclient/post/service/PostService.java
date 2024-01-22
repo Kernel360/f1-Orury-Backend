@@ -6,6 +6,8 @@ import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.log.Logging;
+import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,11 +34,12 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final S3Repository s3Repository;
 
     @Logging
     @Transactional
-    public void createPost(PostDto postDto) {
-        postRepository.save(postDto.toEntity());
+    public void createPost(PostDto postDto, MultipartFile... images) {
+        imageUploadAndSave(postDto, images);
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +49,8 @@ public class PostService {
                 : postRepository.findByCategoryAndIdLessThanOrderByIdDesc(category, cursor, pageable);
 
         return posts.stream()
-                .map(PostDto::from).toList();
+                .map(PostDto::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -55,26 +60,30 @@ public class PostService {
                 : postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
 
         return posts.stream()
-                .map(PostDto::from).toList();
+                .map(PostDto::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
         Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
-                (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now().minusMonths(1L), pageable);
+                (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now()
+                        .minusMonths(1L), pageable);
 
         return posts.map(PostDto::from);
     }
 
     @Logging
     @Transactional
-    public void updatePost(PostDto postDto) {
-        postRepository.save(postDto.toEntity());
+    public void updatePost(PostDto postDto, MultipartFile... images) {
+        oldImagesDelete(postDto);
+        imageUploadAndSave(postDto, images);
     }
 
     @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
+        oldImagesDelete(postDto);
         postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
 
         List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
@@ -84,7 +93,6 @@ public class PostService {
                     commentRepository.delete(comment);
                 }
         );
-
         postRepository.delete(postDto.toEntity());
     }
 
@@ -97,11 +105,14 @@ public class PostService {
     public PostDto getPostDtoById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        return PostDto.from(post);
+        var imgUrls = s3Repository.getUrls("post", post.getImages());
+        var imgUrlsToString = ImageUrlConverter.convertListToString(imgUrls);
+        return PostDto.from(post, imgUrlsToString);
     }
 
     public void isValidate(PostDto postDto, UserDto userDto) {
-        if (!Objects.equals(postDto.userDto().id(), userDto.id()))
+        if (!Objects.equals(postDto.userDto()
+                .id(), userDto.id()))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
     }
 
@@ -109,5 +120,22 @@ public class PostService {
         return (postDtos.hasNext())
                 ? page + 1
                 : NumberConstants.LAST_PAGE;
+    }
+
+    private void imageUploadAndSave(PostDto postDto, MultipartFile... images) {
+        if (s3Repository.isEmpty(images)) {
+            postRepository.save(postDto.toEntity(null));
+        } else {
+            List<String> imageUrls = s3Repository.upload("post", images);
+            String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
+            postRepository.save(postDto.toEntity(convertUrl));
+        }
+    }
+
+    private void oldImagesDelete(PostDto postDto) {
+        String[] oldImages = postDto.images()
+                .split(",");
+        log.info("oldImages Images : {}, {}", oldImages[0], oldImages[1]);
+        s3Repository.delete("post", oldImages);
     }
 }
