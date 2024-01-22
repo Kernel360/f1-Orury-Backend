@@ -1,14 +1,5 @@
 package org.fastcampus.oruryclient.review.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -31,6 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
@@ -248,15 +246,23 @@ public class ReviewReactionServiceTest {
                 "gymRoadAddress",
                 "gymAddress",
                 4.5f,
+                12,
                 "gymImages",
                 "123.456",
                 "123.456",
-                "10:00",
-                "22:00",
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
-                "월"
+                "MONDAY",
+                "11:00 - 23:11",
+                "12:00 - 23:22",
+                "13:00 - 23:33",
+                "14:00 - 23:44",
+                "15:00 - 23:55",
+                "16:00 - 23:66",
+                "17:00 - 23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 

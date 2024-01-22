@@ -200,15 +200,23 @@ public class ReviewServiceTest {
                 "gymRoadAddress",
                 "gymAddress",
                 4.5f,
+                12,
                 "gymImages",
                 "123.456",
                 "123.456",
-                "10:00",
-                "22:00",
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
-                "월"
+                "MONDAY",
+                "11:00 - 23:11",
+                "12:00 - 23:22",
+                "13:00 - 23:33",
+                "14:00 - 23:44",
+                "15:00 - 23:55",
+                "16:00 - 23:66",
+                "17:00 - 23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 
