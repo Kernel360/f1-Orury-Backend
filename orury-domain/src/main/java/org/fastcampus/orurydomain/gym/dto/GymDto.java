@@ -32,44 +32,6 @@ public record GymDto(
         String remark
 ) {
     public static GymDto of(
-            String place_name,
-            String kakaoId,
-            String road_address_name,
-            String phone,
-            String x,
-            String y,
-            String address_name
-    ) {
-        return GymDto.of(
-                null,
-                place_name,
-                kakaoId,
-                road_address_name,
-                address_name,
-                null,
-                0,
-                null,
-                x,
-                y,
-                null,
-                phone,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-    }
-
-    public static GymDto of(
             Long id,
             String name,
             String kakaoId,
