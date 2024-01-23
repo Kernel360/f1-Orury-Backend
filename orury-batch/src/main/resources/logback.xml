@@ -1,0 +1,107 @@
+<configuration scan="true" scanPeriod="15 seconds">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%green(%d{yyyy-MM-dd HH:mm:ss}:) %magenta([%thread]) %clr(%-5level) %cyan(%logger) [%C.%M:%line] -
+                %yellow(%msg%n)
+            </Pattern>
+        </layout>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- INFO Level Appender -->
+    <appender name="INFO_ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Rolling 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--            <fileNamePattern>${LOCAL_LOG_URL}/logs/info/info-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+            <fileNamePattern>${AWS_BATCH_LOG_PATH}/info/info-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 1일까지 보관 -->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 1KB -->
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- WARN Level Appender -->
+    <appender name="WARN_ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Rolling 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--            <fileNamePattern>${LOCAL_LOG_URL}/logs/warn/warn-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+            <fileNamePattern>${AWS_BATCH_LOG_PATH}/warn/warn-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 1일까지 보관 -->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 200MB -->
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- ERROR Level Appender -->
+    <appender name="ERROR_ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Rolling 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--            <fileNamePattern>${LOCAL_LOG_URL}/logs/error/error-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+            <fileNamePattern>${AWS_BATCH_LOG_PATH}/error/error-logback-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 1일까지 보관 -->
+            <maxHistory>1</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 200MB -->
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <root level="TRACE">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="INFO_ROLLING"/>
+        <appender-ref ref="WARN_ROLLING"/>
+        <appender-ref ref="ERROR_ROLLING"/>
+    </root>
+
+    <logger name="org.hibernate.SQL" level="DEBUG">
+        <appender-ref ref="INFO_ROLLING"/>
+    </logger>
+
+    <logger name="org.hibernate.type.descriptor.sql" level="DEBUG">
+        <appender-ref ref="INFO_ROLLING"/>
+    </logger>
+
+
+</configuration>
