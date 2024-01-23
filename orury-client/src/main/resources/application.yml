@@ -18,7 +18,7 @@ spring:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
-  ddatasource:
+  datasource:
     #url: ${LOCAL_DB_NAME}
     url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
     #username: ${LOCAL_DB_USER_NAME}
