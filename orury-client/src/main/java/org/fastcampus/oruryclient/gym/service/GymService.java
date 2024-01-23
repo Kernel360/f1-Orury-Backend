@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.OperatingTimeConverter;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Slf4j
@@ -42,11 +44,11 @@ public class GymService {
         DayOfWeek today = LocalDateTime.now().getDayOfWeek();
         String operatingTime = gymDto.operatingTimes().get(today);
 
-        int openTime = Integer.parseInt(operatingTime.split("~")[0].split(":")[0] + operatingTime.split("~")[0].split(":")[1]);
-        int closeTime = Integer.parseInt(operatingTime.split("~")[1].split(":")[0] + operatingTime.split("~")[1].split(":")[1]);
-        int nowTime = LocalDateTime.now().getHour() * 100 + LocalDateTime.now().getMinute();
+        LocalTime openTime = OperatingTimeConverter.extractOpenTime(operatingTime);
+        LocalTime closeTime = OperatingTimeConverter.extractCloseTime(operatingTime);
+        LocalTime nowTime = LocalTime.now();
 
-        return openTime <= nowTime && nowTime <= closeTime;
+        return nowTime.isAfter(openTime) && nowTime.isBefore(closeTime);
     }
 
     private double getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
