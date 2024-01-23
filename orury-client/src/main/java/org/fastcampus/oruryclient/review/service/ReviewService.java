@@ -64,4 +64,10 @@ public class ReviewService {
         return reviews.stream()
                 .map(ReviewDto::from).toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDto> getAllReviewDtosByGymId(Long gymId) {
+        return reviewRepository.findByGymId(gymId)
+                .stream().map(ReviewDto::from).toList();
+    }
 }

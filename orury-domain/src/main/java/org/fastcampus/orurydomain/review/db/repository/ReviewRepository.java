@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findByGymId(Long gymId);
+
     boolean existsByUser_IdAndGym_Id(Long userId, Long gymId);
 
     List<Review> findByGymIdOrderByIdDesc(Long gymId, Pageable pageable);
@@ -25,7 +27,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "r.angryCount = CASE WHEN :reactionType = 5 THEN r.angryCount + 1 ELSE r.angryCount END " +
             "where r.id = :reviewId")
     void increaseReviewCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
-    
+
     @Modifying
     @Query("update review r set " +
             "r.thumbCount = CASE WHEN :oldReactionType = 1 THEN r.thumbCount - 1 WHEN :newReactionType = 1 THEN r.thumbCount + 1 ELSE r.thumbCount END, " +
