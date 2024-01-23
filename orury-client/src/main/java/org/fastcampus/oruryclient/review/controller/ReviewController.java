@@ -29,7 +29,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/reviews")
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
@@ -57,7 +57,6 @@ public class ReviewController {
                 .status(HttpStatus.OK.value())
                 .message(ReviewMessage.REVIEW_CREATED.getMessage())
                 .build();
-
     }
 
     @Operation(summary = "리뷰 조회", description = "리뷰 수정을 위해 리뷰 id로 기존에 있는 값을 조회하여 정보를 가져온다.")

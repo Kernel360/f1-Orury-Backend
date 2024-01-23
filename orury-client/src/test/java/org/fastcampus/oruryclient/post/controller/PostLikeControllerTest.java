@@ -33,7 +33,7 @@ class PostLikeControllerTest extends ControllerTest {
         PostMessage code = PostMessage.POST_LIKE_CREATED;
 
         //when & then
-        mvc.perform(post("/post/like/" + 1L)
+        mvc.perform(post("/api/v1/posts/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
                 )
@@ -42,7 +42,8 @@ class PostLikeControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
         ;
 
-        then(postLikeService).should(times(1)).createPostLike(postLikeDto);
+        then(postLikeService).should(times(1))
+                .createPostLike(postLikeDto);
     }
 
     @DisplayName("[POST] 존재하지 않는 게시글 id를 가지고 게시글 좋아요를 생성시 예외 처리 - 실패")
@@ -51,10 +52,11 @@ class PostLikeControllerTest extends ControllerTest {
         //given
         PostErrorCode code = PostErrorCode.NOT_FOUND;
         willThrow(new BusinessException(code))
-                .given(postLikeService).createPostLike(any());
+                .given(postLikeService)
+                .createPostLike(any());
 
         //when & then
-        mvc.perform(post("/post/like/" + 1L)
+        mvc.perform(post("/api/v1/posts/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
                 )
@@ -71,7 +73,7 @@ class PostLikeControllerTest extends ControllerTest {
         PostMessage code = PostMessage.POST_LIKE_DELETED;
 
         //when & then
-        mvc.perform(delete("/post/like/" + 1L)
+        mvc.perform(delete("/api/v1/posts/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
                 )
@@ -79,7 +81,8 @@ class PostLikeControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(postLikeService).should(times(1)).deletePostLike(postLikeDto);
+        then(postLikeService).should(times(1))
+                .deletePostLike(postLikeDto);
     }
 
     @DisplayName("[DELETE] 존재하지 않는 게시글 id를 가지고 게시글 좋아요를 삭제시 예외 처리 - 실패")
@@ -88,10 +91,11 @@ class PostLikeControllerTest extends ControllerTest {
         //given
         PostErrorCode code = PostErrorCode.NOT_FOUND;
         willThrow(new BusinessException(code))
-                .given(postLikeService).deletePostLike(any());
+                .given(postLikeService)
+                .deletePostLike(any());
 
         //when & then
-        mvc.perform(delete("/post/like/" + 1L)
+        mvc.perform(delete("/api/v1/posts/like/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON_VALUE)
                 )

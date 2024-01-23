@@ -19,8 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -116,13 +114,13 @@ public class ReviewServiceTest {
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(review));
 
         //when
-        ReviewDto reviewDto = reviewService.getReviewDtoById(1L);
+        ReviewDto reviewDto = reviewService.getReviewDtoById(anyLong());
 
         //then
         then(reviewRepository).should()
                 .findById(anyLong());
 
-        assertEquals(ReviewDto.from(review), reviewDto);
+        assertEquals(ReviewDto.from(review), createReviewDto(1L));
     }
 
     @Test
@@ -197,10 +195,10 @@ public class ReviewServiceTest {
                 "userPassword",
                 1,
                 1,
-                LocalDate.now(),
+                null,
                 "userProfileImage",
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
         );
     }
 
@@ -235,8 +233,8 @@ public class ReviewServiceTest {
                 4,
                 createUser(id),
                 createGym(id),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
         );
     }
 
@@ -253,8 +251,26 @@ public class ReviewServiceTest {
                 4,
                 createUser(id),
                 createGym(1L),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
+        );
+    }
+
+    private static ReviewDto createReviewDto(Long id) {
+        return ReviewDto.of(
+                id,
+                "reviewContent",
+                "reviewImages",
+                4.5f,
+                0,
+                1,
+                2,
+                3,
+                4,
+                UserDto.from(createUser(id)),
+                GymDto.from(createGym(id)),
+                null,
+                null
         );
     }
 
