@@ -116,6 +116,9 @@ public class ReviewController {
     @Operation(summary = "암장 별 리뷰 조회", description = "암장 id를 받아 해당 암장의 리뷰를 반환한다.")
     @GetMapping("/gym/{gymId}")
     public ApiResponse<Object> getReviews(@PathVariable Long gymId, @RequestParam Long cursor, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        String gymName = gymService.getGymDtoById(gymId)
+                .name();
+
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
@@ -123,9 +126,6 @@ public class ReviewController {
                     return ReviewsResponse.of(reviewDto, userPrincipal.id(), myReaction);
                 })
                 .toList();
-
-        String gymName = gymService.getGymDtoById(gymId)
-                .name();
 
         ReviewsWithCursorResponse response = ReviewsWithCursorResponse.of(reviewsResponses, gymName);
 
@@ -135,6 +135,4 @@ public class ReviewController {
                 .data(response)
                 .build();
     }
-
-
 }
