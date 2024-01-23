@@ -76,14 +76,14 @@ public class PostService {
     @Logging
     @Transactional
     public void updatePost(PostDto postDto, MultipartFile... images) {
-        oldImagesDelete(postDto);
+        oldS3ImagesDelete(postDto);
         imageUploadAndSave(postDto, images);
     }
 
     @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
-        oldImagesDelete(postDto);
+        oldS3ImagesDelete(postDto);
         postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
 
         List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
@@ -132,10 +132,9 @@ public class PostService {
         }
     }
 
-    private void oldImagesDelete(PostDto postDto) {
+    private void oldS3ImagesDelete(PostDto postDto) {
         String[] oldImages = postDto.images()
                 .split(",");
-        log.info("oldImages Images : {}, {}", oldImages[0], oldImages[1]);
         s3Repository.delete("post", oldImages);
     }
 }
