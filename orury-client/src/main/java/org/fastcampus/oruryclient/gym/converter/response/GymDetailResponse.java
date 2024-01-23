@@ -19,21 +19,21 @@ public record GymDetailResponse(
         String address,
         Float scoreAverage,
         List<String> images,
-        LocationGrid position,
+        Position position,
         String brand,
         String phoneNumber,
         String instagramLink,
         String homepageLink,
         String settingDay,
-        Set<Map.Entry<DayOfWeek, String>> operatingTimes,
-        boolean isOperating,
+        Set<Map.Entry<DayOfWeek, String>> businessHours,
+        boolean doingBusiness,
         boolean isLike,
         GymDetailStatistics.TotalReviewChart barChartData,
         GymDetailStatistics.MonthlyReviewChart lineChartData
 ) {
     public static GymDetailResponse of(
             GymDto gymDto,
-            boolean isOperating,
+            boolean doingBusiness,
             boolean isLike,
             List<ReviewDto> reviewDtos
     ) {
@@ -44,25 +44,27 @@ public record GymDetailResponse(
                 gymDto.address(),
                 gymDto.scoreAverage(),
                 ImageUrlConverter.convertToList(gymDto.images()),
-                LocationGrid.of(gymDto.latitude(), gymDto.longitude()),
+                Position.of(gymDto.latitude(), gymDto.longitude()),
                 gymDto.brand(),
                 gymDto.phoneNumber(),
                 gymDto.instagramLink(),
                 gymDto.homepageLink(),
                 gymDto.settingDay(),
-                gymDto.operatingTimes().entrySet(),
-                isOperating,
+                gymDto.businessHours().entrySet(),
+                doingBusiness,
                 isLike,
                 GymDetailStatistics.TotalReviewChart.of(reviewDtos),
                 GymDetailStatistics.MonthlyReviewChart.of(reviewDtos)
         );
     }
-}
 
-record LocationGrid(
-        double latitude, double longitude
-) {
-    public static LocationGrid of(double latitude, double longitude) {
-        return new LocationGrid(latitude, longitude);
+    private record Position(
+            double latitude,
+            double longitude
+    ) {
+        private static Position of(double latitude, double longitude) {
+            return new Position(latitude, longitude);
+        }
     }
 }
+

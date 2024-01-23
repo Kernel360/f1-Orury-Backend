@@ -27,7 +27,7 @@ public record GymDto(
         String settingDay,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        EnumMap<DayOfWeek, String> operatingTimes,
+        EnumMap<DayOfWeek, String> businessHours,
         String homepageLink,
         String remark
 ) {
@@ -75,7 +75,7 @@ public record GymDto(
                 settingDay,
                 createdAt,
                 updatedAt,
-                createOperatingTimeMap(serviceMon, serviceTue, serviceWed, serviceThu, serviceFri, serviceSat, serviceSun),
+                createBusinessHoursMap(serviceMon, serviceTue, serviceWed, serviceThu, serviceFri, serviceSat, serviceSun),
                 homepageLink,
                 remark
         );
@@ -97,13 +97,13 @@ public record GymDto(
                 this.phoneNumber,
                 this.instagramLink,
                 this.settingDay,
-                this.operatingTimes.get(DayOfWeek.MONDAY),
-                this.operatingTimes.get(DayOfWeek.TUESDAY),
-                this.operatingTimes.get(DayOfWeek.WEDNESDAY),
-                this.operatingTimes.get(DayOfWeek.THURSDAY),
-                this.operatingTimes.get(DayOfWeek.FRIDAY),
-                this.operatingTimes.get(DayOfWeek.SATURDAY),
-                this.operatingTimes.get(DayOfWeek.SUNDAY),
+                this.businessHours.get(DayOfWeek.MONDAY),
+                this.businessHours.get(DayOfWeek.TUESDAY),
+                this.businessHours.get(DayOfWeek.WEDNESDAY),
+                this.businessHours.get(DayOfWeek.THURSDAY),
+                this.businessHours.get(DayOfWeek.FRIDAY),
+                this.businessHours.get(DayOfWeek.SATURDAY),
+                this.businessHours.get(DayOfWeek.SUNDAY),
                 this.homepageLink,
                 this.remark
         );
@@ -139,7 +139,7 @@ public record GymDto(
         );
     }
 
-    private static EnumMap<DayOfWeek, String> createOperatingTimeMap(
+    private static EnumMap<DayOfWeek, String> createBusinessHoursMap(
             String serviceMon,
             String serviceTue,
             String serviceWed,
@@ -148,14 +148,14 @@ public record GymDto(
             String serviceSat,
             String serviceSun
     ) {
-        EnumMap<DayOfWeek, String> operatingMap = new EnumMap<>(DayOfWeek.class);
-        operatingMap.put(DayOfWeek.MONDAY, serviceMon);
-        operatingMap.put(DayOfWeek.TUESDAY, serviceTue);
-        operatingMap.put(DayOfWeek.WEDNESDAY, serviceWed);
-        operatingMap.put(DayOfWeek.THURSDAY, serviceThu);
-        operatingMap.put(DayOfWeek.FRIDAY, serviceFri);
-        operatingMap.put(DayOfWeek.SATURDAY, serviceSat);
-        operatingMap.put(DayOfWeek.SUNDAY, serviceSun);
-        return operatingMap;
+        EnumMap<DayOfWeek, String> businessHoursMap = new EnumMap<>(DayOfWeek.class);
+        businessHoursMap.put(DayOfWeek.MONDAY, serviceMon);
+        businessHoursMap.put(DayOfWeek.TUESDAY, serviceTue);
+        businessHoursMap.put(DayOfWeek.WEDNESDAY, serviceWed);
+        businessHoursMap.put(DayOfWeek.THURSDAY, serviceThu);
+        businessHoursMap.put(DayOfWeek.FRIDAY, serviceFri);
+        businessHoursMap.put(DayOfWeek.SATURDAY, serviceSat);
+        businessHoursMap.put(DayOfWeek.SUNDAY, serviceSun);
+        return businessHoursMap;
     }
 }

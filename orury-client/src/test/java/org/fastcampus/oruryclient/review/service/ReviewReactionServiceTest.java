@@ -33,7 +33,7 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
 @ActiveProfiles("test")
-public class ReviewReactionServiceTest {
+class ReviewReactionServiceTest {
 
     private ReviewReactionService reviewReactionService;
     private ReviewReactionRepository reviewReactionRepository;
@@ -254,13 +254,13 @@ public class ReviewReactionServiceTest {
                 "010-1234-5678",
                 "gymInstaLink",
                 "MONDAY",
-                "11:00 - 23:11",
-                "12:00 - 23:22",
-                "13:00 - 23:33",
-                "14:00 - 23:44",
-                "15:00 - 23:55",
-                "16:00 - 23:66",
-                "17:00 - 23:77",
+                "11:00~23:11",
+                "12:00~23:22",
+                "13:00~23:33",
+                "14:00~23:44",
+                "15:00~23:55",
+                "16:00~23:66",
+                "17:00~23:77",
                 "gymHomepageLink",
                 "gymRemark"
         );

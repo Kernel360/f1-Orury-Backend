@@ -34,11 +34,11 @@ public class GymController {
     public ApiResponse<GymDetailResponse> getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         GymDto gymDto = gymService.getGymDtoById(id);
-        boolean isOperating = gymService.checkOperating(gymDto);
+        boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
         boolean isLike = gymLikeService.isLiked(userPrincipal.id(), id);
         List<ReviewDto> reviewDtos = reviewService.getAllReviewDtosByGymId(id);
 
-        GymDetailResponse response = GymDetailResponse.of(gymDto, isOperating, isLike, reviewDtos);
+        GymDetailResponse response = GymDetailResponse.of(gymDto, doingBusiness, isLike, reviewDtos);
 
         return ApiResponse.<GymDetailResponse>builder()
                 .status(HttpStatus.OK.value())
@@ -47,7 +47,7 @@ public class GymController {
                 .build();
     }
 
-    @Operation(summary = "암장 목록 검색", description = "검색어와 경위도를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
+    @Operation(summary = "암장 목록 검색", description = "검색어와 위치 좌표(경도, 위도)를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
     @PostMapping("/search")
     public ApiResponse<List<GymsResponse>> getGymsByLocation(@RequestBody GymSearchRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
@@ -56,9 +56,9 @@ public class GymController {
         List<GymsResponse> response = gymDtos.stream()
                 .map(gymDto -> {
                     boolean isLike = gymLikeService.isLiked(userPrincipal.id(), gymDto.id());
-                    boolean isOperating = gymService.checkOperating(gymDto);
+                    boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
-                    return GymsResponse.of(gymDto, isOperating, isLike);
+                    return GymsResponse.of(gymDto, doingBusiness, isLike);
                 }).toList();
 
         return ApiResponse.<List<GymsResponse>>builder()

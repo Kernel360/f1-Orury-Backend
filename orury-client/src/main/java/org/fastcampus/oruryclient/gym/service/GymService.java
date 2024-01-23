@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.OperatingTimeConverter;
+import org.fastcampus.orurycommon.util.BusinessHoursConverter;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
@@ -40,12 +40,12 @@ public class GymService {
                 .toList();
     }
 
-    public boolean checkOperating(GymDto gymDto) {
+    public boolean checkDoingBusiness(GymDto gymDto) {
         DayOfWeek today = LocalDateTime.now().getDayOfWeek();
-        String operatingTime = gymDto.operatingTimes().get(today);
+        String businessHour = gymDto.businessHours().get(today);
 
-        LocalTime openTime = OperatingTimeConverter.extractOpenTime(operatingTime);
-        LocalTime closeTime = OperatingTimeConverter.extractCloseTime(operatingTime);
+        LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
+        LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
         LocalTime nowTime = LocalTime.now();
 
         return nowTime.isAfter(openTime) && nowTime.isBefore(closeTime);
