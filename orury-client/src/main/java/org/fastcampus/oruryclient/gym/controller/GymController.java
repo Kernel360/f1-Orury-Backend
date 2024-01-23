@@ -22,7 +22,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/gyms")
 @RestController
 public class GymController {
     private final GymService gymService;
@@ -30,7 +30,7 @@ public class GymController {
     private final ReviewService reviewService;
 
     @Operation(summary = "암장 상세 조회", description = "gymId를 받아, 암장을 상세 정보를 돌려준다.")
-    @PostMapping("/gym/{id}")
+    @PostMapping("/{id}")
     public ApiResponse<GymDetailResponse> getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         GymDto gymDto = gymService.getGymDtoById(id);
@@ -48,7 +48,7 @@ public class GymController {
     }
 
     @Operation(summary = "암장 목록 검색", description = "검색어와 경위도를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
-    @PostMapping("/gyms/search")
+    @PostMapping("/search")
     public ApiResponse<List<GymsResponse>> getGymsByLocation(@RequestBody GymSearchRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(request.searchWord(), request.latitude(), request.longitude());
