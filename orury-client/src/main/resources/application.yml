@@ -2,49 +2,49 @@ server.port: 8085
 debug: false
 management.endpoints.web.exposure.include: "*"
 
-logging:
-  level:
-    org.task-tracker.project: info
-    org.springframework.web.servlet: info
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql.BasicBinder: trace
+  org.springframework.web.servlet: info
+  org.springframework.jdbc.core.JdbcTemplate: DEBUG
+  org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+
 springdoc:
   show-actuator: true
+
 spring:
   mvc:
     cors:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
-  datasource:
+  ddatasource:
     #url: ${LOCAL_DB_NAME}
     url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
     #username: ${LOCAL_DB_USER_NAME}
     username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
     #password: ${LOCAL_DB_USER_PASSWORD}
     password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
-  #    read:
-  #      jdbc-url: ENC(KkrDs/i2Asal3Qe2/GRo7vBh3Jdu3ozFVNy6sQzXYwKLScBRkm4jB4uWWCBF+rm/2t2XWE67sKRNXyL5fOChWLZ3hmp6KsMo4JSGjwXG8lzcStqVPMQ8jRq+cjaEALI4)
-  #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
-  #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
-  #      driver-class-name: com.mysql.cj.jdbc.Driver
-  #    write:
-  #      jdbc-url: ENC(nYHDbyPX77wt52BMec5vJQLAWDcuiHS06QrV34A4AoEjrCnmNAmWNO/x0FUvNmvRhCPhaPkS1z9bhK7lyRVKocHukRjc5jwbf0XiceDDO2OtxDAfSPTvZg==)
-  #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
-  #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
-  #      driver-class-name: com.mysql.cj.jdbc.Driver
+    #    read:
+    #      jdbc-url: ENC(KkrDs/i2Asal3Qe2/GRo7vBh3Jdu3ozFVNy6sQzXYwKLScBRkm4jB4uWWCBF+rm/2t2XWE67sKRNXyL5fOChWLZ3hmp6KsMo4JSGjwXG8lzcStqVPMQ8jRq+cjaEALI4)
+    #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+    #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+    #      driver-class-name: com.mysql.cj.jdbc.Driver
+    #    write:
+    #      jdbc-url: ENC(nYHDbyPX77wt52BMec5vJQLAWDcuiHS06QrV34A4AoEjrCnmNAmWNO/x0FUvNmvRhCPhaPkS1z9bhK7lyRVKocHukRjc5jwbf0XiceDDO2OtxDAfSPTvZg==)
+    #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+    #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+    #      driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    show-sql: true
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate.ddl-auto: none
-    show-sql: true
+    generate-ddl: true
     properties:
+      hibernate.show_sql: true
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
+    hibernate.ddl-auto: validate
   sql.init.mode: always
   data.rest:
     base-path: /api
@@ -55,18 +55,18 @@ spring:
       enabled: true
   freemarker:
     cache: false
-  thymeleaf:
-    cache: false
     prefix=file: src/main/resources/templates/
   security:
     oauth2:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_OAUTH_CLIENT_ID}
-            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            #            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+            #            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
+            client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8085/login/oauth2/code/kakao
+            redirect-uri: ENC(KemyavCehs82veDQHVojllZahZjLPWiskhSjaTiC2QOVCjnDtYkKYWssTQDVt3WQjMFTxak/+c/BttEpIaaySg==)
             client-authentication-method: client_secret_post
         #          apple:
         #            client-id: { clientId }
