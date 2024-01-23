@@ -1,14 +1,5 @@
 package org.fastcampus.oruryclient.review.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -31,6 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
@@ -64,7 +62,8 @@ public class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         assertEquals(1, reactionType);
 
@@ -80,7 +79,8 @@ public class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         assertEquals(NumberConstants.NOT_REACTION, reactionType);
     }
@@ -101,7 +101,8 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.createReviewReaction(reviewReactionDto));
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(userRepository).should().findById(anyLong());
+        then(userRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -120,8 +121,10 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.createReviewReaction(reviewReactionDto));
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(userRepository).should().findById(anyLong());
-        then(reviewRepository).should().findById(anyLong());
+        then(userRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -140,8 +143,10 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.createReviewReaction(reviewReactionDto));
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(userRepository).should().findById(anyLong());
-        then(reviewRepository).should().findById(anyLong());
+        then(userRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -160,10 +165,14 @@ public class ReviewReactionServiceTest {
         reviewReactionService.createReviewReaction(reviewReactionDto);
 
         //then
-        then(userRepository).should().findById(anyLong());
-        then(reviewRepository).should().findById(anyLong());
-        then(reviewRepository).should().increaseReviewCount(anyLong(), anyInt());
-        then(reviewReactionRepository).should().save(any());
+        then(userRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .increaseReviewCount(anyLong(), anyInt());
+        then(reviewReactionRepository).should()
+                .save(any());
     }
 
     @Test
@@ -182,10 +191,14 @@ public class ReviewReactionServiceTest {
         reviewReactionService.createReviewReaction(reviewReactionDto);
 
         //then
-        then(userRepository).should().findById(anyLong());
-        then(reviewRepository).should().findById(anyLong());
-        then(reviewRepository).should().updateReviewCount(anyLong(), anyInt(), anyInt());
-        then(reviewReactionRepository).should().save(any());
+        then(userRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewRepository).should()
+                .updateReviewCount(anyLong(), anyInt(), anyInt());
+        then(reviewReactionRepository).should()
+                .save(any());
     }
 
     // method: deleteReviewReaction
@@ -203,7 +216,8 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.deleteReviewReaction(reviewReactionPK));
         assertEquals(ReviewReactionErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
     }
     // 유효한 요청일 때, delete한다.
@@ -221,8 +235,10 @@ public class ReviewReactionServiceTest {
         reviewReactionService.deleteReviewReaction(reviewReactionPK);
 
         //then
-        then(reviewReactionRepository).should().findById(any());
-        then(reviewReactionRepository).should().delete(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
+        then(reviewReactionRepository).should()
+                .delete(any());
     }
 
     private static User createUser(Long id) {
@@ -251,8 +267,6 @@ public class ReviewReactionServiceTest {
                 "gymImages",
                 "123.456",
                 "123.456",
-                "10:00",
-                "22:00",
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
