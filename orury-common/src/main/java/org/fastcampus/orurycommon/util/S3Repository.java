@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.FileExceptionCode;
 import org.fastcampus.orurycommon.error.exception.FileException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service
+@Component
 public class S3Repository {
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.s3.bucket}")
