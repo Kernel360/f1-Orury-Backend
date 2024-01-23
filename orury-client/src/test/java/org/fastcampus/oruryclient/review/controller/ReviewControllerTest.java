@@ -1,20 +1,5 @@
 package org.fastcampus.oruryclient.review.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.willThrow;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
@@ -38,9 +23,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @DisplayName("[Controller] 리뷰 관련 테스트")
 @WithUserPrincipal
-public class ReviewControllerTest extends ControllerTest {
+class ReviewControllerTest extends ControllerTest {
 
     @DisplayName("[POST] requestbody(content, images, score, gymId)로 리뷰 정보를 받아, 리뷰를 생성한다. - 성공")
     @Test
@@ -391,17 +384,25 @@ public class ReviewControllerTest extends ControllerTest {
                 "서울시 도로명주소",
                 "서울시 지번주소",
                 4.5f,
+                12,
                 "image.png",
                 "latitude",
                 "longitude",
-                "11:00",
-                "23:00",
                 "더클라임",
                 "01012345678",
                 "instalink.com",
-                "화",
+                "MONDAY",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "11:00-23:11",
+                "12:00-23:22",
+                "13:00-23:33",
+                "14:00-23:44",
+                "15:00-23:55",
+                "16:00-23:66",
+                "17:00-23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 
