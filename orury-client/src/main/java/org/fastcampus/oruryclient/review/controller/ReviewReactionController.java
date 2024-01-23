@@ -1,8 +1,5 @@
 package org.fastcampus.oruryclient.review.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.review.converter.message.ReviewMessage;
 import org.fastcampus.oruryclient.review.converter.request.ReviewReactionRequest;
 import org.fastcampus.oruryclient.review.service.ReviewReactionService;
@@ -13,7 +10,16 @@ import org.fastcampus.orurydomain.review.dto.ReviewReactionDto;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,7 +46,7 @@ public class ReviewReactionController {
 
     }
 
-    @Operation(summary = "반응 삭제", description = "requestbody로 반응 정보를 받아 반응을 삭제한다.")
+    @Operation(summary = "반응 삭제", description = "reviewId, UserId를 비교하여 요청이 유효하면 반응을 삭제한다.")
     @DeleteMapping("/review/reaction/{reviewId}")
     public ApiResponse<Object> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
