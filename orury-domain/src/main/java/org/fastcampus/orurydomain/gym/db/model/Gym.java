@@ -41,12 +41,6 @@ public class Gym extends AuditingField {
     @Column(name = "longitude", nullable = false)
     private String longitude;
 
-//    @Column(name = "open_time")
-//    private String openTime;
-
-//    @Column(name = "close_time")
-//    private String closeTime;
-
     @Column(name = "brand")
     private String brand;
 
