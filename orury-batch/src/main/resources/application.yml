@@ -4,7 +4,7 @@ management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    org.task-tracker.project: info
+    
     org.springframework.web.servlet: info
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 springdoc:
@@ -44,7 +44,7 @@ spring:
     cache: false
   kakao:
     baseurl: https://dapi.kakao.com/v2/local/search/keyword.json
-    key: ENC(repilOQyJySRCH3n7WmPSBR5yZ/G4Ph/YqemQf4ZKW5Y4QZRlvphtT/nchtqxFWV)
+    key: ENC(8pDOKxCjQe2r3avazbs05VCB6ZT4DleSf+aCyiJedsl425HyfG176o5DJd10aURjcQxWyT/JKIc=)
 #  security:
 #    oauth2:
 #      client:
