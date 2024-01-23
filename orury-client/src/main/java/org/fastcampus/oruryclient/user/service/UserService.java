@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
@@ -25,7 +26,7 @@ public class UserService {
     public UserDto getUserDtoById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(UserErrorCode.NOT_FOUND));
-        String imgUrl = s3Repository.getUrls("user", user.getProfileImage())
+        String imgUrl = s3Repository.getUrls(S3Folder.USER.getName(), user.getProfileImage())
                 .get(0);
         return UserDto.from(user, imgUrl);
     }
@@ -33,8 +34,8 @@ public class UserService {
     @Transactional
     public void updateProfileImage(UserDto userDto, MultipartFile image) throws BusinessException {
         //기존에 저장된 요소 삭제
-        s3Repository.delete("user", userDto.profileImage());
-        var url = s3Repository.upload("user", image);
+        s3Repository.delete(S3Folder.USER.getName(), userDto.profileImage());
+        var url = s3Repository.upload(S3Folder.USER.getName(), image);
 
         //MultipartFile이 오지 않은 경우 -> 유저의 프로필 이미지를 기본 이미지로 변경
         //MultipartFile이 오는 경우 -> 유저의 프로필 이미지를 업로드한 이미지로 변경
@@ -49,7 +50,7 @@ public class UserService {
 
     @Transactional
     public void deleteUser(UserDto userDto) {
-        s3Repository.delete("user", userDto.profileImage());
+        s3Repository.delete(S3Folder.USER.getName(), userDto.profileImage());
         userRepository.delete(userDto.toEntity());
     }
 }

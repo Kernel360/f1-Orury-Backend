@@ -6,6 +6,7 @@ import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
@@ -48,7 +49,7 @@ public class ReviewService {
     public ReviewDto getReviewDtoById(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        var urls = s3Repository.getUrls("review", ImageUrlConverter.splitUrlToImage(review.getImages()));
+        var urls = s3Repository.getUrls(S3Folder.REVIEW.getName(), ImageUrlConverter.splitUrlToImage(review.getImages()));
         var images = ImageUrlConverter.convertListToString(urls);
         return ReviewDto.from(review, images);
     }
@@ -78,7 +79,7 @@ public class ReviewService {
         if (s3Repository.isEmpty(images)) {
             reviewRepository.save(reviewDto.toEntity(null));
         } else {
-            List<String> imageUrls = s3Repository.upload("review", images);
+            List<String> imageUrls = s3Repository.upload(S3Folder.REVIEW.getName(), images);
             String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
             reviewRepository.save(reviewDto.toEntity(convertUrl));
         }
@@ -87,6 +88,6 @@ public class ReviewService {
     private void oldS3ImagesDelete(ReviewDto reviewDto) {
         String[] oldImages = reviewDto.images()
                 .split(",");
-        s3Repository.delete("review", oldImages);
+        s3Repository.delete(S3Folder.REVIEW.getName(), oldImages);
     }
 }

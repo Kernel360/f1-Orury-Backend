@@ -7,6 +7,7 @@ import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
@@ -105,7 +106,7 @@ public class PostService {
     public PostDto getPostDtoById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        var imgUrls = s3Repository.getUrls("post", post.getImages());
+        var imgUrls = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
         var imgUrlsToString = ImageUrlConverter.convertListToString(imgUrls);
         return PostDto.from(post, imgUrlsToString);
     }
@@ -126,7 +127,7 @@ public class PostService {
         if (s3Repository.isEmpty(images)) {
             postRepository.save(postDto.toEntity(null));
         } else {
-            List<String> imageUrls = s3Repository.upload("post", images);
+            List<String> imageUrls = s3Repository.upload(S3Folder.POST.getName(), images);
             String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
             postRepository.save(postDto.toEntity(convertUrl));
         }
@@ -135,6 +136,6 @@ public class PostService {
     private void oldS3ImagesDelete(PostDto postDto) {
         String[] oldImages = postDto.images()
                 .split(",");
-        s3Repository.delete("post", oldImages);
+        s3Repository.delete(S3Folder.POST.getName(), oldImages);
     }
 }
