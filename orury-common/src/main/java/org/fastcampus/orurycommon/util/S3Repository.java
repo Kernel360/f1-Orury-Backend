@@ -95,17 +95,12 @@ public class S3Repository {
     }
 
     private List<String> putS3(String domain, File... files) {
-        // S3에 파일을 업로드하고 URL을 반환합니다.
+        // S3에 파일을 업로드하고 이미지 key값을 받환합니다.
         String folder = bucket + domain;
-        var test = Arrays.stream(files)
+
+        return Arrays.stream(files)
                 .map(it -> requestPutObject(folder, it))
                 .toList();
-
-        for (String s : test) {
-            log.info("url : {}", amazonS3.getUrl(folder, s));
-        }
-
-        return test;
     }
 
     private void removeFile(File file) {

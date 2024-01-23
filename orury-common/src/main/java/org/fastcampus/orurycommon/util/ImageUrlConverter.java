@@ -23,11 +23,4 @@ public class ImageUrlConverter {
                 .reduce((first, second) -> second)
                 .orElse("");
     }
-
-    public static String splitUrlListToImage(List<String> urls) {
-        return urls.stream()
-                .map(ImageUrlConverter::splitUrlToImage)
-                .reduce((first, second) -> second)
-                .orElse("");
-    }
 }
