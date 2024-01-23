@@ -65,11 +65,13 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
         ;
 
+        then(userService).should(times(1)).getUserDtoById(anyLong());
+        then(gymService).should(times(1)).getGymDtoById(anyLong());
         then(reviewService).should(times(1)).isExist(any(), any());
         then(reviewService).should(times(1)).createReview(reviewDto);
     }
 
-    @DisplayName("[POST] 유효하지 않은 userId를 포함한 리뷰 정보를 받아, 리뷰를 생성 시 예외 발생 - 실패")
+    @DisplayName("[POST] 인증된 UserId로 UserDto를 가져오는 것을 실패했을 경우, 리뷰를 생성 시 예외 발생 - 실패")
     @Test
     void given_GymIdAndRequestReview_When_CreateReview_Then_NotFoundException() throws Exception {
         //given
@@ -117,6 +119,8 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
+        then(userService).should(times(1)).getUserDtoById(anyLong());
+        then(gymService).should(times(1)).getGymDtoById(anyLong());
         then(reviewService).should(times(0)).isExist(any(), any());
         then(reviewService).should(times(0)).createReview(reviewDto);
     }
@@ -144,6 +148,8 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
+        then(userService).should(times(1)).getUserDtoById(anyLong());
+        then(gymService).should(times(1)).getGymDtoById(anyLong());
         then(reviewService).should(times(1)).isExist(any(), any());
         then(reviewService).should(times(0)).createReview(reviewDto);
     }
@@ -360,7 +366,7 @@ public class ReviewControllerTest extends ControllerTest {
         then(reviewReactionService).should(times(0)).getReactionType(anyLong(), anyLong());
         then(gymService).should(times(1)).getGymDtoById(any());
     }
-    
+
 
     private UserDto createUserDto() {
         return UserDto.of(
