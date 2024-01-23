@@ -38,15 +38,19 @@ class GymLikeServiceTest {
         GymLikePK gymLikePK = GymLikePK.of(2L, 1L);
         GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
 
-        given(gymLikeRepository.existsById(gymLikePK)).willReturn(false);
+        given(gymLikeRepository.existsById(gymLikePK))
+                .willReturn(false);
 
         // when
         gymLikeService.createGymLike(gymLikeDto);
 
         //then
-        then(gymLikeRepository).should().existsById(any());
-        then(gymLikeRepository).should().save(any());
-        then(gymRepository).should().increaseLikeCount(anyLong());
+        then(gymLikeRepository).should()
+                .existsById(any());
+        then(gymLikeRepository).should()
+                .save(any());
+        then(gymRepository).should()
+                .increaseLikeCount(anyLong());
     }
 
     @Test
@@ -56,15 +60,19 @@ class GymLikeServiceTest {
         GymLikePK gymLikePK = GymLikePK.of(1L, 2L);
         GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
 
-        given(gymLikeRepository.existsById(gymLikePK)).willReturn(true);
+        given(gymLikeRepository.existsById(gymLikePK))
+                .willReturn(true);
 
         // when
         gymLikeService.createGymLike(gymLikeDto);
 
         //then
-        then(gymLikeRepository).should().existsById(any());
-        then(gymLikeRepository).should(never()).save(any());
-        then(gymRepository).should(never()).increaseLikeCount(anyLong());
+        then(gymLikeRepository).should().
+                existsById(any());
+        then(gymLikeRepository).should(never())
+                .save(any());
+        then(gymRepository).should(never())
+                .increaseLikeCount(anyLong());
     }
 
     @Test
@@ -74,15 +82,19 @@ class GymLikeServiceTest {
         GymLikePK gymLikePK = GymLikePK.of(4L, 3L);
         GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
 
-        given(gymLikeRepository.existsById(gymLikePK)).willReturn(true);
+        given(gymLikeRepository.existsById(gymLikePK))
+                .willReturn(true);
 
         // when
         gymLikeService.deleteGymLike(gymLikeDto);
 
         //then
-        then(gymLikeRepository).should().existsById(any());
-        then(gymLikeRepository).should().delete(any());
-        then(gymRepository).should().decreaseLikeCount(anyLong());
+        then(gymLikeRepository).should()
+                .existsById(any());
+        then(gymLikeRepository).should()
+                .delete(any());
+        then(gymRepository).should()
+                .decreaseLikeCount(anyLong());
     }
 
     @Test
@@ -92,15 +104,19 @@ class GymLikeServiceTest {
         GymLikePK gymLikePK = GymLikePK.of(3L, 4L);
         GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
 
-        given(gymLikeRepository.existsById(gymLikePK)).willReturn(false);
+        given(gymLikeRepository.existsById(gymLikePK))
+                .willReturn(false);
 
         // when
         gymLikeService.deleteGymLike(gymLikeDto);
 
         //then
-        then(gymLikeRepository).should().existsById(any());
-        then(gymLikeRepository).should(never()).delete(any());
-        then(gymRepository).should(never()).decreaseLikeCount(anyLong());
+        then(gymLikeRepository).should()
+                .existsById(any());
+        then(gymLikeRepository).should(never())
+                .delete(any());
+        then(gymRepository).should(never())
+                .decreaseLikeCount(anyLong());
     }
 
     @Test
@@ -110,7 +126,8 @@ class GymLikeServiceTest {
         Long userId = 1L;
         Long gymId = 2L;
 
-        given(gymLikeRepository.existsByGymLikePK_UserIdAndGymLikePK_GymId(1L, 2L)).willReturn(true);
+        given(gymLikeRepository.existsByGymLikePK_UserIdAndGymLikePK_GymId(1L, 2L))
+                .willReturn(true);
 
         boolean expectedValue = true;
 
@@ -118,8 +135,10 @@ class GymLikeServiceTest {
         boolean isLiked = gymLikeService.isLiked(userId, gymId);
 
         //then
-        then(isLiked).equals(expectedValue);
-        then(gymLikeRepository).should().existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
+        then(isLiked)
+                .equals(expectedValue);
+        then(gymLikeRepository).should()
+                .existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
     }
 
     @Test
@@ -129,7 +148,8 @@ class GymLikeServiceTest {
         Long userId = 1L;
         Long gymId = 2L;
 
-        given(gymLikeRepository.existsByGymLikePK_UserIdAndGymLikePK_GymId(1L, 2L)).willReturn(false);
+        given(gymLikeRepository.existsByGymLikePK_UserIdAndGymLikePK_GymId(1L, 2L))
+                .willReturn(false);
 
         boolean expectedValue = false;
 
@@ -137,8 +157,10 @@ class GymLikeServiceTest {
         boolean isLiked = gymLikeService.isLiked(userId, gymId);
 
         //then
-        then(isLiked).equals(expectedValue);
-        then(gymLikeRepository).should().existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
+        then(isLiked)
+                .equals(expectedValue);
+        then(gymLikeRepository).should()
+                .existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
     }
 
     private static GymLikeDto createGymLikeDto(GymLikePK gymLikePK) {

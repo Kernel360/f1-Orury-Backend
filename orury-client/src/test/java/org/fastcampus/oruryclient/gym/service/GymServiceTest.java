@@ -42,7 +42,8 @@ class GymServiceTest {
         Long gymId = 1L;
         Gym gym = createGym(gymId);
 
-        given(gymRepository.findById(gymId)).willReturn(Optional.of(gym));
+        given(gymRepository.findById(gymId))
+                .willReturn(Optional.of(gym));
 
         GymDto expectedGymDto = GymDto.from(gym);
 
@@ -50,8 +51,10 @@ class GymServiceTest {
         GymDto gymDto = gymService.getGymDtoById(gymId);
 
         //then
-        then(gymDto).equals(expectedGymDto);
-        then(gymRepository).should().findById(anyLong());
+        then(gymDto)
+                .equals(expectedGymDto);
+        then(gymRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -61,7 +64,8 @@ class GymServiceTest {
         Long gymId = 1L;
         Gym gym = createGym(gymId);
 
-        given(gymRepository.findById(gymId)).willReturn(Optional.empty());
+        given(gymRepository.findById(gymId))
+                .willReturn(Optional.empty());
 
         GymDto expectedGymDto = GymDto.from(gym);
 
@@ -69,8 +73,10 @@ class GymServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> gymService.getGymDtoById(gymId));
 
-        then(exception.getStatus()).equals(GymErrorCode.NOT_FOUND.getStatus());
-        then(gymRepository).should().findById(anyLong());
+        then(exception.getStatus())
+                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        then(gymRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -79,12 +85,25 @@ class GymServiceTest {
         //given
         float currentLatitude = 10.111111f;
         float currentLongitude = 10.111111f;
-        Gym middleGym = createGym(1L, "20.000001", "50.543210");
-        Gym mostFarGym = createGym(2L, "50.123456", "137.654321");
-        Gym mostNearGym = createGym(3L, "11.110111", "12.222222");
+        Gym middleGym = createGym(
+                1L,
+                "20.000001",
+                "50.543210"
+        );
+        Gym mostFarGym = createGym(
+                2L,
+                "50.123456",
+                "137.654321"
+        );
+        Gym mostNearGym = createGym(
+                3L,
+                "11.110111",
+                "12.222222"
+        );
         List<Gym> searchedGyms = List.of(middleGym, mostFarGym, mostNearGym);
 
-        given(gymRepository.findByNameContaining(anyString())).willReturn(searchedGyms);
+        given(gymRepository.findByNameContaining(anyString()))
+                .willReturn(searchedGyms);
 
         List<GymDto> expectedGymDtos = List.of(
                 GymDto.from(mostNearGym),
@@ -96,22 +115,28 @@ class GymServiceTest {
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", currentLatitude, currentLongitude);
 
         //then
-        then(gymDtos).equals(expectedGymDtos);
-        then(gymRepository).should().findByNameContaining(anyString());
+        then(gymDtos)
+                .equals(expectedGymDtos);
+        then(gymRepository).should()
+                .findByNameContaining(anyString());
     }
 
     @Test
     @DisplayName("검색어를 포함한 List<Gym>이 비어있어도, 빈 List를 반환한다.")
     void when_NothingSearched_Then_RetrieveEmptyList() {
         //given
-        given(gymRepository.findByNameContaining(anyString())).willReturn(List.of());
+        given(gymRepository.findByNameContaining(anyString()))
+                .willReturn(List.of());
+        List<GymDto> expectedgymDtos = List.of();
 
         //when
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", 12.34f, 56.78f);
 
         //then
-        then(gymDtos).equals(List.of());
-        then(gymRepository).should().findByNameContaining(anyString());
+        then(gymDtos)
+                .equals(expectedgymDtos);
+        then(gymRepository).should()
+                .findByNameContaining(anyString());
     }
 
     @Test
@@ -127,7 +152,8 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness).equals(true);
+        then(doingBusiness)
+                .equals(true);
     }
 
     @Test
@@ -143,7 +169,8 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness).equals(false);
+        then(doingBusiness)
+                .equals(false);
     }
 
     @Test
@@ -159,7 +186,8 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness).equals(false);
+        then(doingBusiness)
+                .equals(false);
     }
 
     @Test
@@ -169,7 +197,8 @@ class GymServiceTest {
         Long gymId = 1L;
         Gym gym = createGym(gymId);
 
-        given(gymRepository.findById(gymId)).willReturn(Optional.of(gym));
+        given(gymRepository.findById(gymId))
+                .willReturn(Optional.of(gym));
 
         //when
         assertDoesNotThrow(
@@ -177,7 +206,8 @@ class GymServiceTest {
         );
 
         //then
-        then(gymRepository).should().findById(anyLong());
+        then(gymRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -187,7 +217,8 @@ class GymServiceTest {
         Long gymId = 1L;
         Gym gym = createGym(gymId);
 
-        given(gymRepository.findById(gymId)).willReturn(Optional.empty());
+        given(gymRepository.findById(gymId))
+                .willReturn(Optional.empty());
 
         //when
         BusinessException exception = assertThrows(BusinessException.class,
@@ -195,8 +226,10 @@ class GymServiceTest {
         );
 
         //then
-        then(exception.getStatus()).equals(GymErrorCode.NOT_FOUND.getStatus());
-        then(gymRepository).should().findById(anyLong());
+        then(exception.getStatus())
+                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        then(gymRepository).should()
+                .findById(anyLong());
     }
 
     private static Gym createGym(Long id) {
