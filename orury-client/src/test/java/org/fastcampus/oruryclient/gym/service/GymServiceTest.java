@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("GymServiceTest")
+@DisplayName("[Service] 암장 테스트")
 @ActiveProfiles("test")
 class GymServiceTest {
 

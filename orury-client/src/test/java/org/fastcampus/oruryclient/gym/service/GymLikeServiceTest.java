@@ -16,7 +16,7 @@ import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("GymLikeServiceTest")
+@DisplayName("[Service] 암장 좋아요 테스트")
 @ActiveProfiles("test")
 class GymLikeServiceTest {
 
