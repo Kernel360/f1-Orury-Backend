@@ -41,11 +41,11 @@ public class Gym extends AuditingField {
     @Column(name = "longitude", nullable = false)
     private String longitude;
 
-    @Column(name = "open_time")
-    private String openTime;
+//    @Column(name = "open_time")
+//    private String openTime;
 
-    @Column(name = "close_time")
-    private String closeTime;
+//    @Column(name = "close_time")
+//    private String closeTime;
 
     @Column(name = "brand")
     private String brand;
@@ -69,8 +69,8 @@ public class Gym extends AuditingField {
             String images,
             String latitude,
             String longitude,
-            String openTime,
-            String closeTime,
+//            String openTime,
+//            String closeTime,
             String brand,
             String phoneNumber,
             String instagramLink,
@@ -85,8 +85,8 @@ public class Gym extends AuditingField {
         this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
+//        this.openTime = openTime;
+//        this.closeTime = closeTime;
         this.brand = brand;
         this.phoneNumber = phoneNumber;
         this.instagramLink = instagramLink;
@@ -103,8 +103,8 @@ public class Gym extends AuditingField {
             String images,
             String latitude,
             String longitude,
-            String openTime,
-            String closeTime,
+//            String openTime,
+//            String closeTime,
             String brand,
             String phoneNumber,
             String instagramLink,
@@ -120,8 +120,8 @@ public class Gym extends AuditingField {
                 images,
                 latitude,
                 longitude,
-                openTime,
-                closeTime,
+//                openTime,
+//                closeTime,
                 brand,
                 phoneNumber,
                 instagramLink,
