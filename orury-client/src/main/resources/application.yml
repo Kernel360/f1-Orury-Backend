@@ -21,9 +21,9 @@ spring:
   datasource:
     #    url: ${LOCAL_DB_NAME}
     url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
-    #      username: ${LOCAL_DB_USER_NAME}
+    #    username: ${LOCAL_DB_USER_NAME}
     username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
-    #      password: ${LOCAL_DB_USER_PASSWORD}
+    #    password: ${LOCAL_DB_USER_PASSWORD}
     password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     show-sql: true
@@ -51,10 +51,12 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_OAUTH_CLIENT_ID}
-            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            #            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+            #            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
+            client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8085/login/oauth2/code/kakao
+            redirect-uri: ENC(KemyavCehs82veDQHVojllZahZjLPWiskhSjaTiC2QOVCjnDtYkKYWssTQDVt3WQjMFTxak/+c/BttEpIaaySg==)
             client-authentication-method: client_secret_post
         #          apple:
         #            client-id: { clientId }
