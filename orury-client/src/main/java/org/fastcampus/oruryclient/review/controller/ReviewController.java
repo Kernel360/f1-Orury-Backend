@@ -63,21 +63,6 @@ public class ReviewController {
 
     }
 
-//    @Operation(summary = "리뷰 조회", description = "리뷰 수정을 위해 리뷰 id로 기존에 있는 값을 조회하여 정보를 가져온다.")
-//    @GetMapping("/review/{reviewId}")
-//    public ApiResponse<Object> getReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-//
-//        ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
-//
-//        ReviewResponse response = ReviewResponse.of(reviewDto, userPrincipal.id());
-//
-//        return ApiResponse.builder()
-//                .status(HttpStatus.OK.value())
-//                .message(ReviewMessage.REVIEW_READ.getMessage())
-//                .data(response)
-//                .build();
-//    }
-
     @Operation(summary = "리뷰 수정", description = "기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다.")
     @PatchMapping("/review/{reviewId}")
     public ApiResponse<Object> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
