@@ -19,7 +19,8 @@ public record GymsResponse(
                 gymDto.name(),
                 gymDto.roadAddress(),
                 gymDto.scoreAverage(),
-                ImageUrlConverter.convertToList(gymDto.images()).get(0),
+                ImageUrlConverter.convertStringToList(gymDto.images())
+                        .get(0),
                 Position.of(gymDto.latitude(), gymDto.longitude()),
                 doingBusiness,
                 isLike
