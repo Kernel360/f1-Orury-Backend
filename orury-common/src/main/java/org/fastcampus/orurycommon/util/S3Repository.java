@@ -62,7 +62,7 @@ public class S3Repository {
         String[] images = Arrays.stream(url)
                 .map(ImageUrlConverter::splitUrlToImage)
                 .toArray(String[]::new);
-
+        log.error("images: {}", Arrays.toString(images));
         //유저 기본 프로필 이미지인 경우 삭제하지 않습니다.
         if (domain.equals("user") && images[0].equals(defaultImage)) return;
 
