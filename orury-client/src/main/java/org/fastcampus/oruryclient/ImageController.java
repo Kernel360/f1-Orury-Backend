@@ -33,11 +33,11 @@ public class ImageController {
 
     @PostMapping
     public ApiResponse<ImageFormat> uploadImage(
-            @RequestPart(required = false) MultipartFile[] images
+            @RequestPart(required = false) MultipartFile... image
     ) {
-        List<String> imgs = s3Repository.upload("test", images);
-        String image = ImageUrlConverter.convertListToString(imgs);
-        var urls = s3Repository.getUrls("test", image);
+        List<String> imgs = s3Repository.upload("test", image);
+        String str = ImageUrlConverter.convertListToString(imgs);
+        var urls = s3Repository.getUrls("test", str);
         var response = new ImageFormat(urls, imgs);
 
         return ApiResponse.<ImageFormat>builder()
