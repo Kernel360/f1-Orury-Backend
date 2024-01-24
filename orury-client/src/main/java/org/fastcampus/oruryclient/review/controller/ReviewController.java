@@ -1,10 +1,14 @@
 package org.fastcampus.oruryclient.review.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.gym.service.GymService;
 import org.fastcampus.oruryclient.review.converter.message.ReviewMessage;
 import org.fastcampus.oruryclient.review.converter.request.ReviewCreateRequest;
 import org.fastcampus.oruryclient.review.converter.request.ReviewUpdateRequest;
+import org.fastcampus.oruryclient.review.converter.response.ReviewResponse;
 import org.fastcampus.oruryclient.review.converter.response.ReviewsResponse;
 import org.fastcampus.oruryclient.review.converter.response.ReviewsWithCursorResponse;
 import org.fastcampus.oruryclient.review.service.ReviewReactionService;
@@ -18,25 +22,14 @@ import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api/v1/reviews")
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
@@ -45,8 +38,12 @@ public class ReviewController {
     private final GymService gymService;
 
     @Operation(summary = "리뷰 생성", description = "requestbody로 리뷰 정보를 받아, 리뷰를 생성한다.")
-    @PostMapping("/review")
-    public ApiResponse<Object> createReview(@RequestBody ReviewCreateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @PostMapping
+    public ApiResponse<Object> createReview(
+            @RequestPart ReviewCreateRequest request,
+            @RequestPart(required = false) MultipartFile[] images,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
 
@@ -54,24 +51,44 @@ public class ReviewController {
 
         ReviewDto reviewDto = request.toDto(userDto, gymDto);
 
-        reviewService.createReview(reviewDto);
+        reviewService.createReview(reviewDto, images);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(ReviewMessage.REVIEW_CREATED.getMessage())
                 .build();
+    }
 
+    @Operation(summary = "리뷰 조회", description = "리뷰 수정을 위해 리뷰 id로 기존에 있는 값을 조회하여 정보를 가져온다.")
+    @GetMapping("/{reviewId}")
+    public ApiResponse<Object> getReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
+
+        ReviewResponse response = ReviewResponse.of(reviewDto, userPrincipal.id());
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(ReviewMessage.REVIEW_READ.getMessage())
+                .data(response)
+                .build();
     }
 
     @Operation(summary = "리뷰 수정", description = "기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다.")
-    @PatchMapping("/review/{reviewId}")
-    public ApiResponse<Object> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @PatchMapping("/{reviewId}")
+    public ApiResponse<Object> updateReview(
+            @PathVariable Long reviewId,
+            @RequestPart ReviewUpdateRequest request,
+            @RequestPart(required = false) MultipartFile[] images,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         ReviewDto beforeReviewDto = reviewService.getReviewDtoById(reviewId);
 
-        reviewService.isValidate(beforeReviewDto.userDto().id(), userPrincipal.id());
+        reviewService.isValidate(beforeReviewDto.userDto()
+                .id(), userPrincipal.id());
 
         ReviewDto updateReviewDto = request.toDto(beforeReviewDto);
-        reviewService.updateReview(updateReviewDto);
+        reviewService.updateReview(updateReviewDto, images);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -80,11 +97,12 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 삭제", description = "리뷰 id를 받아, 리뷰를 삭제한다.")
-    @DeleteMapping("/review/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     public ApiResponse<Object> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
 
-        reviewService.isValidate(userPrincipal.id(), reviewDto.userDto().id());
+        reviewService.isValidate(userPrincipal.id(), reviewDto.userDto()
+                .id());
 
         reviewService.deleteReview(reviewDto);
 
@@ -95,9 +113,10 @@ public class ReviewController {
     }
 
     @Operation(summary = "암장 별 리뷰 조회", description = "암장 id를 받아 해당 암장의 리뷰를 반환한다.")
-    @GetMapping("/reviews/{gymId}")
+    @GetMapping("/gym/{gymId}")
     public ApiResponse<Object> getReviews(@PathVariable Long gymId, @RequestParam Long cursor, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        String gymName = gymService.getGymDtoById(gymId).name();
+        String gymName = gymService.getGymDtoById(gymId)
+                .name();
 
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
@@ -115,6 +134,4 @@ public class ReviewController {
                 .data(response)
                 .build();
     }
-
-
 }

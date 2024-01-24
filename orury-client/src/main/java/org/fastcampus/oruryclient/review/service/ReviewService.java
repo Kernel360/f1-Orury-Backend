@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.S3Folder;
+import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
 import org.fastcampus.orurydomain.review.db.repository.ReviewRepository;
@@ -13,6 +16,7 @@ import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,10 +26,11 @@ import java.util.Objects;
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final S3Repository s3Repository;
 
     @Transactional
-    public void createReview(ReviewDto reviewDto) {
-        reviewRepository.save(reviewDto.toEntity());
+    public void createReview(ReviewDto reviewDto, MultipartFile... images) {
+        imageUploadAndSave(reviewDto, images);
     }
 
     @Transactional(readOnly = true)
@@ -35,15 +40,18 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(ReviewDto reviewDto) {
-        reviewRepository.save(reviewDto.toEntity());
+    public void updateReview(ReviewDto reviewDto, MultipartFile... images) {
+        oldS3ImagesDelete(reviewDto);
+        imageUploadAndSave(reviewDto, images);
     }
 
     @Transactional(readOnly = true)
     public ReviewDto getReviewDtoById(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        return ReviewDto.from(review);
+        var urls = s3Repository.getUrls(S3Folder.REVIEW.getName(), ImageUrlConverter.splitUrlToImage(review.getImages()));
+        var images = ImageUrlConverter.convertListToString(urls);
+        return ReviewDto.from(review, images);
     }
 
     public void isValidate(Long id1, Long id2) {
@@ -52,6 +60,7 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(ReviewDto reviewDto) {
+        oldS3ImagesDelete(reviewDto);
         reviewRepository.delete(reviewDto.toEntity());
     }
 
@@ -62,7 +71,24 @@ public class ReviewService {
                 : reviewRepository.findByGymIdAndIdLessThanOrderByIdDesc(gymId, cursor, pageable);
 
         return reviews.stream()
-                .map(ReviewDto::from).toList();
+                .map(ReviewDto::from)
+                .toList();
+    }
+
+    private void imageUploadAndSave(ReviewDto reviewDto, MultipartFile... images) {
+        if (s3Repository.isEmpty(images)) {
+            reviewRepository.save(reviewDto.toEntity(null));
+        } else {
+            List<String> imageUrls = s3Repository.upload(S3Folder.REVIEW.getName(), images);
+            String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
+            reviewRepository.save(reviewDto.toEntity(convertUrl));
+        }
+    }
+
+    private void oldS3ImagesDelete(ReviewDto reviewDto) {
+        String[] oldImages = reviewDto.images()
+                .split(",");
+        s3Repository.delete(S3Folder.REVIEW.getName(), oldImages);
     }
 
     @Transactional(readOnly = true)

@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.post.service;
 
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -49,7 +50,8 @@ class PostServiceTest {
         postLikeRepository = mock(PostLikeRepository.class);
         commentRepository = mock(CommentRepository.class);
         commentLikeRepository = mock(CommentLikeRepository.class);
-        postService = new PostService(postRepository, postLikeRepository, commentRepository, commentLikeRepository);
+        S3Repository s3Repository = mock(S3Repository.class);
+        postService = new PostService(postRepository, postLikeRepository, commentRepository, commentLikeRepository, s3Repository);
     }
 
     @Test
@@ -75,7 +77,8 @@ class PostServiceTest {
         postService.updatePost(existingPostDto);
 
         // then
-        then(postRepository).should(times(1)).save(existingPostDto.toEntity());
+        then(postRepository).should(times(1))
+                .save(existingPostDto.toEntity());
     }
 
     @Test
@@ -116,7 +119,8 @@ class PostServiceTest {
         Page<Post> mockPostPage = mock(Page.class);
 
         // 시간 값에 대해 엄격히 테스트하지 않겠다는 것을 명시하는 문법. lenient()
-        lenient().when(postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(anyInt(), any(LocalDateTime.class), any(Pageable.class))).thenReturn(mockPostPage);
+        lenient().when(postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(anyInt(), any(LocalDateTime.class), any(Pageable.class)))
+                .thenReturn(mockPostPage);
 
         // when
         postService.getHotPostDtos(pageable);
@@ -166,7 +170,8 @@ class PostServiceTest {
         PostDto resultPostDto = postService.getPostDtoById(1L);
 
         // then
-        then(postRepository).should(times(1)).findById(existingPostDto.id());
+        then(postRepository).should(times(1))
+                .findById(existingPostDto.id());
     }
 
     @Test
@@ -182,7 +187,8 @@ class PostServiceTest {
         postService.addViewCount(existingPostDto);
 
         // then
-        then(postRepository).should(times(1)).updateViewCount(existingPostDto.id());
+        then(postRepository).should(times(1))
+                .updateViewCount(existingPostDto.id());
     }
 
     @Test
@@ -399,7 +405,8 @@ class PostServiceTest {
                 0,
                 "image.jpg",
                 1,
-                createPostDto(postId, userId).userDto().toEntity(),
+                createPostDto(postId, userId).userDto()
+                        .toEntity(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );

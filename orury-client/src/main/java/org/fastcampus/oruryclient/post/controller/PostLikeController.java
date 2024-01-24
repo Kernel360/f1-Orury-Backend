@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api/v1/posts/like")
 @RestController
 public class PostLikeController {
     private final PostLikeService postLikeService;
 
     @Operation(summary = "게시글 좋아요 생성", description = "게시글 id를 받아, 게시글 좋아요를 생성한다.")
-    @PostMapping("/post/like/{postId}")
+    @PostMapping("/{postId}")
     public ApiResponse<Object> createPostLike(@PathVariable Long postId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(userPrincipal.id(), postId)));
 
@@ -35,7 +35,7 @@ public class PostLikeController {
     }
 
     @Operation(summary = "게시글 좋아요 삭제", description = "게시글 id를 받아, 게시글 좋아요를 삭제한다.")
-    @DeleteMapping("/post/like/{postId}")
+    @DeleteMapping("/{postId}")
     public ApiResponse<Object> deletePostLike(@PathVariable Long postId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         PostLikeDto postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(userPrincipal.id(), postId)));
 

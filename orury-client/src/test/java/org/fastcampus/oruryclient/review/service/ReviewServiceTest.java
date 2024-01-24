@@ -3,6 +3,7 @@ package org.fastcampus.oruryclient.review.service;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
@@ -18,8 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,8 @@ class ReviewServiceTest {
     @BeforeEach
     void setUp() {
         reviewRepository = mock(ReviewRepository.class);
-        reviewService = new ReviewService(reviewRepository);
+        S3Repository s3Repository = mock(S3Repository.class);
+        reviewService = new ReviewService(reviewRepository, s3Repository);
     }
 
     @Test
@@ -52,7 +52,8 @@ class ReviewServiceTest {
         reviewService.createReview(reviewDto);
 
         //then
-        then(reviewRepository).should().save(any());
+        then(reviewRepository).should()
+                .save(any());
     }
 
     @Test
@@ -68,7 +69,8 @@ class ReviewServiceTest {
         reviewService.isExist(userDto, gymDto);
 
         //then
-        then(reviewRepository).should().existsByUser_IdAndGym_Id(any(), any());
+        then(reviewRepository).should()
+                .existsByUser_IdAndGym_Id(any(), any());
     }
 
     @Test
@@ -85,7 +87,8 @@ class ReviewServiceTest {
                 () -> reviewService.isExist(userDto, gymDto));
         assertEquals(ReviewErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(reviewRepository).should().existsByUser_IdAndGym_Id(any(), any());
+        then(reviewRepository).should()
+                .existsByUser_IdAndGym_Id(any(), any());
     }
 
     @Test
@@ -98,7 +101,8 @@ class ReviewServiceTest {
         reviewService.createReview(reviewDto);
 
         //then
-        then(reviewRepository).should().save(any());
+        then(reviewRepository).should()
+                .save(any());
 
     }
 
@@ -110,12 +114,13 @@ class ReviewServiceTest {
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(review));
 
         //when
-        ReviewDto reviewDto = reviewService.getReviewDtoById(1L);
+        ReviewDto reviewDto = reviewService.getReviewDtoById(anyLong());
 
         //then
-        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
 
-        assertEquals(ReviewDto.from(review), reviewDto);
+        assertEquals(ReviewDto.from(review), createReviewDto(1L));
     }
 
     @Test
@@ -129,7 +134,8 @@ class ReviewServiceTest {
                 () -> reviewService.getReviewDtoById(1L));
         assertEquals(ReviewErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
-        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
     }
 
     @Test
@@ -155,7 +161,8 @@ class ReviewServiceTest {
         reviewService.deleteReview(reviewDto);
 
         //then
-        then(reviewRepository).should().delete(any());
+        then(reviewRepository).should()
+                .delete(any());
     }
 
     @Test
@@ -173,8 +180,11 @@ class ReviewServiceTest {
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, pageRequest);
 
         //then
-        assertEquals(reviewDtos, reviews.stream().map(ReviewDto::from).toList());
-        then(reviewRepository).should().findByGymIdOrderByIdDesc(anyLong(), any());
+        assertEquals(reviewDtos, reviews.stream()
+                .map(ReviewDto::from)
+                .toList());
+        then(reviewRepository).should()
+                .findByGymIdOrderByIdDesc(anyLong(), any());
     }
 
     private static User createUser(Long id) {
@@ -185,10 +195,10 @@ class ReviewServiceTest {
                 "userPassword",
                 1,
                 1,
-                LocalDate.now(),
+                null,
                 "userProfileImage",
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
         );
     }
 
@@ -233,8 +243,8 @@ class ReviewServiceTest {
                 4,
                 createUser(id),
                 createGym(id),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
         );
     }
 
@@ -251,8 +261,26 @@ class ReviewServiceTest {
                 4,
                 createUser(id),
                 createGym(1L),
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                null,
+                null
+        );
+    }
+
+    private static ReviewDto createReviewDto(Long id) {
+        return ReviewDto.of(
+                id,
+                "reviewContent",
+                "reviewImages",
+                4.5f,
+                0,
+                1,
+                2,
+                3,
+                4,
+                UserDto.from(createUser(id)),
+                GymDto.from(createGym(id)),
+                null,
+                null
         );
     }
 
