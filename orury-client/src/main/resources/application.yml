@@ -1,4 +1,4 @@
-server.port: 8085
+server.port: 9085
 debug: false
 management.endpoints.web.exposure.include: "*"
 
