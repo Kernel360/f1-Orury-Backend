@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 리뷰 Service 테스트")
 @ActiveProfiles("test")
-public class ReviewServiceTest {
+class ReviewServiceTest {
 
     private ReviewRepository reviewRepository;
     private ReviewService reviewService;
@@ -210,13 +210,23 @@ public class ReviewServiceTest {
                 "gymRoadAddress",
                 "gymAddress",
                 4.5f,
+                12,
                 "gymImages",
                 "123.456",
                 "123.456",
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
-                "월"
+                "MONDAY",
+                "11:00-23:11",
+                "12:00-23:22",
+                "13:00-23:33",
+                "14:00-23:44",
+                "15:00-23:55",
+                "16:00-23:66",
+                "17:00-23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 

@@ -1,5 +1,14 @@
 package org.fastcampus.oruryclient.review.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -23,17 +32,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
 @ActiveProfiles("test")
-public class ReviewReactionServiceTest {
+class ReviewReactionServiceTest {
 
     private ReviewReactionService reviewReactionService;
     private ReviewReactionRepository reviewReactionRepository;
@@ -62,8 +64,7 @@ public class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should()
-                .findById(any());
+        then(reviewReactionRepository).should().findById(any());
 
         assertEquals(1, reactionType);
 
@@ -79,32 +80,12 @@ public class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should()
-                .findById(any());
+        then(reviewReactionRepository).should().findById(any());
 
         assertEquals(NumberConstants.NOT_REACTION, reactionType);
     }
 
     // method: createReviewReaction
-    @Test
-    @DisplayName("유효성 검증: reviewReactionDto.reviewReactionPK().getUserId() 가 없을 경우 익셉션을 던진다.")
-    void when_InvalidUserId_Then_ThrowBadRequestException() {
-        //given
-        ReviewReactionPK reviewReactionPK = createReviewReactionPK(2L, 1L);
-        ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
-        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
-
-        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
-
-        //when & then
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewReactionService.createReviewReaction(reviewReactionDto));
-        assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
-
-        then(userRepository).should()
-                .findById(anyLong());
-    }
-
     @Test
     @DisplayName("유효성 검증: reviewReactionDto.reviewReactionPK().getReviewId() 가 없을 경우 익셉션을 던진다.")
     void when_InvalidReviewId_Then_ThrowBadRequestException() {
@@ -113,7 +94,6 @@ public class ReviewReactionServiceTest {
         ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(createUser(1L)));
         given(reviewRepository.findById(anyLong())).willReturn(Optional.empty());
 
         //when & then
@@ -121,10 +101,7 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.createReviewReaction(reviewReactionDto));
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(userRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .findById(anyLong());
+        then(reviewRepository).should().findById(anyLong());
     }
 
     @Test
@@ -135,7 +112,6 @@ public class ReviewReactionServiceTest {
         ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 999);
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(createUser(1L)));
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
 
         //when & then
@@ -143,10 +119,7 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.createReviewReaction(reviewReactionDto));
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(userRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .findById(anyLong());
+        then(reviewRepository).should().findById(anyLong());
     }
 
     @Test
@@ -157,7 +130,6 @@ public class ReviewReactionServiceTest {
         ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(createUser(1L)));
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
         given(reviewReactionRepository.findById(any())).willReturn(Optional.empty());
 
@@ -165,14 +137,9 @@ public class ReviewReactionServiceTest {
         reviewReactionService.createReviewReaction(reviewReactionDto);
 
         //then
-        then(userRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .increaseReviewCount(anyLong(), anyInt());
-        then(reviewReactionRepository).should()
-                .save(any());
+        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should().increaseReviewCount(anyLong(), anyInt());
+        then(reviewReactionRepository).should().save(any());
     }
 
     @Test
@@ -183,7 +150,6 @@ public class ReviewReactionServiceTest {
         ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(createUser(1L)));
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
         given(reviewReactionRepository.findById(any())).willReturn(Optional.of(reviewReaction));
 
@@ -191,14 +157,9 @@ public class ReviewReactionServiceTest {
         reviewReactionService.createReviewReaction(reviewReactionDto);
 
         //then
-        then(userRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .findById(anyLong());
-        then(reviewRepository).should()
-                .updateReviewCount(anyLong(), anyInt(), anyInt());
-        then(reviewReactionRepository).should()
-                .save(any());
+        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should().updateReviewCount(anyLong(), anyInt(), anyInt());
+        then(reviewReactionRepository).should().save(any());
     }
 
     // method: deleteReviewReaction
@@ -216,8 +177,7 @@ public class ReviewReactionServiceTest {
                 () -> reviewReactionService.deleteReviewReaction(reviewReactionPK));
         assertEquals(ReviewReactionErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
-        then(reviewReactionRepository).should()
-                .findById(any());
+        then(reviewReactionRepository).should().findById(any());
 
     }
     // 유효한 요청일 때, delete한다.
@@ -235,10 +195,8 @@ public class ReviewReactionServiceTest {
         reviewReactionService.deleteReviewReaction(reviewReactionPK);
 
         //then
-        then(reviewReactionRepository).should()
-                .findById(any());
-        then(reviewReactionRepository).should()
-                .delete(any());
+        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should().delete(any());
     }
 
     private static User createUser(Long id) {
@@ -264,13 +222,23 @@ public class ReviewReactionServiceTest {
                 "gymRoadAddress",
                 "gymAddress",
                 4.5f,
+                12,
                 "gymImages",
                 "123.456",
                 "123.456",
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
-                "월"
+                "MONDAY",
+                "11:00-23:11",
+                "12:00-23:22",
+                "13:00-23:33",
+                "14:00-23:44",
+                "15:00-23:55",
+                "16:00-23:66",
+                "17:00-23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 

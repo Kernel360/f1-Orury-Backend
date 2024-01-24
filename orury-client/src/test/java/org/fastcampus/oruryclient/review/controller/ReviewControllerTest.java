@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Disabled
 @DisplayName("[Controller] 리뷰 관련 테스트")
 @WithUserPrincipal
-public class ReviewControllerTest extends ControllerTest {
+class ReviewControllerTest extends ControllerTest {
 
     @DisplayName("[POST] requestbody(content, images, score, gymId)로 리뷰 정보를 받아, 리뷰를 생성한다. - 성공")
     @Test
@@ -120,14 +120,10 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(userService).should(times(1))
-                .getUserDtoById(anyLong());
-        then(gymService).should(times(1))
-                .getGymDtoById(anyLong());
-        then(reviewService).should(times(0))
-                .isExist(any(), any());
-        then(reviewService).should(times(0))
-                .createReview(reviewDto);
+        then(userService).should(times(1)).getUserDtoById(anyLong());
+        then(gymService).should(times(1)).getGymDtoById(anyLong());
+        then(reviewService).should(times(0)).isExist(any(), any());
+        then(reviewService).should(times(0)).createReview(reviewDto);
     }
 
     @DisplayName("[POST] 이미 작성된 리뷰가 있을 경우, 리뷰를 생성 시 예외 발생 - 실패")
@@ -142,8 +138,7 @@ public class ReviewControllerTest extends ControllerTest {
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
         given(gymService.getGymDtoById(anyLong())).willReturn(gymDto);
-        willThrow(new BusinessException(code)).given(reviewService)
-                .isExist(any(), any());
+        willThrow(new BusinessException(code)).given(reviewService).isExist(any(), any());
 
         //when & then
         mvc.perform(post("/api/v1/reviews")
@@ -154,14 +149,10 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(userService).should(times(1))
-                .getUserDtoById(anyLong());
-        then(gymService).should(times(1))
-                .getGymDtoById(anyLong());
-        then(reviewService).should(times(1))
-                .isExist(any(), any());
-        then(reviewService).should(times(0))
-                .createReview(reviewDto);
+        then(userService).should(times(1)).getUserDtoById(anyLong());
+        then(gymService).should(times(1)).getGymDtoById(anyLong());
+        then(reviewService).should(times(1)).isExist(any(), any());
+        then(reviewService).should(times(0)).createReview(reviewDto);
     }
 
     @DisplayName("[PATCH] 기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다. - 성공")
@@ -185,12 +176,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(1))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(1))
-                .updateReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(1)).updateReview(any());
     }
 
     @DisplayName("[PATCH] 기존에 작성한 리뷰가 없을 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
@@ -213,12 +201,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(0))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0))
-                .updateReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(0)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(0)).updateReview(any());
     }
 
     @DisplayName("[PATCH] 리뷰 작성자와 수정 요청자의 id가 일치하지 않는 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
@@ -231,8 +216,7 @@ public class ReviewControllerTest extends ControllerTest {
         ReviewErrorCode code = ReviewErrorCode.FORBIDDEN;
 
         given(reviewService.getReviewDtoById(anyLong())).willReturn(beforeReviewDto);
-        willThrow(new BusinessException(code)).given(reviewService)
-                .isValidate(anyLong(), anyLong());
+        willThrow(new BusinessException(code)).given(reviewService).isValidate(anyLong(), anyLong());
 
         //when & then
         mvc.perform(patch("/api/v1/reviews/" + 1L)
@@ -243,12 +227,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(1))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0))
-                .updateReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(0)).updateReview(any());
     }
 
     @DisplayName("[Delete] 리뷰 id를 받아, 리뷰를 삭제한다. - 성공")
@@ -269,12 +250,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(1))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(1))
-                .deleteReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(1)).deleteReview(any());
     }
 
     @DisplayName("[Delete] 삭제할 리뷰가 존재하지 않는 경우, 리뷰 삭제 예외 발생. - 실패")
@@ -293,12 +271,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(0))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0))
-                .deleteReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(0)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(0)).deleteReview(any());
     }
 
     @DisplayName("[Delete] 리뷰 작성자와 삭제 요청자의 id가 일치하지 않는 경우, 리뷰 삭제 예외 발생. - 실패")
@@ -309,8 +284,7 @@ public class ReviewControllerTest extends ControllerTest {
         ReviewErrorCode code = ReviewErrorCode.FORBIDDEN;
 
         given(reviewService.getReviewDtoById(anyLong())).willReturn(deleteReviewDto);
-        willThrow(new BusinessException(code)).given(reviewService)
-                .isValidate(anyLong(), anyLong());
+        willThrow(new BusinessException(code)).given(reviewService).isValidate(anyLong(), anyLong());
 
         //when & then
         mvc.perform(delete("/api/v1/reviews/" + 1L)
@@ -320,12 +294,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtoById(any());
-        then(reviewService).should(times(1))
-                .isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0))
-                .deleteReview(any());
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(0)).deleteReview(any());
     }
 
     @DisplayName("[GET] 암장 id를 받아 해당 암장의 리뷰를 반환한다. - 성공")
@@ -357,28 +328,21 @@ public class ReviewControllerTest extends ControllerTest {
 
 
         //when & then
-        mvc.perform(get("/api/v1/reviewss/" + 1L)
+        mvc.perform(get("/api/v1/reviews/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
                         .param("cursor", "" + cursor))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.reviews[0].id").value(response.reviews()
-                        .get(0)
-                        .id()))
-                .andExpect(jsonPath("$.data.reviews[0].content").value(response.reviews()
-                        .get(0)
-                        .content()))
+                .andExpect(jsonPath("$.data.reviews[0].id").value(response.reviews().get(0).id()))
+                .andExpect(jsonPath("$.data.reviews[0].content").value(response.reviews().get(0).content()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))
                 .andExpect(jsonPath("$.data.gym_name").value(response.gymName()))
         ;
 
-        then(reviewService).should(times(1))
-                .getReviewDtosByGymId(anyLong(), anyLong(), any());
-        then(reviewReactionService).should(times(reviewDtos.size()))
-                .getReactionType(anyLong(), anyLong());
-        then(gymService).should(times(1))
-                .getGymDtoById(any());
+        then(reviewService).should(times(1)).getReviewDtosByGymId(anyLong(), anyLong(), any());
+        then(reviewReactionService).should(times(reviewDtos.size())).getReactionType(anyLong(), anyLong());
+        then(gymService).should(times(1)).getGymDtoById(any());
     }
 
     @DisplayName("[GET] 암장 id가 유효하지 않은 경우, 리뷰 조회 실패 예외처리 발생 - 실패")
@@ -391,7 +355,7 @@ public class ReviewControllerTest extends ControllerTest {
         given(gymService.getGymDtoById(anyLong())).willThrow(new BusinessException(code));
 
         //when & then
-        mvc.perform(get("/api/v1/reviewss/" + 1L)
+        mvc.perform(get("/api/v1/reviews/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
                         .param("cursor", "" + 1L))
@@ -399,12 +363,9 @@ public class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(reviewService).should(times(0))
-                .getReviewDtosByGymId(anyLong(), anyLong(), any());
-        then(reviewReactionService).should(times(0))
-                .getReactionType(anyLong(), anyLong());
-        then(gymService).should(times(1))
-                .getGymDtoById(any());
+        then(reviewService).should(times(0)).getReviewDtosByGymId(anyLong(), anyLong(), any());
+        then(reviewReactionService).should(times(0)).getReactionType(anyLong(), anyLong());
+        then(gymService).should(times(1)).getGymDtoById(any());
     }
 
 
@@ -431,15 +392,25 @@ public class ReviewControllerTest extends ControllerTest {
                 "서울시 도로명주소",
                 "서울시 지번주소",
                 4.5f,
+                12,
                 "image.png",
-                "latitude",
-                "longitude",
+                "37.513709",
+                "127.062144",
                 "더클라임",
                 "01012345678",
                 "instalink.com",
-                "화",
+                "MONDAY",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "11:00-23:11",
+                "12:00-23:22",
+                "13:00-23:33",
+                "14:00-23:44",
+                "15:00-23:55",
+                "16:00-23:66",
+                "17:00-23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 

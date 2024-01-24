@@ -90,4 +90,10 @@ public class ReviewService {
                 .split(",");
         s3Repository.delete(S3Folder.REVIEW.getName(), oldImages);
     }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDto> getAllReviewDtosByGymId(Long gymId) {
+        return reviewRepository.findByGymId(gymId)
+                .stream().map(ReviewDto::from).toList();
+    }
 }

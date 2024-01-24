@@ -3,7 +3,9 @@ package org.fastcampus.orurydomain.gym.dto;
 
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 
 /**
  * DTO for {@link org.fastcampus.orurydomain.gym.db.model.Gym}
@@ -15,48 +17,20 @@ public record GymDto(
         String roadAddress,
         String address,
         Float scoreAverage,
+        int likeCount,
         String images,
-        String latitude,
-        String longitude,
-//        String openTime,
-//        String closeTime,
+        double latitude,
+        double longitude,
         String brand,
         String phoneNumber,
         String instagramLink,
         String settingDay,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        EnumMap<DayOfWeek, String> businessHours,
+        String homepageLink,
+        String remark
 ) {
-    public static GymDto of(
-            String place_name,
-            String kakaoId,
-            String road_address_name,
-            String phone,
-            String x,
-            String y,
-            String address_name
-    ) {
-        return GymDto.of(
-                null,
-                place_name,
-                kakaoId,
-                road_address_name,
-                address_name,
-                null,
-                null,
-                x,
-                y,
-//                null,
-//                null,
-                null,
-                phone,
-                null,
-                null,
-                null,
-                null
-        );
-    }
-
     public static GymDto of(
             Long id,
             String name,
@@ -64,17 +38,25 @@ public record GymDto(
             String roadAddress,
             String address,
             Float scoreAverage,
+            int likeCount,
             String images,
             String latitude,
             String longitude,
-//            String openTime,
-//            String closeTime,
             String brand,
             String phoneNumber,
             String instagramLink,
             String settingDay,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            String serviceMon,
+            String serviceTue,
+            String serviceWed,
+            String serviceThu,
+            String serviceFri,
+            String serviceSat,
+            String serviceSun,
+            String homepageLink,
+            String remark
     ) {
         return new GymDto(
                 id,
@@ -83,17 +65,19 @@ public record GymDto(
                 roadAddress,
                 address,
                 scoreAverage,
+                likeCount,
                 images,
-                latitude,
-                longitude,
-//                openTime,
-//                closeTime,
+                Double.parseDouble(latitude),
+                Double.parseDouble(longitude),
                 brand,
                 phoneNumber,
                 instagramLink,
                 settingDay,
                 createdAt,
-                updatedAt
+                updatedAt,
+                createBusinessHoursMap(serviceMon, serviceTue, serviceWed, serviceThu, serviceFri, serviceSat, serviceSun),
+                homepageLink,
+                remark
         );
     }
 
@@ -105,15 +89,23 @@ public record GymDto(
                 this.roadAddress,
                 this.address,
                 this.scoreAverage,
+                this.likeCount,
                 this.images,
-                this.latitude,
-                this.longitude,
-//                this.openTime,
-//                this.closeTime,
+                String.valueOf(this.latitude),
+                String.valueOf(this.longitude),
                 this.brand,
                 this.phoneNumber,
                 this.instagramLink,
-                this.settingDay
+                this.settingDay,
+                this.businessHours.get(DayOfWeek.MONDAY),
+                this.businessHours.get(DayOfWeek.TUESDAY),
+                this.businessHours.get(DayOfWeek.WEDNESDAY),
+                this.businessHours.get(DayOfWeek.THURSDAY),
+                this.businessHours.get(DayOfWeek.FRIDAY),
+                this.businessHours.get(DayOfWeek.SATURDAY),
+                this.businessHours.get(DayOfWeek.SUNDAY),
+                this.homepageLink,
+                this.remark
         );
     }
 
@@ -125,17 +117,45 @@ public record GymDto(
                 entity.getRoadAddress(),
                 entity.getAddress(),
                 entity.getScoreAverage(),
+                entity.getLikeCount(),
                 entity.getImages(),
                 entity.getLatitude(),
                 entity.getLongitude(),
-//                entity.getOpenTime(),
-//                entity.getCloseTime(),
                 entity.getBrand(),
                 entity.getPhoneNumber(),
                 entity.getInstagramLink(),
                 entity.getSettingDay(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getServiceMon(),
+                entity.getServiceTue(),
+                entity.getServiceWed(),
+                entity.getServiceThu(),
+                entity.getServiceFri(),
+                entity.getServiceSat(),
+                entity.getServiceSun(),
+                entity.getHomepageLink(),
+                entity.getRemark()
         );
+    }
+
+    private static EnumMap<DayOfWeek, String> createBusinessHoursMap(
+            String serviceMon,
+            String serviceTue,
+            String serviceWed,
+            String serviceThu,
+            String serviceFri,
+            String serviceSat,
+            String serviceSun
+    ) {
+        EnumMap<DayOfWeek, String> businessHoursMap = new EnumMap<>(DayOfWeek.class);
+        businessHoursMap.put(DayOfWeek.MONDAY, serviceMon);
+        businessHoursMap.put(DayOfWeek.TUESDAY, serviceTue);
+        businessHoursMap.put(DayOfWeek.WEDNESDAY, serviceWed);
+        businessHoursMap.put(DayOfWeek.THURSDAY, serviceThu);
+        businessHoursMap.put(DayOfWeek.FRIDAY, serviceFri);
+        businessHoursMap.put(DayOfWeek.SATURDAY, serviceSat);
+        businessHoursMap.put(DayOfWeek.SUNDAY, serviceSun);
+        return businessHoursMap;
     }
 }

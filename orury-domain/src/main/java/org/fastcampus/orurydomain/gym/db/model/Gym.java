@@ -32,6 +32,9 @@ public class Gym extends AuditingField {
     @Column(name = "score_average")
     private Float scoreAverage;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @Column(name = "images")
     private String images;
 
@@ -53,6 +56,33 @@ public class Gym extends AuditingField {
     @Column(name = "setting_day")
     private String settingDay;
 
+    @Column(name = "service_mon")
+    private String serviceMon;
+
+    @Column(name = "service_tue")
+    private String serviceTue;
+
+    @Column(name = "service_wed")
+    private String serviceWed;
+
+    @Column(name = "service_thu")
+    private String serviceThu;
+
+    @Column(name = "service_fri")
+    private String serviceFri;
+
+    @Column(name = "service_sat")
+    private String serviceSat;
+
+    @Column(name = "service_sun")
+    private String serviceSun;
+
+    @Column(name = "homepage_link")
+    private String homepageLink;
+
+    @Column(name = "remark")
+    private String remark;
+
     private Gym(
             Long id,
             String name,
@@ -60,15 +90,23 @@ public class Gym extends AuditingField {
             String roadAddress,
             String address,
             Float scoreAverage,
+            int likeCount,
             String images,
             String latitude,
             String longitude,
-//            String openTime,
-//            String closeTime,
             String brand,
             String phoneNumber,
             String instagramLink,
-            String settingDay
+            String settingDay,
+            String serviceMon,
+            String serviceTue,
+            String serviceWed,
+            String serviceThu,
+            String serviceFri,
+            String serviceSat,
+            String serviceSun,
+            String homepageLink,
+            String remark
     ) {
         this.id = id;
         this.name = name;
@@ -76,15 +114,23 @@ public class Gym extends AuditingField {
         this.roadAddress = roadAddress;
         this.address = address;
         this.scoreAverage = scoreAverage;
+        this.likeCount = likeCount;
         this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
-//        this.openTime = openTime;
-//        this.closeTime = closeTime;
         this.brand = brand;
         this.phoneNumber = phoneNumber;
         this.instagramLink = instagramLink;
         this.settingDay = settingDay;
+        this.serviceMon = serviceMon;
+        this.serviceTue = serviceTue;
+        this.serviceWed = serviceWed;
+        this.serviceThu = serviceThu;
+        this.serviceFri = serviceFri;
+        this.serviceSat = serviceSat;
+        this.serviceSun = serviceSun;
+        this.homepageLink = homepageLink;
+        this.remark = remark;
     }
 
     public static Gym of(
@@ -94,15 +140,23 @@ public class Gym extends AuditingField {
             String roadAddress,
             String address,
             Float scoreAverage,
+            int likeCount,
             String images,
             String latitude,
             String longitude,
-//            String openTime,
-//            String closeTime,
             String brand,
             String phoneNumber,
             String instagramLink,
-            String settingDay
+            String settingDay,
+            String serviceMon,
+            String serviceTue,
+            String serviceWed,
+            String serviceThu,
+            String serviceFri,
+            String serviceSat,
+            String serviceSun,
+            String homepageLink,
+            String remark
     ) {
         return new Gym(
                 id,
@@ -111,15 +165,23 @@ public class Gym extends AuditingField {
                 roadAddress,
                 address,
                 scoreAverage,
+                likeCount,
                 images,
                 latitude,
                 longitude,
-//                openTime,
-//                closeTime,
                 brand,
                 phoneNumber,
                 instagramLink,
-                settingDay
+                settingDay,
+                serviceMon,
+                serviceTue,
+                serviceWed,
+                serviceThu,
+                serviceFri,
+                serviceSat,
+                serviceSun,
+                homepageLink,
+                remark
         );
     }
 }

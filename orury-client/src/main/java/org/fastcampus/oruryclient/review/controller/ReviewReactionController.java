@@ -40,7 +40,7 @@ public class ReviewReactionController {
 
     }
 
-    @Operation(summary = "반응 삭제", description = "requestbody로 반응 정보를 받아 반응을 삭제한다.")
+    @Operation(summary = "반응 삭제", description = "reviewId, UserId를 비교하여 요청이 유효하면 반응을 삭제한다.")
     @DeleteMapping("/{reviewId}")
     public ApiResponse<Object> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
