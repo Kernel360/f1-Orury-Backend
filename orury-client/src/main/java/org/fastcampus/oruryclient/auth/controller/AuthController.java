@@ -11,14 +11,11 @@ import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @RestController
 public class AuthController {
     private final AuthService authService;
@@ -37,6 +34,20 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "로그인", description = "소셜 로그인의 인가 코드를 받아 사용자 정보 조회 후 Access & Refresh 토큰 전달")
+    @GetMapping("/login")
+    public String login(@RequestParam String code) {
+        String kakaoToken = authService.getKakaoAccessToken(code).accessToken();
+
+//        UserDto userDto = authService.findUser(kakaoToken);
+//        JwtToken jwtToken = jwtTokenProvider.createJwtToken(userDto);
+//
+//        LoginResponse loginResponse = LoginResponse.of(userDto, jwtToken);
+
+        return kakaoToken;
+    }
+
+
     @Operation(summary = "토큰 재발급", description = "기존 토큰을 받아, Access토큰과 Refresh토큰 모두 재발급하여 돌려준다.")
     @PostMapping("/refresh")
     public ApiResponse<JwtToken> reissueJwtTokens(@RequestBody JwtToken request) {
@@ -49,4 +60,6 @@ public class AuthController {
                 .data(jwtToken)
                 .build();
     }
+
+
 }
