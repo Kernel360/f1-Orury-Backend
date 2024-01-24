@@ -11,15 +11,15 @@ permissions:
     mode: '755'
     owner: ec2-user
     group: ec2-user
-
-hooks:
-  BeforeInstall:
-    - location: scripts/deploy.sh
-      timeout: 60
-      runas: ec2-user
-      command: chmod +x /home/ec2-user/orury/scripts/deploy.sh
-
-  ApplicationStart:
-    - location: scripts/deploy.sh
-      timeout: 60
-      runas: ec2-user
+#
+#hooks:
+#  BeforeInstall:
+#    - location: scripts/deploy.sh
+#      timeout: 60
+#      runas: ec2-user
+#      command: chmod +x /home/ec2-user/orury/scripts/deploy.sh
+#
+#  ApplicationStart:
+#    - location: scripts/deploy.sh
+#      timeout: 60
+#      runas: ec2-user
