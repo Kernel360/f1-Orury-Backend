@@ -5,6 +5,16 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record LoginRequest(
-        String email
+        String code,
+        int signUpType
 ) {
+    public static LoginRequest of(
+            String code,
+            int signUpType
+    ) {
+        return new LoginRequest(
+                code,
+                signUpType
+        );
+    }
 }

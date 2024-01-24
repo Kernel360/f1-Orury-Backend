@@ -45,10 +45,10 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(oAuthSuccessHandler)
-                )
+//                .oauth2Login(oauth -> oauth
+//                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+//                        .successHandler(oAuthSuccessHandler)
+//                )
                 .build();
     }
 

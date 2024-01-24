@@ -4,15 +4,23 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
+import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
 import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
+import org.fastcampus.oruryclient.auth.strategy.LoginStrategy;
+import org.fastcampus.oruryclient.auth.strategy.LoginStrategyManager;
+import org.fastcampus.orurycommon.error.code.AuthErrorCode;
 import org.fastcampus.orurydomain.auth.dto.JwtToken;
+import org.fastcampus.orurydomain.auth.dto.LoginDto;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final LoginStrategyManager loginStrategyManager;
 
     @Operation(summary = "회원가입", description = "소셜 로그인을 통해 전달받은 정보를 기반으로 회원가입 수행")
     @PostMapping("/sign-up")
@@ -36,15 +45,53 @@ public class AuthController {
     }
 
     @Operation(summary = "로그인", description = "소셜 로그인의 인가 코드를 받아 사용자 정보 조회 후 Access & Refresh 토큰 전달")
-    @GetMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestParam String code) {
-        String kakaoToken = authService.getKakaoAccessToken(code).accessToken();
-        UserDto userDto = authService.getUserInfo(kakaoToken);
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+        LoginStrategy strategy = loginStrategyManager.getLoginStrategy(request.signUpType());
+        LoginDto loginDto = strategy.login(request);
 
-        // Access token과 Refresh token을 모두 생성하는 메서드 호출
-        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(userDto.id(), userDto.email());
-        LoginResponse loginResponse = LoginResponse.of(userDto, jwtToken);
+        // 비회원인 경우
+        if (loginDto.flag().equals(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())) {
+            LoginResponse loginResponse = LoginResponse.of(
+                    null,
+                    null,
+                    strategy.getSignUpType(),
+                    null,
+                    null,
+                    null);
 
+            return ApiResponse.<LoginResponse>builder()
+                    .status(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT.getStatus())
+                    .message(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())
+                    .data(loginResponse)
+                    .build();
+        }
+
+        // 다른 소셜로그인 계정이 있는 회원인 경우
+        if (loginDto.flag().equals(AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage())) {
+            LoginResponse loginResponse = LoginResponse.of(
+                    loginDto.userDto().id(),
+                    loginDto.userDto().email(),
+                    loginDto.userDto().signUpType(),
+                    loginDto.userDto().nickname(),
+                    null,
+                    null);
+
+            return ApiResponse.<LoginResponse>builder()
+                    .status(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER.getStatus())
+                    .message(AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage())
+                    .data(loginResponse)
+                    .build();
+        }
+
+        // 정상 로그인
+        LoginResponse loginResponse = LoginResponse.of(
+                loginDto.userDto().id(),
+                loginDto.userDto().email(),
+                loginDto.userDto().signUpType(),
+                loginDto.userDto().nickname(),
+                loginDto.jwtToken().accessToken(),
+                loginDto.jwtToken().refreshToken());
         return ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(AuthMessage.LOGIN_SUCCESS.getMessage())
