@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
+import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
 import org.fastcampus.orurydomain.auth.dto.JwtToken;
@@ -36,15 +37,19 @@ public class AuthController {
 
     @Operation(summary = "로그인", description = "소셜 로그인의 인가 코드를 받아 사용자 정보 조회 후 Access & Refresh 토큰 전달")
     @GetMapping("/login")
-    public String login(@RequestParam String code) {
+    public ApiResponse<LoginResponse> login(@RequestParam String code) {
         String kakaoToken = authService.getKakaoAccessToken(code).accessToken();
+        UserDto userDto = authService.getUserInfo(kakaoToken);
 
-//        UserDto userDto = authService.findUser(kakaoToken);
-//        JwtToken jwtToken = jwtTokenProvider.createJwtToken(userDto);
-//
-//        LoginResponse loginResponse = LoginResponse.of(userDto, jwtToken);
+        // Access token과 Refresh token을 모두 생성하는 메서드 호출
+        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(userDto.id(), userDto.email());
+        LoginResponse loginResponse = LoginResponse.of(userDto, jwtToken);
 
-        return kakaoToken;
+        return ApiResponse.<LoginResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(AuthMessage.LOGIN_SUCCESS.getMessage())
+                .data(loginResponse)
+                .build();
     }
 
 

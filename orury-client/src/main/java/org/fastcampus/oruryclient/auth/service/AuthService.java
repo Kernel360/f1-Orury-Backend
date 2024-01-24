@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
+import org.fastcampus.orurycommon.error.exception.AuthException;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.auth.dto.KakaoAccountDto;
 import org.fastcampus.orurydomain.auth.dto.KakaoTokenDto;
+import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,5 +89,55 @@ public class AuthService {
         return kakaoTokenDto;
     }
 
-    
+    public UserDto getUserInfo(String kakaoAccessToken) {
+        RestTemplate rt = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + kakaoAccessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> accountInfoRequest = new HttpEntity<>(headers);
+
+        // POST 방식으로 API 서버에 요청 후 response 받아옴
+        ResponseEntity<String> accountInfoResponse = rt.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                accountInfoRequest,
+                String.class
+        );
+
+        // JSON Parsing (-> kakaoAccountDto)
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        KakaoAccountDto kakaoAccountDto = null;
+        try {
+            kakaoAccountDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoAccountDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        // 회원가입 처리하기
+        String email = kakaoAccountDto.kakaoAccount().email();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthException(UserErrorCode.NOT_FOUND));
+        return UserDto.from(user);
+
+//        // 처음 로그인이 아닌 경우
+//        if (existOwner != null) {
+//            return Account.builder()
+//                    .id(kakaoAccountDto.getId())
+//                    .email(kakaoAccountDto.getKakao_account().getEmail())
+//                    .kakaoName(kakaoAccountDto.getKakao_account().getProfile().getNickname())
+//                    .build();
+//        }
+//        // 처음 로그인 하는 경우
+//        else {
+//            return Account.builder()
+//                    .id(kakaoAccountDto.getId())
+//                    .email(kakaoAccountDto.getKakao_account().getEmail())
+//                    .kakaoName(kakaoAccountDto.getKakao_account().getProfile().getNickname())
+//                    .build();
+//        }
+    }
 }
