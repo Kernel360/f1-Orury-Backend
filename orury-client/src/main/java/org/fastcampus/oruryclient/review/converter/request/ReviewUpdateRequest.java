@@ -26,7 +26,7 @@ public record ReviewUpdateRequest(
     }
 
     public ReviewDto toDto(ReviewDto reviewDto) {
-        String imagesAsString = ImageUrlConverter.convertToString(images);
+        String imagesAsString = ImageUrlConverter.convertListToString(images);
 
         return ReviewDto.of(
                 reviewDto.id(),

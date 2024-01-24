@@ -45,13 +45,31 @@ public record GymResponse(
 
     public GymDto toDto() {
         return GymDto.of(
+                null,
                 placeName,
                 kakaoId,
                 roadAddressName,
-                phone,
+                addressName,
+                null,
+                0,
+                null,
                 x,
                 y,
-                addressName
+                null,
+                phone,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
     }
 

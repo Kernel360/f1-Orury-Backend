@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
 import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
-import org.fastcampus.oruryclient.auth.jwt.JwtToken;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
+import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.springframework.http.HttpStatus;
@@ -55,7 +55,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         // 정상적으로 로그인 인증된 경우
         else {
-            JwtToken jwtToken = jwtTokenProvider.createJwtToken(user.getId(), user.getEmail());
+            JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.getId(), user.getEmail());
             LoginResponse loginResponse = LoginResponse.of(user.getId(), email, signUpType, user.getNickname(), jwtToken.accessToken(), jwtToken.refreshToken());
 
             sendResponse(
@@ -73,7 +73,8 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                         .build()
         );
 
-        response.setCharacterEncoding("UTF-16");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
     }
 }

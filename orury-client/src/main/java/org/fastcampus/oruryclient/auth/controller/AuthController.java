@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
-import org.fastcampus.oruryclient.auth.jwt.JwtToken;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
+import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @RestController
 public class AuthController {
     private final AuthService authService;

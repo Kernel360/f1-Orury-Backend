@@ -74,11 +74,47 @@ public record ReviewDto(
         );
     }
 
+    public static ReviewDto from(Review entity, String imgUrls) {
+        return ReviewDto.of(
+                entity.getId(),
+                entity.getContent(),
+                imgUrls,
+                entity.getScore(),
+                entity.getInterestCount(),
+                entity.getLikeCount(),
+                entity.getHelpCount(),
+                entity.getThumbCount(),
+                entity.getAngryCount(),
+                UserDto.from(entity.getUser()),
+                GymDto.from(entity.getGym()),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
     public Review toEntity() {
         return Review.of(
                 id,
                 content,
                 images,
+                score,
+                interestCount,
+                likeCount,
+                helpCount,
+                thumbCount,
+                angryCount,
+                userDto.toEntity(),
+                gymDto.toEntity(),
+                createdAt,
+                updatedAt
+        );
+    }
+
+    public Review toEntity(String imgUrls) {
+        return Review.of(
+                id,
+                content,
+                imgUrls,
                 score,
                 interestCount,
                 likeCount,

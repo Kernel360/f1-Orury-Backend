@@ -18,6 +18,8 @@ public final class NumberConstants {
     public static final int COMMENT_PAGINATION_SIZE = 10;
     // Review pagination Size
     public static final int REVIEW_PAGINATION_SIZE = 10;
+    // Gym pagination Size
+    public static final int GYM_PAGINATION_SIZE = 15;
     // int Value of Not Deleted Object`s Status
     public static final int IS_NOT_DELETED = 0;
     // int Value of Deleted Object`s Status

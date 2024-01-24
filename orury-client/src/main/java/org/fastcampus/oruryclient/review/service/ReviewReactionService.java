@@ -37,8 +37,6 @@ public class ReviewReactionService {
 
     @Transactional
     public void createReviewReaction(ReviewReactionDto reviewReactionDto) {
-        userRepository.findById(reviewReactionDto.reviewReactionPK().getUserId())
-                .orElseThrow(() -> new BusinessException(ReviewReactionErrorCode.BAD_REQUEST));
         reviewRepository.findById(reviewReactionDto.reviewReactionPK().getReviewId())
                 .orElseThrow(() -> new BusinessException(ReviewReactionErrorCode.BAD_REQUEST));
 

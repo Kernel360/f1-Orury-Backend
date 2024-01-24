@@ -16,8 +16,10 @@ public record ReviewResponse(
         boolean isMine
 ) {
     public static ReviewResponse of(ReviewDto reviewDto, Long userId) {
-        List<String> imagesAsList = ImageUrlConverter.convertToList(reviewDto.images());
-        boolean isMine = reviewDto.userDto().id().equals(userId);
+        List<String> imagesAsList = ImageUrlConverter.convertStringToList(reviewDto.images());
+        boolean isMine = reviewDto.userDto()
+                .id()
+                .equals(userId);
 
         return new ReviewResponse(
                 reviewDto.id(),
