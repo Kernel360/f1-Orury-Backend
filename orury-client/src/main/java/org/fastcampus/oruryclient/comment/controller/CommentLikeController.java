@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api/v1/comments/like")
 @RestController
 public class CommentLikeController {
     private final CommentLikeService commentLikeService;
     private final CommentService commentService;
 
     @Operation(summary = "댓글 좋아요 생성", description = "댓글 id를 받아, 댓글 좋아요를 생성한다.")
-    @PostMapping("/comment/like/{commentId}")
+    @PostMapping("/{commentId}")
     public ApiResponse<Object> createCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
         commentService.isValidate(commentLikeDto);
@@ -38,7 +38,7 @@ public class CommentLikeController {
     }
 
     @Operation(summary = "댓글 좋아요 삭제", description = "댓글 id를 받아, 댓글 좋아요를 삭제한다.")
-    @DeleteMapping("/comment/like/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ApiResponse<Object> deleteCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
         commentService.isValidate(commentLikeDto);

@@ -65,6 +65,22 @@ public record PostDto(
         );
     }
 
+    public static PostDto from(Post entity, String imgUrls) {
+        return PostDto.of(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getViewCount(),
+                entity.getCommentCount(),
+                entity.getLikeCount(),
+                imgUrls,
+                entity.getCategory(),
+                UserDto.from(entity.getUser()),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
     public Post toEntity() {
         return Post.of(
                 id,
@@ -74,6 +90,22 @@ public record PostDto(
                 commentCount,
                 likeCount,
                 images,
+                category,
+                userDto.toEntity(),
+                createdAt,
+                updatedAt
+        );
+    }
+
+    public Post toEntity(String newImages) {
+        return Post.of(
+                id,
+                title,
+                content,
+                viewCount,
+                commentCount,
+                likeCount,
+                newImages,
                 category,
                 userDto.toEntity(),
                 createdAt,
