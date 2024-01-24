@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/gyms/like")
 @RestController
 public class GymLikeController {
     private final GymLikeService gymLikeService;
     private final GymService gymService;
 
     @Operation(summary = "암장 좋아요 생성", description = "암장 id를 받아, 암장 좋아요를 생성한다.")
-    @PostMapping("/gym/like/{gymId}")
+    @PostMapping("/{gymId}")
     public ApiResponse<Object> createGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         gymService.isValidate(gymId);
         GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
@@ -38,7 +38,7 @@ public class GymLikeController {
     }
 
     @Operation(summary = "암장 좋아요 삭제", description = "암장 id를 받아, 암장 좋아요를 삭제한다.")
-    @DeleteMapping("/gym/like/{gymId}")
+    @DeleteMapping("/{gymId}")
     public ApiResponse<Object> deleteGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         gymService.isValidate(gymId);
         GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
