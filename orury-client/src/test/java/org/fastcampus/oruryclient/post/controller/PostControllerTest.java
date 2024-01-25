@@ -559,7 +559,7 @@ class PostControllerTest extends ControllerTest {
                 1L,
                 "title",
                 "content",
-                "",
+                List.of(),
                 1
         );
     }
