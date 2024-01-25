@@ -11,6 +11,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 @Component
@@ -69,5 +70,12 @@ public class LoggerFilter extends OncePerRequestFilter {
 
 
         res.copyBodyToResponse();
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {"/swagger-ui", "/v3/api-docs"};
+        String path = request.getRequestURI();
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }
