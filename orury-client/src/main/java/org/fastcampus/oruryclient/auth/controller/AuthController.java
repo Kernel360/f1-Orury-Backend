@@ -11,7 +11,6 @@ import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
 import org.fastcampus.oruryclient.auth.strategy.LoginStrategy;
 import org.fastcampus.oruryclient.auth.strategy.LoginStrategyManager;
-import org.fastcampus.orurycommon.error.code.AuthErrorCode;
 import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.auth.dto.LoginDto;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
@@ -50,48 +49,8 @@ public class AuthController {
         LoginStrategy strategy = loginStrategyManager.getLoginStrategy(request.signUpType());
         LoginDto loginDto = strategy.login(request);
 
-        // 비회원인 경우
-        if (loginDto.flag().equals(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())) {
-            LoginResponse loginResponse = LoginResponse.of(
-                    null,
-                    null,
-                    strategy.getSignUpType(),
-                    null,
-                    null,
-                    null);
-
-            return ApiResponse.<LoginResponse>builder()
-                    .status(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT.getStatus())
-                    .message(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())
-                    .data(loginResponse)
-                    .build();
-        }
-
-        // 다른 소셜로그인 계정이 있는 회원인 경우
-        if (loginDto.flag().equals(AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage())) {
-            LoginResponse loginResponse = LoginResponse.of(
-                    loginDto.userDto().id(),
-                    loginDto.userDto().email(),
-                    loginDto.userDto().signUpType(),
-                    loginDto.userDto().nickname(),
-                    null,
-                    null);
-
-            return ApiResponse.<LoginResponse>builder()
-                    .status(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER.getStatus())
-                    .message(AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage())
-                    .data(loginResponse)
-                    .build();
-        }
-
         // 정상 로그인
-        LoginResponse loginResponse = LoginResponse.of(
-                loginDto.userDto().id(),
-                loginDto.userDto().email(),
-                loginDto.userDto().signUpType(),
-                loginDto.userDto().nickname(),
-                loginDto.jwtToken().accessToken(),
-                loginDto.jwtToken().refreshToken());
+        LoginResponse loginResponse = LoginResponse.of(loginDto);
         return ApiResponse.<LoginResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(AuthMessage.LOGIN_SUCCESS.getMessage())

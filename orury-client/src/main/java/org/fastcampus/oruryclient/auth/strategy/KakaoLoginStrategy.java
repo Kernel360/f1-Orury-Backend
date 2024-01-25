@@ -58,11 +58,20 @@ public class KakaoLoginStrategy implements LoginStrategy {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
         Optional<User> user = userRepository.findByEmail(email);
+
         // 비회원인 경우
         if (user.isEmpty()) {
-            return LoginDto.of(null, null, AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
+            throw new AuthException(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT);
         }
-        return getLoginDto(user.get());
+
+        // 다른 소셜 로그인으로 가입한 회원인 경우
+        if (user.get().getSignUpType() != SIGN_UP_TYPE) {
+            throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);
+        }
+
+        // 정상 회원은 토큰 발급
+        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.get().getId(), user.get().getEmail());
+        return LoginDto.of(UserDto.from(user.get()), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 
     @Override
@@ -139,15 +148,5 @@ public class KakaoLoginStrategy implements LoginStrategy {
         }
 
         return kakaoAccountDto.kakaoAccount().email();
-    }
-
-    private LoginDto getLoginDto(User user) {
-        // 다른 소셜 로그인으로 가입한 회원인 경우
-        if (user.getSignUpType() != SIGN_UP_TYPE) {
-            return LoginDto.of(UserDto.from(user), null, AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage());
-        }
-
-        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.getId(), user.getEmail());
-        return LoginDto.of(UserDto.from(user), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 }
