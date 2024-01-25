@@ -39,14 +39,14 @@ public class PostController {
     @Operation(summary = "게시글 생성", description = "게시글 정보를 받아, 게시글을 생성한다.")
     @PostMapping
     public ApiResponse<Object> createPost(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart PostCreateRequest request,
-            @RequestPart(required = false) MultipartFile[] images,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestPart(required = false) MultipartFile... image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = request.toDto(userDto);
 
-        postService.createPost(postDto, images);
+        postService.createPost(postDto, image);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -126,9 +126,9 @@ public class PostController {
     @Operation(summary = "게시글 수정", description = "게시글 정보를 받아, 게시글을 수정한다.")
     @PatchMapping
     public ApiResponse<Object> updatePost(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart PostUpdateRequest request,
-            @RequestPart(required = false) MultipartFile[] images,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestPart(required = false) MultipartFile... image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = postService.getPostDtoById(request.id());
@@ -136,7 +136,7 @@ public class PostController {
 
         PostDto updatingPostDto = request.toDto(postDto, userDto);
 
-        postService.updatePost(updatingPostDto, images);
+        postService.updatePost(updatingPostDto, image);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

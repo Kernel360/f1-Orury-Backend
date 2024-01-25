@@ -40,9 +40,9 @@ public class ReviewController {
     @Operation(summary = "리뷰 생성", description = "requestbody로 리뷰 정보를 받아, 리뷰를 생성한다.")
     @PostMapping
     public ApiResponse<Object> createReview(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart ReviewCreateRequest request,
-            @RequestPart(required = false) MultipartFile[] images,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestPart(required = false) MultipartFile... image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
@@ -51,7 +51,7 @@ public class ReviewController {
 
         ReviewDto reviewDto = request.toDto(userDto, gymDto);
 
-        reviewService.createReview(reviewDto, images);
+        reviewService.createReview(reviewDto, image);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -78,9 +78,9 @@ public class ReviewController {
     @PatchMapping("/{reviewId}")
     public ApiResponse<Object> updateReview(
             @PathVariable Long reviewId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart ReviewUpdateRequest request,
-            @RequestPart(required = false) MultipartFile[] images,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestPart(required = false) MultipartFile... image
     ) {
         ReviewDto beforeReviewDto = reviewService.getReviewDtoById(reviewId);
 
@@ -88,7 +88,7 @@ public class ReviewController {
                 .id(), userPrincipal.id());
 
         ReviewDto updateReviewDto = request.toDto(beforeReviewDto);
-        reviewService.updateReview(updateReviewDto, images);
+        reviewService.updateReview(updateReviewDto, image);
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

@@ -109,7 +109,7 @@ public class S3Repository {
             log.info("File delete success");
             return;
         }
-        log.info("File delete fail");
+        log.error("File delete fail");
         throw new FileException(FileExceptionCode.FILE_DELETE_ERROR);
     }
 
