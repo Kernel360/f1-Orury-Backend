@@ -544,7 +544,7 @@ class PostControllerTest extends ControllerTest {
 
         PostsWithPageResponse response = PostsWithPageResponse.of(postsResponse, -1);
 
-        mvc.perform(get("/api/v1/postss/hot")
+        mvc.perform(get("/api/v1/posts/hot")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .param("page", "0")
                 )

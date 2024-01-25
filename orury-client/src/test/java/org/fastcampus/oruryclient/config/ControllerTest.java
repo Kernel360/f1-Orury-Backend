@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fastcampus.oruryclient.auth.controller.AuthController;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
+import org.fastcampus.oruryclient.auth.strategy.LoginStrategyManager;
 import org.fastcampus.oruryclient.comment.controller.CommentController;
 import org.fastcampus.oruryclient.comment.controller.CommentLikeController;
 import org.fastcampus.oruryclient.comment.service.CommentLikeService;
@@ -77,4 +78,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ReviewReactionService reviewReactionService;
+
+    @MockBean
+    protected LoginStrategyManager loginStrategyManager;
 }
