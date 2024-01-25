@@ -24,13 +24,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+  
+      - run: touch ./orury-client/src/main/resources/application-secret.properties
+      - run: echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-client/src/main/resources/application-secret.properties
+      - run: cat ./orury-client/src/main/resources/application-secret.properties
 
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build -Pjasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }}
+        run: ./gradlew build
         shell: bash
 
       - name: Make zip file
