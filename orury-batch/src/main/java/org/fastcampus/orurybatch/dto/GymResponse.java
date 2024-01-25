@@ -52,6 +52,7 @@ public record GymResponse(
                 addressName,
                 null,
                 0,
+                0,
                 null,
                 x,
                 y,
