@@ -30,7 +30,7 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -Pjasypt.encryptor.password=${{ secrets.JASYPT_PASSWORD }}
         shell: bash
 
       - name: Make zip file
