@@ -28,4 +28,5 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/orury/log/deploy_success.log
+source ~/.bashrc
 sudo nohup java -jar $DEPLOY_JAR --jasypt.encryptor.password=$JASYPT_PASSWORD >> /home/ec2-user/orury/log/tomcat.log 2>/home/ec2-user/orury/log/deploy_error.log &
