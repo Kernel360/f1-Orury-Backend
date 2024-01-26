@@ -61,7 +61,7 @@ class JwtTokenFilterTest {
                 .getAuthenticationFromAccessToken(any());
     }
 
-    @DisplayName("request 헤더에 유효한 토큰이 없으면, 필터를 거치지 않는다.")
+    @DisplayName("getTokenFromRequest에서 InvalidException이 발생하면, 필터를 거치지 않는다.")
     @Test
     void when_InvalidExceptionByGetTokenFromRequest_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
@@ -85,6 +85,7 @@ class JwtTokenFilterTest {
                 .getAuthenticationFromAccessToken(any());
     }
 
+    @DisplayName("getAuthenticationFromAccessToken에서 InvalidException이 발생하면, 필터를 거치지 않는다.")
     @Test
     void when_InvalidExceptionByGetAuthenticationFromAccessToken_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
@@ -108,6 +109,7 @@ class JwtTokenFilterTest {
                 .getAuthenticationFromAccessToken(any());
     }
 
+    @DisplayName("getAuthenticationFromAccessToken에서 ExpiredException이 발생하면, 필터를 거치지 않는다.")
     @Test
     void when_ExpiredExceptionByGetAuthenticationFromAccessToken_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
