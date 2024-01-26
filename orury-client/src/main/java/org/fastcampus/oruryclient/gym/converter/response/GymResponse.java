@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
-import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record GymDetailResponse(
+public record GymResponse(
         Long id,
         String name,
         String roadAddress,
@@ -30,16 +29,16 @@ public record GymDetailResponse(
         Set<Map.Entry<DayOfWeek, String>> businessHours,
         boolean doingBusiness,
         boolean isLike,
-        GymDetailStatistics.TotalReviewChart barChartData,
-        GymDetailStatistics.MonthlyReviewChart lineChartData
+        List<GymReviewStatistics.TotalReviewChart.ReviewCount> barChartData,
+        List<GymReviewStatistics.MonthlyReviewChart.MonthlyReviewCount> lineChartData
 ) {
-    public static GymDetailResponse of(
+    public static GymResponse of(
             GymDto gymDto,
             boolean doingBusiness,
             boolean isLike,
-            List<ReviewDto> reviewDtos
+            GymReviewStatistics gymReviewStatistics
     ) {
-        return new GymDetailResponse(
+        return new GymResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
@@ -57,8 +56,8 @@ public record GymDetailResponse(
                         .entrySet(),
                 doingBusiness,
                 isLike,
-                GymDetailStatistics.TotalReviewChart.of(reviewDtos),
-                GymDetailStatistics.MonthlyReviewChart.of(reviewDtos)
+                gymReviewStatistics.barChartData(),
+                gymReviewStatistics.lineChartData()
         );
     }
 
