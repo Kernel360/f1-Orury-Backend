@@ -7,7 +7,7 @@ public record GymsResponse(
         Long id,
         String name,
         String roadAddress,
-        Float totalScore,
+        Float scoreAverage,
         int reviewCount,
         String thumbnailImage,
         Position position,
@@ -19,7 +19,7 @@ public record GymsResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
-                gymDto.totalScore(),
+                gymDto.totalScore() / gymDto.reviewCount(),
                 gymDto.reviewCount(),
                 ImageUrlConverter.convertStringToList(gymDto.images())
                         .get(0),
