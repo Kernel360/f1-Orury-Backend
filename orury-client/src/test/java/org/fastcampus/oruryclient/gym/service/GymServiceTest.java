@@ -1,5 +1,13 @@
 package org.fastcampus.oruryclient.gym.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.then;
+
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
@@ -16,10 +24,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 암장 테스트")
@@ -239,7 +243,8 @@ class GymServiceTest {
                 "gymKakaoId",
                 "gymRoadAddress",
                 "gymAddress",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "gymImages",
                 "123.456",
@@ -267,7 +272,8 @@ class GymServiceTest {
                 "gymKakaoId",
                 "gymRoadAddress",
                 "gymAddress",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "gymImages",
                 latitude,
@@ -295,7 +301,8 @@ class GymServiceTest {
                 "kakaoid",
                 "서울시 도로명주소",
                 "서울시 지번주소",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "image.png",
                 "37.513709",

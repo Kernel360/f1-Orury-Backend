@@ -1,13 +1,12 @@
 package org.fastcampus.oruryclient.review.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
 import org.fastcampus.orurydomain.review.db.repository.ReviewRepository;
@@ -21,15 +20,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final GymRepository gymRepository;
     private final S3Repository s3Repository;
 
     @Transactional
     public void createReview(ReviewDto reviewDto, MultipartFile... images) {
+        gymRepository.increaseReviewCount(reviewDto.gymDto().id());
+        gymRepository.addTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         imageUploadAndSave(reviewDto, images);
     }
 
@@ -40,9 +45,11 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(ReviewDto reviewDto, MultipartFile... images) {
-        oldS3ImagesDelete(reviewDto);
-        imageUploadAndSave(reviewDto, images);
+    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, MultipartFile... images) {
+        oldS3ImagesDelete(updateReviewDto);
+        gymRepository.subtractTotalScore(beforeReviewDto.gymDto().id(), beforeReviewDto.score());
+        gymRepository.addTotalScore(updateReviewDto.gymDto().id(), updateReviewDto.score());
+        imageUploadAndSave(updateReviewDto, images);
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +68,8 @@ public class ReviewService {
     @Transactional
     public void deleteReview(ReviewDto reviewDto) {
         oldS3ImagesDelete(reviewDto);
+        gymRepository.decreaseReviewCount(reviewDto.gymDto().id());
+        gymRepository.subtractTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         reviewRepository.delete(reviewDto.toEntity());
     }
 
