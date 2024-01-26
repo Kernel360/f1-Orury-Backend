@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
@@ -135,8 +136,7 @@ class GymLikeServiceTest {
         boolean isLiked = gymLikeService.isLiked(userId, gymId);
 
         //then
-        then(isLiked)
-                .equals(expectedValue);
+        assertEquals(expectedValue, isLiked);
         then(gymLikeRepository).should()
                 .existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
     }
@@ -157,8 +157,7 @@ class GymLikeServiceTest {
         boolean isLiked = gymLikeService.isLiked(userId, gymId);
 
         //then
-        then(isLiked)
-                .equals(expectedValue);
+        assertEquals(expectedValue, isLiked);
         then(gymLikeRepository).should()
                 .existsByGymLikePK_UserIdAndGymLikePK_GymId(anyLong(), anyLong());
     }
