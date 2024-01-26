@@ -7,8 +7,11 @@ import org.fastcampus.orurycommon.error.exception.AuthException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 
@@ -18,6 +21,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@DisplayName("JwtTokenFilter 테스트")
+@ActiveProfiles("test")
 class JwtTokenFilterTest {
 
     private JwtTokenFilter jwtTokenFilter;
@@ -38,7 +44,7 @@ class JwtTokenFilterTest {
 
     @DisplayName("JwtTokenFilter의 대상이고 jwtToken Exception이 발생하지 않으면, 정상적으로 doFilterInternal()을 수행한다.")
     @Test
-    void temp1() throws ServletException, IOException {
+    void should_DoFilterInternalSuccessfully() throws ServletException, IOException {
         // given
         request.setRequestURI("/api/v1/posts/1");
 
@@ -57,7 +63,7 @@ class JwtTokenFilterTest {
 
     @DisplayName("request 헤더에 유효한 토큰이 없으면, 필터를 거치지 않는다.")
     @Test
-    void temp2() throws ServletException, IOException {
+    void when_InvalidExceptionByGetTokenFromRequest_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
         request.setRequestURI("/api/v1/comments/2");
 
@@ -80,7 +86,7 @@ class JwtTokenFilterTest {
     }
 
     @Test
-    void temp3() throws ServletException, IOException {
+    void when_InvalidExceptionByGetAuthenticationFromAccessToken_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
         request.setRequestURI("/api/v1/reviews/3");
 
@@ -103,7 +109,7 @@ class JwtTokenFilterTest {
     }
 
     @Test
-    void temp4() throws ServletException, IOException {
+    void when_ExpiredExceptionByGetAuthenticationFromAccessToken_Then_DoNotPassFilter() throws ServletException, IOException {
         // given
         request.setRequestURI("/api/v1/gyms/4");
 
@@ -127,7 +133,7 @@ class JwtTokenFilterTest {
 
     @DisplayName("JwtTokenFilter의 대상 request가 아니라면, 정상적으로 shouldNotFilter()을 수행한다.")
     @Test
-    void when_ExcludePath_Then_ShouldNotFilter() throws ServletException, IOException {
+    void when_ExcludePath_Then_should_ShouldNotFilterSuccessfully() throws ServletException, IOException {
         // given
         String[] excludePath = {"/api/v1/auth", "/swagger-ui", "/v3/api-docs", "/favicon.ico"};
 
