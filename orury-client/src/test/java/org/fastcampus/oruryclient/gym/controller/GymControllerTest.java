@@ -240,6 +240,7 @@ class GymControllerTest extends ControllerTest {
                 "서울시 지번주소",
                 4.5f,
                 12,
+                11,
                 "image.png",
                 "37.513709",
                 "127.062144",
