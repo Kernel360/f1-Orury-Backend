@@ -52,14 +52,14 @@ class JwtTokenProviderTest {
 
     @BeforeEach
     public void setUp() {
-        String secret = "=============================================JwtTokenSecretForOruryTestCode=============================================";
+        secret = "=============================================JwtTokenSecretForOruryTestCode=============================================";
         refreshTokenRepository = mock(RefreshTokenRepository.class);
 
         jwtTokenProvider = new JwtTokenProvider(secret, refreshTokenRepository);
     }
 
-    @Test
     @DisplayName("HttpServletRequest의 Authorization 헤더가 들어가있으면, Prefix(Bearer )를 제거한 jwt 토큰을 반환해야 한다.")
+    @Test
     void should_ReturnAccessTokenTokenWithoutPrefix() {
         // given
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -77,8 +77,8 @@ class JwtTokenProviderTest {
         assertEquals(expectedToken, actualToken);
     }
 
-    @Test
     @DisplayName("Authorization 헤더에 담긴 토큰이 없으면, InvalidAccessToken 예외를 발생시킨다.")
+    @Test
     void when_NullValueInAuthorizationHeader_Then_InvalidAccessTokenException() {
         // given
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -93,8 +93,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_ACCESS_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("Authorization 헤더에 담긴 토큰 prefix가 \"Bearer \"가 아니면, InvalidAccessToken 예외를 발생시킨다.")
+    @Test
     void when_invalidPrefixAccessToken_Then_InvalidAccessTokenException() {
         // given
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -111,8 +111,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_ACCESS_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("만료되지 않고 유효한 형식의 액세스토큰이 들어오면, 액세스토큰으로부터 생성한 인증객체를 정상적으로 반환한다.")
+    @Test
     void should_RetrieveAuthenticationFromNormalAccessToken() {
         // given
         String accessToken = VALID_ACCESS_TOKEN;
@@ -138,8 +138,8 @@ class JwtTokenProviderTest {
         );
     }
 
-    @Test
     @DisplayName("유효하지 않은 형식의 액세스토큰이 들어오면, InvalidAccessToken 예외를 반환한다.")
+    @Test
     void when_MalFormedAccessToken_Then_InvalidAccessTokenException() {
         // given
         String accessToken = VALID_ACCESS_TOKEN.substring(0, 20);
@@ -151,8 +151,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_ACCESS_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("Jwt토큰이 아닌 값이 들어오면, InvalidAccessToken 예외를 반환한다.")
+    @Test
     void when_IllegalArgument_Then_InvalidAccessTokenException() {
         // given
         String accessToken = "IamNOTjwtTOKEN";
@@ -164,8 +164,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_ACCESS_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("만료된 액세스토큰이 들어오면, ExpiredAccessToken 예외를 반환한다.")
+    @Test
     void when_ExpiredAccessToken_Then_ExpiredAccessTokenException() {
         // given
         String accessToken = EXPIRED_ACCESS_TOKEN;
@@ -177,8 +177,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.EXPIRED_ACCESS_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("만료되지 않고 유효한 형식의 리프레쉬토큰으로부터 생성한 인증객체를 정상적으로 반환한다.")
+    @Test
     void should_RetrieveAuthenticationFromNormalRefreshToken() {
         // given
         String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
@@ -194,8 +194,8 @@ class JwtTokenProviderTest {
                 .findByValue(anyString());
     }
 
-    @Test
     @DisplayName("리프레쉬토큰이 null로 들어오면, InvalidRefreshToken 예외를 반환한다.")
+    @Test
     void when_NullRefreshToken_Then_InvalidRefreshTokenException() {
         // given
         String refreshToken = null;
@@ -207,8 +207,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("리프레쉬토큰 prefix가 \"Bearer \"가 아니면, InvalidRefreshToken 예외를 반환한다.")
+    @Test
     void when_invalidPrefixRefreshToken_Then_InvalidRefreshTokenException() {
         // given
         String refreshToken = "Orury " + VALID_REFRESH_TOKEN;
@@ -220,8 +220,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("유효하지 않은 형식의 리프레쉬토큰이 들어오면, InvalidRefreshToken 예외를 반환한다.")
+    @Test
     void when_MalFormedRefreshToken_Then_InvalidRefreshTokenException() {
         // given
         String refreshToken = "Bearer " + VALID_REFRESH_TOKEN.substring(0, 20);
@@ -233,8 +233,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("Jwt토큰이 아닌 값이 들어오면, InvalidRefreshToken 예외를 반환한다.")
+    @Test
     void when_IllegalArgument_Then_InvalidRefreshTokenException() {
         // given
         String refreshToken = "Bearer " + "IamNOTjwtTOKEN";
@@ -246,8 +246,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("만료된 리프레쉬토큰이 들어오면, ExpiredRefreshToken 예외를 반환한다.")
+    @Test
     void when_ExpiredRefreshToken_Then_ExpiredRefreshTokenException() {
         // given
         String refreshToken = "Bearer " + EXPIRED_REFRESH_TOKEN;
@@ -259,8 +259,8 @@ class JwtTokenProviderTest {
         assertEquals(TokenErrorCode.EXPIRED_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
 
-    @Test
     @DisplayName("갱신되기 전의 리프레시토큰이 들어오면, ExpiredRefreshToken 예외를 반환한다.")
+    @Test
     void when_RefreshTokenBeforeReissue_Then_ExpiredRefreshTokenException() {
         // given
         String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
@@ -278,8 +278,8 @@ class JwtTokenProviderTest {
                 .findByValue(anyString());
     }
 
-    @Test
     @DisplayName("id와 email을 받으면, 액세스토큰과 리프레시토큰을 생성하고 저장하여 돌려준다.")
+    @Test
     void when_IdAndEmail_Then_CreateAndSaveJwtTokens() {
         // given
         Long userId = 2L;
