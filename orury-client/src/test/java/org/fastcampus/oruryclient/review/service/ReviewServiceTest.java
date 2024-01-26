@@ -66,7 +66,7 @@ class ReviewServiceTest {
 
         //then
         then(gymRepository).should().increaseReviewCount(anyLong());
-        then(gymRepository).should().sumTotalScore(anyLong(), anyFloat());
+        then(gymRepository).should().addTotalScore(anyLong(), anyFloat());
         then(reviewRepository).should().save(any());
 
     }
@@ -120,7 +120,7 @@ class ReviewServiceTest {
         //then
         then(s3Repository).should().delete(any(), any());
         then(gymRepository).should().subtractTotalScore(anyLong(), anyFloat());
-        then(gymRepository).should().sumTotalScore(anyLong(), anyFloat());
+        then(gymRepository).should().addTotalScore(anyLong(), anyFloat());
         then(reviewRepository).should().save(any());
 
     }

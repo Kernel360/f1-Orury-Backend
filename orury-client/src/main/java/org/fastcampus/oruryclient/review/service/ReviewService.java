@@ -34,7 +34,7 @@ public class ReviewService {
     @Transactional
     public void createReview(ReviewDto reviewDto, MultipartFile... images) {
         gymRepository.increaseReviewCount(reviewDto.gymDto().id());
-        gymRepository.sumTotalScore(reviewDto.gymDto().id(), reviewDto.score());
+        gymRepository.addTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         imageUploadAndSave(reviewDto, images);
     }
 
@@ -48,7 +48,7 @@ public class ReviewService {
     public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, MultipartFile... images) {
         oldS3ImagesDelete(updateReviewDto);
         gymRepository.subtractTotalScore(beforeReviewDto.gymDto().id(), beforeReviewDto.score());
-        gymRepository.sumTotalScore(updateReviewDto.gymDto().id(), updateReviewDto.score());
+        gymRepository.addTotalScore(updateReviewDto.gymDto().id(), updateReviewDto.score());
         imageUploadAndSave(updateReviewDto, images);
     }
 

@@ -29,7 +29,7 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
 
     @Modifying
     @Query("UPDATE gym SET totalScore = totalScore + :reviewScore WHERE id = :gymId")
-    void sumTotalScore(@Param("gymId") Long gymId, @Param("reviewScore") float reviewScore);
+    void addTotalScore(@Param("gymId") Long gymId, @Param("reviewScore") float reviewScore);
 
     @Modifying
     @Query("UPDATE gym SET totalScore = totalScore - :reviewScore WHERE id = :gymId")
