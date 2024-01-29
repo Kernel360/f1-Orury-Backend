@@ -29,8 +29,11 @@ jobs:
       - name: Make application.properties
         run: |
           touch ./orury-client/src/main/resources/application-secret.properties
+          touch ./orury-batch/src/main/resources/application-secret.properties
           echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-client/src/main/resources/application-secret.properties
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-batch/src/main/resources/application-secret.properties
           cat ./orury-client/src/main/resources/application-secret.properties
+          cat ./orury-batch/src/main/resources/application-secret.properties
 
       - name: Make env file
         run: |
