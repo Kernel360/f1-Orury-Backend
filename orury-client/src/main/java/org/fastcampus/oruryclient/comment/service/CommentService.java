@@ -2,10 +2,11 @@ package org.fastcampus.oruryclient.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
-import org.fastcampus.oruryclient.comment.util.CommentMessage;
+import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurycommon.error.code.CommentErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -32,6 +33,7 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
 
+    @Logging
     @Transactional
     public void createComment(CommentDto commentDto) {
         commentRepository.save(commentDto.toEntity());
@@ -56,11 +58,13 @@ public class CommentService {
                 .map(CommentDto::from).toList();
     }
 
+    @Logging
     @Transactional
     public void updateComment(CommentDto commentDto) {
         commentRepository.save(commentDto.toEntity());
     }
 
+    @Logging
     @Transactional
     public void deleteComment(CommentDto commentDto) {
         CommentDto deletingCommentDto = CommentDto.of(
@@ -79,7 +83,7 @@ public class CommentService {
         postRepository.decreaseCommentCount(commentDto.postDto().id());
     }
 
-    public void isValidate(CommentDto commentDto, UserDto userDto){
+    public void isValidate(CommentDto commentDto, UserDto userDto) {
         if (!Objects.equals(commentDto.userDto().id(), userDto.id()))
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
     }
@@ -97,14 +101,15 @@ public class CommentService {
         if (!parentCommentId.equals(NumberConstants.PARENT_COMMENT)) {
             Comment parentComment = commentRepository.findById(parentCommentId)
                     .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
-            if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT)) throw new BusinessException(CommentErrorCode.BAD_REQUEST);
+            if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
+                throw new BusinessException(CommentErrorCode.BAD_REQUEST);
         }
     }
 
     @Transactional(readOnly = true)
-    public CommentDto getCommentDtoById(Long id){
+    public CommentDto getCommentDtoById(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(()-> new BusinessException(CommentErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         return CommentDto.from(comment);
     }
 }

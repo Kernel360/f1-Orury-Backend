@@ -1,0 +1,116 @@
+server.port: 8085
+debug: false
+management.endpoints.web.exposure.include: "*"
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql.BasicBinder: trace
+  org.springframework.web.servlet: info
+  org.springframework.jdbc.core.JdbcTemplate: DEBUG
+  org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+
+springdoc:
+  show-actuator: true
+
+spring:
+  mvc:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET, POST, PUT, DELETE"
+  application.name: orury-client
+  datasource:
+    #    url: ${LOCAL_DB_NAME}
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    #    username: ${LOCAL_DB_USER_NAME}
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    #    password: ${LOCAL_DB_USER_PASSWORD}
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
+    #    read:
+    #      jdbc-url: ENC(KkrDs/i2Asal3Qe2/GRo7vBh3Jdu3ozFVNy6sQzXYwKLScBRkm4jB4uWWCBF+rm/2t2XWE67sKRNXyL5fOChWLZ3hmp6KsMo4JSGjwXG8lzcStqVPMQ8jRq+cjaEALI4)
+    #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+    #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+    #      driver-class-name: com.mysql.cj.jdbc.Driver
+    #    write:
+    #      jdbc-url: ENC(nYHDbyPX77wt52BMec5vJQLAWDcuiHS06QrV34A4AoEjrCnmNAmWNO/x0FUvNmvRhCPhaPkS1z9bhK7lyRVKocHukRjc5jwbf0XiceDDO2OtxDAfSPTvZg==)
+    #      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+    #      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+    #      driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    generate-ddl: true
+    properties:
+      hibernate.show_sql: true
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+    hibernate.ddl-auto: validate
+  sql.init.mode: always
+  data.rest:
+    base-path: /api
+    detection-strategy: annotated
+    baseline-on-migrate: true
+  devtools:
+    livereload:
+      enabled: true
+  freemarker:
+    cache: false
+    prefix=file: src/main/resources/templates/
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            #            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+            #            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
+            client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
+            authorization-grant-type: authorization_code
+            redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx)
+            client-authentication-method: client_secret_post
+        #          apple:
+        #            client-id: { clientId }
+        #            client-secret: { .p8 파일 이름 }/{KeyId}/{TeamId}
+        #            authorization-grant-type: authorization_code
+        #            redirect-uri: { domain }/login/oauth2/code/apple
+        #            client-authentication-method: POST
+        #        #            client-name: Apple
+        #        #            scope:
+        #        #              - email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  #          apple:
+  #            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
+  #            token-uri: https://appleid.apple.com/auth/token
+  #            jwk-set-uri: https://appleid.apple.com/auth/keys
+  jwt:
+    secret:
+      ENC(s+e66U0YV1+iNWMLFl0LCHmARANd5yCv3k41u0iPDpCyfG7+PUgpsYNyUP7SFk/PUNPuK/wnNod399PK2kW+qllbWZzqNwp6msfDx1xP8DCiTHCZXE4rcNZDYji0bM9uzyxIDCGMyDE=)
+cloud:
+  aws:
+    s3:
+      bucket: ENC(DWaoEy70NtH+lhLIr08FR4qd/T11UK+X)
+      default-image: default-user-profile
+      url: https://s3.ap-northeast-2.amazonaws.com/
+    credentials:
+      accessKey: ENC(yfr+1GPLxMHuTbbID6K7Jbs0Dm9iuuK9yFjrOJv8jCU=)
+      secretKey: ENC(nnQ4XTkipeaA+bE6zKD6kI04Axa+E2Qjmw081EgZHpPXhPEBV/dgwqf9YeN1a0vJebMq0yceQJQ=)
+    region:
+      static: ap-northeast-2
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+---
+
+spring:
+  config.activate.on-profile: test
+  datasource.url: jdbc:h2:mem:testdb
+
+---
+spring:
+  profiles:
+    include: secret

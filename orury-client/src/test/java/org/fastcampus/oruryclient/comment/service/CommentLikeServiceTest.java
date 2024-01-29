@@ -1,8 +1,8 @@
 package org.fastcampus.oruryclient.comment.service;
 
-import org.fastcampus.oruryclient.comment.error.CommentErrorCode;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurycommon.error.code.CommentErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.model.CommentLike;
 import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})
-@DisplayName("CommentLikeServiceTest")
+@DisplayName("[Service] 댓글 좋아요 테스트")
 @ActiveProfiles("test")
 class CommentLikeServiceTest {
 
@@ -83,7 +83,7 @@ class CommentLikeServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentLikeService.createCommentLike(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLikePK.getCommentId());
@@ -163,7 +163,7 @@ class CommentLikeServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> commentLikeService.deleteCommentLike(CommentLikeDto.from(commentLike)));
 
-        assertEquals(CommentErrorCode.NOT_FOUND, exception.getErrorCode());
+        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
                 .findById(commentLikePK.getCommentId());

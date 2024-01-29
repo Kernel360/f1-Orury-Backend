@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.base.db.AuditingField;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,9 +12,8 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 @Entity(name = "user")
-@EqualsAndHashCode(of={"id"}, callSuper = false)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class User extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
