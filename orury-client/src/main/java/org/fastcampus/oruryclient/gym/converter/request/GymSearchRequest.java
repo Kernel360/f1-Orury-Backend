@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 public record GymSearchRequest(
         String searchWord,
         float latitude,
-        float longitude,
-        int page
+        float longitude
 ) {
 }

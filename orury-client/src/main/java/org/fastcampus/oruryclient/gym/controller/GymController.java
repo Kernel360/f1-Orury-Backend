@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.gym.converter.message.GymMessage;
 import org.fastcampus.oruryclient.gym.converter.request.GymSearchRequest;
-import org.fastcampus.oruryclient.gym.converter.response.GymDetailResponse;
+import org.fastcampus.oruryclient.gym.converter.response.GymResponse;
+import org.fastcampus.oruryclient.gym.converter.response.GymReviewStatistics;
 import org.fastcampus.oruryclient.gym.converter.response.GymsResponse;
 import org.fastcampus.oruryclient.gym.service.GymLikeService;
 import org.fastcampus.oruryclient.gym.service.GymService;
@@ -30,17 +31,19 @@ public class GymController {
     private final ReviewService reviewService;
 
     @Operation(summary = "암장 상세 조회", description = "gymId를 받아, 암장을 상세 정보를 돌려준다.")
-    @PostMapping("/{id}")
-    public ApiResponse<GymDetailResponse> getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @GetMapping("/{id}")
+    public ApiResponse<GymResponse> getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         GymDto gymDto = gymService.getGymDtoById(id);
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
         boolean isLike = gymLikeService.isLiked(userPrincipal.id(), id);
+
         List<ReviewDto> reviewDtos = reviewService.getAllReviewDtosByGymId(id);
+        GymReviewStatistics gymReviewStatistics = GymReviewStatistics.of(reviewDtos);
 
-        GymDetailResponse response = GymDetailResponse.of(gymDto, doingBusiness, isLike, reviewDtos);
+        GymResponse response = GymResponse.of(gymDto, doingBusiness, isLike, gymReviewStatistics);
 
-        return ApiResponse.<GymDetailResponse>builder()
+        return ApiResponse.<GymResponse>builder()
                 .status(HttpStatus.OK.value())
                 .message(GymMessage.GYM_READ.getMessage())
                 .data(response)
@@ -48,7 +51,7 @@ public class GymController {
     }
 
     @Operation(summary = "암장 목록 검색", description = "검색어와 위치 좌표(경도, 위도)를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ApiResponse<List<GymsResponse>> getGymsByLocation(@RequestBody GymSearchRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(request.searchWord(), request.latitude(), request.longitude());

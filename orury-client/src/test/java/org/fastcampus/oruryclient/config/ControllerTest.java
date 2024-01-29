@@ -9,6 +9,9 @@ import org.fastcampus.oruryclient.comment.controller.CommentController;
 import org.fastcampus.oruryclient.comment.controller.CommentLikeController;
 import org.fastcampus.oruryclient.comment.service.CommentLikeService;
 import org.fastcampus.oruryclient.comment.service.CommentService;
+import org.fastcampus.oruryclient.gym.controller.GymController;
+import org.fastcampus.oruryclient.gym.controller.GymLikeController;
+import org.fastcampus.oruryclient.gym.service.GymLikeService;
 import org.fastcampus.oruryclient.gym.service.GymService;
 import org.fastcampus.oruryclient.post.controller.PostController;
 import org.fastcampus.oruryclient.post.controller.PostLikeController;
@@ -35,11 +38,13 @@ import org.springframework.test.web.servlet.MockMvc;
         AuthController.class,
         CommentController.class,
         CommentLikeController.class,
+        GymController.class,
+        GymLikeController.class,
         PostController.class,
         PostLikeController.class,
         ReviewController.class,
-        UserController.class,
-        ReviewReactionController.class
+        ReviewReactionController.class,
+        UserController.class
 })
 @ActiveProfiles("test")
 public abstract class ControllerTest {
@@ -59,6 +64,18 @@ public abstract class ControllerTest {
     protected CommentLikeService commentLikeService;
 
     @MockBean
+    protected GymService gymService;
+
+    @MockBean
+    protected GymLikeService gymLikeService;
+
+    @MockBean
+    protected JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    protected LoginStrategyManager loginStrategyManager;
+
+    @MockBean
     protected PostService postService;
 
     @MockBean
@@ -68,17 +85,8 @@ public abstract class ControllerTest {
     protected ReviewService reviewService;
 
     @MockBean
-    protected UserService userService;
-
-    @MockBean
-    protected GymService gymService;
-
-    @MockBean
-    protected JwtTokenProvider jwtTokenProvider;
-
-    @MockBean
     protected ReviewReactionService reviewReactionService;
 
     @MockBean
-    protected LoginStrategyManager loginStrategyManager;
+    protected UserService userService;
 }

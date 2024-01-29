@@ -1,13 +1,5 @@
 package org.fastcampus.oruryclient.gym.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.mock;
-import static org.mockito.BDDMockito.then;
-
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
@@ -24,6 +16,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 암장 테스트")
@@ -55,8 +50,7 @@ class GymServiceTest {
         GymDto gymDto = gymService.getGymDtoById(gymId);
 
         //then
-        then(gymDto)
-                .equals(expectedGymDto);
+        assertEquals(expectedGymDto, gymDto);
         then(gymRepository).should()
                 .findById(anyLong());
     }
@@ -77,8 +71,7 @@ class GymServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> gymService.getGymDtoById(gymId));
 
-        then(exception.getStatus())
-                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        assertEquals(GymErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
         then(gymRepository).should()
                 .findById(anyLong());
     }
@@ -119,8 +112,7 @@ class GymServiceTest {
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", currentLatitude, currentLongitude);
 
         //then
-        then(gymDtos)
-                .equals(expectedGymDtos);
+        assertEquals(expectedGymDtos, gymDtos);
         then(gymRepository).should()
                 .findByNameContaining(anyString());
     }
@@ -137,8 +129,7 @@ class GymServiceTest {
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", 12.34f, 56.78f);
 
         //then
-        then(gymDtos)
-                .equals(expectedgymDtos);
+        assertEquals(expectedgymDtos, gymDtos);
         then(gymRepository).should()
                 .findByNameContaining(anyString());
     }
@@ -156,8 +147,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(true);
+        assertTrue(doingBusiness);
     }
 
     @Test
@@ -173,8 +163,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(false);
+        assertFalse(doingBusiness);
     }
 
     @Test
@@ -190,8 +179,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(false);
+        assertFalse(doingBusiness);
     }
 
     @Test
@@ -230,8 +218,7 @@ class GymServiceTest {
         );
 
         //then
-        then(exception.getStatus())
-                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        assertEquals(GymErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
         then(gymRepository).should()
                 .findById(anyLong());
     }
