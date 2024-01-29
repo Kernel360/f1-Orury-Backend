@@ -15,6 +15,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPost_Id(Long postId);
 
+    List<Comment> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
+
+    List<Comment> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+
     @Modifying
     @Query("UPDATE comment SET likeCount = likeCount + 1 WHERE id = :id")
     void increaseLikeCount(Long id);
