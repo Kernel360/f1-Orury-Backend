@@ -28,6 +28,6 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/orury/log/deploy_success.log
-source ~/.bashrc
+cd /home/ec2-user/orury
 sudo docker-compose up -d
 sudo nohup java -jar $DEPLOY_JAR >> /home/ec2-user/orury/log/tomcat.log 2>/home/ec2-user/orury/log/deploy_error.log &
