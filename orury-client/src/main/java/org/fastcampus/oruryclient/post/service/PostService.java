@@ -1,7 +1,5 @@
 package org.fastcampus.oruryclient.post.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -26,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -59,6 +60,17 @@ public class PostService {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? postRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, searchWord, pageable)
                 : postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
+
+        return posts.stream()
+                .map(PostDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostDto> getPostDtosByUserId(Long userId, Long cursor, Pageable pageable) {
+        List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? postRepository.findByUserIdOrderByIdDesc(userId, pageable)
+                : postRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
         return posts.stream()
                 .map(PostDto::from)

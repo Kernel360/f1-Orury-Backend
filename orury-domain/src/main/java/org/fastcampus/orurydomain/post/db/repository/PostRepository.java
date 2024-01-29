@@ -21,6 +21,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(int likeCount, LocalDateTime localDateTime, Pageable pageable);
 
+    List<Post> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
+
+    List<Post> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+
+
     @Modifying
     @Query("UPDATE post SET viewCount = viewCount + 1 WHERE id = :id")
     void updateViewCount(Long id);
