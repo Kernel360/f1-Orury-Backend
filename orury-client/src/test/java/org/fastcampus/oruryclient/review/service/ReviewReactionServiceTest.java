@@ -201,32 +201,6 @@ class ReviewReactionServiceTest {
                 .decreaseReactionCount(anyLong(), anyInt());
     }
 
-//    @Test
-//    @DisplayName("ReviewReactionPK에 해당하는 ReviewReaction이 없다면 익셉션을 던진다.")
-//    void when_NotExistReactionType_Then_ThrowNotFoundException() {
-//        //given
-//        ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
-//        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(createReviewReaction(reviewReactionPK, 1));
-//
-//        given(reviewReactionRepository.findById(any())).willReturn(Optional.empty());
-//
-//        //when & then
-//        BusinessException exception = assertThrows(BusinessException.class,
-//                () -> reviewReactionService.processReviewReaction(reviewReactionDto));
-//
-//        assertEquals(ReviewReactionErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
-//
-//        then(reviewRepository).should().findById(anyLong());
-//        then(reviewReactionRepository).should().findById(any());
-//
-//        then(reviewRepository).should(never())
-//                .updateReactionCount(anyLong(), anyInt(), anyInt());
-//        then(reviewRepository).should(never())
-//                .increaseReactionCount(anyLong(), anyInt());
-//        then(reviewRepository).should(never())
-//                .decreaseReactionCount(anyLong(), anyInt());
-//    }
-
     @Test
     @DisplayName("ReviewReactionPK에 해당하는 ReviewReaction이 있을 때 delete를 수행한다.")
     void when_ExistReactionType_Then_Delete() {
