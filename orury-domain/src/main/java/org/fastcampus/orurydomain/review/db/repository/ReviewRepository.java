@@ -18,6 +18,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByGymIdAndIdLessThanOrderByIdDesc(Long gymId, Long cursor, Pageable pageable);
 
+    List<Review> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
+
+    List<Review> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+
     @Modifying
     @Query("update review r set " +
             "r.thumbCount = CASE WHEN :reactionType = 1 THEN r.thumbCount + 1 ELSE r.thumbCount END, " +
