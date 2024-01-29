@@ -6,21 +6,18 @@ import org.fastcampus.orurydomain.user.dto.UserDto;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProfileImageRequest(
-        Long id,
         String profileImage
-){
-
-
-    public static UserDto toDto(UserDto userDto, ProfileImageRequest profileImageRequest){
+) {
+    public static UserDto toDto(UserDto userDto, String profileImage) {
         return UserDto.of(
-                profileImageRequest.id(),
+                userDto.id(),
                 userDto.email(),
                 userDto.nickname(),
                 userDto.password(),
                 userDto.signUpType(),
                 userDto.gender(),
                 userDto.birthday(),
-                profileImageRequest.profileImage(),
+                profileImage,
                 userDto.createdAt(),
                 null
         );

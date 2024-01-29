@@ -2,11 +2,11 @@ package org.fastcampus.oruryclient.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurydomain.post.dto.PostLikeDto;
+import org.fastcampus.orurycommon.error.code.PostErrorCode;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
-import org.fastcampus.oruryclient.post.error.PostErrorCode;
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurydomain.post.dto.PostLikeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isLiked(Long userId, Long postId){
+    public boolean isLiked(Long userId, Long postId) {
         return postLikeRepository.existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
     }
 }

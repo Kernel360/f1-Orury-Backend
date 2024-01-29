@@ -1,6 +1,6 @@
 package org.fastcampus.oruryclient.post.service;
 
-import org.fastcampus.oruryclient.global.error.BusinessException;
+import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("게시글 좋아요 관련 테스트")
+@DisplayName("[Service] 게시글 좋아요 테스트")
 @ActiveProfiles("test")
 class PostLikeServiceTest {
     private PostLikeRepository postLikeRepository;
