@@ -19,7 +19,7 @@ spring:
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
   datasource:
-    #        url: ${LOCAL_DB_NAME}
+    #    url: ${LOCAL_DB_NAME}
     url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
     #    username: ${LOCAL_DB_USER_NAME}
     username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
@@ -66,7 +66,7 @@ spring:
             client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
             client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
             authorization-grant-type: authorization_code
-            redirect-uri: ENC(KemyavCehs82veDQHVojllZahZjLPWiskhSjaTiC2QOVCjnDtYkKYWssTQDVt3WQjMFTxak/+c/BttEpIaaySg==)
+            redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx)
             client-authentication-method: client_secret_post
         #          apple:
         #            client-id: { clientId }

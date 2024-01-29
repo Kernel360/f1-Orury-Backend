@@ -17,8 +17,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,8 +50,7 @@ class GymServiceTest {
         GymDto gymDto = gymService.getGymDtoById(gymId);
 
         //then
-        then(gymDto)
-                .equals(expectedGymDto);
+        assertEquals(expectedGymDto, gymDto);
         then(gymRepository).should()
                 .findById(anyLong());
     }
@@ -73,8 +71,7 @@ class GymServiceTest {
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> gymService.getGymDtoById(gymId));
 
-        then(exception.getStatus())
-                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        assertEquals(GymErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
         then(gymRepository).should()
                 .findById(anyLong());
     }
@@ -115,8 +112,7 @@ class GymServiceTest {
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", currentLatitude, currentLongitude);
 
         //then
-        then(gymDtos)
-                .equals(expectedGymDtos);
+        assertEquals(expectedGymDtos, gymDtos);
         then(gymRepository).should()
                 .findByNameContaining(anyString());
     }
@@ -133,8 +129,7 @@ class GymServiceTest {
         List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc("", 12.34f, 56.78f);
 
         //then
-        then(gymDtos)
-                .equals(expectedgymDtos);
+        assertEquals(expectedgymDtos, gymDtos);
         then(gymRepository).should()
                 .findByNameContaining(anyString());
     }
@@ -152,8 +147,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(true);
+        assertTrue(doingBusiness);
     }
 
     @Test
@@ -169,8 +163,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(false);
+        assertFalse(doingBusiness);
     }
 
     @Test
@@ -186,8 +179,7 @@ class GymServiceTest {
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
         //then
-        then(doingBusiness)
-                .equals(false);
+        assertFalse(doingBusiness);
     }
 
     @Test
@@ -226,8 +218,7 @@ class GymServiceTest {
         );
 
         //then
-        then(exception.getStatus())
-                .equals(GymErrorCode.NOT_FOUND.getStatus());
+        assertEquals(GymErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
         then(gymRepository).should()
                 .findById(anyLong());
     }
@@ -239,7 +230,8 @@ class GymServiceTest {
                 "gymKakaoId",
                 "gymRoadAddress",
                 "gymAddress",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "gymImages",
                 "123.456",
@@ -267,7 +259,8 @@ class GymServiceTest {
                 "gymKakaoId",
                 "gymRoadAddress",
                 "gymAddress",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "gymImages",
                 latitude,
@@ -295,7 +288,8 @@ class GymServiceTest {
                 "kakaoid",
                 "서울시 도로명주소",
                 "서울시 지번주소",
-                4.5f,
+                40.5f,
+                23,
                 12,
                 "image.png",
                 "37.513709",
