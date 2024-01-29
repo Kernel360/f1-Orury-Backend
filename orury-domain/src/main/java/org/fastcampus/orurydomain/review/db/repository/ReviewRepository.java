@@ -26,7 +26,17 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "r.likeCount = CASE WHEN :reactionType = 4 THEN r.likeCount + 1 ELSE r.likeCount END, " +
             "r.angryCount = CASE WHEN :reactionType = 5 THEN r.angryCount + 1 ELSE r.angryCount END " +
             "where r.id = :reviewId")
-    void increaseReviewCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
+    void increaseReactionCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
+
+    @Modifying
+    @Query("update review r set " +
+            "r.thumbCount = CASE WHEN :reactionType = 1 THEN r.thumbCount - 1 ELSE r.thumbCount END, " +
+            "r.interestCount = CASE WHEN :reactionType = 2 THEN r.interestCount + 1 ELSE r.interestCount END, " +
+            "r.helpCount = CASE WHEN :reactionType = 3 THEN r.helpCount - 1 ELSE r.helpCount END, " +
+            "r.likeCount = CASE WHEN :reactionType = 4 THEN r.likeCount - 1 ELSE r.likeCount END, " +
+            "r.angryCount = CASE WHEN :reactionType = 5 THEN r.angryCount - 1 ELSE r.angryCount END " +
+            "where r.id = :reviewId")
+    void decreaseReactionCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
 
     @Modifying
     @Query("update review r set " +
@@ -36,7 +46,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "r.likeCount = CASE WHEN :oldReactionType = 4 THEN r.likeCount - 1 WHEN :newReactionType = 4 THEN r.likeCount + 1 ELSE r.likeCount END, " +
             "r.angryCount = CASE WHEN :oldReactionType = 5 THEN r.angryCount - 1 WHEN :newReactionType = 5 THEN r.angryCount + 1 ELSE r.angryCount END " +
             "where r.id = :reviewId")
-    void updateReviewCount(@Param("reviewId") Long reviewId, @Param("oldReactionType") int oldReactionType, @Param("newReactionType") int newReactionType);
+    void updateReactionCount(@Param("reviewId") Long reviewId, @Param("oldReactionType") int oldReactionType, @Param("newReactionType") int newReactionType);
 
 
 }

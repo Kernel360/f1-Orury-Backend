@@ -1,14 +1,5 @@
 package org.fastcampus.oruryclient.review.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -20,7 +11,6 @@ import org.fastcampus.orurydomain.review.db.repository.ReviewReactionRepository;
 import org.fastcampus.orurydomain.review.db.repository.ReviewRepository;
 import org.fastcampus.orurydomain.review.dto.ReviewReactionDto;
 import org.fastcampus.orurydomain.user.db.model.User;
-import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +22,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.mock;
+
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewServiceTest")
 @ActiveProfiles("test")
@@ -40,14 +35,12 @@ class ReviewReactionServiceTest {
     private ReviewReactionService reviewReactionService;
     private ReviewReactionRepository reviewReactionRepository;
     private ReviewRepository reviewRepository;
-    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
         reviewReactionRepository = mock(ReviewReactionRepository.class);
         reviewRepository = mock(ReviewRepository.class);
-        userRepository = mock(UserRepository.class);
-        reviewReactionService = new ReviewReactionService(reviewRepository, userRepository, reviewReactionRepository);
+        reviewReactionService = new ReviewReactionService(reviewRepository, reviewReactionRepository);
     }
 
     // method: getReactionType
@@ -85,7 +78,6 @@ class ReviewReactionServiceTest {
         assertEquals(NumberConstants.NOT_REACTION, reactionType);
     }
 
-    // method: createReviewReaction
     @Test
     @DisplayName("유효성 검증: reviewReactionDto.reviewReactionPK().getReviewId() 가 없을 경우 익셉션을 던진다.")
     void when_InvalidReviewId_Then_ThrowBadRequestException() {
@@ -98,15 +90,41 @@ class ReviewReactionServiceTest {
 
         //when & then
         BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewReactionService.createReviewReaction(reviewReactionDto));
+                () -> reviewReactionService.processReviewReaction(reviewReactionDto));
+
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should(never())
+                .findById(any());
     }
 
     @Test
-    @DisplayName("유효성 검증: reviewReactionDto.reactionType()이 1~5 사이의 값이 아닌 경우 익셉션을 던진다.")
-    void when_InvalidReactionType_Then_ThrowBadRequestException() {
+    @DisplayName("유효성 검증: reviewReactionDto.reactionType()이 1 미만의 값이 아닌 경우 익셉션을 던진다.")
+    void when_UnderReactionType_Then_ThrowBadRequestException() {
+        //given
+        ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
+        ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 0);
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+
+        given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
+
+        //when & then
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> reviewReactionService.processReviewReaction(reviewReactionDto));
+
+        assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
+
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should(never())
+                .findById(any());
+    }
+
+    @Test
+    @DisplayName("유효성 검증: reviewReactionDto.reactionType()이 5 초과의 값이 아닌 경우 익셉션을 던진다.")
+    void when_OverReactionType_Then_ThrowBadRequestException() {
         //given
         ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
         ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 999);
@@ -116,87 +134,100 @@ class ReviewReactionServiceTest {
 
         //when & then
         BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewReactionService.createReviewReaction(reviewReactionDto));
+                () -> reviewReactionService.processReviewReaction(reviewReactionDto));
+
         assertEquals(ReviewReactionErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
-        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should(never())
+                .findById(any());
     }
 
     @Test
-    @DisplayName("유효성이 검증되고, 전에 생성한 reviewRaction이 없을 때, increaseReviewCount와 save를 수행한다.")
+    @DisplayName("유효성이 검증되고, 전에 생성한 reviewReaction이 없을 때, increaseReactionCount와 save를 수행한다.")
     void when_NotExistReviewReaction_Then_IncreaseReviewCountAndSave() {
         //given
         ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
-        ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
-        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(createReviewReaction(reviewReactionPK, 1));
 
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
         given(reviewReactionRepository.findById(any())).willReturn(Optional.empty());
 
         //when
-        reviewReactionService.createReviewReaction(reviewReactionDto);
+        reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
         then(reviewRepository).should().findById(anyLong());
-        then(reviewRepository).should().increaseReviewCount(anyLong(), anyInt());
-        then(reviewReactionRepository).should().save(any());
+        then(reviewReactionRepository).should().findById(any());
+
+        then(reviewRepository).should(times(1))
+                .increaseReactionCount(anyLong(), anyInt());
+        then(reviewReactionRepository).should(times(1))
+                .save(any());
+
+        then(reviewRepository).should(never())
+                .updateReactionCount(anyLong(), anyInt(), anyInt());
+        then(reviewRepository).should(never())
+                .decreaseReactionCount(anyLong(), anyInt());
     }
 
     @Test
-    @DisplayName("유효성이 검증되고, 전에 생성한 reviewRaction이 있을 때, updateReviewCount와 save를 수행한다.")
+    @DisplayName("유효성이 검증되고, 전에 생성한 reviewReaction이 있을 때, updateReactionCount와 save를 수행한다.")
     void when_ExistReviewReaction_Then_UpdateReviewCountAndSave() {
         //given
         ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
-        ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
-        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(createReviewReaction(reviewReactionPK, 1));
+        ReviewReaction originReviewReaction = createReviewReaction(reviewReactionPK, 3);
 
         given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
-        given(reviewReactionRepository.findById(any())).willReturn(Optional.of(reviewReaction));
+        given(reviewReactionRepository.findById(any())).willReturn(Optional.of(originReviewReaction));
 
         //when
-        reviewReactionService.createReviewReaction(reviewReactionDto);
+        reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
         then(reviewRepository).should().findById(anyLong());
-        then(reviewRepository).should().updateReviewCount(anyLong(), anyInt(), anyInt());
-        then(reviewReactionRepository).should().save(any());
-    }
-
-    // method: deleteReviewReaction
-
-    @Test
-    @DisplayName("ReviewReactionPK에 해당하는 ReviewReaction이 없다면 익셉션을 던진다.")
-    void when_NotExistReactionType_Then_ThrowNotFoundException() {
-        //given
-        ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
-
-        given(reviewReactionRepository.findById(any())).willReturn(Optional.empty());
-
-        //when & then
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewReactionService.deleteReviewReaction(reviewReactionPK));
-        assertEquals(ReviewReactionErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
-
         then(reviewReactionRepository).should().findById(any());
 
+        then(reviewRepository).should(times(1))
+                .updateReactionCount(anyLong(), anyInt(), anyInt());
+        then(reviewReactionRepository).should(times(1))
+                .save(any());
+
+        then(reviewRepository).should(never())
+                .increaseReactionCount(anyLong(), anyInt());
+        then(reviewRepository).should(never())
+                .decreaseReactionCount(anyLong(), anyInt());
     }
-    // 유효한 요청일 때, delete한다.
 
     @Test
     @DisplayName("ReviewReactionPK에 해당하는 ReviewReaction이 있을 때 delete를 수행한다.")
     void when_ExistReactionType_Then_Delete() {
         //given
         ReviewReactionPK reviewReactionPK = createReviewReactionPK(1L, 1L);
-        ReviewReaction reviewReaction = createReviewReaction(reviewReactionPK, 1);
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(createReviewReaction(reviewReactionPK, 1));
+        ReviewReaction originReviewReaction = createReviewReaction(reviewReactionPK, 1);
 
-        given(reviewReactionRepository.findById(any())).willReturn(Optional.of(reviewReaction));
+        given(reviewRepository.findById(anyLong())).willReturn(Optional.of(createReview(1L)));
+        given(reviewReactionRepository.findById(any())).willReturn(Optional.of(originReviewReaction));
 
         //when
-        reviewReactionService.deleteReviewReaction(reviewReactionPK);
+        reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
+        then(reviewRepository).should().findById(anyLong());
         then(reviewReactionRepository).should().findById(any());
-        then(reviewReactionRepository).should().delete(any());
+
+        then(reviewRepository).should(times(1))
+                .decreaseReactionCount(anyLong(), anyInt());
+        then(reviewReactionRepository).should(times(1))
+                .delete(any());
+
+        then(reviewRepository).should(never())
+                .increaseReactionCount(anyLong(), anyInt());
+        then(reviewRepository).should(never())
+                .updateReactionCount(anyLong(), anyInt(), anyInt());
     }
 
     private static User createUser(Long id) {
