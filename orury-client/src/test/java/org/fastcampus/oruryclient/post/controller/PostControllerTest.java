@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.post.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
@@ -111,12 +112,7 @@ class PostControllerTest extends ControllerTest {
         UserDto userDto = createUserDto(userId);
         PostCreateRequest postCreateRequest = createPostCreateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostCreateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postCreateRequest).getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile request = createRequestPart(postCreateRequest);
 
         PostMessage message = PostMessage.POST_CREATED;
 
@@ -145,18 +141,8 @@ class PostControllerTest extends ControllerTest {
         UserDto userDto = createUserDto(userId);
         PostCreateRequest postCreateRequest = createPostCreateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostCreateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postCreateRequest).getBytes(StandardCharsets.UTF_8)
-        );
-        MockMultipartFile image = new MockMultipartFile(
-                "file",
-                "testImageFile",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!".getBytes()
-        );
+        MockMultipartFile request = createRequestPart(postCreateRequest);
+        MockMultipartFile image = createImagePart();
 
         PostMessage message = PostMessage.POST_CREATED;
 
@@ -185,18 +171,8 @@ class PostControllerTest extends ControllerTest {
         Long userId = NumberConstants.USER_ID;
         PostCreateRequest postCreateRequest = createPostCreateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostCreateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postCreateRequest).getBytes(StandardCharsets.UTF_8)
-        );
-        MockMultipartFile image = new MockMultipartFile(
-                "file",
-                "testImageFile",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!".getBytes()
-        );
+        MockMultipartFile request = createRequestPart(postCreateRequest);
+        MockMultipartFile image = createImagePart();
 
         UserErrorCode code = UserErrorCode.NOT_FOUND;
 
@@ -228,24 +204,9 @@ class PostControllerTest extends ControllerTest {
         PostDto postDto = createPostDto(postId);
         PostUpdateRequest postUpdateRequest = createPostUpdateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostUpdateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postUpdateRequest).getBytes(StandardCharsets.UTF_8)
-        );
-        MockMultipartFile image1 = new MockMultipartFile(
-                "file",
-                "testImageFile1",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!".getBytes()
-        );
-        MockMultipartFile image2 = new MockMultipartFile(
-                "file",
-                "testImageFile2",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!!".getBytes()
-        );
+        MockMultipartFile request = createRequestPart(postUpdateRequest);
+        MockMultipartFile image1 = createImagePart();
+        MockMultipartFile image2 = createImagePart();
 
         PostMessage message = PostMessage.POST_UPDATED;
 
@@ -282,12 +243,7 @@ class PostControllerTest extends ControllerTest {
         PostDto postDto = createPostDto(postId);
         PostUpdateRequest postUpdateRequest = createPostUpdateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostUpdateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postUpdateRequest).getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile request = createRequestPart(postUpdateRequest);
 
         PostMessage message = PostMessage.POST_UPDATED;
 
@@ -319,21 +275,10 @@ class PostControllerTest extends ControllerTest {
         //given
         UserDto userDto = createUserDto();
         Long postId = 1L;
-        PostDto postDto = createPostDto(postId);
         PostUpdateRequest postUpdateRequest = createPostUpdateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostUpdateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postUpdateRequest).getBytes(StandardCharsets.UTF_8)
-        );
-        MockMultipartFile image = new MockMultipartFile(
-                "file",
-                "testImageFile",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!".getBytes()
-        );
+        MockMultipartFile request = createRequestPart(postUpdateRequest);
+        MockMultipartFile image = createImagePart();
 
         PostErrorCode code = PostErrorCode.NOT_FOUND;
 
@@ -369,18 +314,8 @@ class PostControllerTest extends ControllerTest {
         UserDto userDto = createUserDto();
         PostUpdateRequest postUpdateRequest = createPostUpdateRequest();
 
-        MockMultipartFile request = new MockMultipartFile(
-                "request",
-                "testPostUpdateRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(postUpdateRequest).getBytes(StandardCharsets.UTF_8)
-        );
-        MockMultipartFile image = new MockMultipartFile(
-                "file",
-                "testImageFile",
-                MediaType.TEXT_PLAIN_VALUE,
-                "Hello, World!".getBytes()
-        );
+        MockMultipartFile request = createRequestPart(postUpdateRequest);
+        MockMultipartFile image = createImagePart();
 
         PostErrorCode code = PostErrorCode.FORBIDDEN;
 
@@ -853,6 +788,24 @@ class PostControllerTest extends ControllerTest {
                 "bio",
                 LocalDateTime.now(),
                 LocalDateTime.now()
+        );
+    }
+
+    private MockMultipartFile createImagePart() {
+        return new MockMultipartFile(
+                "TestImageName",
+                "testImageFileName",
+                MediaType.TEXT_PLAIN_VALUE,
+                "testImageFileDate".getBytes()
+        );
+    }
+
+    private MockMultipartFile createRequestPart(Object request) throws JsonProcessingException {
+        return new MockMultipartFile(
+                "request",
+                "testRequest",
+                MediaType.APPLICATION_JSON_VALUE,
+                mapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8)
         );
     }
 }
