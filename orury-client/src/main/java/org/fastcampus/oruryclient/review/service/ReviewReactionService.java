@@ -22,6 +22,7 @@ public class ReviewReactionService {
     private final ReviewRepository reviewRepository;
     private final ReviewReactionRepository reviewReactionRepository;
 
+    @Transactional(readOnly = true)
     public int getReactionType(Long userId, Long reviewId) {
 
         ReviewReactionPK reactionPK = ReviewReactionPK.of(userId, reviewId);
