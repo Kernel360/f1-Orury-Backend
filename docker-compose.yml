@@ -1,0 +1,42 @@
+version: '3'
+services:
+  dev:
+    image: mysql:latest
+    container_name: dev-container
+    environment:
+      MYSQL_URL: ${LOCAL_DB_URL}
+      MYSQL_DATABASE: ${LOCAL_DB_NAME}
+      MYSQL_USER: ${LOCAL_DB_USER_NAME}
+      MYSQL_USER_PASSWORD: ${LOCAL_DB_USER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${LOCAL_DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+  prod:
+    image: mysql:latest
+    container_name: prod-container
+    environment:
+      MYSQL_URL: ${LOCAL_DB_URL}
+      MYSQL_DATABASE: ${LOCAL_DB_NAME}
+      MYSQL_USER: ${LOCAL_DB_USER_NAME}
+      MYSQL_USER_PASSWORD: ${LOCAL_DB_USER_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${LOCAL_DB_ROOT_PASSWORD}
+    ports:
+      - "3305:3305"
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-container
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-container
+    user: "$UID:$GID"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
