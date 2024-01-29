@@ -2,7 +2,7 @@ version: '3'
 services:
   dev:
     image: mysql:latest
-    container_name: mysql-container
+    container_name: dev-container
     environment:
       MYSQL_URL: ${LOCAL_DB_URL}
       MYSQL_DATABASE: ${LOCAL_DB_NAME}
