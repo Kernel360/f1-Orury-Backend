@@ -1,5 +1,17 @@
 package org.fastcampus.oruryclient.comment.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -26,12 +38,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 댓글 테스트")
@@ -390,6 +399,76 @@ class CommentServiceTest {
 
         verify(commentRepository, times(1))
                 .findById(id);
+    }
+
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서일 때 findByUserIdOrderByIdDesc을 실행한다.")
+    void given_FirstCursor_when_getMyComments_then_successfully() {
+        //given
+        Long cursor = NumberConstants.FIRST_CURSOR;
+        Pageable pageable = PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE);
+
+        List<Comment> comments = Arrays.asList(
+                createComment(10L, NumberConstants.PARENT_COMMENT),
+                createComment(9L, NumberConstants.PARENT_COMMENT),
+                createComment(8L, NumberConstants.PARENT_COMMENT),
+                createComment(7L, NumberConstants.PARENT_COMMENT),
+                createComment(6L, NumberConstants.PARENT_COMMENT),
+                createComment(5L, NumberConstants.PARENT_COMMENT),
+                createComment(4L, NumberConstants.PARENT_COMMENT),
+                createComment(3L, NumberConstants.PARENT_COMMENT),
+                createComment(2L, NumberConstants.PARENT_COMMENT),
+                createComment(1L, NumberConstants.PARENT_COMMENT)
+        );
+
+        List<CommentDto> expectCommentDtos = comments.stream()
+                .map(CommentDto::from)
+                .toList();
+
+        given(commentRepository.findByUserIdOrderByIdDesc(anyLong(), any())).willReturn(comments);
+
+        //when
+        List<CommentDto> resultCommentDtos = commentService.getCommentDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        //then
+        assertEquals(expectCommentDtos, resultCommentDtos);
+        then(commentRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서가 아닐 때 findByUserIdAndIdLessThanOrderByIdDesc을 실행한다.")
+    void given_NotFirstCursor_when_getMyComments_then_successfully() {
+        //given
+        Long cursor = 20L;
+        Pageable pageable = PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE);
+
+        List<Comment> comments = Arrays.asList(
+                createComment(10L, NumberConstants.PARENT_COMMENT),
+                createComment(9L, NumberConstants.PARENT_COMMENT),
+                createComment(8L, NumberConstants.PARENT_COMMENT),
+                createComment(7L, NumberConstants.PARENT_COMMENT),
+                createComment(6L, NumberConstants.PARENT_COMMENT),
+                createComment(5L, NumberConstants.PARENT_COMMENT),
+                createComment(4L, NumberConstants.PARENT_COMMENT),
+                createComment(3L, NumberConstants.PARENT_COMMENT),
+                createComment(2L, NumberConstants.PARENT_COMMENT),
+                createComment(1L, NumberConstants.PARENT_COMMENT)
+        );
+
+        List<CommentDto> expectCommentDtos = comments.stream()
+                .map(CommentDto::from)
+                .toList();
+
+        given(commentRepository.findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(comments);
+
+        //when
+        List<CommentDto> resultCommentDtos = commentService.getCommentDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        //then
+        assertEquals(expectCommentDtos, resultCommentDtos);
+        then(commentRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     private static User createUser() {
