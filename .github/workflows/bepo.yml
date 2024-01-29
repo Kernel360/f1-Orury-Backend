@@ -32,12 +32,6 @@ jobs:
           echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-client/src/main/resources/application-secret.properties
           cat ./orury-client/src/main/resources/application-secret.properties
 
-      - name: Make .env
-        run: |
-          touch .env
-          echo ${{ secrets.DOCKER_ENV }}" >> .env
-          cat .env
-
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
         shell: bash
