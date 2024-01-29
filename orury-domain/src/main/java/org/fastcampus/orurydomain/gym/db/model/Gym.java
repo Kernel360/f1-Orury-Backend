@@ -1,9 +1,18 @@
 package org.fastcampus.orurydomain.gym.db.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.base.db.AuditingField;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ToString
@@ -29,8 +38,11 @@ public class Gym extends AuditingField {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "score_average")
-    private Float scoreAverage;
+    @Column(name = "total_score")
+    private Float totalScore;
+
+    @Column(name = "review_count")
+    private int reviewCount;
 
     @Column(name = "like_count")
     private int likeCount;
@@ -89,7 +101,8 @@ public class Gym extends AuditingField {
             String kakaoId,
             String roadAddress,
             String address,
-            Float scoreAverage,
+            Float totalScore,
+            int reviewCount,
             int likeCount,
             String images,
             String latitude,
@@ -113,7 +126,8 @@ public class Gym extends AuditingField {
         this.kakaoId = kakaoId;
         this.roadAddress = roadAddress;
         this.address = address;
-        this.scoreAverage = scoreAverage;
+        this.totalScore = totalScore;
+        this.reviewCount = reviewCount;
         this.likeCount = likeCount;
         this.images = images;
         this.latitude = latitude;
@@ -139,7 +153,8 @@ public class Gym extends AuditingField {
             String kakaoId,
             String roadAddress,
             String address,
-            Float scoreAverage,
+            Float totalScore,
+            int reviewCount,
             int likeCount,
             String images,
             String latitude,
@@ -164,7 +179,8 @@ public class Gym extends AuditingField {
                 kakaoId,
                 roadAddress,
                 address,
-                scoreAverage,
+                totalScore,
+                reviewCount,
                 likeCount,
                 images,
                 latitude,

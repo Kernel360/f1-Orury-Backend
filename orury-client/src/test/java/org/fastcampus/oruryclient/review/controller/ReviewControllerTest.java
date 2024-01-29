@@ -1,5 +1,20 @@
 package org.fastcampus.oruryclient.review.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
@@ -23,14 +38,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Disabled
 @DisplayName("[Controller] 리뷰 관련 테스트")
@@ -178,7 +185,7 @@ class ReviewControllerTest extends ControllerTest {
 
         then(reviewService).should(times(1)).getReviewDtoById(any());
         then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(1)).updateReview(any());
+        then(reviewService).should(times(1)).updateReview(any(), any(), any());
     }
 
     @DisplayName("[PATCH] 기존에 작성한 리뷰가 없을 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
@@ -203,7 +210,7 @@ class ReviewControllerTest extends ControllerTest {
 
         then(reviewService).should(times(1)).getReviewDtoById(any());
         then(reviewService).should(times(0)).isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0)).updateReview(any());
+        then(reviewService).should(times(0)).updateReview(any(), any(), any());
     }
 
     @DisplayName("[PATCH] 리뷰 작성자와 수정 요청자의 id가 일치하지 않는 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
@@ -229,7 +236,7 @@ class ReviewControllerTest extends ControllerTest {
 
         then(reviewService).should(times(1)).getReviewDtoById(any());
         then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
-        then(reviewService).should(times(0)).updateReview(any());
+        then(reviewService).should(times(0)).updateReview(any(), any(), any());
     }
 
     @DisplayName("[Delete] 리뷰 id를 받아, 리뷰를 삭제한다. - 성공")
@@ -391,7 +398,8 @@ class ReviewControllerTest extends ControllerTest {
                 "kakaoid",
                 "서울시 도로명주소",
                 "서울시 지번주소",
-                4.5f,
+                25.3f,
+                23,
                 12,
                 "image.png",
                 "37.513709",

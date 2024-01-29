@@ -8,6 +8,7 @@ public record GymsResponse(
         String name,
         String roadAddress,
         Float scoreAverage,
+        int reviewCount,
         String thumbnailImage,
         Position position,
         boolean doingBusiness,
@@ -18,7 +19,8 @@ public record GymsResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
-                gymDto.scoreAverage(),
+                gymDto.totalScore() / gymDto.reviewCount(),
+                gymDto.reviewCount(),
                 ImageUrlConverter.convertStringToList(gymDto.images())
                         .get(0),
                 Position.of(gymDto.latitude(), gymDto.longitude()),
