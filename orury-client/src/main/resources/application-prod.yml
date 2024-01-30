@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    read:
+      jdbc-url: ENC(KkrDs/i2Asal3Qe2/GRo7vBh3Jdu3ozFVNy6sQzXYwKLScBRkm4jB4uWWCBF+rm/2t2XWE67sKRNXyL5fOChWLZ3hmp6KsMo4JSGjwXG8lzcStqVPMQ8jRq+cjaEALI4)
+      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    write:
+      jdbc-url: ENC(nYHDbyPX77wt52BMec5vJQLAWDcuiHS06QrV34A4AoEjrCnmNAmWNO/x0FUvNmvRhCPhaPkS1z9bhK7lyRVKocHukRjc5jwbf0XiceDDO2OtxDAfSPTvZg==)
+      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
+      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
+      driver-class-name: com.mysql.cj.jdbc.Driver
