@@ -84,6 +84,16 @@ public class ReviewService {
                 .toList();
     }
 
+    public List<ReviewDto> getReviewDtosByUserId(Long userId, Long cursor, Pageable pageable) {
+        List<Review> reviews = (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? reviewRepository.findByUserIdOrderByIdDesc(userId, pageable)
+                : reviewRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
+
+        return reviews.stream()
+                .map(ReviewDto::from)
+                .toList();
+    }
+
     private void imageUploadAndSave(ReviewDto reviewDto, MultipartFile... images) {
         if (s3Repository.isEmpty(images)) {
             reviewRepository.save(reviewDto.toEntity(null));
