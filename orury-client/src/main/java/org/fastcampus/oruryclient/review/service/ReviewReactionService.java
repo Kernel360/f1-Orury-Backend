@@ -1,5 +1,7 @@
 package org.fastcampus.oruryclient.review.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
@@ -8,23 +10,19 @@ import org.fastcampus.orurydomain.review.db.model.ReviewReactionPK;
 import org.fastcampus.orurydomain.review.db.repository.ReviewReactionRepository;
 import org.fastcampus.orurydomain.review.db.repository.ReviewRepository;
 import org.fastcampus.orurydomain.review.dto.ReviewReactionDto;
-import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReviewReactionService {
     private final ReviewRepository reviewRepository;
-    private final UserRepository userRepository;
     private final ReviewReactionRepository reviewReactionRepository;
 
+    @Transactional(readOnly = true)
     public int getReactionType(Long userId, Long reviewId) {
 
         ReviewReactionPK reactionPK = ReviewReactionPK.of(userId, reviewId);
@@ -36,31 +34,38 @@ public class ReviewReactionService {
     }
 
     @Transactional
-    public void createReviewReaction(ReviewReactionDto reviewReactionDto) {
+    public void processReviewReaction(ReviewReactionDto reviewReactionDto) {
         reviewRepository.findById(reviewReactionDto.reviewReactionPK().getReviewId())
                 .orElseThrow(() -> new BusinessException(ReviewReactionErrorCode.BAD_REQUEST));
 
-        int reactionType = reviewReactionDto.reactionType();
-        if (reactionType < 1 || reactionType > 5) {
+        int reactionTypeInput = reviewReactionDto.reactionType();
+        if (reactionTypeInput < 1 || reactionTypeInput > 5) {
             throw new BusinessException(ReviewReactionErrorCode.BAD_REQUEST);
         }
-        Optional<ReviewReaction> reviewReaction = reviewReactionRepository.findById(reviewReactionDto.reviewReactionPK());
-        if (reviewReaction.isEmpty()) {
-            reviewRepository.increaseReviewCount(reviewReactionDto.reviewReactionPK().getReviewId(), reviewReactionDto.reactionType());
 
+        Optional<ReviewReaction> originReaction = reviewReactionRepository.findById(reviewReactionDto.reviewReactionPK());
+
+        if (originReaction.isEmpty()) {
+            createReviewReaction(reviewReactionDto);
+        } else if (originReaction.get().getReactionType() != reactionTypeInput) {
+            updateReviewReaction(reviewReactionDto, originReaction.get().getReactionType());
         } else {
-            int oldReactionType = reviewReaction.get().getReactionType();
-            reviewRepository.updateReviewCount(reviewReactionDto.reviewReactionPK().getReviewId(), oldReactionType, reviewReactionDto.reactionType());
+            deleteReviewReaction(reviewReactionDto);
         }
-        ReviewReaction save_reviewReaction = reviewReactionDto.toEntity();
-        reviewReactionRepository.save(save_reviewReaction);
     }
 
-    @Transactional
-    public void deleteReviewReaction(ReviewReactionPK reactionPK) {
-        Optional<ReviewReaction> reviewReaction = reviewReactionRepository.findById(reactionPK);
-        if (reviewReaction.isEmpty()) throw new BusinessException(ReviewReactionErrorCode.NOT_FOUND);
+    private void createReviewReaction(ReviewReactionDto reviewReactionDto) {
+        reviewRepository.increaseReactionCount(reviewReactionDto.reviewReactionPK().getReviewId(), reviewReactionDto.reactionType());
+        reviewReactionRepository.save(reviewReactionDto.toEntity());
+    }
 
-        reviewReactionRepository.delete(reviewReaction.get());
+    private void updateReviewReaction(ReviewReactionDto reviewReactionDto, int oldReactionType) {
+        reviewRepository.updateReactionCount(reviewReactionDto.reviewReactionPK().getReviewId(), oldReactionType, reviewReactionDto.reactionType());
+        reviewReactionRepository.save(reviewReactionDto.toEntity());
+    }
+
+    private void deleteReviewReaction(ReviewReactionDto reviewReactionDto) {
+        reviewRepository.decreaseReactionCount(reviewReactionDto.reviewReactionPK().getReviewId(), reviewReactionDto.reactionType());
+        reviewReactionRepository.delete(reviewReactionDto.toEntity());
     }
 }

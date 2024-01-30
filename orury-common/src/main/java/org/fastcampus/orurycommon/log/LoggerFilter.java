@@ -31,17 +31,18 @@ public class LoggerFilter extends OncePerRequestFilter {
         var headerNames = req.getHeaderNames();
         var headerValues = new StringBuilder();
 
-        headerNames.asIterator().forEachRemaining(headerKey -> {
-            var headerValue = req.getHeader(headerKey);
+        headerNames.asIterator()
+                .forEachRemaining(headerKey -> {
+                    var headerValue = req.getHeader(headerKey);
 
-            // authorization-token : ??? , user-agent : ???
-            headerValues
-                    .append("[")
-                    .append(headerKey)
-                    .append(" : ")
-                    .append(headerValue)
-                    .append("] ");
-        });
+                    // authorization-token : ??? , user-agent : ???
+                    headerValues
+                            .append("[")
+                            .append(headerKey)
+                            .append(" : ")
+                            .append(headerValue)
+                            .append("] ");
+                });
 
         var requestBody = new String(req.getContentAsByteArray());
         var uri = req.getRequestURI();
@@ -53,16 +54,17 @@ public class LoggerFilter extends OncePerRequestFilter {
         // response 정보
         var responseHeaderValues = new StringBuilder();
 
-        res.getHeaderNames().forEach(headerKey -> {
-            var headerValue = res.getHeader(headerKey);
+        res.getHeaderNames()
+                .forEach(headerKey -> {
+                    var headerValue = res.getHeader(headerKey);
 
-            responseHeaderValues
-                    .append("[")
-                    .append(headerKey)
-                    .append(" : ")
-                    .append(headerValue)
-                    .append("] ");
-        });
+                    responseHeaderValues
+                            .append("[")
+                            .append(headerKey)
+                            .append(" : ")
+                            .append(headerValue)
+                            .append("] ");
+                });
 
         var responseBody = new String(res.getContentAsByteArray());
 
@@ -74,8 +76,9 @@ public class LoggerFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/swagger-ui", "/v3/api-docs"};
+        String[] excludePath = {"/swagger-ui", "/v3/api-docs", "/actuator/prometheus"};
         String path = request.getRequestURI();
-        return Arrays.stream(excludePath).anyMatch(path::startsWith);
+        return Arrays.stream(excludePath)
+                .anyMatch(path::startsWith);
     }
 }

@@ -1,6 +1,8 @@
-server.port: 8085
+server:
+  port: 8085
+  tomcat.mbeanregistry.enabled: true
 debug: false
-management.endpoints.web.exposure.include: "*"
+management.endpoints.web.exposure.include: "prometheus"
 
 logging.level:
   org.hibernate.SQL: debug
