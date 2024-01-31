@@ -39,6 +39,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    //h2
+    testRuntimeOnly('com.h2database:h2')
+    
+    //mysql
+    testRuntimeOnly('com.mysql:mysql-connector-j')
+
 }
 tasks.register("prepareKotlinBuildScriptModel") {}
 
