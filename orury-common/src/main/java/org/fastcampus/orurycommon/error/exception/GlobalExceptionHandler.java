@@ -13,7 +13,6 @@ public class GlobalExceptionHandler {
     //비즈니스 로직 예외 처리 -> BadRequest의 역할
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
-        log.warn(e.getMessage(), e);
         return ResponseEntity
                 .status(e.getStatus())
                 .body(ErrorResponse.of(e.getStatus(), e.getMessage()));
@@ -22,7 +21,6 @@ public class GlobalExceptionHandler {
     //인증 예외 처리 -> Unauthorized의 역할
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ErrorResponse> handleAuthException(AuthException e) {
-        log.warn(e.getMessage(), e);
         return ResponseEntity
                 .status(e.getStatus())
                 .body(ErrorResponse.of(e.getStatus(), e.getMessage()));
@@ -31,7 +29,7 @@ public class GlobalExceptionHandler {
     //그 외 모든 예외 처리 -> InternalServerError의 역할
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.warn(e.getMessage(), e);
+        log.error("### Unexpected Error Occurred : {}", e.getMessage(), e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "unhandled exception"));
