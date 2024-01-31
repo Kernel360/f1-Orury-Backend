@@ -1,9 +1,10 @@
 package org.fastcampus.oruryclient.post.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
@@ -25,9 +26,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -38,7 +36,6 @@ public class PostService {
     private final CommentLikeRepository commentLikeRepository;
     private final S3Repository s3Repository;
 
-    @Logging
     @Transactional
     public void createPost(PostDto postDto, MultipartFile... images) {
         imageUploadAndSave(postDto, images);
@@ -86,14 +83,12 @@ public class PostService {
         return posts.map(PostDto::from);
     }
 
-    @Logging
     @Transactional
     public void updatePost(PostDto postDto, MultipartFile... images) {
         oldS3ImagesDelete(postDto);
         imageUploadAndSave(postDto, images);
     }
 
-    @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
         oldS3ImagesDelete(postDto);
