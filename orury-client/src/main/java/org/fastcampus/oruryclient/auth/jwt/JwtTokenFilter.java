@@ -33,6 +33,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         Authentication authentication = null;
         try {
             accessToken = jwtTokenProvider.getTokenFromRequest(request);
+
             authentication = jwtTokenProvider.getAuthenticationFromAccessToken(accessToken);
         } catch (AuthException e) {
             jwtExceptionHandler(response, e);
@@ -47,7 +48,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/v1/auth", "/swagger-ui", "/v3/api-docs", "/favicon.ico", "/actuator/prometheus"};
+        String[] excludePath = {"/api/v1/auth/login", "/api/v1/auth/refresh", "/swagger-ui", "/v3/api-docs", "/favicon.ico", "/actuator/prometheus"};
         String path = request.getRequestURI();
         return Arrays.stream(excludePath)
                 .anyMatch(path::startsWith);

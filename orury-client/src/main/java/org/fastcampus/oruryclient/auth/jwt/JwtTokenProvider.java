@@ -73,6 +73,15 @@ public class JwtTokenProvider {
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
 
+        // 비회원은 토큰에 email 필드가 있으므로, 해당 필드로 검증 가능
+        if (claims.get("email") != null) {
+            // 임시 Authentication 세팅
+            UserPrincipal userDetails = UserPrincipal.fromToken(0L, claims.get("email").toString(), Constants.ROLE_USER.getMessage());
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+
+            return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+        }
+
         UserPrincipal userDetails = UserPrincipal.fromToken((long) (int) claims.get("id"), claims.getSubject(), Constants.ROLE_USER.getMessage());
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
 
