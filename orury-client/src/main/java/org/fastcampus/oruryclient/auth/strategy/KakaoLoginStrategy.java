@@ -61,7 +61,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
 
         // 비회원인 경우
         if (user.isEmpty()) {
-            throw new AuthException(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT);
+            return LoginDto.fromNoUser(email, signUpType, jwtTokenProvider.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
         }
 
         // 다른 소셜 로그인으로 가입한 회원인 경우
