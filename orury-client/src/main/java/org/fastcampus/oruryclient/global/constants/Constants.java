@@ -18,11 +18,10 @@ public enum Constants {
     DEFAULT_NICKNAME("default nickname"),
 
     // deleted values
-    DELETED_USER("deleted user")
+    DELETED_USER("deleted user"),
 
-    //
-
-    ;
+    // 암장 조회 시, kakaoId 기반으로 kakaoMapLink 만들기 위한 baseUrl
+    KAKAO_MAP_BASE_URL("https://map.kakao.com/?itemId=");
 
     private final String message;
 
