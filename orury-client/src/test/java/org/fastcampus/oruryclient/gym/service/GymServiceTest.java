@@ -183,6 +183,19 @@ class GymServiceTest {
     }
 
     @Test
+    @DisplayName("GymDto의 현재 요일 영업시간이 비어있다면(null이라면), false를 반환한다.")
+    void when_BusinessHoursIsNull_Then_ReturnFalse() {
+        //given
+        GymDto gymDto = createGymDto(null);
+
+        //when
+        boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
+
+        //then
+        assertFalse(doingBusiness);
+    }
+
+    @Test
     @DisplayName("존재하는 gymId가 들어오면, 아무것도 하지 않는다.")
     void when_IdOfExistingGym_Then_DoNothing() {
         //given
@@ -307,6 +320,37 @@ class GymServiceTest {
                 openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
                 openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
                 openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
+                "gymHomepageLink",
+                "gymRemark"
+        );
+    }
+
+    private static GymDto createGymDto(String businessHour) {
+        return GymDto.of(
+                1L,
+                "더클라임 봉은사점",
+                "kakaoid",
+                "서울시 도로명주소",
+                "서울시 지번주소",
+                40.5f,
+                23,
+                12,
+                "image.png",
+                "37.513709",
+                "127.062144",
+                "더클라임",
+                "01012345678",
+                "gymInstagramLink.com",
+                "MONDAY",
+                LocalDateTime.of(1999, 3, 1, 7, 30),
+                LocalDateTime.of(2024, 1, 23, 18, 32),
+                businessHour,
+                businessHour,
+                businessHour,
+                businessHour,
+                businessHour,
+                businessHour,
+                businessHour,
                 "gymHomepageLink",
                 "gymRemark"
         );
