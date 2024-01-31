@@ -11,6 +11,7 @@ import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
 import org.fastcampus.oruryclient.auth.service.AuthService;
 import org.fastcampus.oruryclient.auth.strategy.LoginStrategy;
 import org.fastcampus.oruryclient.auth.strategy.LoginStrategyManager;
+import org.fastcampus.orurycommon.error.code.AuthErrorCode;
 import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.auth.dto.LoginDto;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
@@ -48,6 +49,16 @@ public class AuthController {
     public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginStrategy strategy = loginStrategyManager.getLoginStrategy(request.signUpType());
         LoginDto loginDto = strategy.login(request);
+
+        // 비회원인 경우 비회원 전용 토큰을 담아 return
+        if (loginDto.flag().equals(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())) {
+            LoginResponse loginResponse = LoginResponse.fromNoUser(loginDto);
+            return ApiResponse.<LoginResponse>builder()
+                    .status(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT.getStatus())
+                    .message(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage())
+                    .data(loginResponse)
+                    .build();
+        }
 
         // 정상 로그인
         LoginResponse loginResponse = LoginResponse.of(loginDto);

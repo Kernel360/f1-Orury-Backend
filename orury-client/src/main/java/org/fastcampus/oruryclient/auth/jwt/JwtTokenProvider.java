@@ -37,6 +37,9 @@ public class JwtTokenProvider {
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
 
+    // 비회원 전용 토큰
+    private static final long NO_USER_ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 30L; // 30분
+
     private final SecretKey secretKey;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -122,12 +125,28 @@ public class JwtTokenProvider {
         return JwtToken.of(accessToken, refreshToken);
     }
 
+    public JwtToken issueNoUserJwtTokens(String email) {
+        String accessToken = noUserCreateJwtToken(email);
+
+        return JwtToken.of(accessToken, null);
+    }
+
     private String createJwtToken(Long id, String email, long expirationTime) {
         return Jwts.builder()
                 .subject(email)
                 .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    private String noUserCreateJwtToken(String email) {
+        return Jwts.builder()
+                .subject(email)
+                .claim("email", email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + JwtTokenProvider.NO_USER_ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey)
                 .compact();
     }

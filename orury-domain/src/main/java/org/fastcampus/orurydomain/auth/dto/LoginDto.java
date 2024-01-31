@@ -18,4 +18,28 @@ public record LoginDto(
                 flag
         );
     }
+
+    public static LoginDto fromNoUser(
+            String email,
+            int signUpType,
+            JwtToken jwtToken,
+            String flag
+    ) {
+        return new LoginDto(
+                UserDto.of(
+                        null,
+                        email,
+                        null,
+                        null,
+                        signUpType,
+                        9,
+                        null,
+                        null,
+                        null,
+                        null
+                ),
+                jwtToken,
+                flag
+        );
+    }
 }
