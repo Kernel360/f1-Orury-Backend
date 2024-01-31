@@ -1,0 +1,8 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)

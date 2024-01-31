@@ -1,5 +1,20 @@
 package org.fastcampus.oruryclient.post.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.S3Repository;
@@ -27,11 +42,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 게시글 테스트")
@@ -393,6 +403,81 @@ class PostServiceTest {
         // then
         verify(postRepository).findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
+    }
+
+    // getPostDtosByUserId 테스트 추가
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서일 때 findByUserIdOrderByIdDesc을 실행한다.")
+    void given_firstCursor_when_getMyPosts_then_successfully() {
+        // given
+        Long cursor = NumberConstants.FIRST_CURSOR;
+        Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+
+        List<Post> posts = Arrays.asList(
+                createPost(10L, NumberConstants.USER_ID),
+                createPost(9L, NumberConstants.USER_ID),
+                createPost(8L, NumberConstants.USER_ID),
+                createPost(7L, NumberConstants.USER_ID),
+                createPost(6L, NumberConstants.USER_ID),
+                createPost(5L, NumberConstants.USER_ID),
+                createPost(4L, NumberConstants.USER_ID),
+                createPost(3L, NumberConstants.USER_ID),
+                createPost(2L, NumberConstants.USER_ID),
+                createPost(1L, NumberConstants.USER_ID)
+        );
+
+        List<PostDto> expectPostDtos = posts.stream()
+                .map(PostDto::from)
+                .toList();
+
+
+        given(postRepository.findByUserIdOrderByIdDesc(anyLong(), any())).willReturn(posts);
+
+
+        // when
+        List<PostDto> resultPostDtos = postService.getPostDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        // then
+        assertEquals(resultPostDtos, expectPostDtos);
+        then(postRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(postRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서가 아닐 때 findByUserIdAndIdLessThanOrderByIdDesc을 실행한다.")
+    void given_NotFirstCursor_when_getMyPosts_then_successfully() {
+        // given
+        Long cursor = 20L;
+        Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+
+        List<Post> posts = Arrays.asList(
+                createPost(19L, NumberConstants.USER_ID),
+                createPost(18L, NumberConstants.USER_ID),
+                createPost(17L, NumberConstants.USER_ID),
+                createPost(16L, NumberConstants.USER_ID),
+                createPost(15L, NumberConstants.USER_ID),
+                createPost(14L, NumberConstants.USER_ID),
+                createPost(13L, NumberConstants.USER_ID),
+                createPost(12L, NumberConstants.USER_ID),
+                createPost(11L, NumberConstants.USER_ID),
+                createPost(10L, NumberConstants.USER_ID)
+        );
+
+        List<PostDto> expectPostDtos = posts.stream()
+                .map(PostDto::from)
+                .toList();
+
+
+        given(postRepository.findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(posts);
+
+
+        // when
+        List<PostDto> resultPostDtos = postService.getPostDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        // then
+        assertEquals(resultPostDtos, expectPostDtos);
+        then(postRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(postRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     private static Post createPost(Long postId, Long userId) {

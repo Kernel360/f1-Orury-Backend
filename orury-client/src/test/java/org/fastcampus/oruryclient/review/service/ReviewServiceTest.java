@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
@@ -27,12 +28,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -208,6 +211,77 @@ class ReviewServiceTest {
         then(reviewRepository).should()
                 .findByGymIdOrderByIdDesc(anyLong(), any());
     }
+
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서일 때 findByUserIdOrderByIdDesc을 실행한다.")
+    void given_FirstCursor_when_getMyReviews_then_successfully() {
+        //given
+        Long cursor = NumberConstants.FIRST_CURSOR;
+        Pageable pageable = PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE);
+
+        List<Review> reviews = Arrays.asList(
+                createReview(10L, NumberConstants.USER_ID, 10L),
+                createReview(9L, NumberConstants.USER_ID, 9L),
+                createReview(8L, NumberConstants.USER_ID, 8L),
+                createReview(7L, NumberConstants.USER_ID, 7L),
+                createReview(6L, NumberConstants.USER_ID, 6L),
+                createReview(5L, NumberConstants.USER_ID, 5L),
+                createReview(4L, NumberConstants.USER_ID, 4L),
+                createReview(3L, NumberConstants.USER_ID, 3L),
+                createReview(2L, NumberConstants.USER_ID, 2L),
+                createReview(1L, NumberConstants.USER_ID, 1L)
+        );
+
+        List<ReviewDto> expectReviewDtos = reviews.stream()
+                .map(ReviewDto::from)
+                .toList();
+
+        given(reviewRepository.findByUserIdOrderByIdDesc(anyLong(), any())).willReturn(reviews);
+
+        //when
+        List<ReviewDto> resultReviewDtos = reviewService.getReviewDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        //then
+        assertEquals(resultReviewDtos, expectReviewDtos);
+        then(reviewRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(reviewRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("userId, cursor, pageable을 받아 첫번째 커서가 아닐 때 findByUserIdAndIdLessThanOrderByIdDesc을 실행한다.")
+    void given_NotFirstCursor_when_getMyReviews_then_successfully() {
+        //given
+        Long cursor = 20L;
+        Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+
+        List<Review> reviews = Arrays.asList(
+                createReview(10L, NumberConstants.USER_ID, 10L),
+                createReview(9L, NumberConstants.USER_ID, 9L),
+                createReview(8L, NumberConstants.USER_ID, 8L),
+                createReview(7L, NumberConstants.USER_ID, 7L),
+                createReview(6L, NumberConstants.USER_ID, 6L),
+                createReview(5L, NumberConstants.USER_ID, 5L),
+                createReview(4L, NumberConstants.USER_ID, 4L),
+                createReview(3L, NumberConstants.USER_ID, 3L),
+                createReview(2L, NumberConstants.USER_ID, 2L),
+                createReview(1L, NumberConstants.USER_ID, 1L)
+        );
+
+        List<ReviewDto> expectReviewDtos = reviews.stream()
+                .map(ReviewDto::from)
+                .toList();
+
+        given(reviewRepository.findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(reviews);
+
+        //when
+        List<ReviewDto> resultReviewDtos = reviewService.getReviewDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
+
+        //then
+        assertEquals(resultReviewDtos, expectReviewDtos);
+        then(reviewRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
+        then(reviewRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+    }
+
 
     private static User createUser(Long id) {
         return User.of(
