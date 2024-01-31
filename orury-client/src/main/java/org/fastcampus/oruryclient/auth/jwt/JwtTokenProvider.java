@@ -53,6 +53,7 @@ public class JwtTokenProvider {
 
         // AccessToken 헤더가 없거나 Bearer 토큰이 아닌 경우
         if (accessTokenHeader == null || !accessTokenHeader.startsWith(JWT_TOKEN_PREFIX)) {
+            log.error("### Error with token header: Authorization does not exist or Token is not bearer token");
             throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
         }
 
@@ -66,10 +67,10 @@ public class JwtTokenProvider {
         try {
             claims = parseToken(accessToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
-            log.error("Error with token: {}", exception.getMessage());
+            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
         } catch (final JwtException exception) {
-            log.error("Error when token: {}", exception.getMessage());
+            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
 
@@ -102,10 +103,10 @@ public class JwtTokenProvider {
         try {
             claims = parseToken(refreshToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
-            log.error("Error with token: {}", exception.getMessage());
+            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.INVALID_REFRESH_TOKEN);
         } catch (final JwtException exception) {
-            log.error("Error when parsing: {}", exception.getMessage());
+            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 

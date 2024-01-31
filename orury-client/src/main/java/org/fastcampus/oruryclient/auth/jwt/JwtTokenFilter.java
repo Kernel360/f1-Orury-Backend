@@ -62,9 +62,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String json = new ObjectMapper().writeValueAsString(ErrorResponse.of(exception.getStatus(), exception.getMessage()));
             response.getWriter()
                     .write(json);
-            log.warn(exception.getMessage(), exception);
+            log.error("### Error Occurred in JwtTokenFilter : {}", exception.getMessage(), exception);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("### Error Occurred in JwtTokenFilter : {}", exception.getMessage(), exception);
         }
     }
 }
