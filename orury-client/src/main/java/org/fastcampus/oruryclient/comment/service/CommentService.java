@@ -1,7 +1,5 @@
 package org.fastcampus.oruryclient.comment.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
@@ -23,6 +21,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +57,17 @@ public class CommentService {
 
         return allComments.stream()
                 .map(CommentDto::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentDto> getCommentDtosByUserId(Long userId, Long cursor, Pageable pageable) {
+        List<Comment> comments = (cursor.equals(NumberConstants.FIRST_CURSOR))
+                ? commentRepository.findByUserIdOrderByIdDesc(userId, pageable)
+                : commentRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
+
+        return comments.stream()
+                .map(CommentDto::from)
+                .toList();
     }
 
     @Logging

@@ -41,4 +41,15 @@ public record LoginResponse(
                 loginDto.jwtToken().refreshToken()
         );
     }
+
+    public static LoginResponse fromNoUser(LoginDto loginDto) {
+        return new LoginResponse(
+                null,
+                loginDto.userDto().email(),
+                loginDto.userDto().signUpType(),
+                null,
+                loginDto.jwtToken().accessToken(),
+                null
+        );
+    }
 }

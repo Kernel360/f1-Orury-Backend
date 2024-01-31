@@ -5,6 +5,7 @@ env:
   BUCKET_NAME: orury-bepo-bucket
   CODE_DEPLOY_APP_NAME: orury-code-deploy
   DEPLOYMENT_GROUP_NAME: orury-code-deploy-group
+  DOCKER_ENV: .env
 
 on:
   push:
@@ -24,10 +25,21 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-  
-      - run: touch ./orury-client/src/main/resources/application-secret.properties
-      - run: echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-client/src/main/resources/application-secret.properties
-      - run: cat ./orury-client/src/main/resources/application-secret.properties
+
+      - name: Make application.properties
+        run: |
+          touch ./orury-client/src/main/resources/application-secret.properties
+          touch ./orury-batch/src/main/resources/application-secret.properties
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-client/src/main/resources/application-secret.properties
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./orury-batch/src/main/resources/application-secret.properties
+          cat ./orury-client/src/main/resources/application-secret.properties
+          cat ./orury-batch/src/main/resources/application-secret.properties
+
+      - name: Make env file
+        run: |
+          touch ./.env
+          echo "${{ secrets.DOCKER_ENV }}" >> ./.env
+          cat ./.env
 
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew

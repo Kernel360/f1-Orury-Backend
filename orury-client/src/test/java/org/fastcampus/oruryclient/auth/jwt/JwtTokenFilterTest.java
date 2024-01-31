@@ -137,7 +137,7 @@ class JwtTokenFilterTest {
     @Test
     void when_ExcludePath_Then_should_ShouldNotFilterSuccessfully() throws ServletException, IOException {
         // given
-        String[] excludePath = {"/api/v1/auth", "/swagger-ui", "/v3/api-docs", "/favicon.ico"};
+        String[] excludePath = {"/api/v1/auth/login", "/api/v1/auth/refresh", "/swagger-ui", "/v3/api-docs", "/favicon.ico"};
 
         for (String path : excludePath) {
             request.setRequestURI(path + "/temp-path");
