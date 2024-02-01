@@ -7,11 +7,8 @@ import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -30,9 +27,6 @@ import java.util.Objects;
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final CommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
     private final S3Repository s3Repository;
 
     @Transactional

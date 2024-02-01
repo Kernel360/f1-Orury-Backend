@@ -3,11 +3,8 @@ package org.fastcampus.oruryclient.post.service;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.S3Repository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.db.model.User;
@@ -39,19 +36,13 @@ import static org.mockito.Mockito.*;
 class PostServiceTest {
 
     private PostRepository postRepository;
-    private PostLikeRepository postLikeRepository;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
     private PostService postService;
 
     @BeforeEach
     public void setUp() {
         postRepository = mock(PostRepository.class);
-        postLikeRepository = mock(PostLikeRepository.class);
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
         S3Repository s3Repository = mock(S3Repository.class);
-        postService = new PostService(postRepository, postLikeRepository, commentRepository, commentLikeRepository, s3Repository);
+        postService = new PostService(postRepository, s3Repository);
     }
 
     @Test
