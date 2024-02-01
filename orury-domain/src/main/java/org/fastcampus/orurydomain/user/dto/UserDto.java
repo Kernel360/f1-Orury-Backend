@@ -76,7 +76,7 @@ public record UserDto(
                 entity.getSignUpType(),
                 entity.getGender(),
                 entity.getBirthday(),
-                (entity.getIsDeleted() == NumberConstants.IS_DELETED) ? Constants.DEFAULT_USER_PROFILE.getMessage() : imageUrl,
+                imageUrl,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getIsDeleted()
