@@ -1,6 +1,6 @@
 package org.fastcampus.oruryclient.config;
 
-import org.fastcampus.oruryclient.global.constants.Constants;
+import org.fastcampus.orurydomain.global.constants.Constants;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
