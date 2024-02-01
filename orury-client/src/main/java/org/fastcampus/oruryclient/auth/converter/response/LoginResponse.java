@@ -45,7 +45,7 @@ public record LoginResponse(
     public static LoginResponse fromNoUser(LoginDto loginDto) {
         return new LoginResponse(
                 null,
-                loginDto.userDto().email(),
+                null,
                 loginDto.userDto().signUpType(),
                 null,
                 loginDto.jwtToken().accessToken(),

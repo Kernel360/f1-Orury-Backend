@@ -20,7 +20,6 @@ public record LoginDto(
     }
 
     public static LoginDto fromNoUser(
-            String email,
             int signUpType,
             JwtToken jwtToken,
             String flag
@@ -28,7 +27,7 @@ public record LoginDto(
         return new LoginDto(
                 UserDto.of(
                         null,
-                        email,
+                        null,
                         null,
                         null,
                         signUpType,
