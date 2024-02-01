@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.gym.converter.message.GymMessage;
-import org.fastcampus.oruryclient.gym.converter.request.GymSearchRequest;
 import org.fastcampus.oruryclient.gym.converter.response.GymResponse;
 import org.fastcampus.oruryclient.gym.converter.response.GymReviewStatistics;
 import org.fastcampus.oruryclient.gym.converter.response.GymsResponse;
@@ -52,9 +51,13 @@ public class GymController {
 
     @Operation(summary = "암장 목록 검색", description = "검색어와 위치 좌표(경도, 위도)를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
     @GetMapping("/search")
-    public ApiResponse<List<GymsResponse>> getGymsByLocation(@RequestBody GymSearchRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse<List<GymsResponse>> getGymsByLocation(
+            @RequestParam("search_word") String searchWord,
+            @RequestParam float latitude,
+            @RequestParam float longitude,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(request.searchWord(), request.latitude(), request.longitude());
+        List<GymDto> gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude);
 
         List<GymsResponse> response = gymDtos.stream()
                 .map(gymDto -> {
