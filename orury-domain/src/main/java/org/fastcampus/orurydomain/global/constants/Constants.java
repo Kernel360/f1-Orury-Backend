@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.constants;
+package org.fastcampus.orurydomain.global.constants;
 
 import lombok.Getter;
 
@@ -14,11 +14,11 @@ public enum Constants {
     REFRESH_HEADER("Refresh-token"),
 
     // default values
-    DEFAULT_IMAGE("default image"),
+    DEFAULT_USER_PROFILE("default-user-profile"),
     DEFAULT_NICKNAME("default nickname"),
 
     // deleted values
-    DELETED_USER("deleted user"),
+    DELETED_USER_NICKNAME("탈퇴 유저"),
 
     // 암장 조회 시, kakaoId 기반으로 kakaoMapLink 만들기 위한 baseUrl
     KAKAO_MAP_BASE_URL("https://map.kakao.com/?itemId=");

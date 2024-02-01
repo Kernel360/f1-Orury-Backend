@@ -3,7 +3,7 @@ package org.fastcampus.oruryclient.comment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.model.Comment;

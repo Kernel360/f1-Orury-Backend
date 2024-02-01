@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.global.constants.Constants;
+import org.fastcampus.orurydomain.global.constants.Constants;
 import org.fastcampus.orurycommon.error.code.TokenErrorCode;
 import org.fastcampus.orurycommon.error.exception.AuthException;
 import org.fastcampus.orurydomain.auth.db.model.RefreshToken;

@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.gym.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.global.constants.Constants;
+import org.fastcampus.orurydomain.global.constants.Constants;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 
