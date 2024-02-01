@@ -44,6 +44,9 @@ public class GymService {
         DayOfWeek today = LocalDateTime.now().getDayOfWeek();
         String businessHour = gymDto.businessHours().get(today);
 
+        if (businessHour == null)
+            return false;
+
         LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
         LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
         LocalTime nowTime = LocalTime.now();

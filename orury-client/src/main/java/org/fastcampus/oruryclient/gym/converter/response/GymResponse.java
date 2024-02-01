@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.gym.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
+import org.fastcampus.oruryclient.global.constants.Constants;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 
@@ -23,6 +23,7 @@ public record GymResponse(
         Position position,
         String brand,
         String phoneNumber,
+        String kakaoMapLink,
         String instagramLink,
         String homepageLink,
         String settingDay,
@@ -49,6 +50,7 @@ public record GymResponse(
                 Position.of(gymDto.latitude(), gymDto.longitude()),
                 gymDto.brand(),
                 gymDto.phoneNumber(),
+                Constants.KAKAO_MAP_BASE_URL.getMessage() + gymDto.kakaoId(),
                 gymDto.instagramLink(),
                 gymDto.homepageLink(),
                 gymDto.settingDay(),
