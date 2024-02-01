@@ -1,5 +1,7 @@
 package org.fastcampus.orurydomain.user.dto;
 
+import org.fastcampus.orurydomain.global.constants.Constants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.user.db.model.User;
 
 import java.time.LocalDate;
@@ -18,7 +20,8 @@ public record UserDto(
         LocalDate birthday,
         String profileImage,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        int isDeleted
 ) {
     public static UserDto of(
             Long id,
@@ -30,7 +33,8 @@ public record UserDto(
             LocalDate birthday,
             String profileImage,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int isDeleted
     ) {
         return new UserDto(
                 id,
@@ -42,7 +46,8 @@ public record UserDto(
                 birthday,
                 profileImage,
                 createdAt,
-                updatedAt
+                updatedAt,
+                isDeleted
         );
     }
 
@@ -57,7 +62,8 @@ public record UserDto(
                 entity.getBirthday(),
                 entity.getProfileImage(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getIsDeleted()
         );
     }
 
@@ -65,14 +71,15 @@ public record UserDto(
         return UserDto.of(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getNickname(),
+                (entity.getIsDeleted() == NumberConstants.IS_DELETED) ? Constants.DELETED_USER_NICKNAME.getMessage() : entity.getNickname(),
                 entity.getPassword(),
                 entity.getSignUpType(),
                 entity.getGender(),
                 entity.getBirthday(),
-                imageUrl,
+                (entity.getIsDeleted() == NumberConstants.IS_DELETED) ? Constants.DEFAULT_USER_PROFILE.getMessage() : imageUrl,
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getIsDeleted()
         );
     }
 
@@ -87,7 +94,8 @@ public record UserDto(
                 birthday,
                 profileImage,
                 createdAt,
-                updatedAt
+                updatedAt,
+                isDeleted
         );
     }
 
@@ -102,7 +110,8 @@ public record UserDto(
                 birthday,
                 newProfileImage,
                 createdAt,
-                updatedAt
+                updatedAt,
+                isDeleted
         );
     }
 }
