@@ -2,11 +2,11 @@ package org.fastcampus.oruryclient.gym.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.gym.converter.message.GymMessage;
 import org.fastcampus.oruryclient.gym.converter.request.GymSearchRequest;
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.db.model.User;
@@ -273,7 +273,8 @@ class GymControllerTest extends ControllerTest {
                 null,
                 "userProfileImage",
                 null,
-                null
+                null,
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

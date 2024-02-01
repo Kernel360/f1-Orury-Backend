@@ -7,12 +7,12 @@ import org.fastcampus.oruryclient.comment.converter.response.CommentResponse;
 import org.fastcampus.oruryclient.comment.converter.response.CommentsWithCursorResponse;
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
@@ -515,7 +515,8 @@ class CommentControllerTest extends ControllerTest {
                 LocalDate.now(),
                 null,
                 null,
-                null
+                null,
+                NumberConstants.IS_NOT_DELETED
         );
     }
 }
