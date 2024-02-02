@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.config;
+package org.fastcampus.orurycommon.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    private static final String SECURITY_SCHEME_NAME = "authorization";	// 추가
+    private static final String SECURITY_SCHEME_NAME = "authorization"; // 추가
 
     @Bean
     public OpenAPI swaggerApi() {
