@@ -1,35 +1,7 @@
 //build.gradle 파일
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.6'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-}
-group = 'org.fastcampus'
-version = '0.0.1-SNAPSHOT'
-java {
-    sourceCompatibility = '17'
-}
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 dependencies {
     implementation project(':orury-common')
     implementation project(':orury-domain')
-    //boot start
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //Security
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -46,23 +18,13 @@ dependencies {
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
 
     //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
-    //jpa
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    //web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    //lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 }
 tasks.register("prepareKotlinBuildScriptModel") {}
 
