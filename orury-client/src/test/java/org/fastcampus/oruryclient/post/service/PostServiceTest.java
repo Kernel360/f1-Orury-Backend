@@ -1,28 +1,10 @@
 package org.fastcampus.oruryclient.post.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.S3Repository;
-import org.fastcampus.orurydomain.comment.db.model.Comment;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.db.model.User;
@@ -43,25 +25,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 게시글 테스트")
 @ActiveProfiles("test")
 class PostServiceTest {
 
     private PostRepository postRepository;
-    private PostLikeRepository postLikeRepository;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
     private PostService postService;
 
     @BeforeEach
     public void setUp() {
         postRepository = mock(PostRepository.class);
-        postLikeRepository = mock(PostLikeRepository.class);
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
         S3Repository s3Repository = mock(S3Repository.class);
-        postService = new PostService(postRepository, postLikeRepository, commentRepository, commentLikeRepository, s3Repository);
+        postService = new PostService(postRepository, s3Repository);
     }
 
     @Test
@@ -214,44 +195,6 @@ class PostServiceTest {
         );
 
         assertEquals(PostErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
-    }
-
-    @Test
-    @DisplayName("게시글이 삭제되면, 게시글과 게시글 좋아요가 성공적으로 삭제되어야 한다.")
-    void when_DeletePost_Then_DeletePostAndPostLikeSuccessfully() {
-        // given
-        UserDto userDto = createUserDto(1L);
-        PostDto postDto = createPostDto(1L, 1L);
-        // when
-        postService.deletePost(postDto);
-
-        // then
-        verify(postRepository).delete(postDto.toEntity());
-        verify(postLikeRepository).deleteByPostLikePK_PostId(anyLong());
-        verify(commentRepository).findByPost_Id(postDto.id());
-    }
-
-    @Test
-    @DisplayName("게시글이 삭제될 때, 댓글이 있다면 댓글/댓글좋아요도 삭제된다.")
-    void when_DeletePost_Then_DeletePostAndCommentAndCommentLike() {
-        // given
-        UserDto userDto = createUserDto(1L);
-        PostDto postDto = createPostDto(1L, 1L);
-
-        Comment comment1 = Comment.of(1L, "content1", null, 10, null, null, 0, null, null);
-        Comment comment2 = Comment.of(2L, "content2", null, 20, null, null, 0, null, null);
-        List<Comment> comments = Arrays.asList(comment1, comment2);
-
-        // when
-        when(commentRepository.findByPost_Id(postDto.id())).thenReturn(comments);
-        postService.deletePost(postDto);
-
-        // then
-        verify(commentRepository).findByPost_Id(postDto.id());
-        verify(commentLikeRepository).deleteByCommentLikePK_CommentId(comment1.getId());
-        verify(commentLikeRepository).deleteByCommentLikePK_CommentId(comment2.getId());
-        verify(commentRepository).delete(comment1);
-        verify(commentRepository).delete(comment2);
     }
 
     @Test
@@ -524,7 +467,8 @@ class PostServiceTest {
                 LocalDate.now(),
                 "test.jpg",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 
@@ -539,7 +483,8 @@ class PostServiceTest {
                 LocalDate.now(),
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50)
+                LocalDateTime.of(1999, 3, 1, 7, 50),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 }

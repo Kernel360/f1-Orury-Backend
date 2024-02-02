@@ -1,4 +1,4 @@
-package org.fastcampus.oruryclient.global.constants;
+package org.fastcampus.orurydomain.global.constants;
 
 public final class NumberConstants {
     private NumberConstants() {

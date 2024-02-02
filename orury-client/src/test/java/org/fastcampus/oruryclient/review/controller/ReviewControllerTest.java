@@ -1,23 +1,7 @@
 package org.fastcampus.oruryclient.review.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.willThrow;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.review.converter.message.ReviewMessage;
 import org.fastcampus.oruryclient.review.converter.request.ReviewCreateRequest;
 import org.fastcampus.oruryclient.review.converter.request.ReviewUpdateRequest;
@@ -27,6 +11,7 @@ import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -38,6 +23,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Disabled
 @DisplayName("[Controller] 리뷰 관련 테스트")
@@ -387,7 +380,8 @@ class ReviewControllerTest extends ControllerTest {
                 LocalDate.now(),
                 null,
                 null,
-                null
+                null,
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

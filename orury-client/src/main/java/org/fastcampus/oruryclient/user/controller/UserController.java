@@ -1,8 +1,10 @@
 package org.fastcampus.oruryclient.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.service.CommentService;
 import org.fastcampus.oruryclient.global.WithCursorResponse;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.post.service.PostService;
 import org.fastcampus.oruryclient.review.service.ReviewService;
 import org.fastcampus.oruryclient.user.converter.message.UserMessage;
@@ -14,6 +16,7 @@ import org.fastcampus.oruryclient.user.converter.response.MypageResponse;
 import org.fastcampus.oruryclient.user.service.UserService;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -21,23 +24,10 @@ import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -151,9 +141,9 @@ public class UserController {
     }
 
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
-    @DeleteMapping("/{id}")
-    public ApiResponse<Object> deleteUser(@PathVariable Long id) {
-        UserDto user = userService.getUserDtoById(id);
+    @DeleteMapping
+    public ApiResponse<Object> deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UserDto user = userService.getUserDtoById(userPrincipal.id());
         userService.deleteUser(user);
 
         return ApiResponse.builder()

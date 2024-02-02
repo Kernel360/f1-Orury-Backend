@@ -2,17 +2,13 @@ package org.fastcampus.oruryclient.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
-import org.fastcampus.orurydomain.comment.db.model.Comment;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -31,9 +27,6 @@ import java.util.Objects;
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final CommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
     private final S3Repository s3Repository;
 
     @Transactional
@@ -92,15 +85,6 @@ public class PostService {
     @Transactional
     public void deletePost(PostDto postDto) {
         oldS3ImagesDelete(postDto);
-        postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
-
-        List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
-        comments.forEach(
-                comment -> {
-                    commentLikeRepository.deleteByCommentLikePK_CommentId(comment.getId());
-                    commentRepository.delete(comment);
-                }
-        );
         postRepository.delete(postDto.toEntity());
     }
 

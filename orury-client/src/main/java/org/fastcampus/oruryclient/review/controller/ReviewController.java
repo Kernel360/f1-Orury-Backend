@@ -1,6 +1,8 @@
 package org.fastcampus.oruryclient.review.controller;
 
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.gym.service.GymService;
 import org.fastcampus.oruryclient.review.converter.message.ReviewMessage;
 import org.fastcampus.oruryclient.review.converter.request.ReviewCreateRequest;
@@ -12,6 +14,7 @@ import org.fastcampus.oruryclient.review.service.ReviewReactionService;
 import org.fastcampus.oruryclient.review.service.ReviewService;
 import org.fastcampus.oruryclient.user.service.UserService;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -19,22 +22,10 @@ import org.fastcampus.orurydomain.user.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package org.fastcampus.oruryclient.comment.service;
 
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
@@ -9,6 +8,7 @@ import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -228,7 +228,8 @@ class CommentLikeServiceTest {
                 LocalDate.now(),
                 "userProfileImage",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

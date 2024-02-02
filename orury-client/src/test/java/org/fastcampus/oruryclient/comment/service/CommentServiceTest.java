@@ -1,18 +1,5 @@
 package org.fastcampus.oruryclient.comment.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
@@ -22,6 +9,7 @@ import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
@@ -41,6 +29,13 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 댓글 테스트")
@@ -482,7 +477,8 @@ class CommentServiceTest {
                 LocalDate.now(),
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50)
+                LocalDateTime.of(1999, 3, 1, 7, 50),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 
@@ -497,7 +493,8 @@ class CommentServiceTest {
                 LocalDate.now(),
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50)
+                LocalDateTime.of(1999, 3, 1, 7, 50),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

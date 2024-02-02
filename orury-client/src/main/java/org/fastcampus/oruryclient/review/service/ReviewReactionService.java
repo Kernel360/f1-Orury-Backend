@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.review.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewReactionErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurydomain.review.db.model.ReviewReaction;
