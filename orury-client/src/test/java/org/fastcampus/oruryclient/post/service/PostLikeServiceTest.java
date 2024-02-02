@@ -33,7 +33,7 @@ class PostLikeServiceTest {
     void setUp() {
         postLikeRepository = mock(PostLikeRepository.class);
         postRepository = mock(PostRepository.class);
-        postLikeService = new PostLikeService(postLikeRepository, postRepository);
+        postLikeService = new PostLikeServiceImpl(postLikeRepository, postRepository);
     }
 
     @Test
