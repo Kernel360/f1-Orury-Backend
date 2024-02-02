@@ -1,5 +1,6 @@
 package org.fastcampus.orurydomain.auth.dto;
 
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 public record LoginDto(
@@ -35,7 +36,8 @@ public record LoginDto(
                         null,
                         null,
                         null,
-                        null
+                        null,
+                        NumberConstants.IS_NOT_DELETED
                 ),
                 jwtToken,
                 flag

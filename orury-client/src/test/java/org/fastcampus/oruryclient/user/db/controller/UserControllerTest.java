@@ -1,20 +1,14 @@
 package org.fastcampus.oruryclient.user.db.controller;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.global.WithCursorResponse;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.user.converter.message.UserMessage;
 import org.fastcampus.oruryclient.user.converter.response.MyCommentResponse;
 import org.fastcampus.oruryclient.user.converter.response.MyPostResponse;
 import org.fastcampus.oruryclient.user.converter.response.MyReviewResponse;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
@@ -28,6 +22,12 @@ import org.springframework.http.MediaType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@Disabled
 @DisplayName("[Controller] 유저 마이페이지 관련 테스트")
@@ -171,7 +171,8 @@ public class UserControllerTest extends ControllerTest {
                 null,
                 "bio",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

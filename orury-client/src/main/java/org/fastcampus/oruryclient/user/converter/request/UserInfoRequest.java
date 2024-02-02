@@ -20,7 +20,8 @@ public record UserInfoRequest(
                 userDto.birthday(),
                 ImageUrlConverter.splitUrlToImage(userDto.profileImage()),
                 userDto.createdAt(),
-                null
+                null,
+                userDto.isDeleted()
         );
     }
 }

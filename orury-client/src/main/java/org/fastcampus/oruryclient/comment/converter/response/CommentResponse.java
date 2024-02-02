@@ -2,7 +2,6 @@ package org.fastcampus.oruryclient.comment.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.global.constants.Constants;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
 
 import java.time.LocalDateTime;
@@ -28,8 +27,8 @@ public record CommentResponse(
                 commentDto.parentId(),
                 commentDto.likeCount(),
                 (commentDto.deleted() == 1) ? false : commentDto.userDto().id().equals(userId),
-                (commentDto.deleted() == 1) ? Constants.DELETED_USER.getMessage() : commentDto.userDto().nickname(),
-                (commentDto.deleted() == 1) ? Constants.DELETED_USER.getMessage() : commentDto.userDto().profileImage(),
+                commentDto.userDto().nickname(),
+                commentDto.userDto().profileImage(),
                 commentDto.createdAt(),
                 commentDto.updatedAt(),
                 (commentDto.deleted() == 1) ? false : isLike,

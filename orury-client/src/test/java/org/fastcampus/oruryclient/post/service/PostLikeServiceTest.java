@@ -1,6 +1,7 @@
 package org.fastcampus.oruryclient.post.service;
 
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.model.PostLikePK;
 import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
@@ -33,7 +34,7 @@ class PostLikeServiceTest {
     void setUp() {
         postLikeRepository = mock(PostLikeRepository.class);
         postRepository = mock(PostRepository.class);
-        postLikeService = new PostLikeService(postLikeRepository, postRepository);
+        postLikeService = new PostLikeServiceImpl(postLikeRepository, postRepository);
     }
 
     @Test
@@ -138,7 +139,8 @@ class PostLikeServiceTest {
                 LocalDate.now(),
                 "test.jpg",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                NumberConstants.IS_NOT_DELETED
         );
     }
 

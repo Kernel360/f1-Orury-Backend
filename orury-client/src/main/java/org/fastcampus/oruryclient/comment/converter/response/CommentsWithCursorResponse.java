@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.comment.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 
 import java.util.Comparator;
 import java.util.List;

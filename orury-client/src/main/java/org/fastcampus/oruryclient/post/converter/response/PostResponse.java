@@ -41,8 +41,8 @@ public record PostResponse(
                 postDto.userDto()
                         .id()
                         .equals(userDto.id()),
-                userDto.nickname(),
-                userDto.profileImage(),
+                postDto.userDto().nickname(),
+                postDto.userDto().profileImage(),
                 isLike
         );
     }
