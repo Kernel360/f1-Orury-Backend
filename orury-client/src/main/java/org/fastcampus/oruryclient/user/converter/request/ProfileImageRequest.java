@@ -19,7 +19,8 @@ public record ProfileImageRequest(
                 userDto.birthday(),
                 profileImage,
                 userDto.createdAt(),
-                null
+                null,
+                userDto.isDeleted()
         );
     }
 }

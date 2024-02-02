@@ -1,7 +1,7 @@
 package org.fastcampus.oruryclient.auth.oauth;
 
 import lombok.RequiredArgsConstructor;
-import org.fastcampus.oruryclient.global.constants.Constants;
+import org.fastcampus.orurydomain.global.constants.Constants;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

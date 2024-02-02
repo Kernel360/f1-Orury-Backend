@@ -1,6 +1,6 @@
 package org.fastcampus.oruryclient.global;
 
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 
 import java.util.List;
 

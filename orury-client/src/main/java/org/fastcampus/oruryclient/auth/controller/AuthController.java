@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
 import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
+import org.fastcampus.oruryclient.auth.converter.request.RefreshTokenRequest;
 import org.fastcampus.oruryclient.auth.converter.request.SignUpRequest;
 import org.fastcampus.oruryclient.auth.converter.response.LoginResponse;
 import org.fastcampus.oruryclient.auth.converter.response.SignUpResponse;
@@ -77,7 +78,7 @@ public class AuthController {
 
     @Operation(summary = "토큰 재발급", description = "기존 토큰을 받아, Access토큰과 Refresh토큰 모두 재발급하여 돌려준다.")
     @PostMapping("/refresh")
-    public ApiResponse<JwtToken> reissueJwtTokens(@RequestBody JwtToken request) {
+    public ApiResponse<JwtToken> reissueJwtTokens(@RequestBody RefreshTokenRequest request) {
 
         JwtToken jwtToken = jwtTokenProvider.reissueJwtTokens(request.refreshToken());
 

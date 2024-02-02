@@ -1,10 +1,11 @@
 package org.fastcampus.oruryclient.comment.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -22,9 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -34,7 +32,6 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
 
-    @Logging
     @Transactional
     public void createComment(CommentDto commentDto) {
         commentRepository.save(commentDto.toEntity());
@@ -70,13 +67,11 @@ public class CommentService {
                 .toList();
     }
 
-    @Logging
     @Transactional
     public void updateComment(CommentDto commentDto) {
         commentRepository.save(commentDto.toEntity());
     }
 
-    @Logging
     @Transactional
     public void deleteComment(CommentDto commentDto) {
         CommentDto deletingCommentDto = CommentDto.of(

@@ -1,17 +1,14 @@
 package org.fastcampus.oruryclient.post.service;
 
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.log.Logging;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurycommon.util.S3Repository;
-import org.fastcampus.orurydomain.comment.db.model.Comment;
-import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
-import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
-import org.fastcampus.orurydomain.post.db.repository.PostLikeRepository;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -25,20 +22,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final CommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
     private final S3Repository s3Repository;
 
-    @Logging
     @Transactional
     public void createPost(PostDto postDto, MultipartFile... images) {
         imageUploadAndSave(postDto, images);
@@ -86,26 +76,15 @@ public class PostService {
         return posts.map(PostDto::from);
     }
 
-    @Logging
     @Transactional
     public void updatePost(PostDto postDto, MultipartFile... images) {
         oldS3ImagesDelete(postDto);
         imageUploadAndSave(postDto, images);
     }
 
-    @Logging
     @Transactional
     public void deletePost(PostDto postDto) {
         oldS3ImagesDelete(postDto);
-        postLikeRepository.deleteByPostLikePK_PostId(postDto.id());
-
-        List<Comment> comments = commentRepository.findByPost_Id(postDto.id());
-        comments.forEach(
-                comment -> {
-                    commentLikeRepository.deleteByCommentLikePK_CommentId(comment.getId());
-                    commentRepository.delete(comment);
-                }
-        );
         postRepository.delete(postDto.toEntity());
     }
 

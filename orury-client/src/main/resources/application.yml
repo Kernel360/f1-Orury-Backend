@@ -95,11 +95,6 @@ cloud:
 jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
----
-
-spring:
-  config.activate.on-profile: test
-  datasource.url: jdbc:h2:mem:testdb
 
 ---
 spring:

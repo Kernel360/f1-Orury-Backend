@@ -2,25 +2,23 @@ package org.fastcampus.oruryclient.gym.controller;
 
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
-import org.fastcampus.oruryclient.global.constants.NumberConstants;
 import org.fastcampus.oruryclient.gym.converter.message.GymMessage;
-import org.fastcampus.oruryclient.gym.converter.request.GymSearchRequest;
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -152,7 +150,10 @@ class GymControllerTest extends ControllerTest {
     void when_ExistingSearchResult_Then_GymDtosSuccessFully() throws Exception {
         //given
         Long userId = NumberConstants.USER_ID;
-        GymSearchRequest request = createGymSearchRequest();
+        String searchWord = "SearchWord for TestCode";
+        float latitude = 123.456f;
+        float longitude = 123.456f;
+
         GymDto gymDto1 = createGymDto(1L);
         GymDto gymDto2 = createGymDto(2L);
         GymDto gymDto3 = createGymDto(3L);
@@ -177,9 +178,10 @@ class GymControllerTest extends ControllerTest {
 
         //when & then
         mvc.perform(get("/api/v1/gyms/search")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+                        .param("search_word", searchWord)
+                        .param("latitude", String.valueOf(latitude))
+                        .param("longitude", String.valueOf(longitude))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(message.getMessage()))
                 .andExpect(jsonPath("$.data[0].is_like").value(true))
@@ -203,7 +205,9 @@ class GymControllerTest extends ControllerTest {
     @Test
     void when_NotExistingSearchResult_Then_NothingInData() throws Exception {
         //given
-        GymSearchRequest request = createGymSearchRequest();
+        String searchWord = "SearchWord for TestCode";
+        float latitude = 123.456f;
+        float longitude = 123.456f;
         List<GymDto> gymDtos = List.of();
 
         GymMessage message = GymMessage.GYM_READ;
@@ -213,9 +217,10 @@ class GymControllerTest extends ControllerTest {
 
         //when & then
         mvc.perform(get("/api/v1/gyms/search")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+                        .param("search_word", searchWord)
+                        .param("latitude", String.valueOf(latitude))
+                        .param("longitude", String.valueOf(longitude))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(message.getMessage()))
                 .andExpect(jsonPath("$.data").isEmpty())
@@ -273,7 +278,8 @@ class GymControllerTest extends ControllerTest {
                 null,
                 "userProfileImage",
                 null,
-                null
+                null,
+                NumberConstants.IS_NOT_DELETED
         );
     }
 
@@ -293,9 +299,5 @@ class GymControllerTest extends ControllerTest {
                 LocalDateTime.of(2024, 1, 1, 14, 23),
                 LocalDateTime.of(2024, 1, 25, 4, 56)
         );
-    }
-
-    private static GymSearchRequest createGymSearchRequest() {
-        return new GymSearchRequest("SearchWord for TestCode", 123.456f, 123.456f);
     }
 }

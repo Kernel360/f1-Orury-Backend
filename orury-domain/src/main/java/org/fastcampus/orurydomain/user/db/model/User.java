@@ -41,7 +41,10 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    @Column(name = "is_deleted")
+    private int isDeleted;
+
+    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, int isDeleted) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -52,9 +55,10 @@ public class User extends AuditingField {
         this.profileImage = profileImage;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
     }
 
-    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt);
+    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, int isDeleted) {
+        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, isDeleted);
     }
 }
