@@ -22,7 +22,7 @@ public record GymsResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
-                gymDto.totalScore() / gymDto.reviewCount(),
+                (gymDto.reviewCount() == 0) ? 0 : gymDto.totalScore() / gymDto.reviewCount(),
                 gymDto.reviewCount(),
                 ImageUrlConverter.convertStringToList(gymDto.images())
                         .get(0),
