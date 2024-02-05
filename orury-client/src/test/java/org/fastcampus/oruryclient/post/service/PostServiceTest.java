@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.post.service;
 
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
@@ -36,12 +37,13 @@ import static org.mockito.Mockito.*;
 class PostServiceTest {
 
     private PostRepository postRepository;
+    private S3Repository s3Repository;
     private PostService postService;
 
     @BeforeEach
     public void setUp() {
         postRepository = mock(PostRepository.class);
-        S3Repository s3Repository = mock(S3Repository.class);
+        s3Repository = mock(S3Repository.class);
         postService = new PostService(postRepository, s3Repository);
     }
 
@@ -368,13 +370,14 @@ class PostServiceTest {
                 createPost(2L, NumberConstants.USER_ID),
                 createPost(1L, NumberConstants.USER_ID)
         );
-
+        List<String> thumbnails = List.of("image1", "image2", "image3");
         List<PostDto> expectPostDtos = posts.stream()
-                .map(PostDto::from)
+                .map(post -> PostDto.from(post, ImageUrlConverter.convertListToString(thumbnails)))
                 .toList();
 
 
         given(postRepository.findByUserIdOrderByIdDesc(anyLong(), any())).willReturn(posts);
+        given(s3Repository.getUrls(anyString(), anyString())).willReturn(thumbnails);
 
 
         // when
@@ -405,20 +408,21 @@ class PostServiceTest {
                 createPost(11L, NumberConstants.USER_ID),
                 createPost(10L, NumberConstants.USER_ID)
         );
-
+        List<String> thumbnails = List.of("image1", "image2", "image3");
         List<PostDto> expectPostDtos = posts.stream()
-                .map(PostDto::from)
+                .map(post -> PostDto.from(post, ImageUrlConverter.convertListToString(thumbnails)))
                 .toList();
 
 
         given(postRepository.findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(posts);
+        given(s3Repository.getUrls(anyString(), anyString())).willReturn(thumbnails);
 
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
 
         // then
-        assertEquals(resultPostDtos, expectPostDtos);
+        assertEquals(expectPostDtos, resultPostDtos);
         then(postRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
         then(postRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
