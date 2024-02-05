@@ -4,9 +4,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.orurycommon.config.SlackMessage;
+import org.fastcampus.orurycommon.error.code.LogTemplate;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -18,8 +22,10 @@ import java.util.Arrays;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@RequiredArgsConstructor
 @Component
 public class LoggerFilter extends OncePerRequestFilter {
+    private final SlackMessage slackMessage;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,8 +48,13 @@ public class LoggerFilter extends OncePerRequestFilter {
         // response 정보
         String responseHeaderValues = extractResponseHeader(res);
         String responseBody = new String(res.getContentAsByteArray());
+
         log.info("=== URI : {} , HTTP Method : {} , Header : {} , ResponseBody : {}", uri, method, responseHeaderValues, responseBody);
 
+        if (res.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            var template = LogTemplate.of(uri, requestBody, requestPart, responseBody);
+            slackMessage.send(template);
+        }
         res.copyBodyToResponse();
     }
 
@@ -80,7 +91,8 @@ public class LoggerFilter extends OncePerRequestFilter {
     }
 
     private String extractRequestPart(HttpServletRequest request) throws ServletException, IOException {
-        if (request.getContentType() == null || !request.getContentType().startsWith("multipart"))
+        if (request.getContentType() == null || !request.getContentType()
+                .startsWith("multipart"))
             return null;
 
         var multiparts = request.getParts();
@@ -89,7 +101,8 @@ public class LoggerFilter extends OncePerRequestFilter {
 
         multiparts.forEach(part -> {
 
-            String partValue = (part.getHeader("Content-Disposition").contains("filename="))
+            String partValue = (part.getHeader("Content-Disposition")
+                    .contains("filename="))
                     ? extractFileName(part.getHeader("Content-Disposition"))
                     : request.getParameter(part.getName());
 
@@ -106,8 +119,11 @@ public class LoggerFilter extends OncePerRequestFilter {
 
     private String extractFileName(String partHeader) {
         for (String cd : partHeader.split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                String fileName = cd.substring(cd.indexOf("=") + 1).trim().replace("\"", "");
+            if (cd.trim()
+                    .startsWith("filename")) {
+                String fileName = cd.substring(cd.indexOf("=") + 1)
+                        .trim()
+                        .replace("\"", "");
                 int index = fileName.lastIndexOf(File.separator);
                 return fileName.substring(index + 1);
             }
