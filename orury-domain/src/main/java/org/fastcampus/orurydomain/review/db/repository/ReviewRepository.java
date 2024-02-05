@@ -12,6 +12,8 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByGymId(Long gymId);
 
+    List<Review> findByUser_Id(Long userId);
+
     boolean existsByUser_IdAndGym_Id(Long userId, Long gymId);
 
     List<Review> findByGymIdOrderByIdDesc(Long gymId, Pageable pageable);

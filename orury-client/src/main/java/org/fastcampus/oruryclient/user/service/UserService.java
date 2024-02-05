@@ -70,6 +70,7 @@ public class UserService {
     @Transactional
     public void deleteUser(UserDto userDto) {
         deleteReviewReactionsByUserId(userDto.id());
+        deleteReviewsByUserId(userDto.id());
         deleteGymLikesByUserId(userDto.id());
         deleteCommentLikesByUserId(userDto.id());
         deletePostLikesByUserId(userDto.id());
@@ -102,6 +103,10 @@ public class UserService {
                     reviewReactionRepository.delete(reviewReaction);
                 }
         );
+    }
+
+    private void deleteReviewsByUserId(Long userId) {
+        reviewRepository.deleteAll(reviewRepository.findByUser_Id(userId));
     }
 
     private void deleteGymLikesByUserId(Long userId) {
