@@ -1,5 +1,23 @@
 package org.fastcampus.oruryclient.review.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
 import org.fastcampus.oruryclient.review.converter.message.ReviewMessage;
@@ -15,46 +33,43 @@ import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@Disabled
+//@Disabled
 @DisplayName("[Controller] 리뷰 관련 테스트")
 @WithUserPrincipal
 class ReviewControllerTest extends ControllerTest {
 
-    @DisplayName("[POST] requestbody(content, images, score, gymId)로 리뷰 정보를 받아, 리뷰를 생성한다. - 성공")
+    @DisplayName("[POST] 유효한 요청이고, 이미지가 있을 때, 리뷰를 생성한다. (이미지 있는 경우)- 성공")
     @Test
-    void given_ValidateIdAndRequestReview_When_CreateReview_Then_Successfully() throws Exception {
+    void given_ValidateIdAndRequestReviewAndExistImage_When_CreateReview_Then_Successfully() throws Exception {
         //given
         UserDto userDto = createUserDto();
         GymDto gymDto = createGymDto();
-        ReviewCreateRequest request = createReviewCreateRequest();
-        ReviewDto reviewDto = request.toDto(userDto, gymDto);
+
+        ReviewCreateRequest reviewCreateRequest = createReviewCreateRequest();
+        MockMultipartFile request = createRequestPart(reviewCreateRequest);
+        MockMultipartFile image = createImagePart();
+
         ReviewMessage code = ReviewMessage.REVIEW_CREATED;
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
         given(gymService.getGymDtoById(anyLong())).willReturn(gymDto);
 
         //when & then
-        mvc.perform(post("/api/v1/reviews")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(POST, "/api/v1/reviews")
+                        .file(request)
+                        .file(image)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data").isEmpty())
@@ -67,35 +82,70 @@ class ReviewControllerTest extends ControllerTest {
         then(reviewService).should(times(1))
                 .isExist(any(), any());
         then(reviewService).should(times(1))
-                .createReview(reviewDto);
+                .createReview(any(), any());
+    }
+
+    @DisplayName("[POST] 유효한 요청이고, 이미지가 없을 때, 리뷰를 생성한다. (이미지 없는 경우)- 성공")
+    @Test
+    void given_ValidateIdAndRequestReviewAndNotExistImage_When_CreateReview_Then_Successfully() throws Exception {
+        //given
+        UserDto userDto = createUserDto();
+        GymDto gymDto = createGymDto();
+
+        ReviewCreateRequest reviewCreateRequest = createReviewCreateRequest();
+        MockMultipartFile request = createRequestPart(reviewCreateRequest);
+
+        ReviewMessage code = ReviewMessage.REVIEW_CREATED;
+
+        given(userService.getUserDtoById(anyLong())).willReturn(userDto);
+        given(gymService.getGymDtoById(anyLong())).willReturn(gymDto);
+
+        //when & then
+        mvc.perform(multipart(POST, "/api/v1/reviews")
+                        .file(request)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(code.getMessage()))
+                .andExpect(jsonPath("$.data").isEmpty())
+        ;
+
+        then(userService).should(times(1))
+                .getUserDtoById(anyLong());
+        then(gymService).should(times(1))
+                .getGymDtoById(anyLong());
+        then(reviewService).should(times(1))
+                .isExist(any(), any());
+        then(reviewService).should(times(1))
+                .createReview(any(), any());
     }
 
     @DisplayName("[POST] 인증된 UserId로 UserDto를 가져오는 것을 실패했을 경우, 리뷰를 생성 시 예외 발생 - 실패")
     @Test
-    void given_GymIdAndRequestReview_When_CreateReview_Then_NotFoundException() throws Exception {
+    void given_NotValidUserId_When_CreateReview_Then_NotFoundException() throws Exception {
         //given
-        UserDto userDto = createUserDto();
-        GymDto gymDto = createGymDto();
-        ReviewCreateRequest request = createReviewCreateRequest();
-        ReviewDto reviewDto = request.toDto(userDto, gymDto);
+        ReviewCreateRequest reviewCreateRequest = createReviewCreateRequest();
+        MockMultipartFile request = createRequestPart(reviewCreateRequest);
+
         UserErrorCode code = UserErrorCode.NOT_FOUND;
 
         given(userService.getUserDtoById(anyLong())).willThrow(new BusinessException(code));
-        given(gymService.getGymDtoById(anyLong())).willReturn(gymDto);
 
         //when & then
-        mvc.perform(post("/api/v1/reviews")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(POST, "/api/v1/reviews")
+                        .file(request)
+                        .with(csrf()))
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
+        then(userService).should(times(1))
+                .getUserDtoById(anyLong());
+        then(gymService).should(times(0))
+                .getGymDtoById(anyLong());
         then(reviewService).should(times(0))
                 .isExist(any(), any());
         then(reviewService).should(times(0))
-                .createReview(reviewDto);
+                .createReview(any(), any());
     }
 
     @DisplayName("[POST] 유효하지 않은 gymId를 포함한 리뷰 정보를 받아, 리뷰를 생성 시 예외 발생 - 실패")
@@ -103,27 +153,30 @@ class ReviewControllerTest extends ControllerTest {
     void given_UserIdAndRequestReview_When_CreateReview_Then_NotFoundException() throws Exception {
         //given
         UserDto userDto = createUserDto();
-        GymDto gymDto = createGymDto();
-        ReviewCreateRequest request = createReviewCreateRequest();
-        ReviewDto reviewDto = request.toDto(userDto, gymDto);
+        ReviewCreateRequest reviewCreateRequest = createReviewCreateRequest();
+        MockMultipartFile request = createRequestPart(reviewCreateRequest);
+
         GymErrorCode code = GymErrorCode.NOT_FOUND;
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
         given(gymService.getGymDtoById(anyLong())).willThrow(new BusinessException(code));
 
         //when & then
-        mvc.perform(post("/api/v1/reviews")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(POST, "/api/v1/reviews")
+                        .file(request)
+                        .with(csrf()))
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(userService).should(times(1)).getUserDtoById(anyLong());
-        then(gymService).should(times(1)).getGymDtoById(anyLong());
-        then(reviewService).should(times(0)).isExist(any(), any());
-        then(reviewService).should(times(0)).createReview(reviewDto);
+        then(userService).should(times(1))
+                .getUserDtoById(anyLong());
+        then(gymService).should(times(1))
+                .getGymDtoById(anyLong());
+        then(reviewService).should(times(0))
+                .isExist(any(), any());
+        then(reviewService).should(times(0))
+                .createReview(any(), any());
     }
 
     @DisplayName("[POST] 이미 작성된 리뷰가 있을 경우, 리뷰를 생성 시 예외 발생 - 실패")
@@ -132,8 +185,9 @@ class ReviewControllerTest extends ControllerTest {
         //given
         UserDto userDto = createUserDto();
         GymDto gymDto = createGymDto();
-        ReviewCreateRequest request = createReviewCreateRequest();
-        ReviewDto reviewDto = request.toDto(userDto, gymDto);
+        ReviewCreateRequest reviewCreateRequest = createReviewCreateRequest();
+        MockMultipartFile request = createRequestPart(reviewCreateRequest);
+
         ReviewErrorCode code = ReviewErrorCode.BAD_REQUEST;
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
@@ -141,36 +195,67 @@ class ReviewControllerTest extends ControllerTest {
         willThrow(new BusinessException(code)).given(reviewService).isExist(any(), any());
 
         //when & then
-        mvc.perform(post("/api/v1/reviews")
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(POST, "/api/v1/reviews")
+                        .file(request)
+                        .with(csrf()))
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
 
-        then(userService).should(times(1)).getUserDtoById(anyLong());
-        then(gymService).should(times(1)).getGymDtoById(anyLong());
-        then(reviewService).should(times(1)).isExist(any(), any());
-        then(reviewService).should(times(0)).createReview(reviewDto);
+        then(userService).should(times(1))
+                .getUserDtoById(anyLong());
+        then(gymService).should(times(1))
+                .getGymDtoById(anyLong());
+        then(reviewService).should(times(1))
+                .isExist(any(), any());
+        then(reviewService).should(times(0))
+                .createReview(any(), any());
     }
 
-    @DisplayName("[PATCH] 기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다. - 성공")
+    @DisplayName("[PATCH] 기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다.(이미지 없는 경우) - 성공")
     @Test
     void given_RequestUpdateReview_When_UpdateRequest_Then_Successfully() throws Exception {
-
         // given
         ReviewDto beforeReviewDto = createReviewDto(1L);
-        ReviewUpdateRequest request = createReviewUpdateRequest();
+        ReviewUpdateRequest reviewUpdateRequest = createReviewUpdateRequest();
+        MockMultipartFile request = createRequestPart(reviewUpdateRequest);
+
         ReviewMessage code = ReviewMessage.REVIEW_UPDATED;
 
         given(reviewService.getReviewDtoById(anyLong())).willReturn(beforeReviewDto);
 
         //when & then
-        mvc.perform(patch("/api/v1/reviews/" + 1L)
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(PATCH, "/api/v1/reviews/" + 1L)
+                        .file(request)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(code.getMessage()))
+                .andExpect(jsonPath("$.data").isEmpty())
+        ;
+
+        then(reviewService).should(times(1)).getReviewDtoById(any());
+        then(reviewService).should(times(1)).isValidate(anyLong(), anyLong());
+        then(reviewService).should(times(1)).updateReview(any(), any(), any());
+    }
+
+    @DisplayName("[PATCH] 기존 리뷰를 불러온 후, 수정할 리뷰 정보를 받아, 리뷰를 수정한다. (이미지 있는 경우) - 성공")
+    @Test
+    void given_RequestUpdateReviewAndExistImage_When_UpdateRequest_Then_Successfully() throws Exception {
+        // given
+        ReviewDto beforeReviewDto = createReviewDto(1L);
+        ReviewUpdateRequest reviewUpdateRequest = createReviewUpdateRequest();
+        MockMultipartFile request = createRequestPart(reviewUpdateRequest);
+        MockMultipartFile image = createImagePart();
+
+        ReviewMessage code = ReviewMessage.REVIEW_UPDATED;
+
+        given(reviewService.getReviewDtoById(anyLong())).willReturn(beforeReviewDto);
+
+        //when & then
+        mvc.perform(multipart(PATCH, "/api/v1/reviews/" + 1L)
+                        .file(request)
+                        .file(image)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data").isEmpty())
@@ -184,19 +269,17 @@ class ReviewControllerTest extends ControllerTest {
     @DisplayName("[PATCH] 기존에 작성한 리뷰가 없을 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
     @Test
     void given_NotExistReview_When_UpdateRequest_Then_NotFoundException() throws Exception {
-
         // given
-        ReviewDto beforeReviewDto = createReviewDto(1L);
-        ReviewUpdateRequest request = createReviewUpdateRequest();
+        ReviewUpdateRequest reviewUpdateRequest = createReviewUpdateRequest();
+        MockMultipartFile request = createRequestPart(reviewUpdateRequest);
         ReviewErrorCode code = ReviewErrorCode.NOT_FOUND;
 
         given(reviewService.getReviewDtoById(anyLong())).willThrow(new BusinessException(code));
 
         //when & then
-        mvc.perform(patch("/api/v1/reviews/" + 1L)
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(PATCH, "/api/v1/reviews/" + 1L)
+                        .file(request)
+                        .with(csrf()))
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
@@ -209,20 +292,19 @@ class ReviewControllerTest extends ControllerTest {
     @DisplayName("[PATCH] 리뷰 작성자와 수정 요청자의 id가 일치하지 않는 경우, 리뷰 수정 실패로 예외 처리 발생 - 실패")
     @Test
     void given_NotMatchUserId_When_UpdateRequest_Then_ForbiddenException() throws Exception {
-
         //given
         ReviewDto beforeReviewDto = createReviewDto(1L);
-        ReviewUpdateRequest request = createReviewUpdateRequest();
+        ReviewUpdateRequest reviewUpdateRequest = createReviewUpdateRequest();
+        MockMultipartFile request = createRequestPart(reviewUpdateRequest);
         ReviewErrorCode code = ReviewErrorCode.FORBIDDEN;
 
         given(reviewService.getReviewDtoById(anyLong())).willReturn(beforeReviewDto);
         willThrow(new BusinessException(code)).given(reviewService).isValidate(anyLong(), anyLong());
 
         //when & then
-        mvc.perform(patch("/api/v1/reviews/" + 1L)
-                        .with(csrf())
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mvc.perform(multipart(PATCH, "/api/v1/reviews/" + 1L)
+                        .file(request)
+                        .with(csrf()))
                 .andExpect(status().is(code.getStatus()))
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
         ;
@@ -305,7 +387,7 @@ class ReviewControllerTest extends ControllerTest {
         //given
         Long cursor = 1L;
         GymDto gymDto = createGymDto();
-        Long userPrincipalId = NumberConstants.USER_ID;
+        //Long userPrincipalId = NumberConstants.USER_ID;
         ReviewMessage code = ReviewMessage.REVIEWS_READ;
 
         List<ReviewDto> reviewDtos = new ArrayList<>();
@@ -316,19 +398,19 @@ class ReviewControllerTest extends ControllerTest {
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
                     int myReaction = NumberConstants.INTERREST_REACTION;
-                    given(reviewReactionService.getReactionType(userPrincipalId, reviewDto.id())).willReturn(myReaction);
-                    return ReviewsResponse.of(reviewDto, userPrincipalId, myReaction);
+                    given(reviewReactionService.getReactionType(anyLong(), anyLong())).willReturn(myReaction);
+                    return ReviewsResponse.of(reviewDto, NumberConstants.USER_ID, myReaction);
                 })
                 .toList();
 
         ReviewsWithCursorResponse response = ReviewsWithCursorResponse.of(reviewsResponses, gymDto.name());
 
-        given(reviewService.getReviewDtosByGymId(anyLong(), anyLong(), any())).willReturn(reviewDtos);
         given(gymService.getGymDtoById(anyLong())).willReturn(gymDto);
+        given(reviewService.getReviewDtosByGymId(anyLong(), anyLong(), any())).willReturn(reviewDtos);
 
 
         //when & then
-        mvc.perform(get("/api/v1/reviews/" + 1L)
+        mvc.perform(get("/api/v1/reviews/gym/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
                         .param("cursor", "" + cursor))
@@ -340,9 +422,9 @@ class ReviewControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data.gym_name").value(response.gymName()))
         ;
 
+        then(gymService).should(times(1)).getGymDtoById(any());
         then(reviewService).should(times(1)).getReviewDtosByGymId(anyLong(), anyLong(), any());
         then(reviewReactionService).should(times(reviewDtos.size())).getReactionType(anyLong(), anyLong());
-        then(gymService).should(times(1)).getGymDtoById(any());
     }
 
     @DisplayName("[GET] 암장 id가 유효하지 않은 경우, 리뷰 조회 실패 예외처리 발생 - 실패")
@@ -355,7 +437,7 @@ class ReviewControllerTest extends ControllerTest {
         given(gymService.getGymDtoById(anyLong())).willThrow(new BusinessException(code));
 
         //when & then
-        mvc.perform(get("/api/v1/reviews/" + 1L)
+        mvc.perform(get("/api/v1/reviews/gym/" + 1L)
                         .with(csrf())
                         .contentType(APPLICATION_JSON)
                         .param("cursor", "" + 1L))
@@ -445,8 +527,25 @@ class ReviewControllerTest extends ControllerTest {
     private ReviewUpdateRequest createReviewUpdateRequest() {
         return ReviewUpdateRequest.of(
                 "update review content",
-                List.of(new String[]{"updateimage.png"}),
                 4.0f
+        );
+    }
+
+    private MockMultipartFile createImagePart() {
+        return new MockMultipartFile(
+                "TestImageName",
+                "testImageFileName",
+                MediaType.TEXT_PLAIN_VALUE,
+                "testImageFileDate".getBytes()
+        );
+    }
+
+    private MockMultipartFile createRequestPart(Object request) throws JsonProcessingException {
+        return new MockMultipartFile(
+                "request",
+                "testRequest",
+                MediaType.APPLICATION_JSON_VALUE,
+                mapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8)
         );
     }
 
