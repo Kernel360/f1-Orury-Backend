@@ -7,8 +7,8 @@ public record GymResponse(
         String kakaoId,
         String roadAddressName,
         String phone,
-        String x,
         String y,
+        String x,
         String addressName
 ) {
     public static GymResponse of(
@@ -16,8 +16,8 @@ public record GymResponse(
             String kakaoId,
             String roadAddressName,
             String phone,
-            String x,
             String y,
+            String x,
             String addressName
     ) {
         return new GymResponse(
@@ -25,8 +25,8 @@ public record GymResponse(
                 kakaoId,
                 roadAddressName,
                 phone,
-                x,
                 y,
+                x,
                 addressName
         );
     }
@@ -37,8 +37,8 @@ public record GymResponse(
                 docs.getId(),
                 docs.getRoadAddressName(),
                 docs.getPhone(),
-                docs.getX(),
                 docs.getY(),
+                docs.getX(),
                 docs.getAddressName()
         );
     }
@@ -54,8 +54,8 @@ public record GymResponse(
                 0,
                 0,
                 null,
-                x,
                 y,
+                x,
                 null,
                 phone,
                 null,
