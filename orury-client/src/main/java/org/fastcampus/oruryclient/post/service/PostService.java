@@ -63,7 +63,10 @@ public class PostService {
                 : postRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
         return posts.stream()
-                .map(PostDto::from)
+                .map(post -> {
+                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
+                    return PostDto.from(post, ImageUrlConverter.convertListToString(images));
+                })
                 .toList();
     }
 
