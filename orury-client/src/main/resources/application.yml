@@ -27,26 +27,18 @@ spring:
     username: ${LOCAL_DB_USER_NAME}
     password: ${LOCAL_DB_USER_PASSWORD}
   jpa:
-    show-sql: true
-    open-in-view: false
-    defer-datasource-initialization: true
-    generate-ddl: true
     properties:
-      hibernate.show_sql: true
-      hibernate.format_sql: true
-      hibernate.default_batch_fetch_size: 100
+      hibernate:
+        default_batch_fetch_size: 100
     hibernate.ddl-auto: validate
+    open-in-view: false
+
   sql.init.mode: always
-  data.rest:
-    base-path: /api
-    detection-strategy: annotated
-    baseline-on-migrate: true
+
   devtools:
     livereload:
       enabled: true
-  freemarker:
-    cache: false
-    prefix=file: src/main/resources/templates/
+
   security:
     oauth2:
       client:
@@ -100,6 +92,10 @@ slack:
   token: ENC(7Pd4U/iPDtDF5quQM5TzMXF7jsfv+QQYCDdckH+/T8vbz/QOYTOKX6iAGdqM5gRVusZ84cC93RpQE8qK1kW4f6tdoIf5GDu2)
   channel: ENC(9i8/M3HKZDCGoJWCM1B1Lg6ECmK4eudW)
 
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 ---
 spring:
   profiles:
