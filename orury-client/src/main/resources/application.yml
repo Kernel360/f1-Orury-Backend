@@ -96,6 +96,10 @@ jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
 
+slack:
+  token: ENC(7Pd4U/iPDtDF5quQM5TzMXF7jsfv+QQYCDdckH+/T8vbz/QOYTOKX6iAGdqM5gRVusZ84cC93RpQE8qK1kW4f6tdoIf5GDu2)
+  channel: ENC(9i8/M3HKZDCGoJWCM1B1Lg6ECmK4eudW)
+
 ---
 spring:
   profiles:
