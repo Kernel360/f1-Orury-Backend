@@ -22,6 +22,7 @@ public class FlywayConfig {
                 .dataSource(dataSource)
                 .load();
 
+        flyway.repair();
         flyway.migrate();
     }
 
