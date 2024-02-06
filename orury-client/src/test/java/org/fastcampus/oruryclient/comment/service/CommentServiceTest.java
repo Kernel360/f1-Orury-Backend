@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.comment.service;
 
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.model.CommentLike;
 import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
@@ -45,6 +46,7 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
     private CommentLikeRepository commentLikeRepository;
     private PostRepository postRepository;
+    private ImageUtils imageUtils;
     private CommentService commentService;
 
     @BeforeEach
@@ -52,7 +54,8 @@ class CommentServiceTest {
         commentRepository = mock(CommentRepository.class);
         commentLikeRepository = mock(CommentLikeRepository.class);
         postRepository = mock(PostRepository.class);
-        commentService = new CommentService(commentRepository, commentLikeRepository, postRepository);
+        imageUtils = mock(ImageUtils.class);
+        commentService = new CommentService(commentRepository, commentLikeRepository, postRepository, imageUtils);
     }
 
     @Test
@@ -105,16 +108,17 @@ class CommentServiceTest {
                 comment3_2,
                 comment3_3
         );
+        String commentUserImage = "userProfileImage";
         List<CommentDto> expectedCommentDtos = List.of(
-                CommentDto.from(comment1),
-                CommentDto.from(comment1_1),
-                CommentDto.from(comment1_2),
-                CommentDto.from(comment1_3),
-                CommentDto.from(comment2),
-                CommentDto.from(comment3),
-                CommentDto.from(comment3_1),
-                CommentDto.from(comment3_2),
-                CommentDto.from(comment3_3)
+                CommentDto.from(comment1, commentUserImage),
+                CommentDto.from(comment1_1, commentUserImage),
+                CommentDto.from(comment1_2, commentUserImage),
+                CommentDto.from(comment1_3, commentUserImage),
+                CommentDto.from(comment2, commentUserImage),
+                CommentDto.from(comment3, commentUserImage),
+                CommentDto.from(comment3_1, commentUserImage),
+                CommentDto.from(comment3_2, commentUserImage),
+                CommentDto.from(comment3_3, commentUserImage)
         );
 
         when(commentRepository.findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable))
@@ -125,6 +129,8 @@ class CommentServiceTest {
                 .thenReturn(List.of());
         when(commentRepository.findByParentIdOrderByIdAsc(3L))
                 .thenReturn(childCommentsFor3);
+        when(imageUtils.getUserImageUrl(commentUserImage))
+                .thenReturn(commentUserImage);
 
         // when
         List<CommentDto> commentDtos = commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);

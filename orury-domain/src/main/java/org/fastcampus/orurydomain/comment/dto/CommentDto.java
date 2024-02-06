@@ -58,6 +58,20 @@ public record CommentDto(
         );
     }
 
+    public static CommentDto from(Comment entity, String commentUserImage) {
+        return CommentDto.of(
+                entity.getId(),
+                entity.getContent(),
+                entity.getParentId(),
+                entity.getLikeCount(),
+                PostDto.from(entity.getPost()),
+                UserDto.from(entity.getUser(), commentUserImage),
+                entity.getDeleted(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
     public Comment toEntity() {
         return Comment.of(
                 id,
