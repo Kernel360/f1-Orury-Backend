@@ -1,33 +1,32 @@
 package org.fastcampus.oruryclient.auth.strategy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.fastcampus.oruryclient.auth.converter.message.AuthMessage;
 import org.fastcampus.oruryclient.auth.converter.request.LoginRequest;
 import org.fastcampus.oruryclient.auth.jwt.JwtTokenProvider;
+import org.fastcampus.oruryclient.auth.strategy.applefeign.AppleAuthClient;
 import org.fastcampus.orurycommon.error.code.AuthErrorCode;
 import org.fastcampus.orurycommon.error.exception.AuthException;
+import org.fastcampus.orurycommon.util.TokenDecoder;
 import org.fastcampus.orurydomain.auth.dto.JwtToken;
 import org.fastcampus.orurydomain.auth.dto.LoginDto;
-import org.fastcampus.orurydomain.auth.dto.kakao.KakaoAccountDto;
-import org.fastcampus.orurydomain.auth.dto.kakao.KakaoTokenDto;
+import org.fastcampus.orurydomain.auth.dto.apple.AppleIdTokenPayload;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.fastcampus.orurydomain.user.db.repository.UserRepository;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
+import java.security.PrivateKey;
+import java.security.Security;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Base64;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -37,23 +36,28 @@ public class AppleLoginStrategy implements LoginStrategy {
     private final int SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AppleAuthClient appleAuthClient;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    String kakaoClientId;
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    String kakaoRedirectURI;
-    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    String kakaoClientSecret;
+    @Value("${oauth-login.provider.apple.grant-type}")
+    String grantType;
+    @Value("${oauth-login.provider.apple.client-id}")
+    String clientId;
+    @Value("${oauth-login.provider.apple.key-id}")
+    String keyId;
+    @Value("${oauth-login.provider.apple.team-id}")
+    String teamId;
+    @Value("${oauth-login.provider.apple.audience}")
+    String audience;
+    @Value("${oauth-login.provider.apple.private-key}")
+    String privateKey;
 
     @Override
     public LoginDto login(LoginRequest request) {
         String code = request.code();
-        int signUpType = request.signUpType();
 
-        String kakaoToken = getKakaoToken(code).accessToken();
-        String email = getEmailFromToken(kakaoToken);
+        String email = getEmailFromAuthorizationCode(code);
 
-        // 카카오 이메일이 없는 고객인 경우
+        // 애플 이메일이 없는 고객인 경우
         if (email == null) {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
@@ -70,75 +74,47 @@ public class AppleLoginStrategy implements LoginStrategy {
         return SIGN_UP_TYPE;
     }
 
-    private KakaoTokenDto getKakaoToken(String code) {
+    public String getEmailFromAuthorizationCode(String authorizationCode) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        String idToken = appleAuthClient.getIdToken(
+                clientId,
+                generateClientSecret(),
+                grantType,
+                authorizationCode
+        ).idToken();
 
-
-        // Http Response Body 객체 생성
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code"); //카카오 공식문서 기준 authorization_code 로 고정
-        params.add("client_id", kakaoClientId); // 카카오 Dev 앱 REST API 키
-        params.add("redirect_uri", kakaoRedirectURI); // 카카오 Dev redirect uri
-        params.add("code", code); // 프론트에서 인가 코드 요청시 받은 인가 코드값
-        params.add("client_secret", kakaoClientSecret); // 카카오 Dev 카카오 로그인 Client Secret
-
-        // 헤더와 바디 합치기 위해 Http Entity 객체 생성
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-        // 카카오로부터 Access token 받아오기
-        RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> accessTokenResponse = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        // JSON Parsing (-> KakaoTokenDto)
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        KakaoTokenDto kakaoTokenDto = null;
-        try {
-            kakaoTokenDto = objectMapper.readValue(accessTokenResponse.getBody(), KakaoTokenDto.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return kakaoTokenDto;
+        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class).email();
     }
 
-    public String getEmailFromToken(String kakaoAccessToken) {
-        RestTemplate rt = new RestTemplate();
+    private String generateClientSecret() {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + kakaoAccessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        LocalDateTime expiration = LocalDateTime.now().plusMinutes(5);
 
-        HttpEntity<MultiValueMap<String, String>> accountInfoRequest = new HttpEntity<>(headers);
+        return Jwts.builder()
+                .header().keyId(keyId).and()
+                .issuer(teamId)
+                .audience().add(audience).and()
+                .subject(clientId)
+                .expiration(Date.from(expiration.atZone(ZoneId.systemDefault()).toInstant()))
+                .issuedAt(new Date())
+                .signWith(getPrivateKey())
+//                .signWith(getPrivateKey(), SignatureAlgorithm.ES256)
+                .compact();
+    }
 
-        // POST 방식으로 API 서버에 요청 후 response 받아옴
-        ResponseEntity<String> accountInfoResponse = rt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                accountInfoRequest,
-                String.class
-        );
+    private PrivateKey getPrivateKey() {
 
-        // JSON Parsing (-> kakaoAccountDto)
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        KakaoAccountDto kakaoAccountDto = null;
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+
         try {
-            kakaoAccountDto = objectMapper.readValue(accountInfoResponse.getBody(), KakaoAccountDto.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKey);
 
-        return kakaoAccountDto.kakaoAccount().email();
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKeyBytes);
+            return converter.getPrivateKey(privateKeyInfo);
+        } catch (Exception e) {
+            throw new RuntimeException("Error converting private key from String", e);
+        }
     }
 
     private LoginDto getLoginDto(User user) {
