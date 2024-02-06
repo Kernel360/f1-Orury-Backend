@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum S3Folder {
     POST("post"),
     REVIEW("review"),
-    USER("user");
+    USER("user"),
+    GYM("gym");
 
     private final String name;
 
