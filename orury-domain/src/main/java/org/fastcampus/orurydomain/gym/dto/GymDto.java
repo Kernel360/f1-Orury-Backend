@@ -6,6 +6,7 @@ import org.fastcampus.orurydomain.gym.db.model.Gym;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
+import java.util.List;
 
 /**
  * DTO for {@link org.fastcampus.orurydomain.gym.db.model.Gym}
@@ -19,7 +20,7 @@ public record GymDto(
         Float totalScore,
         int reviewCount,
         int likeCount,
-        String images,
+        List<String> images,
         double latitude,
         double longitude,
         String brand,
@@ -41,7 +42,7 @@ public record GymDto(
             Float totalScore,
             int reviewCount,
             int likeCount,
-            String images,
+            List<String> images,
             String latitude,
             String longitude,
             String brand,
