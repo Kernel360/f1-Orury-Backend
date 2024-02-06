@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MypageResponse(
+        Long id,
         String email,
         String nickname,
         int signUpType,
@@ -18,6 +19,7 @@ public record MypageResponse(
 ) {
     public static MypageResponse of(UserDto userDto) {
         return new MypageResponse(
+                userDto.id(),
                 userDto.email(),
                 userDto.nickname(),
                 userDto.signUpType(),
