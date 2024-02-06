@@ -139,8 +139,10 @@ class GymServiceTest {
     void when_CurrentTimeIsBetweenBusinessHours_Then_ReturnTrue() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().minusMinutes(1L),
-                LocalTime.now().plusMinutes(1L)
+                LocalTime.now()
+                        .minusMinutes(1L),
+                LocalTime.now()
+                        .plusMinutes(1L)
         );
 
         //when
@@ -155,8 +157,10 @@ class GymServiceTest {
     void when_CurrentTimeIsBeforeBusinessHours_Then_ReturnFalse() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().plusMinutes(1L),
-                LocalTime.now().plusMinutes(2L)
+                LocalTime.now()
+                        .plusMinutes(1L),
+                LocalTime.now()
+                        .plusMinutes(2L)
         );
 
         //when
@@ -171,8 +175,10 @@ class GymServiceTest {
     void when_CurrentTimeIsAfterBusinessHours_Then_ReturnFalse() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().minusMinutes(2L),
-                LocalTime.now().minusMinutes(1L)
+                LocalTime.now()
+                        .minusMinutes(2L),
+                LocalTime.now()
+                        .minusMinutes(1L)
         );
 
         //when
@@ -246,7 +252,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 "123.456",
                 "123.456",
                 "gymBrand",
@@ -275,7 +281,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 latitude,
                 longitude,
                 "gymBrand",
@@ -304,7 +310,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",
@@ -335,7 +341,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",

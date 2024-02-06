@@ -68,7 +68,8 @@ class CommentServiceTest {
         verify(commentRepository, times(1))
                 .save(comment);
         verify(postRepository, times(1))
-                .increaseCommentCount(comment.getPost().getId());
+                .increaseCommentCount(comment.getPost()
+                        .getId());
     }
 
     @Test
@@ -200,7 +201,8 @@ class CommentServiceTest {
         commentService.isValidate(CommentDto.from(comment), UserDto.from(user));
 
         // then
-        assertEquals(comment.getUser().getId(), user.getId());
+        assertEquals(comment.getUser()
+                .getId(), user.getId());
     }
 
     @Test
@@ -233,7 +235,8 @@ class CommentServiceTest {
 
         // then
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -252,7 +255,8 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -282,7 +286,8 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.FORBIDDEN.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -427,8 +432,10 @@ class CommentServiceTest {
 
         //then
         assertEquals(expectCommentDtos, resultCommentDtos);
-        then(commentRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(commentRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(commentRepository).should(times(1))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(0))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -462,8 +469,10 @@ class CommentServiceTest {
 
         //then
         assertEquals(expectCommentDtos, resultCommentDtos);
-        then(commentRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(commentRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(commentRepository).should(times(0))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(1))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     private static User createUser() {
@@ -506,7 +515,7 @@ class CommentServiceTest {
                 0,
                 0,
                 0,
-                "postImage",
+                List.of(),
                 1,
                 createUser(),
                 LocalDateTime.now(),
