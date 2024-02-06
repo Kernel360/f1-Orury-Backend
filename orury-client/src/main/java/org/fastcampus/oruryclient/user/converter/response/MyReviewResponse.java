@@ -3,7 +3,6 @@ package org.fastcampus.oruryclient.user.converter.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
-import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
@@ -18,7 +17,9 @@ public record MyReviewResponse(
         float score,
         List<MyReviewResponse.ReviewReactionCount> reviewReactionCount,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Long gymId,
+        String gymName
 ) implements IdIdentifiable {
     public static MyReviewResponse of(ReviewDto reviewDto) {
         List<String> imagesAsList = ImageUrlConverter.convertStringToList(reviewDto.images());
@@ -38,26 +39,10 @@ public record MyReviewResponse(
                 reviewDto.score(),
                 reviewReactionCount,
                 reviewDto.createdAt(),
-                reviewDto.updatedAt()
+                reviewDto.updatedAt(),
+                reviewDto.gymDto().id(),
+                reviewDto.gymDto().name()
         );
-    }
-
-
-    private static String mapReactionType(int reaction) {
-        switch (reaction) {
-            case NumberConstants.THUMB_REACTION:
-                return "thumb";
-            case NumberConstants.INTERREST_REACTION:
-                return "interest";
-            case NumberConstants.HELP_REACTION:
-                return "help";
-            case NumberConstants.LIKE_REACTION:
-                return "like";
-            case NumberConstants.ANGRY_REACTION:
-                return "angry";
-            default:
-                return null;
-        }
     }
 
     private static record ReviewReactionCount(String type, int count) {

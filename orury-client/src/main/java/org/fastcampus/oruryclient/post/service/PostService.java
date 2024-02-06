@@ -41,7 +41,11 @@ public class PostService {
                 : postRepository.findByCategoryAndIdLessThanOrderByIdDesc(category, cursor, pageable);
 
         return posts.stream()
-                .map(PostDto::from)
+                .map(post -> {
+                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
+                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
+                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
+                })
                 .toList();
     }
 
@@ -52,7 +56,11 @@ public class PostService {
                 : postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
 
         return posts.stream()
-                .map(PostDto::from)
+                .map(post -> {
+                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
+                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
+                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
+                })
                 .toList();
     }
 
@@ -63,7 +71,11 @@ public class PostService {
                 : postRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
         return posts.stream()
-                .map(PostDto::from)
+                .map(post -> {
+                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
+                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
+                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
+                })
                 .toList();
     }
 
@@ -73,7 +85,11 @@ public class PostService {
                 (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now()
                         .minusMonths(1L), pageable);
 
-        return posts.map(PostDto::from);
+        return posts.map(post -> {
+            var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
+            var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
+            return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
+        });
     }
 
     @Transactional
@@ -99,7 +115,8 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         var imgUrls = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
         var imgUrlsToString = ImageUrlConverter.convertListToString(imgUrls);
-        return PostDto.from(post, imgUrlsToString);
+        var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
+        return PostDto.from(post, imgUrlsToString, postUserImage);
     }
 
     public void isValidate(PostDto postDto, UserDto userDto) {

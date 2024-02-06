@@ -65,7 +65,7 @@ public record PostDto(
         );
     }
 
-    public static PostDto from(Post entity, String imgUrls) {
+    public static PostDto from(Post entity, String imgUrls, String postUserImageUrl) {
         return PostDto.of(
                 entity.getId(),
                 entity.getTitle(),
@@ -75,7 +75,7 @@ public record PostDto(
                 entity.getLikeCount(),
                 imgUrls,
                 entity.getCategory(),
-                UserDto.from(entity.getUser()),
+                UserDto.from(entity.getUser(), postUserImageUrl),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

@@ -23,6 +23,7 @@ import org.fastcampus.oruryclient.review.service.ReviewReactionService;
 import org.fastcampus.oruryclient.review.service.ReviewService;
 import org.fastcampus.oruryclient.user.controller.UserController;
 import org.fastcampus.oruryclient.user.service.UserService;
+import org.fastcampus.orurycommon.config.SlackMessage;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,4 +90,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected UserService userService;
+
+    @MockBean
+    protected SlackMessage slackMessage;
 }
