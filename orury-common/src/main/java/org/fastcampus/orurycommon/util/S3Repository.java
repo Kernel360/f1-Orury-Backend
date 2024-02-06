@@ -3,6 +3,7 @@ package org.fastcampus.orurycommon.util;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.FileExceptionCode;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,54 +26,50 @@ public class S3Repository {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Getter
     @Value("${cloud.aws.s3.default-image}")
     private String defaultImage;
 
-    public List<String> getUrls(String domain, String images) {
-        return ImageUrlConverter.convertStringToList(images)
-                .stream()
+    public List<String> getUrls(String domain, List<String> images) {
+        return images.stream()
                 .map(it -> amazonS3.getUrl(bucket + domain, it)
                         .toString())
                 .toList();
     }
 
-    public List<String> upload(String domain, MultipartFile... multipartFiles) {
+    public List<String> upload(String domain, List<MultipartFile> multipartFiles) {
         // 파일이 없으면 빈 리스트를 반환합니다.
         if (isEmpty(multipartFiles)) return List.of();
 
         // 파일들을 임시로 저장합니다.
-        File[] files = Arrays.stream(multipartFiles)
+        List<File> files = multipartFiles.stream()
                 .map(this::convert)
-                .toArray(File[]::new);
+                .toList();
 
         // S3에 파일들을 업로드하고 Name을 반환합니다.
         List<String> fileNames = putS3(domain, files);
 
         // 임시 파일들을 삭제합니다.
-        Arrays.stream(files)
-                .forEach(this::removeFile);
+        files.forEach(this::removeFile);
 
         //파일 고유 이름을 반환
         return fileNames;
     }
 
     //DB에 있는 이미지를 삭제하는 메서드
-    public void delete(String domain, String... url) {
-        String[] images = Arrays.stream(url)
+    public void delete(String domain, List<String> urls) {
+        urls.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
-                .toArray(String[]::new);
-
-        //유저 기본 프로필 이미지인 경우 삭제하지 않습니다.
-        if (domain.equals("user") && images[0].equals(defaultImage)) return;
-
-        // 해당 버킷 경로의 S3에 파일을 삭제합니다.
-        String path = bucket + domain;
-        Arrays.stream(images)
-                .forEach(it -> amazonS3.deleteObject(path, it));
+                .forEach(it -> {
+                    //유저 기본 프로필 이미지인 경우 삭제하지 않습니다.
+                    if (domain.equals(S3Folder.USER.getName()) && it.equals(defaultImage)) return;
+                    // 해당 버킷 경로의 S3에 파일을 삭제합니다.
+                    amazonS3.deleteObject(bucket + domain, it);
+                });
     }
 
-    public boolean isEmpty(MultipartFile... files) {
-        if (files == null) return true;
+    public boolean isEmpty(List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) return true;
         // 파일이 없으면 true를 반환합니다.
         for (MultipartFile file : files) {
             if (file == null || file.isEmpty()) return true;
@@ -94,12 +90,10 @@ public class S3Repository {
         return file;
     }
 
-    private List<String> putS3(String domain, File... files) {
+    private List<String> putS3(String domain, List<File> files) {
         // S3에 파일을 업로드하고 이미지 key값을 받환합니다.
-        String folder = bucket + domain;
-
-        return Arrays.stream(files)
-                .map(it -> requestPutObject(folder, it))
+        return files.stream()
+                .map(it -> requestPutObject(bucket + domain, it))
                 .toList();
     }
 
