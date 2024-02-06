@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.base.db.AuditingField;
+import org.fastcampus.orurydomain.global.listener.ImageConvertListener;
 import org.fastcampus.orurydomain.user.db.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @ToString
@@ -35,8 +37,9 @@ public class Post extends AuditingField {
     @Column(name = "like_count", nullable = false)
     private int likeCount;
 
+    @Convert(converter = ImageConvertListener.class)
     @Column(name = "images")
-    private String images;
+    private List<String> images;
 
     @Column(name = "category", nullable = false)
     private int category;
@@ -45,7 +48,19 @@ public class Post extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Post(Long id, String title, String content, int viewCount, int commentCount, int likeCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private Post(
+            Long id,
+            String title,
+            String content,
+            int viewCount,
+            int commentCount,
+            int likeCount,
+            List<String> images,
+            int category,
+            User user,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -59,7 +74,7 @@ public class Post extends AuditingField {
         this.updatedAt = updatedAt;
     }
 
-    public static Post of(Long id, String title, String content, int viewCount, int commentCount, int likeCount, String images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static Post of(Long id, String title, String content, int viewCount, int commentCount, int likeCount, List<String> images, int category, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new Post(id, title, content, viewCount, commentCount, likeCount, images, category, user, createdAt, updatedAt);
     }
 }
