@@ -145,6 +145,37 @@ public record GymDto(
         );
     }
 
+    public static GymDto from(Gym entity, List<String> urls) {
+        return GymDto.of(
+                entity.getId(),
+                entity.getName(),
+                entity.getKakaoId(),
+                entity.getRoadAddress(),
+                entity.getAddress(),
+                entity.getTotalScore(),
+                entity.getReviewCount(),
+                entity.getLikeCount(),
+                urls,
+                entity.getLatitude(),
+                entity.getLongitude(),
+                entity.getBrand(),
+                entity.getPhoneNumber(),
+                entity.getInstagramLink(),
+                entity.getSettingDay(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt(),
+                entity.getServiceMon(),
+                entity.getServiceTue(),
+                entity.getServiceWed(),
+                entity.getServiceThu(),
+                entity.getServiceFri(),
+                entity.getServiceSat(),
+                entity.getServiceSun(),
+                entity.getHomepageLink(),
+                entity.getRemark()
+        );
+    }
+
     private static EnumMap<DayOfWeek, String> createBusinessHoursMap(
             String serviceMon,
             String serviceTue,
