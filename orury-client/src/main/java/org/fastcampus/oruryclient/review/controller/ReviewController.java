@@ -42,7 +42,7 @@ public class ReviewController {
     public ApiResponse<Object> createReview(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart ReviewCreateRequest request,
-            @RequestPart(required = false) MultipartFile... image
+            @RequestPart(required = false) List<MultipartFile> image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
@@ -80,7 +80,7 @@ public class ReviewController {
             @PathVariable Long reviewId,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart ReviewUpdateRequest request,
-            @RequestPart(required = false) MultipartFile... image
+            @RequestPart(required = false) List<MultipartFile> image
     ) {
         ReviewDto beforeReviewDto = reviewService.getReviewDtoById(reviewId);
 

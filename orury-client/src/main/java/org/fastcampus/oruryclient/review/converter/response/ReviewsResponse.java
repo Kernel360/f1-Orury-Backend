@@ -3,7 +3,6 @@ package org.fastcampus.oruryclient.review.converter.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.time.LocalDateTime;
@@ -24,8 +23,7 @@ public record ReviewsResponse(
 
 ) {
     public static ReviewsResponse of(ReviewDto reviewDto, Long userId, int myReaction) {
-        List<String> imagesAsList = ImageUrlConverter.convertStringToList(reviewDto.images());
-
+//
         boolean isMine = reviewDto.userDto()
                 .id()
                 .equals(userId);
@@ -49,7 +47,7 @@ public record ReviewsResponse(
         return new ReviewsResponse(
                 reviewDto.id(),
                 reviewDto.content(),
-                imagesAsList,
+                reviewDto.images(),
                 reviewDto.score(),
                 reviewReactionCount,
                 myReactionType,
