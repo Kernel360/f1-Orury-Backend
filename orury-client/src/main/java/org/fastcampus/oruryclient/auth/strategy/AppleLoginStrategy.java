@@ -33,7 +33,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class AppleLoginStrategy implements LoginStrategy {
-    private final int SIGN_UP_TYPE = 2;
+    private static final int SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AppleAuthClient appleAuthClient;
@@ -54,6 +54,7 @@ public class AppleLoginStrategy implements LoginStrategy {
     @Override
     public LoginDto login(LoginRequest request) {
         String code = request.code();
+        int signUpType = request.signUpType();
 
         String email = getEmailFromAuthorizationCode(code);
 
@@ -62,11 +63,20 @@ public class AppleLoginStrategy implements LoginStrategy {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
         Optional<User> user = userRepository.findByEmail(email);
+
         // 비회원인 경우
         if (user.isEmpty()) {
-            return LoginDto.of(null, null, AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
+            return LoginDto.fromNoUser(signUpType, jwtTokenProvider.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
         }
-        return getLoginDto(user.get());
+
+        // 다른 소셜 로그인으로 가입한 회원인 경우
+        if (user.get().getSignUpType() != SIGN_UP_TYPE) {
+            throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);
+        }
+
+        // 정상 회원은 토큰 발급
+        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.get().getId(), user.get().getEmail());
+        return LoginDto.of(UserDto.from(user.get()), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 
     @Override
@@ -115,17 +125,5 @@ public class AppleLoginStrategy implements LoginStrategy {
         } catch (Exception e) {
             throw new RuntimeException("Error converting private key from String", e);
         }
-    }
-
-    private LoginDto getLoginDto(User user) {
-        UserDto userDto = UserDto.from(user);
-
-        // 다른 소셜 로그인으로 가입한 회원인 경우
-        if (userDto.signUpType() != SIGN_UP_TYPE) {
-            return LoginDto.of(null, null, AuthMessage.NOT_MATCHING_SOCIAL_PROVIDER.getMessage());
-        }
-
-        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(userDto.id(), userDto.email());
-        return LoginDto.of(userDto, jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 }
