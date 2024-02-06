@@ -3,14 +3,16 @@ package org.fastcampus.oruryclient.comment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
-import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.S3Folder;
+import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
 import org.fastcampus.orurydomain.comment.dto.CommentLikeDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -31,6 +33,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
+    private final S3Repository s3Repository;
 
     @Transactional
     public void createComment(CommentDto commentDto) {
@@ -53,7 +56,11 @@ public class CommentService {
         );
 
         return allComments.stream()
-                .map(CommentDto::from).toList();
+                .map(comment -> {
+                    String commentUserImage = s3Repository.getUrls(S3Folder.USER.getName(), comment.getUser().getProfileImage()).get(0);
+                    return CommentDto.from(comment, commentUserImage);
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)
