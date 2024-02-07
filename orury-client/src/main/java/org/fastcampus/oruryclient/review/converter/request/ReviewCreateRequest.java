@@ -6,6 +6,8 @@ import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
+import java.util.List;
+
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ReviewCreateRequest(
         String content,
@@ -20,7 +22,7 @@ public record ReviewCreateRequest(
         return ReviewDto.of(
                 null,
                 content,
-                "",
+                List.of(),
                 score,
                 0,
                 0,

@@ -3,8 +3,8 @@ package org.fastcampus.oruryclient.review.converter.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
+import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +23,11 @@ public record ReviewsResponse(
         boolean isMine
 
 ) {
-    public static ReviewsResponse of(ReviewDto reviewDto, Long userId, int myReaction) {
-        List<String> imagesAsList = ImageUrlConverter.convertStringToList(reviewDto.images());
-
+    public static ReviewsResponse of(ReviewDto reviewDto, UserDto userDto, int myReaction) {
+//
         boolean isMine = reviewDto.userDto()
                 .id()
-                .equals(userId);
+                .equals(userDto.id());
 
         List<ReviewReactionCount> reviewReactionCount = List.of(
                 new ReviewReactionCount("thumb", reviewDto.thumbCount()),
@@ -40,16 +39,16 @@ public record ReviewsResponse(
 
         Writer writer = new Writer(reviewDto.userDto()
                 .id(), reviewDto.userDto()
-                .nickname(), reviewDto.userDto()
-                .profileImage());
-
+                .nickname(),
+                userDto.profileImage()
+        );
 
         String myReactionType = mapReactionType(myReaction);
 
         return new ReviewsResponse(
                 reviewDto.id(),
                 reviewDto.content(),
-                imagesAsList,
+                reviewDto.images(),
                 reviewDto.score(),
                 reviewReactionCount,
                 myReactionType,

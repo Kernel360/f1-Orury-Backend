@@ -3,7 +3,6 @@ package org.fastcampus.oruryclient.user.converter.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,6 @@ public record MyReviewResponse(
         String gymName
 ) implements IdIdentifiable {
     public static MyReviewResponse of(ReviewDto reviewDto) {
-        List<String> imagesAsList = ImageUrlConverter.convertStringToList(reviewDto.images());
 
         List<MyReviewResponse.ReviewReactionCount> reviewReactionCount = List.of(
                 new MyReviewResponse.ReviewReactionCount("thumb", reviewDto.thumbCount()),
@@ -35,13 +33,15 @@ public record MyReviewResponse(
         return new MyReviewResponse(
                 reviewDto.id(),
                 reviewDto.content(),
-                imagesAsList,
+                reviewDto.images(),
                 reviewDto.score(),
                 reviewReactionCount,
                 reviewDto.createdAt(),
                 reviewDto.updatedAt(),
-                reviewDto.gymDto().id(),
-                reviewDto.gymDto().name()
+                reviewDto.gymDto()
+                        .id(),
+                reviewDto.gymDto()
+                        .name()
         );
     }
 

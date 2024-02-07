@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.review.service;
 
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.times;
 class ReviewServiceTest {
 
     private ReviewRepository reviewRepository;
-    private S3Repository s3Repository;
+    private ImageUtils imageUtils;
     private GymRepository gymRepository;
     private ReviewService reviewService;
 
@@ -49,8 +49,8 @@ class ReviewServiceTest {
     void setUp() {
         reviewRepository = mock(ReviewRepository.class);
         gymRepository = mock(GymRepository.class);
-        s3Repository = mock(S3Repository.class);
-        reviewService = new ReviewService(reviewRepository, gymRepository, s3Repository);
+        imageUtils = mock(ImageUtils.class);
+        reviewService = new ReviewService(reviewRepository, gymRepository, imageUtils);
     }
 
     @Test
@@ -58,15 +58,18 @@ class ReviewServiceTest {
     void should_ReviewCreatedSuccessfully() {
         //given
         ReviewDto reviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        MultipartFile[] images = createMultiFile();
+        List<MultipartFile> images = createMultiFile();
 
         //when
         reviewService.createReview(reviewDto, images);
 
         //then
-        then(gymRepository).should().increaseReviewCount(anyLong());
-        then(gymRepository).should().addTotalScore(anyLong(), anyFloat());
-        then(reviewRepository).should().save(any());
+        then(gymRepository).should()
+                .increaseReviewCount(anyLong());
+        then(gymRepository).should()
+                .addTotalScore(anyLong(), anyFloat());
+        then(reviewRepository).should()
+                .save(any());
 
     }
 
@@ -111,16 +114,20 @@ class ReviewServiceTest {
         //given
         ReviewDto beforerReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
         ReviewDto updateReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        MultipartFile[] images = createMultiFile();
+        List<MultipartFile> images = createMultiFile();
 
         //when
         reviewService.updateReview(beforerReviewDto, updateReviewDto, images);
 
         //then
-        then(s3Repository).should().delete(any(), any());
-        then(gymRepository).should().subtractTotalScore(anyLong(), anyFloat());
-        then(gymRepository).should().addTotalScore(anyLong(), anyFloat());
-        then(reviewRepository).should().save(any());
+        then(imageUtils).should()
+                .oldS3ImagesDelete(any(), anyList());
+        then(gymRepository).should()
+                .subtractTotalScore(anyLong(), anyFloat());
+        then(gymRepository).should()
+                .addTotalScore(anyLong(), anyFloat());
+        then(reviewRepository).should()
+                .save(any());
 
     }
 
@@ -180,10 +187,14 @@ class ReviewServiceTest {
         reviewService.deleteReview(reviewDto);
 
         //then
-        then(s3Repository).should().delete(any(), any());
-        then(gymRepository).should().decreaseReviewCount(anyLong());
-        then(gymRepository).should().subtractTotalScore(anyLong(), anyFloat());
-        then(reviewRepository).should().delete(any());
+        then(imageUtils).should()
+                .oldS3ImagesDelete(any(), anyList());
+        then(gymRepository).should()
+                .decreaseReviewCount(anyLong());
+        then(gymRepository).should()
+                .subtractTotalScore(anyLong(), anyFloat());
+        then(reviewRepository).should()
+                .delete(any());
     }
 
     @Test
@@ -239,8 +250,10 @@ class ReviewServiceTest {
 
         //then
         assertEquals(resultReviewDtos, expectReviewDtos);
-        then(reviewRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(reviewRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(reviewRepository).should(times(1))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(reviewRepository).should(times(0))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -274,8 +287,10 @@ class ReviewServiceTest {
 
         //then
         assertEquals(resultReviewDtos, expectReviewDtos);
-        then(reviewRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(reviewRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(reviewRepository).should(times(0))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(reviewRepository).should(times(1))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
 
@@ -305,7 +320,7 @@ class ReviewServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 "123.456",
                 "123.456",
                 "gymBrand",
@@ -328,7 +343,7 @@ class ReviewServiceTest {
         return Review.of(
                 reviewId,
                 "reviewContent",
-                "reviewImages",
+                List.of(),
                 4.5f,
                 0,
                 1,
@@ -346,8 +361,7 @@ class ReviewServiceTest {
         return Review.of(
                 id,
                 "reviewContent",
-                "reviewImages",
-                4.5f,
+                List.of(), 4.5f,
                 0,
                 1,
                 2,
@@ -364,7 +378,7 @@ class ReviewServiceTest {
         return ReviewDto.of(
                 reviewId,
                 "reviewContent",
-                "reviewImages",
+                List.of(),
                 4.5f,
                 0,
                 1,
@@ -388,13 +402,13 @@ class ReviewServiceTest {
         return reviews;
     }
 
-    public static MultipartFile[] createMultiFile() {
+    public static List<MultipartFile> createMultiFile() {
         try {
             // 여러 개의 MultipartFile을 생성하여 배열에 담아 반환
-            return new MultipartFile[]{
+            return List.of(
                     createMockMultipartFile("key1", "image.png"),
                     createMockMultipartFile("key2", "image2.png")
-            };
+            );
         } catch (IOException e) {
             throw new RuntimeException("Failed to create MultipartFile.", e);
         }

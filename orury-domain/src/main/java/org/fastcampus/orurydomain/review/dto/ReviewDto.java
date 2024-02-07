@@ -5,6 +5,7 @@ import org.fastcampus.orurydomain.review.db.model.Review;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link Review}
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 public record ReviewDto(
         Long id,
         String content,
-        String images,
+        List<String> images,
         float score,
         int interestCount,
         int likeCount,
@@ -27,7 +28,7 @@ public record ReviewDto(
     public static ReviewDto of(
             Long id,
             String content,
-            String images,
+            List<String> images,
             float score,
             int interestCount,
             int likeCount,
@@ -74,7 +75,7 @@ public record ReviewDto(
         );
     }
 
-    public static ReviewDto from(Review entity, String imgUrls) {
+    public static ReviewDto from(Review entity, List<String> imgUrls) {
         return ReviewDto.of(
                 entity.getId(),
                 entity.getContent(),
@@ -110,11 +111,11 @@ public record ReviewDto(
         );
     }
 
-    public Review toEntity(String imgUrls) {
+    public Review toEntity(List<String> images) {
         return Review.of(
                 id,
                 content,
-                imgUrls,
+                images,
                 score,
                 interestCount,
                 likeCount,

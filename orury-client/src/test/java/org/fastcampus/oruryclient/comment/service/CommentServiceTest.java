@@ -2,7 +2,7 @@ package org.fastcampus.oruryclient.comment.service;
 
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.model.CommentLike;
 import org.fastcampus.orurydomain.comment.db.model.CommentLikePK;
@@ -46,7 +46,7 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
     private CommentLikeRepository commentLikeRepository;
     private PostRepository postRepository;
-    private S3Repository s3Repository;
+    private ImageUtils imageUtils;
     private CommentService commentService;
 
     @BeforeEach
@@ -54,8 +54,8 @@ class CommentServiceTest {
         commentRepository = mock(CommentRepository.class);
         commentLikeRepository = mock(CommentLikeRepository.class);
         postRepository = mock(PostRepository.class);
-        s3Repository = mock(S3Repository.class);
-        commentService = new CommentService(commentRepository, commentLikeRepository, postRepository, s3Repository);
+        imageUtils = mock(ImageUtils.class);
+        commentService = new CommentService(commentRepository, commentLikeRepository, postRepository, imageUtils);
     }
 
     @Test
@@ -71,7 +71,8 @@ class CommentServiceTest {
         verify(commentRepository, times(1))
                 .save(comment);
         verify(postRepository, times(1))
-                .increaseCommentCount(comment.getPost().getId());
+                .increaseCommentCount(comment.getPost()
+                        .getId());
     }
 
     @Test
@@ -107,7 +108,7 @@ class CommentServiceTest {
                 comment3_2,
                 comment3_3
         );
-        String commentUserImage = "Profile.Image";
+        String commentUserImage = "userProfileImage";
         List<CommentDto> expectedCommentDtos = List.of(
                 CommentDto.from(comment1, commentUserImage),
                 CommentDto.from(comment1_1, commentUserImage),
@@ -128,8 +129,8 @@ class CommentServiceTest {
                 .thenReturn(List.of());
         when(commentRepository.findByParentIdOrderByIdAsc(3L))
                 .thenReturn(childCommentsFor3);
-        when(s3Repository.getUrls(anyString(), anyString()))
-                .thenReturn(List.of(commentUserImage));
+        when(imageUtils.getUserImageUrl(commentUserImage))
+                .thenReturn(commentUserImage);
 
         // when
         List<CommentDto> commentDtos = commentService.getCommentDtosByPost(PostDto.from(post), cursor, pageable);
@@ -206,7 +207,8 @@ class CommentServiceTest {
         commentService.isValidate(CommentDto.from(comment), UserDto.from(user));
 
         // then
-        assertEquals(comment.getUser().getId(), user.getId());
+        assertEquals(comment.getUser()
+                .getId(), user.getId());
     }
 
     @Test
@@ -239,7 +241,8 @@ class CommentServiceTest {
 
         // then
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -258,7 +261,8 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -288,7 +292,8 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.FORBIDDEN.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(commentLike.getCommentLikePK().getCommentId());
+                .findById(commentLike.getCommentLikePK()
+                        .getCommentId());
     }
 
     @Test
@@ -433,8 +438,10 @@ class CommentServiceTest {
 
         //then
         assertEquals(expectCommentDtos, resultCommentDtos);
-        then(commentRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(commentRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(commentRepository).should(times(1))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(0))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -468,8 +475,10 @@ class CommentServiceTest {
 
         //then
         assertEquals(expectCommentDtos, resultCommentDtos);
-        then(commentRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(commentRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(commentRepository).should(times(0))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(commentRepository).should(times(1))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     private static User createUser() {
@@ -512,7 +521,7 @@ class CommentServiceTest {
                 0,
                 0,
                 0,
-                "postImage",
+                List.of(),
                 1,
                 createUser(),
                 LocalDateTime.now(),

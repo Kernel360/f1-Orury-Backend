@@ -2,8 +2,7 @@ package org.fastcampus.oruryclient.post.service;
 
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
-import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
@@ -37,14 +36,14 @@ import static org.mockito.Mockito.*;
 class PostServiceTest {
 
     private PostRepository postRepository;
-    private S3Repository s3Repository;
+    private ImageUtils imageUtils;
     private PostService postService;
 
     @BeforeEach
     public void setUp() {
         postRepository = mock(PostRepository.class);
-        s3Repository = mock(S3Repository.class);
-        postService = new PostService(postRepository, s3Repository);
+        imageUtils = mock(ImageUtils.class);
+        postService = new PostService(postRepository, imageUtils);
     }
 
     @Test
@@ -54,7 +53,7 @@ class PostServiceTest {
         UserDto userDto = createUserDto(1L);
         PostDto postDto = createPostDto(1L, 1L);
         // when
-        postService.createPost(postDto);
+        postService.createPost(postDto, List.of());
 
         // then
         verify(postRepository).save(postDto.toEntity());
@@ -67,7 +66,7 @@ class PostServiceTest {
         PostDto existingPostDto = createPostDto(1L, 1L);
 
         // when
-        postService.updatePost(existingPostDto);
+        postService.updatePost(existingPostDto, List.of());
 
         // then
         then(postRepository).should(times(1))
@@ -158,11 +157,11 @@ class PostServiceTest {
         UserDto userDto = createUserDto(1L);
         PostDto existingPostDto = createPostDto(1L, 1L);
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
 
         when(postRepository.findById(any())).thenReturn(Optional.of(existingPostDto.toEntity()));
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        when(imageUtils.getUrls("post", postImages)).thenReturn(postImages);
+        when(imageUtils.getUserImageUrl(userImage)).thenReturn(userImage);
 
         // when
         PostDto resultPostDto = postService.getPostDtoById(1L);
@@ -179,11 +178,12 @@ class PostServiceTest {
         UserDto userDto = createUserDto(1L);
         PostDto existingPostDto = createPostDto(1L, 1L);
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
+        List<String> postUrls = List.of("post1", "post2");
 
         when(postRepository.findById(any())).thenReturn(Optional.of(existingPostDto.toEntity()));
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        when(imageUtils.getUrls("post", postImages)).thenReturn(postImages);
+        when(imageUtils.getUserImageUrl(userImage)).thenReturn(userImage);
 
         // when
         PostDto resultPostDto = postService.getPostDtoById(1L);
@@ -242,11 +242,11 @@ class PostServiceTest {
                 createPost(10L, 2L)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
 
         when(postRepository.findByCategoryOrderByIdDesc(category, pageable)).thenReturn(posts);
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        when(imageUtils.getUrls("post", postImages)).thenReturn(postImages);
+        when(imageUtils.getUserImageUrl(userImage)).thenReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByCategory(category, cursor, PageRequest.of(0, 10));
@@ -273,11 +273,11 @@ class PostServiceTest {
                 createPost(2L, 1L)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
 
         when(postRepository.findByCategoryAndIdLessThanOrderByIdDesc(category, cursor, pageable)).thenReturn(posts);
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        when(imageUtils.getUrls("post", postImages)).thenReturn(postImages);
+        when(imageUtils.getUserImageUrl(userImage)).thenReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByCategory(category, cursor, PageRequest.of(0, 10));
@@ -320,11 +320,11 @@ class PostServiceTest {
                 createPost(10L, 2L)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
 
         when(postRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, searchWord, pageable)).thenReturn(posts);
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        when(imageUtils.getUrls("post", postImages)).thenReturn(postImages);
+        when(imageUtils.getUserImageUrl(userImage)).thenReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
@@ -353,16 +353,20 @@ class PostServiceTest {
                 createPost(2L, 1L)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
 
         when(postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable)).thenReturn(posts);
-        when(s3Repository.getUrls(eq("post"), anyString())).thenReturn(postImages);
-        when(s3Repository.getUrls(eq("user"), anyString())).thenReturn(postUserImage);
+        given(imageUtils.getUrls("post", postImages)).willReturn(postImages);
+        given(imageUtils.getUserImageUrl(userImage)).willReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
 
         // then
+        then(imageUtils).should(times(2))
+                .getUrls("post", postImages);
+        then(imageUtils).should(times(2))
+                .getUserImageUrl(userImage);
         verify(postRepository).findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
@@ -388,22 +392,24 @@ class PostServiceTest {
                 createPost(1L, NumberConstants.USER_ID)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
         List<PostDto> expectPostDtos = posts.stream()
-                .map(post -> PostDto.from(post, ImageUrlConverter.convertListToString(postImages), postUserImage.get(0)))
+                .map(post -> PostDto.from(post, postImages, userImage))
                 .toList();
 
         given(postRepository.findByUserIdOrderByIdDesc(anyLong(), any())).willReturn(posts);
-        given(s3Repository.getUrls(eq("post"), anyString())).willReturn(postImages);
-        given(s3Repository.getUrls(eq("user"), anyString())).willReturn(postUserImage);
+        given(imageUtils.getUrls("post", postImages)).willReturn(postImages);
+        given(imageUtils.getUserImageUrl(userImage)).willReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
 
         // then
         assertEquals(resultPostDtos, expectPostDtos);
-        then(postRepository).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(postRepository).should(times(0)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(postRepository).should(times(1))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(postRepository).should(times(0))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -426,23 +432,25 @@ class PostServiceTest {
                 createPost(10L, NumberConstants.USER_ID)
         );
         List<String> postImages = List.of("post1.png", "post2.png");
-        List<String> postUserImage = List.of("user.png");
+        String userImage = "test.png";
         List<PostDto> expectPostDtos = posts.stream()
-                .map(post -> PostDto.from(post, ImageUrlConverter.convertListToString(postImages), postUserImage.get(0)))
+                .map(post -> PostDto.from(post, postImages, userImage))
                 .toList();
 
 
         given(postRepository.findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(posts);
-        given(s3Repository.getUrls(eq("post"), anyString())).willReturn(postImages);
-        given(s3Repository.getUrls(eq("user"), anyString())).willReturn(postUserImage);
+        given(imageUtils.getUrls("post", postImages)).willReturn(postImages);
+        given(imageUtils.getUserImageUrl(userImage)).willReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByUserId(NumberConstants.USER_ID, cursor, pageable);
 
         // then
         assertEquals(expectPostDtos, resultPostDtos);
-        then(postRepository).should(times(0)).findByUserIdOrderByIdDesc(anyLong(), any());
-        then(postRepository).should(times(1)).findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
+        then(postRepository).should(times(0))
+                .findByUserIdOrderByIdDesc(anyLong(), any());
+        then(postRepository).should(times(1))
+                .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
     private static Post createPost(Long postId, Long userId) {
@@ -453,7 +461,7 @@ class PostServiceTest {
                 0,
                 0,
                 0,
-                "image.jpg",
+                List.of("post1.png", "post2.png"),
                 1,
                 createPostDto(postId, userId).userDto()
                         .toEntity(),
@@ -470,7 +478,7 @@ class PostServiceTest {
                 0,
                 0,
                 0,
-                "image.jpg",
+                List.of("post1.png", "post2.png"),
                 1,
                 createUserDto(userId),
                 LocalDateTime.now(),
@@ -487,7 +495,7 @@ class PostServiceTest {
                 1,
                 1,
                 LocalDate.now(),
-                "test.jpg",
+                "test.png",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 NumberConstants.IS_NOT_DELETED

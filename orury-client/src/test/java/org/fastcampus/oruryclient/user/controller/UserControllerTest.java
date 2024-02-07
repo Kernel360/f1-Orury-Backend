@@ -65,7 +65,9 @@ public class UserControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data.cursor").value(1))
-                .andExpect(jsonPath("$.data.list[0].id").value(response.list().get(0).id()))
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
+                        .get(0)
+                        .id()))
         ;
 
         then(postService).should()
@@ -107,7 +109,9 @@ public class UserControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data.cursor").value(1))
-                .andExpect(jsonPath("$.data.list[0].id").value(response.list().get(0).id()))
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
+                        .get(0)
+                        .id()))
         ;
 
         then(reviewService).should()
@@ -149,7 +153,9 @@ public class UserControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
                 .andExpect(jsonPath("$.data.cursor").value(1))
-                .andExpect(jsonPath("$.data.list[0].id").value(response.list().get(0).id()))
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
+                        .get(0)
+                        .id()))
         ;
 
         then(commentService).should()
@@ -184,7 +190,7 @@ public class UserControllerTest extends ControllerTest {
                 0,
                 0,
                 0,
-                "",
+                List.of(),
                 1,
                 createUserDto(),
                 LocalDateTime.now(),
@@ -202,7 +208,7 @@ public class UserControllerTest extends ControllerTest {
                 25.3f,
                 23,
                 12,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",
@@ -227,7 +233,7 @@ public class UserControllerTest extends ControllerTest {
         return ReviewDto.of(
                 id,
                 "test content",
-                "test.png, test2.png",
+                List.of(),
                 4.5f,
                 1,
                 2,

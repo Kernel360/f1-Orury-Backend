@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,7 +58,8 @@ class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         assertEquals(1, reactionType);
 
@@ -73,7 +75,8 @@ class ReviewReactionServiceTest {
         int reactionType = reviewReactionService.getReactionType(1L, 1L);
 
         //then
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         assertEquals(NumberConstants.NOT_REACTION, reactionType);
     }
@@ -158,8 +161,10 @@ class ReviewReactionServiceTest {
         reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
-        then(reviewRepository).should().findById(anyLong());
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         then(reviewRepository).should(times(1))
                 .increaseReactionCount(anyLong(), anyInt());
@@ -187,8 +192,10 @@ class ReviewReactionServiceTest {
         reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
-        then(reviewRepository).should().findById(anyLong());
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         then(reviewRepository).should(times(1))
                 .updateReactionCount(anyLong(), anyInt(), anyInt());
@@ -216,8 +223,10 @@ class ReviewReactionServiceTest {
         reviewReactionService.processReviewReaction(reviewReactionDto);
 
         //then
-        then(reviewRepository).should().findById(anyLong());
-        then(reviewReactionRepository).should().findById(any());
+        then(reviewRepository).should()
+                .findById(anyLong());
+        then(reviewReactionRepository).should()
+                .findById(any());
 
         then(reviewRepository).should(times(1))
                 .decreaseReactionCount(anyLong(), anyInt());
@@ -256,7 +265,7 @@ class ReviewReactionServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 "123.456",
                 "123.456",
                 "gymBrand",
@@ -279,7 +288,7 @@ class ReviewReactionServiceTest {
         return Review.of(
                 id,
                 "reviewContent",
-                "reviewImages",
+                List.of(),
                 4.5f,
                 0,
                 1,

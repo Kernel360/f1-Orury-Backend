@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -120,7 +121,7 @@ class PostLikeServiceTest {
                 1,
                 1,
                 1,
-                "image",
+                List.of(),
                 1,
                 createUser().toEntity(),
                 LocalDateTime.now(),
