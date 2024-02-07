@@ -1,6 +1,6 @@
 #!/bin/bash
-BUILD_JAR=$(ls /home/ec2-user/orury/orury-client/build/libs/orury-client-0.0.1-SNAPSHOT.jar)
-BATCH_JAR=$(ls /home/ec2-user/orury/orury-batch/build/libs/orury-batch-0.0.1-SNAPSHOT.jar)
+BUILD_JAR=$(ls /home/ec2-user/orury/orury-client/build/libs/orury-client.jar)
+BATCH_JAR=$(ls /home/ec2-user/orury/orury-batch/build/libs/orury-batch.jar)
 
 JAR_NAME=$(basename $BUILD_JAR)
 BATCH_JAR_NAME=$(basename $BATCH_JAR)

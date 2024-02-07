@@ -9,7 +9,8 @@ env:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+
 
 permissions:
   contents: read
@@ -46,7 +47,12 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            ./gradlew build -Pprod
+          else
+            ./gradlew build -Pdev
+          fi
         shell: bash
 
       - name: Make zip file
