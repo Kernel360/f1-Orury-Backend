@@ -52,7 +52,7 @@ spring:
             client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
             client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
             authorization-grant-type: authorization_code
-            redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx)
+            redirect-uri: ENC(Mka1e3fZ1vu2GcXmHsGaAz2JbdbMFDsSq4WZFA11Q8F4+w9+qme1xw==)
             client-authentication-method: client_secret_post
         #          apple:
         #            client-id: { clientId }
