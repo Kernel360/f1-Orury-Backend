@@ -109,8 +109,8 @@ oauth-login:
   provider:
     apple:
       grant-type: authorization_code
-      client-id: YOUR_APPLE_CLIENT_ID
-      key-id: YOUR_APPLE_KEY_ID
-      team-id: YOUR_APPLE_TEAM_ID
+      client-id: ENC(IsmSK+WGaIMSbqooHIKuIf/+ohtA3cg+)
+      key-id: ENC(brcOV0kbT6t3WxbIHtYm3koGXRqre5QP)
+      team-id: ENC(Yj5y1FXFku6D8rUcrqyzykhtkE48AGM+)
       audience: https://appleid.apple.com
-      private-key: YOUR_APPLE_P8_KEY (-----BEGIN PRIVATE KEY-----, -----END PRIVATE KEY----- 를 제외한 key 문자열을 띄어쓰기 없이 넣어야 합니다)
+      private-key: ENC(F5GGXQ/HphzUf6CuMe3Qt/I1YUcs5aVwnEifgvZ/z0IlJ43B2YlV5hqyDLqcQ81/CjxZGf5l+pKtblpFTWuZcfpwb6MzeLrjIvoDS+EHvrE0QFhoMaIUVZM7PiEugKdc4/vLpALUtTJYur97gXUucZ5g+1fcqAobtTZhI7mNwdKVsIWETqdIrtlwytBEjO61y6Ef90lpZLuOq8Y138N3N4FNNV0s+58LCID4tWmwUh0JbgVYALeukWhilgBJk01ijjyKWtr44mWD8PWQWKuzpmlG3+H8Il9D
