@@ -23,9 +23,9 @@ spring:
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
   datasource:
-    url: ${LOCAL_DB_NAME}
-    username: ${LOCAL_DB_USER_NAME}
-    password: ${LOCAL_DB_USER_PASSWORD}
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     properties:
       hibernate:

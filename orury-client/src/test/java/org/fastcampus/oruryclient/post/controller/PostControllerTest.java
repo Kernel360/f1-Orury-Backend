@@ -192,7 +192,7 @@ class PostControllerTest extends ControllerTest {
         then(userService).should()
                 .getUserDtoById(userId);
         then(postService).should(never())
-                .createPost(any());
+                .createPost(any(), any());
     }
 
     @DisplayName("[PATCH] 게시글 정보를 받아 게시글을 수정 - 성공 (이미지 있는 경우)")
@@ -715,7 +715,6 @@ class PostControllerTest extends ControllerTest {
                 1L,
                 "title",
                 "content",
-                List.of(),
                 1
         );
     }
@@ -724,7 +723,6 @@ class PostControllerTest extends ControllerTest {
         return PostCreateRequest.of(
                 "title",
                 "content",
-                "",
                 1
         );
     }
@@ -737,7 +735,7 @@ class PostControllerTest extends ControllerTest {
                 0,
                 0,
                 0,
-                "",
+                List.of(),
                 1,
                 createUserDto(),
                 LocalDateTime.now(),
@@ -753,7 +751,7 @@ class PostControllerTest extends ControllerTest {
                 0,
                 0,
                 0,
-                "",
+                List.of(),
                 1,
                 createUserDto(userId),
                 LocalDateTime.now(),
@@ -807,7 +805,8 @@ class PostControllerTest extends ControllerTest {
                 "request",
                 "testRequest",
                 MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8)
+                mapper.writeValueAsString(request)
+                        .getBytes(StandardCharsets.UTF_8)
         );
     }
 }

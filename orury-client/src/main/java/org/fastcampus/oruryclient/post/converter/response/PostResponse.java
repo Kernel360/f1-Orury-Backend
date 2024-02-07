@@ -2,7 +2,6 @@ package org.fastcampus.oruryclient.post.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
@@ -34,16 +33,22 @@ public record PostResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                ImageUrlConverter.convertStringToList(postDto.images()),
+                postDto.images(),
                 postDto.category(),
                 postDto.createdAt(),
                 postDto.updatedAt(),
+                mine(postDto, userDto),
                 postDto.userDto()
-                        .id()
-                        .equals(userDto.id()),
-                postDto.userDto().nickname(),
-                postDto.userDto().profileImage(),
+                        .nickname(),
+                postDto.userDto()
+                        .profileImage(),
                 isLike
         );
+    }
+
+    private static boolean mine(PostDto postDto, UserDto userDto) {
+        return postDto.userDto()
+                .id()
+                .equals(userDto.id());
     }
 }

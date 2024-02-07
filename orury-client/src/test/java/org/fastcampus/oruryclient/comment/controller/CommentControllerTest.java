@@ -496,7 +496,7 @@ class CommentControllerTest extends ControllerTest {
                 0,
                 0,
                 0,
-                "",
+                List.of(),
                 1,
                 createUserDto(),
                 null,

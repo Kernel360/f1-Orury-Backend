@@ -5,15 +5,16 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
+import java.util.List;
+
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PostCreateRequest(
         String title,
         String content,
-        String images,
         int category
 ) {
-    public static PostCreateRequest of(String title, String content, String images, int category) {
-        return new PostCreateRequest(title, content, images, category);
+    public static PostCreateRequest of(String title, String content, int category) {
+        return new PostCreateRequest(title, content, category);
     }
 
     public PostDto toDto(UserDto userDto) {
@@ -24,7 +25,7 @@ public record PostCreateRequest(
                 0,
                 0,
                 0,
-                images,
+                List.of(),
                 category,
                 userDto,
                 null,

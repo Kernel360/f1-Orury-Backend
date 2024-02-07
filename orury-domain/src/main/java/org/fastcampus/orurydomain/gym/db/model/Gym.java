@@ -1,18 +1,12 @@
 package org.fastcampus.orurydomain.gym.db.model;
 
-import org.fastcampus.orurydomain.base.db.AuditingField;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.fastcampus.orurydomain.base.db.AuditingField;
+import org.fastcampus.orurydomain.global.listener.EntityImageConverter;
+
+import java.util.List;
 
 @Slf4j
 @ToString
@@ -47,8 +41,9 @@ public class Gym extends AuditingField {
     @Column(name = "like_count")
     private int likeCount;
 
+    @Convert(converter = EntityImageConverter.class)
     @Column(name = "images")
-    private String images;
+    private List<String> images;
 
     @Column(name = "latitude", nullable = false)
     private String latitude;
@@ -104,7 +99,7 @@ public class Gym extends AuditingField {
             Float totalScore,
             int reviewCount,
             int likeCount,
-            String images,
+            List<String> images,
             String latitude,
             String longitude,
             String brand,
@@ -156,7 +151,7 @@ public class Gym extends AuditingField {
             Float totalScore,
             int reviewCount,
             int likeCount,
-            String images,
+            List<String> images,
             String latitude,
             String longitude,
             String brand,

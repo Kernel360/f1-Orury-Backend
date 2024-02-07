@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurycommon.util.S3Folder;
-import org.fastcampus.orurycommon.util.S3Repository;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.post.db.repository.PostRepository;
@@ -27,10 +26,10 @@ import java.util.Objects;
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final S3Repository s3Repository;
+    private final ImageUtils imageUtils;
 
     @Transactional
-    public void createPost(PostDto postDto, MultipartFile... images) {
+    public void createPost(PostDto postDto, List<MultipartFile> images) {
         imageUploadAndSave(postDto, images);
     }
 
@@ -39,14 +38,7 @@ public class PostService {
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? postRepository.findByCategoryOrderByIdDesc(category, pageable)
                 : postRepository.findByCategoryAndIdLessThanOrderByIdDesc(category, cursor, pageable);
-
-        return posts.stream()
-                .map(post -> {
-                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
-                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
-                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
-                })
-                .toList();
+        return transferPosts(posts);
     }
 
     @Transactional(readOnly = true)
@@ -55,13 +47,7 @@ public class PostService {
                 ? postRepository.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, searchWord, pageable)
                 : postRepository.findByIdLessThanAndTitleContainingOrIdLessThanAndContentContainingOrderByIdDesc(cursor, searchWord, cursor, searchWord, pageable);
 
-        return posts.stream()
-                .map(post -> {
-                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
-                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
-                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
-                })
-                .toList();
+        return transferPosts(posts);
     }
 
     @Transactional(readOnly = true)
@@ -70,13 +56,7 @@ public class PostService {
                 ? postRepository.findByUserIdOrderByIdDesc(userId, pageable)
                 : postRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
-        return posts.stream()
-                .map(post -> {
-                    var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
-                    var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
-                    return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
-                })
-                .toList();
+        return transferPosts(posts);
     }
 
     @Transactional(readOnly = true)
@@ -84,23 +64,18 @@ public class PostService {
         Page<Post> posts = postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
                 (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now()
                         .minusMonths(1L), pageable);
-
-        return posts.map(post -> {
-            var images = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
-            var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
-            return PostDto.from(post, ImageUrlConverter.convertListToString(images), postUserImage);
-        });
+        return transferPosts(posts);
     }
 
     @Transactional
-    public void updatePost(PostDto postDto, MultipartFile... images) {
-        oldS3ImagesDelete(postDto);
+    public void updatePost(PostDto postDto, List<MultipartFile> images) {
+        imageUtils.oldS3ImagesDelete(S3Folder.POST.getName(), postDto.images());
         imageUploadAndSave(postDto, images);
     }
 
     @Transactional
     public void deletePost(PostDto postDto) {
-        oldS3ImagesDelete(postDto);
+        imageUtils.oldS3ImagesDelete(S3Folder.POST.getName(), postDto.images());
         postRepository.delete(postDto.toEntity());
     }
 
@@ -113,10 +88,8 @@ public class PostService {
     public PostDto getPostDtoById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        var imgUrls = s3Repository.getUrls(S3Folder.POST.getName(), post.getImages());
-        var imgUrlsToString = ImageUrlConverter.convertListToString(imgUrls);
-        var postUserImage = s3Repository.getUrls(S3Folder.USER.getName(), post.getUser().getProfileImage()).get(0);
-        return PostDto.from(post, imgUrlsToString, postUserImage);
+
+        return transferPosts(List.of(post)).get(0);
     }
 
     public void isValidate(PostDto postDto, UserDto userDto) {
@@ -131,19 +104,33 @@ public class PostService {
                 : NumberConstants.LAST_PAGE;
     }
 
-    private void imageUploadAndSave(PostDto postDto, MultipartFile... images) {
-        if (s3Repository.isEmpty(images)) {
-            postRepository.save(postDto.toEntity(null));
+    private void imageUploadAndSave(PostDto postDto, List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            postRepository.save(postDto.toEntity(List.of()));
         } else {
-            List<String> imageUrls = s3Repository.upload(S3Folder.POST.getName(), images);
-            String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
-            postRepository.save(postDto.toEntity(convertUrl));
+            List<String> images = imageUtils.upload(S3Folder.POST.getName(), files);
+            postRepository.save(postDto.toEntity(images));
         }
     }
 
-    private void oldS3ImagesDelete(PostDto postDto) {
-        String[] oldImages = postDto.images()
-                .split(",");
-        s3Repository.delete(S3Folder.POST.getName(), oldImages);
+    private Page<PostDto> transferPosts(Page<Post> posts) {
+        return posts.map(post -> {
+            var images = imageUtils.getUrls(S3Folder.POST.getName(), post.getImages());
+            var postUserImage = imageUtils.getUrls(S3Folder.USER.getName(), List.of(post.getUser()
+                            .getProfileImage()))
+                    .get(0);
+            return PostDto.from(post, images, postUserImage);
+        });
+    }
+
+    private List<PostDto> transferPosts(List<Post> posts) {
+        return posts.stream()
+                .map(post -> {
+                    var images = imageUtils.getUrls(S3Folder.POST.getName(), post.getImages());
+                    var postUserImage = imageUtils.getUserImageUrl(post.getUser()
+                            .getProfileImage());
+                    return PostDto.from(post, images, postUserImage);
+                })
+                .toList();
     }
 }

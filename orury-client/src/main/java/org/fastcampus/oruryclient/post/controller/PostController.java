@@ -13,8 +13,8 @@ import org.fastcampus.oruryclient.post.converter.response.PostsWithPageResponse;
 import org.fastcampus.oruryclient.post.service.PostLikeService;
 import org.fastcampus.oruryclient.post.service.PostService;
 import org.fastcampus.oruryclient.user.service.UserService;
-import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.base.converter.ApiResponse;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
@@ -41,7 +41,7 @@ public class PostController {
     public ApiResponse<Object> createPost(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart PostCreateRequest request,
-            @RequestPart(required = false) MultipartFile... image
+            @RequestPart(required = false) List<MultipartFile> image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = request.toDto(userDto);
@@ -128,7 +128,7 @@ public class PostController {
     public ApiResponse<Object> updatePost(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart PostUpdateRequest request,
-            @RequestPart(required = false) MultipartFile... image
+            @RequestPart(required = false) List<MultipartFile> image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = postService.getPostDtoById(request.id());

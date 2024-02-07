@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurydomain.base.db.AuditingField;
+import org.fastcampus.orurydomain.global.listener.EntityImageConverter;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @ToString
@@ -30,8 +32,9 @@ public class Review extends AuditingField {
     @Column(name = "content")
     private String content;
 
+    @Convert(converter = EntityImageConverter.class)
     @Column(name = "images")
-    private String images;
+    private List<String> images;
 
     @Column(name = "score", nullable = false)
     private float score;
@@ -62,7 +65,7 @@ public class Review extends AuditingField {
     public Review(
             Long id,
             String content,
-            String images,
+            List<String> images,
             float score,
             int interestCount,
             int likeCount,
@@ -92,7 +95,7 @@ public class Review extends AuditingField {
     public static Review of(
             Long id,
             String content,
-            String images,
+            List<String> images,
             float score,
             int interestCount,
             int likeCount,
