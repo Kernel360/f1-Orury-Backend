@@ -28,7 +28,6 @@ public record MyPostResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-//                (postDto.images().isEmpty()) ? null : ImageUrlConverter.convertStringToList(postDto.images()).get(0),
                 (postDto.images()
                         .isEmpty()) ? null : postDto.images()
                         .get(0),
