@@ -2,9 +2,8 @@ package org.fastcampus.oruryclient.review.converter.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
-import java.util.List;
+import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ReviewUpdateRequest(
@@ -22,10 +21,11 @@ public record ReviewUpdateRequest(
     }
 
     public ReviewDto toDto(ReviewDto reviewDto) {
+
         return ReviewDto.of(
                 reviewDto.id(),
                 content,
-                List.of(),
+                reviewDto.images(),
                 score,
                 reviewDto.interestCount(),
                 reviewDto.likeCount(),
