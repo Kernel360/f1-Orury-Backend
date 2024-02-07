@@ -103,3 +103,17 @@ decorator:
 spring:
   profiles:
     include: secret
+
+---
+oauth-login:
+  client:
+    apple-auth:
+      url: https://appleid.apple.com
+  provider:
+    apple:
+      grant-type: authorization_code
+      client-id: ENC(IsmSK+WGaIMSbqooHIKuIf/+ohtA3cg+)
+      key-id: ENC(brcOV0kbT6t3WxbIHtYm3koGXRqre5QP)
+      team-id: ENC(Yj5y1FXFku6D8rUcrqyzykhtkE48AGM+)
+      audience: https://appleid.apple.com
+      private-key: ENC(F5GGXQ/HphzUf6CuMe3Qt/I1YUcs5aVwnEifgvZ/z0IlJ43B2YlV5hqyDLqcQ81/CjxZGf5l+pKtblpFTWuZcfpwb6MzeLrjIvoDS+EHvrE0QFhoMaIUVZM7PiEugKdc4/vLpALUtTJYur97gXUucZ5g+1fcqAobtTZhI7mNwdKVsIWETqdIrtlwytBEjO61y6Ef90lpZLuOq8Y138N3N4FNNV0s+58LCID4tWmwUh0JbgVYALeukWhilgBJk01ijjyKWtr44mWD8PWQWKuzpmlG3+H8Il9D
