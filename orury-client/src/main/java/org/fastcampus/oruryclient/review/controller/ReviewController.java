@@ -117,12 +117,12 @@ public class ReviewController {
     public ApiResponse<Object> getReviews(@PathVariable Long gymId, @RequestParam Long cursor, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         String gymName = gymService.getGymDtoById(gymId)
                 .name();
-
+        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
                     int myReaction = reviewReactionService.getReactionType(userPrincipal.id(), reviewDto.id());
-                    return ReviewsResponse.of(reviewDto, userPrincipal.id(), myReaction);
+                    return ReviewsResponse.of(reviewDto, userDto, myReaction);
                 })
                 .toList();
 
