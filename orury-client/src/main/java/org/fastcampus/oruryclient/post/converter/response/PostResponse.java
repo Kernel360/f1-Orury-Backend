@@ -22,6 +22,7 @@ public record PostResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         boolean isMine,
+        Long userId,
         String userNickname,
         String userProfileImage,
         boolean isLike
@@ -41,6 +42,7 @@ public record PostResponse(
                 postDto.userDto()
                         .id()
                         .equals(userDto.id()),
+                postDto.userDto().id(),
                 postDto.userDto().nickname(),
                 postDto.userDto().profileImage(),
                 isLike
