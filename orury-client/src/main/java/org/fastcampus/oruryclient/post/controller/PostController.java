@@ -45,7 +45,7 @@ public class PostController {
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         PostDto postDto = request.toDto(userDto);
-        log.info("image : {}", image);
+
         postService.createPost(postDto, image);
 
         return ApiResponse.builder()
