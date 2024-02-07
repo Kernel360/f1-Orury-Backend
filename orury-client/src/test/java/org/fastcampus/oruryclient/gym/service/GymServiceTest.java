@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.gym.service;
 
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
@@ -27,11 +28,13 @@ class GymServiceTest {
 
     private GymService gymService;
     private GymRepository gymRepository;
+    private ImageUtils imageUtils;
 
     @BeforeEach
     void setUp() {
         gymRepository = mock(GymRepository.class);
-        gymService = new GymService(gymRepository);
+        imageUtils = mock(ImageUtils.class);
+        gymService = new GymService(gymRepository, imageUtils);
     }
 
     @Test

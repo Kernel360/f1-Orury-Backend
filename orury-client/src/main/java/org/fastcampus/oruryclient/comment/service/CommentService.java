@@ -37,8 +37,7 @@ public class CommentService {
     @Transactional
     public void createComment(CommentDto commentDto) {
         commentRepository.save(commentDto.toEntity());
-        postRepository.increaseCommentCount(commentDto.postDto()
-                .id());
+        postRepository.increaseCommentCount(commentDto.postDto().id());
     }
 
     @Transactional(readOnly = true)
@@ -57,8 +56,7 @@ public class CommentService {
 
         return allComments.stream()
                 .map(comment -> {
-                    String commentUserImage = imageUtils.getUserImageUrl(comment.getUser()
-                            .getProfileImage());
+                    String commentUserImage = imageUtils.getUserImageUrl(comment.getUser().getProfileImage());
                     return CommentDto.from(comment, commentUserImage);
                 })
                 .toList();
@@ -95,20 +93,17 @@ public class CommentService {
         );
         commentRepository.save(deletingCommentDto.toEntity());
         commentLikeRepository.deleteByCommentLikePK_CommentId(deletingCommentDto.id());
-        postRepository.decreaseCommentCount(commentDto.postDto()
-                .id());
+        postRepository.decreaseCommentCount(commentDto.postDto().id());
     }
 
     public void isValidate(CommentDto commentDto, UserDto userDto) {
-        if (!Objects.equals(commentDto.userDto()
-                .id(), userDto.id()))
+        if (!Objects.equals(commentDto.userDto().id(), userDto.id()))
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
     }
 
     @Transactional(readOnly = true)
     public void isValidate(CommentLikeDto commentLikeDto) {
-        Comment comment = commentRepository.findById(commentLikeDto.commentLikePK()
-                        .getCommentId())
+        Comment comment = commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         if (comment.getDeleted() == NumberConstants.IS_DELETED)
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
@@ -119,8 +114,7 @@ public class CommentService {
         if (!parentCommentId.equals(NumberConstants.PARENT_COMMENT)) {
             Comment parentComment = commentRepository.findById(parentCommentId)
                     .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
-            if (!parentComment.getParentId()
-                    .equals(NumberConstants.PARENT_COMMENT))
+            if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
                 throw new BusinessException(CommentErrorCode.BAD_REQUEST);
         }
     }

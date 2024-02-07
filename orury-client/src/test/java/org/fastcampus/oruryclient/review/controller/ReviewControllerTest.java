@@ -334,7 +334,7 @@ class ReviewControllerTest extends ControllerTest {
         //given
         Long cursor = 1L;
         GymDto gymDto = createGymDto();
-        Long userPrincipalId = NumberConstants.USER_ID;
+        UserDto userDto = createUserDto();
         ReviewMessage code = ReviewMessage.REVIEWS_READ;
 
         List<ReviewDto> reviewDtos = new ArrayList<>();
@@ -345,8 +345,8 @@ class ReviewControllerTest extends ControllerTest {
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
                     int myReaction = NumberConstants.INTERREST_REACTION;
-                    given(reviewReactionService.getReactionType(userPrincipalId, reviewDto.id())).willReturn(myReaction);
-                    return ReviewsResponse.of(reviewDto, userPrincipalId, myReaction);
+                    given(reviewReactionService.getReactionType(userDto.id(), reviewDto.id())).willReturn(myReaction);
+                    return ReviewsResponse.of(reviewDto, userDto, myReaction);
                 })
                 .toList();
 
