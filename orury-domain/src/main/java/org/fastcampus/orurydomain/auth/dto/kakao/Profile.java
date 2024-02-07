@@ -7,11 +7,4 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 public record Profile(
         String nickname
 ) {
-    public static Profile of(
-            String nickname
-    ) {
-        return new Profile(
-                nickname
-        );
-    }
 }
