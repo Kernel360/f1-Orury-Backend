@@ -21,6 +21,7 @@ public record PostResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         boolean isMine,
+        Long userId,
         String userNickname,
         String userProfileImage,
         boolean isLike
@@ -38,10 +39,9 @@ public record PostResponse(
                 postDto.createdAt(),
                 postDto.updatedAt(),
                 mine(postDto, userDto),
-                postDto.userDto()
-                        .nickname(),
-                postDto.userDto()
-                        .profileImage(),
+                postDto.userDto().id(),
+                postDto.userDto().nickname(),
+                postDto.userDto().profileImage(),
                 isLike
         );
     }
