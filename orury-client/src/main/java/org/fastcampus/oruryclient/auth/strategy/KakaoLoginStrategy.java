@@ -86,7 +86,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
         );
     }
 
-    public String getEmailFromToken(String kakaoAccessToken) {
+    private String getEmailFromToken(String kakaoAccessToken) {
         return kakaoKapiClient.getInfo(
                 "Bearer " + kakaoAccessToken,
                 contentType
