@@ -2,6 +2,7 @@ package org.fastcampus.oruryclient.gym.service;
 
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
@@ -27,11 +28,13 @@ class GymServiceTest {
 
     private GymService gymService;
     private GymRepository gymRepository;
+    private ImageUtils imageUtils;
 
     @BeforeEach
     void setUp() {
         gymRepository = mock(GymRepository.class);
-        gymService = new GymService(gymRepository);
+        imageUtils = mock(ImageUtils.class);
+        gymService = new GymService(gymRepository, imageUtils);
     }
 
     @Test
@@ -139,8 +142,10 @@ class GymServiceTest {
     void when_CurrentTimeIsBetweenBusinessHours_Then_ReturnTrue() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().minusMinutes(1L),
-                LocalTime.now().plusMinutes(1L)
+                LocalTime.now()
+                        .minusMinutes(1L),
+                LocalTime.now()
+                        .plusMinutes(1L)
         );
 
         //when
@@ -155,8 +160,10 @@ class GymServiceTest {
     void when_CurrentTimeIsBeforeBusinessHours_Then_ReturnFalse() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().plusMinutes(1L),
-                LocalTime.now().plusMinutes(2L)
+                LocalTime.now()
+                        .plusMinutes(1L),
+                LocalTime.now()
+                        .plusMinutes(2L)
         );
 
         //when
@@ -171,8 +178,10 @@ class GymServiceTest {
     void when_CurrentTimeIsAfterBusinessHours_Then_ReturnFalse() {
         //given
         GymDto gymDto = createGymDto(
-                LocalTime.now().minusMinutes(2L),
-                LocalTime.now().minusMinutes(1L)
+                LocalTime.now()
+                        .minusMinutes(2L),
+                LocalTime.now()
+                        .minusMinutes(1L)
         );
 
         //when
@@ -246,7 +255,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 "123.456",
                 "123.456",
                 "gymBrand",
@@ -275,7 +284,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "gymImages",
+                List.of(),
                 latitude,
                 longitude,
                 "gymBrand",
@@ -304,7 +313,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",
@@ -335,7 +344,7 @@ class GymServiceTest {
                 40.5f,
                 23,
                 12,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",

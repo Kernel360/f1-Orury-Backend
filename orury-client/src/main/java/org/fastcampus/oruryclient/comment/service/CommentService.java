@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.S3Folder;
-import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurydomain.comment.db.model.Comment;
 import org.fastcampus.orurydomain.comment.db.repository.CommentLikeRepository;
 import org.fastcampus.orurydomain.comment.db.repository.CommentRepository;
@@ -33,7 +32,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
-    private final S3Repository s3Repository;
+    private final ImageUtils imageUtils;
 
     @Transactional
     public void createComment(CommentDto commentDto) {
@@ -57,7 +56,7 @@ public class CommentService {
 
         return allComments.stream()
                 .map(comment -> {
-                    String commentUserImage = s3Repository.getUrls(S3Folder.USER.getName(), comment.getUser().getProfileImage()).get(0);
+                    String commentUserImage = imageUtils.getUserImageUrl(comment.getUser().getProfileImage());
                     return CommentDto.from(comment, commentUserImage);
                 })
                 .toList();

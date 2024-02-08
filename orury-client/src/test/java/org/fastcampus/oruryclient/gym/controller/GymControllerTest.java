@@ -161,8 +161,8 @@ class GymControllerTest extends ControllerTest {
 
         GymMessage message = GymMessage.GYM_READ;
 
-        given(gymService.getGymDtosBySearchWordOrderByDistanceAsc(anyString(), anyFloat(), anyFloat()))
-                .willReturn(gymDtos);
+        when(gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude))
+                .thenReturn(gymDtos);
         given(gymLikeService.isLiked(userId, 1L))
                 .willReturn(true);
         given(gymLikeService.isLiked(userId, 2L))
@@ -246,7 +246,7 @@ class GymControllerTest extends ControllerTest {
                 4.5f,
                 12,
                 11,
-                "image.png",
+                List.of(),
                 "37.513709",
                 "127.062144",
                 "더클라임",
@@ -287,7 +287,7 @@ class GymControllerTest extends ControllerTest {
         return ReviewDto.of(
                 id,
                 "reviewContent",
-                "reviewImages",
+                List.of(),
                 4.5f,
                 0,
                 1,
