@@ -43,7 +43,7 @@ public record GymResponse(
                 gymDto.name(),
                 gymDto.roadAddress(),
                 gymDto.address(),
-                (gymDto.reviewCount() == 0) ? 0 : gymDto.totalScore() / gymDto.reviewCount(),
+                (gymDto.reviewCount() == 0) ? 0 : Math.round(gymDto.totalScore() * 10 / gymDto.reviewCount()) / 10f,
                 gymDto.reviewCount(),
                 gymDto.images(),
                 Position.of(gymDto.latitude(), gymDto.longitude()),
