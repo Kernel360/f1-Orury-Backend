@@ -21,7 +21,8 @@ public record GymsResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
-                (gymDto.reviewCount() == 0) ? 0 : gymDto.totalScore() / gymDto.reviewCount(),
+                (gymDto.reviewCount() == 0) ? 0 : Math.round(gymDto.totalScore() * 10 / gymDto.reviewCount()) / 10f,
+//                (gymDto.reviewCount() == 0) ? 0 : Float.parseFloat(String.format("%.2f", gymDto.totalScore() * 10 / gymDto.reviewCount())),
                 gymDto.reviewCount(),
                 gymDto.images()
                         .isEmpty() ? null : gymDto.images()
