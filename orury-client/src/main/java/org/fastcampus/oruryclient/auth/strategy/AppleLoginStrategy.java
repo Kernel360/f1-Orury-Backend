@@ -84,7 +84,7 @@ public class AppleLoginStrategy implements LoginStrategy {
         return SIGN_UP_TYPE;
     }
 
-    public String getEmailFromAuthorizationCode(String authorizationCode) {
+    private String getEmailFromAuthorizationCode(String authorizationCode) {
 
         String idToken = appleAuthClient.getIdToken(
                 clientId,
