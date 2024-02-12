@@ -143,6 +143,7 @@ public class UserService {
         //MultipartFile이 오지 않은 경우 -> 유저의 프로필 이미지를 기본 이미지로 변경
         if (file == null || file.isEmpty()) {
             userRepository.save(userDto.toEntity(imageUtils.getUserDefaultImage()));
+            // return 활용 else문 제거
         } else {
             //MultipartFile이 오는 경우 -> 유저의 프로필 이미지를 업로드한 이미지로 변경
             String image = imageUtils.upload(S3Folder.USER.getName(), file);
