@@ -45,6 +45,7 @@ public class ReviewController {
             @RequestPart ReviewCreateRequest request,
             @RequestPart(required = false) List<MultipartFile> image
     ) {
+        //
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
 
