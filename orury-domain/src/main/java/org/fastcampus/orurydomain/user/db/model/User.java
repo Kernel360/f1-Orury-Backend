@@ -29,9 +29,11 @@ public class User extends AuditingField {
     @Column(name = "password", nullable = false)
     private String password;
 
+    //
     @Column(name = "sign_up_type", nullable = false)
     private int signUpType;
 
+    //
     @Column(name = "gender", nullable = false)
     private int gender;
 
@@ -41,6 +43,7 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
+    //
     @Column(name = "is_deleted")
     private int isDeleted;
 
