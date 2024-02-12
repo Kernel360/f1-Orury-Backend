@@ -61,6 +61,7 @@ public class ReviewService {
         return ReviewDto.from(review, urls);
     }
 
+    //
     public void isValidate(Long id1, Long id2) {
         if (!Objects.equals(id1, id2)) throw new BusinessException(ReviewErrorCode.FORBIDDEN);
     }
