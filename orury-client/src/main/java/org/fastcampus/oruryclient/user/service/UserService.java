@@ -35,6 +35,8 @@ public class UserService {
     private final CommentLikeRepository commentLikeRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewReactionRepository reviewReactionRepository;
+
+    //
     private final GymRepository gymRepository;
     private final GymLikeRepository gymLikeRepository;
 
