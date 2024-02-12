@@ -119,6 +119,7 @@ public class UserService {
     }
 
     private void deletePostLikesByUserId(Long userId) {
+       //
         postLikeRepository.findByPostLikePK_UserId(userId)
                 .forEach(
                         postLike -> {
