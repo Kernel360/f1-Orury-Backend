@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
+//
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProfileImageRequest(
         String profileImage
