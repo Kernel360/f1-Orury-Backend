@@ -33,6 +33,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class AppleLoginStrategy implements LoginStrategy {
+
+    //
     private static final int SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
