@@ -38,6 +38,7 @@ public class ReviewController {
     private final UserService userService;
     private final GymService gymService;
 
+    //
     @Operation(summary = "리뷰 생성", description = "requestbody로 리뷰 정보를 받아, 리뷰를 생성한다.")
     @PostMapping
     public ApiResponse<Object> createReview(
