@@ -30,6 +30,7 @@ public class S3Repository {
     @Value("${cloud.aws.s3.default-image}")
     private String defaultImage;
 
+    // presignedUrl사용
     public List<String> getUrls(String domain, List<String> images) {
         return images.stream()
                 .map(it -> amazonS3.getUrl(bucket + domain, it)
