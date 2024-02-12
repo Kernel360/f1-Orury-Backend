@@ -30,6 +30,7 @@ public class S3Repository {
     @Value("${cloud.aws.s3.default-image}")
     private String defaultImage;
 
+    // presignedUrl사용
     public List<String> getUrls(String domain, List<String> images) {
         return images.stream()
                 .map(it -> amazonS3.getUrl(bucket + domain, it)
@@ -62,6 +63,7 @@ public class S3Repository {
                 .map(ImageUrlConverter::splitUrlToImage)
                 .forEach(it -> {
                     //유저 기본 프로필 이미지인 경우 삭제하지 않습니다.
+                    //
                     if (domain.equals(S3Folder.USER.getName()) && it.equals(defaultImage)) return;
                     // 해당 버킷 경로의 S3에 파일을 삭제합니다.
                     amazonS3.deleteObject(bucket + domain, it);

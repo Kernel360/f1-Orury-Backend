@@ -1,6 +1,7 @@
 package org.fastcampus.oruryclient.auth.strategy;
 
 import io.jsonwebtoken.Jwts;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -33,6 +34,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class AppleLoginStrategy implements LoginStrategy {
+
+    //
     private static final int SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -59,6 +62,7 @@ public class AppleLoginStrategy implements LoginStrategy {
         String email = getEmailFromAuthorizationCode(code);
 
         // 애플 이메일이 없는 고객인 경우
+        //
         if (email == null) {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
@@ -67,8 +71,9 @@ public class AppleLoginStrategy implements LoginStrategy {
         // 비회원인 경우
         if (user.isEmpty()) {
             return LoginDto.fromNoUser(signUpType, jwtTokenProvider.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
-        }
+        }용
 
+        //
         // 다른 소셜 로그인으로 가입한 회원인 경우
         if (user.get().getSignUpType() != SIGN_UP_TYPE) {
             throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);

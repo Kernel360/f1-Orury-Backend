@@ -38,6 +38,8 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public void isExist(UserDto userDto, GymDto gymDto) {
+
+        //
         boolean exist = reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id());
         if (exist) throw new BusinessException(ReviewErrorCode.BAD_REQUEST);
     }
@@ -59,6 +61,7 @@ public class ReviewService {
         return ReviewDto.from(review, urls);
     }
 
+    //
     public void isValidate(Long id1, Long id2) {
         if (!Objects.equals(id1, id2)) throw new BusinessException(ReviewErrorCode.FORBIDDEN);
     }

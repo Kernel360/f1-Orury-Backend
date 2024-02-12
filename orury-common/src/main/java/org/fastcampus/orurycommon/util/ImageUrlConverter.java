@@ -19,6 +19,7 @@ public class ImageUrlConverter {
     }
 
     public static String splitUrlToImage(String url) {
+        //
         if (url == null || url.isEmpty()) return "";
         return Arrays.stream(url.split("/"))
                 .reduce((first, second) -> second)

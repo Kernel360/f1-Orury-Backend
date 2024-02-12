@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
+//
 @RequestMapping("/api/v1/posts/like")
 @RestController
 public class PostLikeController {

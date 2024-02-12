@@ -31,9 +31,12 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+//
 @RequestMapping("/api/v1/user")
 @RestController
 public class UserController {
+
+    //
     private final UserService userService;
     private final PostService postService;
     private final ReviewService reviewService;
@@ -44,6 +47,8 @@ public class UserController {
     public ApiResponse<Object> readMypage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
+
+        //
         MypageResponse mypageResponse = MypageResponse.of(userDto);
 
         return ApiResponse.builder()

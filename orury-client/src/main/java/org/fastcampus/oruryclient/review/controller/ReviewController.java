@@ -28,6 +28,8 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+
+//
 @RequestMapping("/api/v1/reviews")
 @RestController
 public class ReviewController {
@@ -36,6 +38,7 @@ public class ReviewController {
     private final UserService userService;
     private final GymService gymService;
 
+    //
     @Operation(summary = "리뷰 생성", description = "requestbody로 리뷰 정보를 받아, 리뷰를 생성한다.")
     @PostMapping
     public ApiResponse<Object> createReview(
@@ -43,6 +46,7 @@ public class ReviewController {
             @RequestPart ReviewCreateRequest request,
             @RequestPart(required = false) List<MultipartFile> image
     ) {
+        //
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
 

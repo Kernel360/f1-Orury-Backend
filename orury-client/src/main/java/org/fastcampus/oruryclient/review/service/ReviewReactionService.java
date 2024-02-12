@@ -35,16 +35,22 @@ public class ReviewReactionService {
 
     @Transactional
     public void processReviewReaction(ReviewReactionDto reviewReactionDto) {
+
+        //
         reviewRepository.findById(reviewReactionDto.reviewReactionPK().getReviewId())
                 .orElseThrow(() -> new BusinessException(ReviewReactionErrorCode.BAD_REQUEST));
 
+        //
         int reactionTypeInput = reviewReactionDto.reactionType();
+
+        // Request에 대한 정책은 CustomValidator에
         if (reactionTypeInput < 1 || reactionTypeInput > 5) {
             throw new BusinessException(ReviewReactionErrorCode.BAD_REQUEST);
         }
 
         Optional<ReviewReaction> originReaction = reviewReactionRepository.findById(reviewReactionDto.reviewReactionPK());
 
+        //
         if (originReaction.isEmpty()) {
             createReviewReaction(reviewReactionDto);
         } else if (originReaction.get().getReactionType() != reactionTypeInput) {
