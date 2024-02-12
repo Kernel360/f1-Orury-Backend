@@ -6,6 +6,8 @@ import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.util.List;
 
+
+//
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ReviewResponse(
         Long id,
