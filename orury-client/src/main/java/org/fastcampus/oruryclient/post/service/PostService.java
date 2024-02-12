@@ -52,6 +52,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByUserId(Long userId, Long cursor, Pageable pageable) {
+
+        //
         List<Post> posts = (cursor.equals(NumberConstants.FIRST_CURSOR))
                 ? postRepository.findByUserIdOrderByIdDesc(userId, pageable)
                 : postRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
