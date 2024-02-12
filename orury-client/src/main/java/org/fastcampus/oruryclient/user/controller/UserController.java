@@ -47,6 +47,8 @@ public class UserController {
     public ApiResponse<Object> readMypage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
+
+        //
         MypageResponse mypageResponse = MypageResponse.of(userDto);
 
         return ApiResponse.builder()
