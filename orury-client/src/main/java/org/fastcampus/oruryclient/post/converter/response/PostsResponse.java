@@ -2,6 +2,8 @@ package org.fastcampus.oruryclient.post.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import org.fastcampus.oruryclient.global.IdIdentifiable;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public record PostsResponse(
         String userProfileImage,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {
+) implements IdIdentifiable {
     public static PostsResponse of(PostDto postDto) {
 
         return new PostsResponse(
