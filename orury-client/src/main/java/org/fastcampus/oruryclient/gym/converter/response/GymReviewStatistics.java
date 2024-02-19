@@ -1,7 +1,5 @@
 package org.fastcampus.oruryclient.gym.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.time.Month;
@@ -21,7 +19,6 @@ public record GymReviewStatistics(
         );
     }
 
-    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     record TotalReviewChart(
             List<ReviewCount> barChartData
     ) {
@@ -40,7 +37,6 @@ public record GymReviewStatistics(
         }
     }
 
-    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     record MonthlyReviewChart(
             List<MonthlyReviewCount> lineChartData
     ) {
