@@ -37,6 +37,7 @@ public class AppleLoginStrategy implements LoginStrategy {
     private static final int APPLE_SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenDecoder tokenDecoder;
     private final AppleAuthClient appleAuthClient;
 
     @Value("${oauth-login.provider.apple.grant-type}")
@@ -96,7 +97,7 @@ public class AppleLoginStrategy implements LoginStrategy {
                 authorizationCode
         ).idToken();
 
-        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class).email();
+        return tokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class).email();
     }
 
     private String generateClientSecret() {
