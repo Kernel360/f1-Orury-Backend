@@ -2,6 +2,8 @@ package org.fastcampus.oruryclient.comment.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import org.fastcampus.oruryclient.global.IdIdentifiable;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
 
 import java.time.LocalDateTime;
@@ -20,7 +22,7 @@ public record CommentResponse(
         LocalDateTime updatedAt,
         boolean isLike,
         int deleted
-) {
+) implements IdIdentifiable {
     public static CommentResponse of(CommentDto commentDto, Long userId, boolean isLike) {
         return new CommentResponse(
                 commentDto.id(),
