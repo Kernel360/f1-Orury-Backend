@@ -49,6 +49,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
@@ -91,10 +92,10 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto(1L);
         User user = createUser(1L);
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(imageUtils.getUserImageUrl(anyString())).willReturn("test.png");
 
         // when
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(imageUtils.getUserImageUrl(anyString())).thenReturn("test.png");
 
         UserDto actualUserDto = userService.getUserDtoById(anyLong());
 
@@ -136,18 +137,21 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("MultipartFile이 오지 않은 경우는 기본 프로필 이미지로 업데이트한다.")
-    void when_UpdateUserProfileImageWithNoneMultipartFile_Then_UpdateSuccessfullyAsDefaultProfileImage() throws BusinessException {
+    @DisplayName("MultipartFile이 null이거나 빈 파일인 경우 기본 프로필 이미지로 업데이트한다.")
+    void when_UpdateUserProfileImageWithNullOrEmpty_Then_UpdateSuccessfullyAsDefaultProfileImage() throws BusinessException {
         // given
         UserDto userDto = createUserDto(1L);
         MultipartFile file = null;
+        MultipartFile emptyFile = mock(MultipartFile.class);
         ImageUtils imageUtils = mock(ImageUtils.class);
+        given(emptyFile.isEmpty()).willReturn(true);
 
         // when
         userService.updateProfileImage(userDto, file);
+        userService.updateProfileImage(userDto, emptyFile);
 
         // then
-        then(userRepository).should(times(1)).save(userDto.toEntity(imageUtils.getUserDefaultImage()));
+        then(userRepository).should(times(2)).save(userDto.toEntity(imageUtils.getUserDefaultImage()));
     }
 
     @Test
@@ -177,12 +181,13 @@ class UserServiceTest {
         Post post = createPost(1L, userDto.id());
         PostLike postLike = createPostLike(userDto.id(), post.getId());
 
+        given(reviewReactionRepository.findByReviewReactionPK_UserId(userDto.id())).willReturn(Arrays.asList(reviewReaction));
+        given(gymLikeRepository.findByGymLikePK_UserId(userDto.id())).willReturn(Arrays.asList(gymLike));
+        given(commentLikeRepository.findByCommentLikePK_UserId(userDto.id())).willReturn(Arrays.asList(commentLike));
+        given(postLikeRepository.findByPostLikePK_UserId(userDto.id())).willReturn(Arrays.asList(postLike));
+        given(postRepository.findByUser_Id(userDto.id())).willReturn(Arrays.asList(post));
+
         // when
-        when(reviewReactionRepository.findByReviewReactionPK_UserId(userDto.id())).thenReturn(Arrays.asList(reviewReaction));
-        when(gymLikeRepository.findByGymLikePK_UserId(userDto.id())).thenReturn(Arrays.asList(gymLike));
-        when(commentLikeRepository.findByCommentLikePK_UserId(userDto.id())).thenReturn(Arrays.asList(commentLike));
-        when(postLikeRepository.findByPostLikePK_UserId(userDto.id())).thenReturn(Arrays.asList(postLike));
-        when(postRepository.findByUser_Id(userDto.id())).thenReturn(Arrays.asList(post));
         userService.deleteUser(userDto);
 
         // then
