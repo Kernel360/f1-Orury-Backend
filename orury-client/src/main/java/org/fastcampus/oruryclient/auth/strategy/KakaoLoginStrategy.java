@@ -18,13 +18,14 @@ import org.fastcampus.orurydomain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class KakaoLoginStrategy implements LoginStrategy {
-    private static final int SIGN_UP_TYPE = 1;
+    private static final int KAKAO_SIGN_UP_TYPE = 1;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -51,7 +52,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
         String email = getEmailFromToken(kakaoToken);
 
         // 카카오 이메일이 없는 고객인 경우
-        if (email == null) {
+        if (Objects.isNull(email)) {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
         Optional<User> user = userRepository.findByEmail(email);
@@ -61,19 +62,21 @@ public class KakaoLoginStrategy implements LoginStrategy {
             return LoginDto.fromNoUser(signUpType, jwtTokenProvider.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
         }
 
+        User userEntity = user.get();
+
         // 다른 소셜 로그인으로 가입한 회원인 경우
-        if (user.get().getSignUpType() != SIGN_UP_TYPE) {
+        if (userEntity.getSignUpType() != KAKAO_SIGN_UP_TYPE) {
             throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);
         }
 
         // 정상 회원은 토큰 발급
-        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.get().getId(), user.get().getEmail());
-        return LoginDto.of(UserDto.from(user.get()), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
+        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(userEntity.getId(), userEntity.getEmail());
+        return LoginDto.of(UserDto.from(userEntity), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 
     @Override
     public int getSignUpType() {
-        return SIGN_UP_TYPE;
+        return KAKAO_SIGN_UP_TYPE;
     }
 
     private KakaoOAuthTokenDto getKakaoTokenFromAuthorizationCode(String code) {
