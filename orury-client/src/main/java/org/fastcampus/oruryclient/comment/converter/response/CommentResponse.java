@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.comment.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
@@ -16,7 +17,9 @@ public record CommentResponse(
         Long userId,
         String userNickname,
         String userProfileImage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         boolean isLike,
         int deleted

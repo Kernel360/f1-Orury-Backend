@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.review.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
@@ -18,7 +19,9 @@ public record ReviewsResponse(
         List<ReviewReactionCount> reviewReactionCount,
         String myReaction,
         Writer writer,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         boolean isMine
 
