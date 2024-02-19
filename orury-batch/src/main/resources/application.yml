@@ -44,6 +44,8 @@ spring:
   kakao:
     baseurl: https://dapi.kakao.com/v2/local/search/keyword.json
     key: ENC(8pDOKxCjQe2r3avazbs05VCB6ZT4DleSf+aCyiJedsl425HyfG176o5DJd10aURjcQxWyT/JKIc=)
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 cloud:
   aws:
