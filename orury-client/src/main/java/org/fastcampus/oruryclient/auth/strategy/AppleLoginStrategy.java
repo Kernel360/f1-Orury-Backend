@@ -27,15 +27,17 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AppleLoginStrategy implements LoginStrategy {
-    private static final int SIGN_UP_TYPE = 2;
+    private static final int APPLE_SIGN_UP_TYPE = 2;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenDecoder tokenDecoder;
     private final AppleAuthClient appleAuthClient;
 
     @Value("${oauth-login.provider.apple.grant-type}")
@@ -59,7 +61,7 @@ public class AppleLoginStrategy implements LoginStrategy {
         String email = getEmailFromAuthorizationCode(code);
 
         // 애플 이메일이 없는 고객인 경우
-        if (email == null) {
+        if (Objects.isNull(email)) {
             throw new AuthException(AuthErrorCode.NO_EMAIL);
         }
         Optional<User> user = userRepository.findByEmail(email);
@@ -69,22 +71,24 @@ public class AppleLoginStrategy implements LoginStrategy {
             return LoginDto.fromNoUser(signUpType, jwtTokenProvider.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
         }
 
+        User userEntity = user.get();
+
         // 다른 소셜 로그인으로 가입한 회원인 경우
-        if (user.get().getSignUpType() != SIGN_UP_TYPE) {
+        if (userEntity.getSignUpType() != APPLE_SIGN_UP_TYPE) {
             throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);
         }
 
         // 정상 회원은 토큰 발급
-        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(user.get().getId(), user.get().getEmail());
-        return LoginDto.of(UserDto.from(user.get()), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
+        JwtToken jwtToken = jwtTokenProvider.issueJwtTokens(userEntity.getId(), userEntity.getEmail());
+        return LoginDto.of(UserDto.from(userEntity), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
     }
 
     @Override
     public int getSignUpType() {
-        return SIGN_UP_TYPE;
+        return APPLE_SIGN_UP_TYPE;
     }
 
-    public String getEmailFromAuthorizationCode(String authorizationCode) {
+    private String getEmailFromAuthorizationCode(String authorizationCode) {
 
         String idToken = appleAuthClient.getIdToken(
                 clientId,
@@ -93,7 +97,7 @@ public class AppleLoginStrategy implements LoginStrategy {
                 authorizationCode
         ).idToken();
 
-        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class).email();
+        return tokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class).email();
     }
 
     private String generateClientSecret() {

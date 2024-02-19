@@ -45,38 +45,6 @@ spring:
     multipart:
       maxFileSize: 5MB # 파일 하나의 최대 크기
       maxRequestSize: 25MB  # 한 번에 최대 업로드 가능 용량
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            #            client-id: ${KAKAO_OAUTH_CLIENT_ID}
-            #            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
-            client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
-            client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
-            authorization-grant-type: authorization_code
-            #            redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx) # 프론트 로컬
-            redirect-uri: ENC(Mka1e3fZ1vu2GcXmHsGaAz2JbdbMFDsSq4WZFA11Q8F4+w9+qme1xw==) # 서버 redirect uri
-            client-authentication-method: client_secret_post
-        #          apple:
-        #            client-id: { clientId }
-        #            client-secret: { .p8 파일 이름 }/{KeyId}/{TeamId}
-        #            authorization-grant-type: authorization_code
-        #            redirect-uri: { domain }/login/oauth2/code/apple
-        #            client-authentication-method: POST
-        #        #            client-name: Apple
-        #        #            scope:
-        #        #              - email
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
-  #          apple:
-  #            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post
-  #            token-uri: https://appleid.apple.com/auth/token
-  #            jwk-set-uri: https://appleid.apple.com/auth/keys
   jwt:
     secret:
       ENC(s+e66U0YV1+iNWMLFl0LCHmARANd5yCv3k41u0iPDpCyfG7+PUgpsYNyUP7SFk/PUNPuK/wnNod399PK2kW+qllbWZzqNwp6msfDx1xP8DCiTHCZXE4rcNZDYji0bM9uzyxIDCGMyDE=)
@@ -113,6 +81,10 @@ oauth-login:
   client:
     apple-auth:
       url: https://appleid.apple.com
+    kakao-auth:
+      url: https://kauth.kakao.com
+    kakao-kapi:
+      url: https://kapi.kakao.com
   provider:
     apple:
       grant-type: authorization_code
@@ -120,4 +92,10 @@ oauth-login:
       key-id: ENC(brcOV0kbT6t3WxbIHtYm3koGXRqre5QP)
       team-id: ENC(Yj5y1FXFku6D8rUcrqyzykhtkE48AGM+)
       audience: https://appleid.apple.com
-      private-key: ENC(F5GGXQ/HphzUf6CuMe3Qt/I1YUcs5aVwnEifgvZ/z0IlJ43B2YlV5hqyDLqcQ81/CjxZGf5l+pKtblpFTWuZcfpwb6MzeLrjIvoDS+EHvrE0QFhoMaIUVZM7PiEugKdc4/vLpALUtTJYur97gXUucZ5g+1fcqAobtTZhI7mNwdKVsIWETqdIrtlwytBEjO61y6Ef90lpZLuOq8Y138N3N4FNNV0s+58LCID4tWmwUh0JbgVYALeukWhilgBJk01ijjyKWtr44mWD8PWQWKuzpmlG3+H8Il9D
+      private-key: ENC(B1eHssqHQ+ATb9OF6jB3jxREnGj6u5Mu2wsN2JwYMJRWhocKJ/YvhOutzZaSMgpMOAA0SJgPvi7FOJCQJ5NCOoA+tLvpy13zRRSZuVSyq/gQZXH0O9MwrXHoLp4shh+V6+Nuk0H1iJelSrW7b3H8cDqFYJ/fOXFap9nSfsKkuo4u+dkwPyh2XGmyTHbJUqOtUIj11c4NcJjpVGLJSrvV6NtSYWbhnSXZidqJQkVwFMQFXNsEIAU+R7iZxsQyJ3eR3XfLPqLs9GBA+kfObDrGqh//wpGBkYHV)
+    kakao:
+      grant-type: authorization_code
+      client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
+      redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx)
+      client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
+      content-type: application/x-www-form-urlencoded;charset=utf-8

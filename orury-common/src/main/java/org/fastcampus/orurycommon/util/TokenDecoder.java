@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 
+@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TokenDecoder {
 
-    public static <T> T decodePayload(String token, Class<T> targetClass) {
+    public <T> T decodePayload(String token, Class<T> targetClass) {
 
         String[] tokenParts = token.split("\\.");
         String payloadJWT = tokenParts[1];
