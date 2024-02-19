@@ -58,7 +58,7 @@ class ReviewServiceTest {
     void should_ReviewCreatedSuccessfully() {
         //given
         ReviewDto reviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        List<MultipartFile> images = createMultiFile();
+        List<MultipartFile> images = createMultiFiles();
 
         //when
         reviewService.createReview(reviewDto, images);
@@ -114,7 +114,7 @@ class ReviewServiceTest {
         //given
         ReviewDto beforerReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
         ReviewDto updateReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        List<MultipartFile> images = createMultiFile();
+        List<MultipartFile> images = createMultiFiles();
 
         //when
         reviewService.updateReview(beforerReviewDto, updateReviewDto, images);
@@ -402,7 +402,7 @@ class ReviewServiceTest {
         return reviews;
     }
 
-    public static List<MultipartFile> createMultiFile() {
+    public static List<MultipartFile> createMultiFiles() {
         try {
             // 여러 개의 MultipartFile을 생성하여 배열에 담아 반환
             return List.of(
