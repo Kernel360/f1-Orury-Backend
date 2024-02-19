@@ -1,13 +1,28 @@
 package org.fastcampus.oruryclient.post.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.never;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
+import org.fastcampus.oruryclient.global.WithCursorResponse;
 import org.fastcampus.oruryclient.post.converter.message.PostMessage;
 import org.fastcampus.oruryclient.post.converter.request.PostCreateRequest;
 import org.fastcampus.oruryclient.post.converter.request.PostUpdateRequest;
 import org.fastcampus.oruryclient.post.converter.response.PostsResponse;
-import org.fastcampus.oruryclient.post.converter.response.PostsWithCursorResponse;
 import org.fastcampus.oruryclient.post.converter.response.PostsWithPageResponse;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
@@ -28,15 +43,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.http.HttpMethod.PATCH;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@Disabled
 @DisplayName("[Controller] 게시글 관련 테스트")
@@ -454,7 +460,7 @@ class PostControllerTest extends ControllerTest {
         int category = 1;
         Long cursor = 1L;
         for (int i = 1; i <= NumberConstants.POST_PAGINATION_SIZE; i++) postDtos.add(createPostDto((long) i));
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream()
+        WithCursorResponse<PostsResponse> response = WithCursorResponse.of(postDtos.stream()
                 .map(PostsResponse::of)
                 .toList(), cursor);
 
@@ -473,13 +479,13 @@ class PostControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
                         .get(0)
                         .id()))
-                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[1].id").value(response.list()
                         .get(1)
                         .id()))
-                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[9].id").value(response.list()
                         .get(9)
                         .id()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))
@@ -499,9 +505,6 @@ class PostControllerTest extends ControllerTest {
         List<PostDto> postDtos = new ArrayList<>();
         int category = 1;
         Long cursor = 1L;
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream()
-                .map(PostsResponse::of)
-                .toList(), cursor);
 
         PostMessage code = PostMessage.POSTS_READ;
 
@@ -537,7 +540,7 @@ class PostControllerTest extends ControllerTest {
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<PostDto> postDtos = new ArrayList<>();
         for (int i = 1; i <= NumberConstants.POST_PAGINATION_SIZE; i++) postDtos.add(createPostDto((long) i));
-        PostsWithCursorResponse response = PostsWithCursorResponse.of(postDtos.stream()
+        WithCursorResponse<PostsResponse> response = WithCursorResponse.of(postDtos.stream()
                 .map(PostsResponse::of)
                 .toList(), cursor);
 
@@ -557,13 +560,13 @@ class PostControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
                         .get(0)
                         .id()))
-                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[1].id").value(response.list()
                         .get(1)
                         .id()))
-                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts()
+                .andExpect(jsonPath("$.data.list[9].id").value(response.list()
                         .get(9)
                         .id()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))

@@ -1,12 +1,26 @@
 package org.fastcampus.oruryclient.comment.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.fastcampus.oruryclient.comment.converter.message.CommentMessage;
 import org.fastcampus.oruryclient.comment.converter.request.CommentCreateRequest;
 import org.fastcampus.oruryclient.comment.converter.request.CommentUpdateRequest;
 import org.fastcampus.oruryclient.comment.converter.response.CommentResponse;
-import org.fastcampus.oruryclient.comment.converter.response.CommentsWithCursorResponse;
 import org.fastcampus.oruryclient.config.ControllerTest;
 import org.fastcampus.oruryclient.config.WithUserPrincipal;
+import org.fastcampus.oruryclient.global.WithCursorResponse;
 import org.fastcampus.orurycommon.error.code.CommentErrorCode;
 import org.fastcampus.orurycommon.error.code.PostErrorCode;
 import org.fastcampus.orurycommon.error.code.UserErrorCode;
@@ -21,14 +35,6 @@ import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("[Controller] 댓글 관련 테스트")
 @WithUserPrincipal
@@ -161,7 +167,8 @@ class CommentControllerTest extends ControllerTest {
                 })
                 .toList();
         CommentMessage code = CommentMessage.COMMENTS_READ;
-        CommentsWithCursorResponse response = CommentsWithCursorResponse.of(commentResponses);
+        //CommentsWithCursorResponse response = CommentsWithCursorResponse.of(commentResponses);
+        WithCursorResponse<CommentResponse> response = WithCursorResponse.of(commentResponses);
 
         given(postService.getPostDtoById(1L)).willReturn(postDto);
         given(commentService.getCommentDtosByPost(
@@ -177,10 +184,9 @@ class CommentControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.comments[0].id").value(response.comments()
-                        .get(0)
-                        .id()))
-                .andExpect(jsonPath("$.data.comments[0].content").value(response.comments()
+                .andExpect(jsonPath("$.data.list[0].id").value(response.list()
+                        .get(0).id()))
+                .andExpect(jsonPath("$.data.list[0].content").value(response.list()
                         .get(0)
                         .content()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))
@@ -194,7 +200,7 @@ class CommentControllerTest extends ControllerTest {
                         1L,
                         PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)
                 );
-        for (int i = 1; i <= response.comments()
+        for (int i = 1; i <= response.list()
                 .size(); i++)
             then(commentLikeService).should(times(1))
                     .isLiked(NumberConstants.USER_ID, (long) (i + 1));
@@ -207,7 +213,7 @@ class CommentControllerTest extends ControllerTest {
         Long cursor = 1L;
         PostDto postDto = createPostDto();
         CommentMessage code = CommentMessage.COMMENTS_READ;
-        CommentsWithCursorResponse response = CommentsWithCursorResponse.of(List.of());
+        WithCursorResponse<CommentResponse> response = WithCursorResponse.of(List.of());
 
         given(postService.getPostDtoById(1L)).willReturn(postDto);
         given(commentService.getCommentDtosByPost(
@@ -223,7 +229,7 @@ class CommentControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.comments.size()").value(0))
+                .andExpect(jsonPath("$.data.list.size()").value(0))
                 .andExpect(jsonPath("$.data.cursor").value(-1))
         ;
 
