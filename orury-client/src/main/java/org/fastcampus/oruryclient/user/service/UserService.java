@@ -130,7 +130,7 @@ public class UserService {
     }
 
     private void deletePostsByUserId(Long userId) {
-        postRepository.findByUser_Id(userId)
+        postRepository.findByUserId(userId)
                 .forEach(
                         post -> {
                             imageUtils.oldS3ImagesDelete(S3Folder.POST.getName(), post.getImages());

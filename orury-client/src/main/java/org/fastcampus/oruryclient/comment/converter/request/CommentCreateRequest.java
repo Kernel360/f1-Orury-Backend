@@ -1,15 +1,10 @@
 package org.fastcampus.oruryclient.comment.converter.request;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
-@Slf4j
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record CommentCreateRequest(
         String content,
         Long parentId,

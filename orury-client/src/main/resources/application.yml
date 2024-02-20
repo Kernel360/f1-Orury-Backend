@@ -48,6 +48,8 @@ spring:
   jwt:
     secret:
       ENC(s+e66U0YV1+iNWMLFl0LCHmARANd5yCv3k41u0iPDpCyfG7+PUgpsYNyUP7SFk/PUNPuK/wnNod399PK2kW+qllbWZzqNwp6msfDx1xP8DCiTHCZXE4rcNZDYji0bM9uzyxIDCGMyDE=)
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 cloud:
   aws:
     s3:

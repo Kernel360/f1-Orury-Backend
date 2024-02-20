@@ -1,14 +1,11 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MyReviewResponse(
         Long id,
         String content,
