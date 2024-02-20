@@ -1,5 +1,11 @@
 package org.oruryclient.user.service;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.orurycommon.error.code.UserErrorCode;
 import org.orurycommon.error.exception.BusinessException;
 import org.orurycommon.util.ImageUrlConverter;
@@ -30,12 +36,6 @@ import org.orurydomain.review.db.repository.ReviewRepository;
 import org.orurydomain.user.db.model.User;
 import org.orurydomain.user.db.repository.UserRepository;
 import org.orurydomain.user.dto.UserDto;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
@@ -185,7 +185,7 @@ class UserServiceTest {
         given(gymLikeRepository.findByGymLikePK_UserId(userDto.id())).willReturn(Arrays.asList(gymLike));
         given(commentLikeRepository.findByCommentLikePK_UserId(userDto.id())).willReturn(Arrays.asList(commentLike));
         given(postLikeRepository.findByPostLikePK_UserId(userDto.id())).willReturn(Arrays.asList(postLike));
-        given(postRepository.findByUser_Id(userDto.id())).willReturn(Arrays.asList(post));
+        given(postRepository.findByUserId(userDto.id())).willReturn(Arrays.asList(post));
 
         // when
         userService.deleteUser(userDto);
@@ -211,7 +211,7 @@ class UserServiceTest {
         then(postRepository).should(atLeastOnce()).decreaseCommentCount(postLike.getPostLikePK().getPostId());
         then(postLikeRepository).should(atLeastOnce()).delete(postLike);
 
-        then(postRepository).should(times(1)).findByUser_Id(userDto.id());
+        then(postRepository).should(times(1)).findByUserId(userDto.id());
         then(imageUtils).should(atLeastOnce()).oldS3ImagesDelete(S3Folder.POST.getName(), post.getImages());
         then(postRepository).should(atLeastOnce()).delete(post);
     }
