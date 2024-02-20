@@ -1,11 +1,7 @@
 package org.fastcampus.oruryclient.review.converter.request;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ReviewUpdateRequest(
         String content,
         float score

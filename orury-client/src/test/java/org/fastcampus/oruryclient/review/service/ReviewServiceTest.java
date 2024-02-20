@@ -80,14 +80,14 @@ class ReviewServiceTest {
         UserDto userDto = UserDto.from(createUser(1L));
         GymDto gymDto = GymDto.from(createGym(1L));
 
-        given(reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id())).willReturn(false);
+        given(reviewRepository.existsByUserIdAndGymId(userDto.id(), gymDto.id())).willReturn(false);
 
         //when
         reviewService.isExist(userDto, gymDto);
 
         //then
         then(reviewRepository).should()
-                .existsByUser_IdAndGym_Id(any(), any());
+                .existsByUserIdAndGymId(any(), any());
     }
 
     @Test
@@ -97,7 +97,7 @@ class ReviewServiceTest {
         UserDto userDto = UserDto.from(createUser(1L));
         GymDto gymDto = GymDto.from(createGym(1L));
 
-        given(reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id())).willReturn(true);
+        given(reviewRepository.existsByUserIdAndGymId(userDto.id(), gymDto.id())).willReturn(true);
 
         //when & then
         BusinessException exception = assertThrows(BusinessException.class,
@@ -105,7 +105,7 @@ class ReviewServiceTest {
         assertEquals(ReviewErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
         then(reviewRepository).should()
-                .existsByUser_IdAndGym_Id(any(), any());
+                .existsByUserIdAndGymId(any(), any());
     }
 
     @Test

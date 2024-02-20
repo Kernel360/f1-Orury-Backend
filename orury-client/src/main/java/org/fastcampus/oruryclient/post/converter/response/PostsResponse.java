@@ -1,12 +1,9 @@
 package org.fastcampus.oruryclient.post.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 
 import java.time.LocalDateTime;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PostsResponse(
         Long id,
         String title,

@@ -12,7 +12,7 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByGymId(Long gymId);
 
-    boolean existsByUser_IdAndGym_Id(Long userId, Long gymId);
+    boolean existsByUserIdAndGymId(Long userId, Long gymId);
 
     List<Review> findByGymIdOrderByIdDesc(Long gymId, Pageable pageable);
 
