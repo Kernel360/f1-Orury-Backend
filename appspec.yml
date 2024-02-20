@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/orury/
+    destination: /home/ec2-user/ttest/
     overwrite: yes
 
 permissions:
@@ -17,7 +17,7 @@ hooks:
     - location: scripts/deploy.sh
       timeout: 60
       runas: ec2-user
-      command: chmod +x /home/ec2-user/orury/scripts/deploy.sh
+      command: chmod +x /home/ec2-user/ttest/scripts/deploy.sh
 
   ApplicationStart:
     - location: scripts/deploy.sh
