@@ -13,19 +13,4 @@ public record KakaoAccountDto(
         LocalDateTime synchedAt,
         KakaoAccount kakaoAccount
 ) {
-    public static KakaoAccountDto of(
-            Long id,
-            boolean hasSignedUp,
-            LocalDateTime connectedAt,
-            LocalDateTime synchedAt,
-            KakaoAccount kakaoAccount
-    ) {
-        return new KakaoAccountDto(
-                id,
-                hasSignedUp,
-                connectedAt,
-                synchedAt,
-                kakaoAccount
-        );
-    }
 }

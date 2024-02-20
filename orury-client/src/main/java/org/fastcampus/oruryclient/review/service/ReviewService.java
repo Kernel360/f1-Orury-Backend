@@ -2,12 +2,11 @@ package org.fastcampus.oruryclient.review.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurycommon.error.code.ReviewErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
+import org.fastcampus.orurycommon.util.ImageUtils;
 import org.fastcampus.orurycommon.util.S3Folder;
-import org.fastcampus.orurycommon.util.S3Repository;
+import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.db.model.Review;
@@ -28,10 +27,10 @@ import java.util.Objects;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final GymRepository gymRepository;
-    private final S3Repository s3Repository;
+    private final ImageUtils imageUtils;
 
     @Transactional
-    public void createReview(ReviewDto reviewDto, MultipartFile... images) {
+    public void createReview(ReviewDto reviewDto, List<MultipartFile> images) {
         gymRepository.increaseReviewCount(reviewDto.gymDto().id());
         gymRepository.addTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         imageUploadAndSave(reviewDto, images);
@@ -44,20 +43,20 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, MultipartFile... images) {
-        oldS3ImagesDelete(updateReviewDto);
+    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> images) {
         gymRepository.subtractTotalScore(beforeReviewDto.gymDto().id(), beforeReviewDto.score());
         gymRepository.addTotalScore(updateReviewDto.gymDto().id(), updateReviewDto.score());
+
         imageUploadAndSave(updateReviewDto, images);
+        imageUtils.oldS3ImagesDelete(S3Folder.REVIEW.getName(), beforeReviewDto.images());
     }
 
     @Transactional(readOnly = true)
     public ReviewDto getReviewDtoById(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        var urls = s3Repository.getUrls(S3Folder.REVIEW.getName(), ImageUrlConverter.splitUrlToImage(review.getImages()));
-        var images = ImageUrlConverter.convertListToString(urls);
-        return ReviewDto.from(review, images);
+        var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), review.getImages());
+        return ReviewDto.from(review, urls);
     }
 
     public void isValidate(Long id1, Long id2) {
@@ -66,10 +65,10 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(ReviewDto reviewDto) {
-        oldS3ImagesDelete(reviewDto);
         gymRepository.decreaseReviewCount(reviewDto.gymDto().id());
         gymRepository.subtractTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         reviewRepository.delete(reviewDto.toEntity());
+        imageUtils.oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
     }
 
     @Transactional(readOnly = true)
@@ -78,9 +77,7 @@ public class ReviewService {
                 ? reviewRepository.findByGymIdOrderByIdDesc(gymId, pageable)
                 : reviewRepository.findByGymIdAndIdLessThanOrderByIdDesc(gymId, cursor, pageable);
 
-        return reviews.stream()
-                .map(ReviewDto::from)
-                .toList();
+        return transferReview(reviews);
     }
 
     public List<ReviewDto> getReviewDtosByUserId(Long userId, Long cursor, Pageable pageable) {
@@ -88,30 +85,30 @@ public class ReviewService {
                 ? reviewRepository.findByUserIdOrderByIdDesc(userId, pageable)
                 : reviewRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
-        return reviews.stream()
-                .map(ReviewDto::from)
-                .toList();
-    }
-
-    private void imageUploadAndSave(ReviewDto reviewDto, MultipartFile... images) {
-        if (s3Repository.isEmpty(images)) {
-            reviewRepository.save(reviewDto.toEntity(null));
-        } else {
-            List<String> imageUrls = s3Repository.upload(S3Folder.REVIEW.getName(), images);
-            String convertUrl = ImageUrlConverter.convertListToString(imageUrls);
-            reviewRepository.save(reviewDto.toEntity(convertUrl));
-        }
-    }
-
-    private void oldS3ImagesDelete(ReviewDto reviewDto) {
-        String[] oldImages = reviewDto.images()
-                .split(",");
-        s3Repository.delete(S3Folder.REVIEW.getName(), oldImages);
+        return transferReview(reviews);
     }
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getAllReviewDtosByGymId(Long gymId) {
-        return reviewRepository.findByGymId(gymId)
-                .stream().map(ReviewDto::from).toList();
+        var reviews = reviewRepository.findByGymId(gymId);
+        return transferReview(reviews);
+    }
+
+    private List<ReviewDto> transferReview(List<Review> reviews) {
+        return reviews.stream()
+                .map(it -> {
+                    var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), it.getImages());
+                    return ReviewDto.from(it, urls);
+                })
+                .toList();
+    }
+
+    private void imageUploadAndSave(ReviewDto reviewDto, List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            reviewRepository.save(reviewDto.toEntity(List.of()));
+        } else {
+            List<String> images = imageUtils.upload(S3Folder.REVIEW.getName(), files);
+            reviewRepository.save(reviewDto.toEntity(images));
+        }
     }
 }

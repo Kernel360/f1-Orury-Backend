@@ -1,21 +1,35 @@
 package org.fastcampus.orurydomain.base.converter;
 
 
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ApiResponse<T> {
-    private int status;
+public record ApiResponse(
+        int status,
+        String message,
+        Object data
+) {
+    //기존의 ApiResponse<Object>.builder
+    public static ApiResponse of(String message) {
+        return ApiResponse.of(
+                message,
+                null
+        );
+    }
 
-    private String message;
+    //기존의 ApiResponse<CustomResponse>.builder
+    public static ApiResponse of(String message, Object data) {
+        return ApiResponse.of(
+                HttpStatus.OK.value(),
+                message,
+                data
+        );
+    }
 
-    @Valid
-    private T data;
+    public static ApiResponse of(int status, String message, Object data) {
+        return new ApiResponse(
+                status,
+                message,
+                data
+        );
+    }
 }

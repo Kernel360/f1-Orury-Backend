@@ -2,7 +2,6 @@ package org.fastcampus.oruryclient.gym.converter.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -22,9 +21,10 @@ public record GymsResponse(
                 gymDto.id(),
                 gymDto.name(),
                 gymDto.roadAddress(),
-                (gymDto.reviewCount() == 0) ? 0 : gymDto.totalScore() / gymDto.reviewCount(),
+                (gymDto.reviewCount() == 0) ? 0 : Math.round(gymDto.totalScore() * 10 / gymDto.reviewCount()) / 10f,
                 gymDto.reviewCount(),
-                ImageUrlConverter.convertStringToList(gymDto.images())
+                gymDto.images()
+                        .isEmpty() ? null : gymDto.images()
                         .get(0),
                 Position.of(gymDto.latitude(), gymDto.longitude()),
                 doingBusiness,

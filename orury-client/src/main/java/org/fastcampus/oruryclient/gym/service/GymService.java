@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.fastcampus.orurycommon.error.code.GymErrorCode;
 import org.fastcampus.orurycommon.error.exception.BusinessException;
 import org.fastcampus.orurycommon.util.BusinessHoursConverter;
+import org.fastcampus.orurycommon.util.ImageUtils;
+import org.fastcampus.orurycommon.util.S3Folder;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.fastcampus.orurydomain.gym.db.repository.GymRepository;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
@@ -21,17 +23,19 @@ import java.util.List;
 @Service
 public class GymService {
     private final GymRepository gymRepository;
+    private final ImageUtils imageUtils;
 
     @Transactional(readOnly = true)
     public GymDto getGymDtoById(Long id) {
         Gym gym = gymRepository.findById(id).orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
-        return GymDto.from(gym);
+        var urls = imageUtils.getUrls(S3Folder.GYM.getName(), gym.getImages());
+        return GymDto.from(gym, urls);
     }
 
     @Transactional(readOnly = true)
     public List<GymDto> getGymDtosBySearchWordOrderByDistanceAsc(String searchWord, float latitude, float longitude) {
         return gymRepository.findByNameContaining(searchWord).stream()
-                .map(GymDto::from)
+                .map(it -> GymDto.from(it, imageUtils.getUrls(S3Folder.GYM.getName(), it.getImages())))
                 .sorted((g1, g2) -> {
                     double distance1 = getDistance(latitude, longitude, g1.latitude(), g1.longitude());
                     double distance2 = getDistance(latitude, longitude, g2.latitude(), g2.longitude());

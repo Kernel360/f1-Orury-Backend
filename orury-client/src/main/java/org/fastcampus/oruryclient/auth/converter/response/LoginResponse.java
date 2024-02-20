@@ -32,7 +32,7 @@ public record LoginResponse(
     }
 
     public static LoginResponse of(LoginDto loginDto) {
-        return new LoginResponse(
+        return LoginResponse.of(
                 loginDto.userDto().id(),
                 loginDto.userDto().email(),
                 loginDto.userDto().signUpType(),
@@ -43,7 +43,7 @@ public record LoginResponse(
     }
 
     public static LoginResponse fromNoUser(LoginDto loginDto) {
-        return new LoginResponse(
+        return LoginResponse.of(
                 null,
                 null,
                 loginDto.userDto().signUpType(),

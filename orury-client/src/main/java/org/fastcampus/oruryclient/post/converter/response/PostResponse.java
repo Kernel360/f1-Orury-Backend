@@ -1,8 +1,8 @@
 package org.fastcampus.oruryclient.post.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
@@ -19,9 +19,12 @@ public record PostResponse(
         int likeCount,
         List<String> images,
         int category,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime created_at,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime updated_at,
         boolean isMine,
+        Long userId,
         String userNickname,
         String userProfileImage,
         boolean isLike
@@ -34,16 +37,21 @@ public record PostResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                ImageUrlConverter.convertStringToList(postDto.images()),
+                postDto.images(),
                 postDto.category(),
                 postDto.createdAt(),
                 postDto.updatedAt(),
-                postDto.userDto()
-                        .id()
-                        .equals(userDto.id()),
+                mine(postDto, userDto),
+                postDto.userDto().id(),
                 postDto.userDto().nickname(),
                 postDto.userDto().profileImage(),
                 isLike
         );
+    }
+
+    private static boolean mine(PostDto postDto, UserDto userDto) {
+        return postDto.userDto()
+                .id()
+                .equals(userDto.id());
     }
 }

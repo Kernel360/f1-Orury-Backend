@@ -1,8 +1,8 @@
 package org.fastcampus.oruryclient.post.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,9 @@ public record PostsResponse(
         Long userId,
         String userNickname,
         String userProfileImage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt
 ) {
     public static PostsResponse of(PostDto postDto) {
@@ -32,7 +34,7 @@ public record PostsResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                (postDto.images().isEmpty()) ? null : ImageUrlConverter.convertStringToList(postDto.images()).get(0),
+                (postDto.images().isEmpty()) ? null : postDto.images().get(0),
                 postDto.category(),
                 postDto.userDto().id(),
                 postDto.userDto().nickname(),

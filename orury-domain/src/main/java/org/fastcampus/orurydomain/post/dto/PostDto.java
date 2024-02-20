@@ -4,10 +4,13 @@ import org.fastcampus.orurydomain.post.db.model.Post;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 /**
  * DTO for {@link Post}
  */
+
 public record PostDto(
         Long id,
         String title,
@@ -15,7 +18,7 @@ public record PostDto(
         int viewCount,
         int commentCount,
         int likeCount,
-        String images,
+        List<String> images,
         int category,
         UserDto userDto,
         LocalDateTime createdAt,
@@ -28,7 +31,7 @@ public record PostDto(
             int viewCount,
             int commentCount,
             int likeCount,
-            String images,
+            List<String> images,
             int category,
             UserDto userDto,
             LocalDateTime createdAt,
@@ -65,7 +68,7 @@ public record PostDto(
         );
     }
 
-    public static PostDto from(Post entity, String imgUrls, String postUserImageUrl) {
+    public static PostDto from(Post entity, List<String> imgUrls, String postUserImageUrl) {
         return PostDto.of(
                 entity.getId(),
                 entity.getTitle(),
@@ -97,7 +100,7 @@ public record PostDto(
         );
     }
 
-    public Post toEntity(String newImages) {
+    public Post toEntity(List<String> newImages) {
         return Post.of(
                 id,
                 title,

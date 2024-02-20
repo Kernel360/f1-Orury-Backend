@@ -1,9 +1,9 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
-import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,9 @@ public record MyPostResponse(
         int likeCount,
         String thumbnailImage,
         int category,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt
 ) implements IdIdentifiable {
     public static MyPostResponse of(PostDto postDto) {
@@ -29,7 +31,9 @@ public record MyPostResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                (postDto.images().isEmpty()) ? null : ImageUrlConverter.convertStringToList(postDto.images()).get(0),
+                (postDto.images()
+                        .isEmpty()) ? null : postDto.images()
+                        .get(0),
                 postDto.category(),
                 postDto.createdAt(),
                 postDto.updatedAt()
