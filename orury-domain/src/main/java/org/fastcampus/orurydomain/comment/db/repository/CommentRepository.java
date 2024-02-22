@@ -9,11 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(Long postId, Long parentId, Long cursor, Pageable pageable);
+    List<Comment> findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(Long postId, Long parentId, Long cursor, Pageable pageable);
 
     List<Comment> findByParentIdOrderByIdAsc(Long parentId);
-
-    List<Comment> findByPost_Id(Long postId);
 
     List<Comment> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 

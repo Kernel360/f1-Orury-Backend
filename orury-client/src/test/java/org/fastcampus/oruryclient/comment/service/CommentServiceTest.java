@@ -121,7 +121,7 @@ class CommentServiceTest {
                 CommentDto.from(comment3_3, commentUserImage)
         );
 
-        when(commentRepository.findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable))
+        when(commentRepository.findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable))
                 .thenReturn(parentComments);
         when(commentRepository.findByParentIdOrderByIdAsc(1L))
                 .thenReturn(childCommentsFor1);
@@ -139,7 +139,7 @@ class CommentServiceTest {
         assertEquals(expectedCommentDtos, commentDtos);
 
         verify(commentRepository, times(1))
-                .findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable);
+                .findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable);
         verify(commentRepository, times(3))
                 .findByParentIdOrderByIdAsc(anyLong());
     }
@@ -159,7 +159,7 @@ class CommentServiceTest {
         assertEquals(0, commentDtos.size());
 
         verify(commentRepository, never())
-                .findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable);
+                .findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(post.getId(), NumberConstants.PARENT_COMMENT, cursor, pageable);
         verify(commentRepository, never())
                 .findByParentIdOrderByIdAsc(anyLong());
     }

@@ -1,13 +1,10 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDate;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MypageResponse(
         Long id,
         String email,

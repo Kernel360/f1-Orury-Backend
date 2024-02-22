@@ -1,10 +1,7 @@
 package org.fastcampus.oruryclient.gym.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GymsResponse(
         Long id,
         String name,

@@ -38,7 +38,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public void isExist(UserDto userDto, GymDto gymDto) {
-        boolean exist = reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id());
+        boolean exist = reviewRepository.existsByUserIdAndGymId(userDto.id(), gymDto.id());
         if (exist) throw new BusinessException(ReviewErrorCode.BAD_REQUEST);
     }
 
