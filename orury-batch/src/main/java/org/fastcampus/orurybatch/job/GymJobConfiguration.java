@@ -7,6 +7,7 @@ import org.fastcampus.orurybatch.config.JobCompletionNotificationListener;
 import org.fastcampus.orurybatch.dto.GymResponse;
 import org.fastcampus.orurybatch.dto.KakaoMapGymResponse;
 import org.fastcampus.orurybatch.util.Constant;
+import org.fastcampus.orurybatch.util.SqlQuery;
 import org.fastcampus.orurydomain.gym.db.model.Gym;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -72,7 +73,7 @@ public class GymJobConfiguration {
     public ItemWriter<Gym> itemWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<Gym>()
                 .dataSource(dataSource)
-                .sql(Constant.INSERT_GYM)
+                .sql(SqlQuery.INSERT_GYM)
                 .beanMapped()
                 .build();
     }

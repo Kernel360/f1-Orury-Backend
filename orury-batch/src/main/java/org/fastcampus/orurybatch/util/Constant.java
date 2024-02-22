@@ -3,17 +3,6 @@ package org.fastcampus.orurybatch.util;
 import java.util.List;
 
 public class Constant {
-    public static final String INSERT_GYM = "INSERT INTO gym (name, road_address, address, latitude, longitude, phone_number, kakao_id, created_at, updated_at) " +
-            "VALUES (:name, :roadAddress, :address, :latitude, :longitude, :phoneNumber, :kakaoId, now(), now()) " +
-            "ON DUPLICATE KEY UPDATE " +
-            "name = :name, " +
-            "road_address = :roadAddress, " +
-            "address = :address, " +
-            "latitude = :latitude, " +
-            "longitude = :longitude, " +
-            "phone_number = :phoneNumber, " +
-            "updated_at = now()";
-
     public static final List<String> LOCATIONS = List.of(
             "강남구", "강동구", "강북구", "강서구", "관악구",
             "광진구", "구로구", "금천구", "노원구", "도봉구",
