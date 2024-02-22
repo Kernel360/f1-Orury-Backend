@@ -14,7 +14,6 @@ import org.fastcampus.orurydomain.base.converter.ApiResponse;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserPrincipal;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gyms")
+@RequestMapping("/gyms")
 @RestController
 public class GymController {
     private final GymService gymService;
@@ -31,7 +30,7 @@ public class GymController {
 
     @Operation(summary = "암장 상세 조회", description = "gymId를 받아, 암장을 상세 정보를 돌려준다.")
     @GetMapping("/{id}")
-    public ApiResponse<GymResponse> getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse getGymById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         GymDto gymDto = gymService.getGymDtoById(id);
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -41,17 +40,12 @@ public class GymController {
         GymReviewStatistics gymReviewStatistics = GymReviewStatistics.of(reviewDtos);
 
         GymResponse response = GymResponse.of(gymDto, doingBusiness, isLike, gymReviewStatistics);
-
-        return ApiResponse.<GymResponse>builder()
-                .status(HttpStatus.OK.value())
-                .message(GymMessage.GYM_READ.getMessage())
-                .data(response)
-                .build();
+        return ApiResponse.of(GymMessage.GYM_READ.getMessage(), response);
     }
 
     @Operation(summary = "암장 목록 검색", description = "검색어와 위치 좌표(경도, 위도)를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
     @GetMapping("/search")
-    public ApiResponse<List<GymsResponse>> getGymsByLocation(
+    public ApiResponse getGymsByLocation(
             @RequestParam("search_word") String searchWord,
             @RequestParam float latitude,
             @RequestParam float longitude,
@@ -65,13 +59,8 @@ public class GymController {
                     boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
                     return GymsResponse.of(gymDto, doingBusiness, isLike);
-                }).toList();
-
-        return ApiResponse.<List<GymsResponse>>builder()
-                .status(HttpStatus.OK.value())
-                .message(GymMessage.GYM_READ.getMessage())
-                .data(response)
-                .build();
+                })
+                .toList();
+        return ApiResponse.of(GymMessage.GYM_READ.getMessage(), response);
     }
-
 }

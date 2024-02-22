@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.post.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
@@ -15,8 +16,10 @@ public record PostResponse(
         int likeCount,
         List<String> images,
         int category,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime created_at,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime updated_at,
         boolean isMine,
         Long userId,
         String userNickname,

@@ -18,13 +18,8 @@ public class KakaoMapClient {
     private String BASE_URL;
 
     @Bean
-    public WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
-    }
-
-    @Bean
     public WebClient webClient() {
-        return webClientBuilder()
+        return WebClient.builder()
                 .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, env)
                 .build();
@@ -32,7 +27,6 @@ public class KakaoMapClient {
 
     public KakaoMapGymResponse searchGyms(String location, int page) {
         String queryParam = "서울시" + location + "클라이밍";
-        log.info("queryParam: {}, page: {}", queryParam, page);
         return webClient().get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("query", queryParam)

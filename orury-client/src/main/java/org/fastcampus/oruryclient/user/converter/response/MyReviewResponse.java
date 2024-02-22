@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 
@@ -12,7 +13,9 @@ public record MyReviewResponse(
         List<String> images,
         float score,
         List<MyReviewResponse.ReviewReactionCount> reviewReactionCount,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         Long gymId,
         String gymName

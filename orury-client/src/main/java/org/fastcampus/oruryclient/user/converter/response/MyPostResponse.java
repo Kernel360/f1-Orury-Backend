@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.fastcampus.oruryclient.global.IdIdentifiable;
 import org.fastcampus.orurydomain.post.dto.PostDto;
 
@@ -14,7 +15,9 @@ public record MyPostResponse(
         int likeCount,
         String thumbnailImage,
         int category,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt
 ) implements IdIdentifiable {
     public static MyPostResponse of(PostDto postDto) {

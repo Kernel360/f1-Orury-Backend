@@ -1,5 +1,6 @@
 package org.fastcampus.oruryclient.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ public record MypageResponse(
         String nickname,
         int signUpType,
         int gender,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDate birthday,
         String profileImage
 ) {
