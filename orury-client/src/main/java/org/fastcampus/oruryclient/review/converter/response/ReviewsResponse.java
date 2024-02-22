@@ -1,8 +1,6 @@
 package org.fastcampus.oruryclient.review.converter.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import org.fastcampus.orurydomain.global.constants.NumberConstants;
 import org.fastcampus.orurydomain.review.dto.ReviewDto;
 import org.fastcampus.orurydomain.user.dto.UserDto;
@@ -10,7 +8,6 @@ import org.fastcampus.orurydomain.user.dto.UserDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ReviewsResponse(
         Long id,
         String content,

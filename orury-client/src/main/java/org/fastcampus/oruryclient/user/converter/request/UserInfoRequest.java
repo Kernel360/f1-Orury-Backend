@@ -1,11 +1,8 @@
 package org.fastcampus.oruryclient.user.converter.request;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurycommon.util.ImageUrlConverter;
 import org.fastcampus.orurydomain.user.dto.UserDto;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record UserInfoRequest(
         String nickname
 ) {

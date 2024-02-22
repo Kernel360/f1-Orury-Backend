@@ -58,7 +58,7 @@ class ReviewServiceTest {
     void should_ReviewCreatedSuccessfully() {
         //given
         ReviewDto reviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        List<MultipartFile> images = createMultiFile();
+        List<MultipartFile> images = createMultiFiles();
 
         //when
         reviewService.createReview(reviewDto, images);
@@ -80,14 +80,14 @@ class ReviewServiceTest {
         UserDto userDto = UserDto.from(createUser(1L));
         GymDto gymDto = GymDto.from(createGym(1L));
 
-        given(reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id())).willReturn(false);
+        given(reviewRepository.existsByUserIdAndGymId(userDto.id(), gymDto.id())).willReturn(false);
 
         //when
         reviewService.isExist(userDto, gymDto);
 
         //then
         then(reviewRepository).should()
-                .existsByUser_IdAndGym_Id(any(), any());
+                .existsByUserIdAndGymId(any(), any());
     }
 
     @Test
@@ -97,7 +97,7 @@ class ReviewServiceTest {
         UserDto userDto = UserDto.from(createUser(1L));
         GymDto gymDto = GymDto.from(createGym(1L));
 
-        given(reviewRepository.existsByUser_IdAndGym_Id(userDto.id(), gymDto.id())).willReturn(true);
+        given(reviewRepository.existsByUserIdAndGymId(userDto.id(), gymDto.id())).willReturn(true);
 
         //when & then
         BusinessException exception = assertThrows(BusinessException.class,
@@ -105,7 +105,7 @@ class ReviewServiceTest {
         assertEquals(ReviewErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
         then(reviewRepository).should()
-                .existsByUser_IdAndGym_Id(any(), any());
+                .existsByUserIdAndGymId(any(), any());
     }
 
     @Test
@@ -114,7 +114,7 @@ class ReviewServiceTest {
         //given
         ReviewDto beforerReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
         ReviewDto updateReviewDto = ReviewDto.from(createReview(1L, 1L, 1L));
-        List<MultipartFile> images = createMultiFile();
+        List<MultipartFile> images = createMultiFiles();
 
         //when
         reviewService.updateReview(beforerReviewDto, updateReviewDto, images);
@@ -402,7 +402,7 @@ class ReviewServiceTest {
         return reviews;
     }
 
-    public static List<MultipartFile> createMultiFile() {
+    public static List<MultipartFile> createMultiFiles() {
         try {
             // 여러 개의 MultipartFile을 생성하여 배열에 담아 반환
             return List.of(
