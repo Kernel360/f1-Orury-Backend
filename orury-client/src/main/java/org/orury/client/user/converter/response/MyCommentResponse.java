@@ -1,5 +1,6 @@
 package org.orury.client.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.comment.dto.CommentDto;
 
@@ -10,7 +11,9 @@ public record MyCommentResponse(
         String content,
         Long postId,
         String postTitle,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         int likeCount
 ) implements IdIdentifiable {

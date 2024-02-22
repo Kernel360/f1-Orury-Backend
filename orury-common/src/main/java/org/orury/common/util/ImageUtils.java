@@ -18,8 +18,7 @@ public class ImageUtils {
     }
 
     public String getUserImageUrl(String image) {
-        return s3Repository.getUrls(S3Folder.USER.getName(), List.of(image))
-                .get(0);
+        return s3Repository.getUrls(S3Folder.USER.getName(), List.of(image)).get(0);
     }
 
     public List<String> getUrls(String domain, List<String> image) {
@@ -43,7 +42,6 @@ public class ImageUtils {
     }
 
     public String upload(String domain, MultipartFile image) {
-        return s3Repository.upload(domain, List.of(image))
-                .get(0);
+        return s3Repository.upload(domain, List.of(image)).get(0);
     }
 }

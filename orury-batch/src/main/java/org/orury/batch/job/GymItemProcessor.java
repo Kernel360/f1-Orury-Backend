@@ -8,7 +8,7 @@ import org.springframework.batch.item.ItemProcessor;
 @Slf4j
 public class GymItemProcessor implements ItemProcessor<GymResponse, Gym> {
     @Override
-    public Gym process(GymResponse item) throws Exception {
+    public Gym process(GymResponse item) {
         return item.toDto().toEntity();
     }
 }

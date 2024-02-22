@@ -1,5 +1,6 @@
 package org.orury.client.user.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.review.dto.ReviewDto;
 
@@ -12,7 +13,9 @@ public record MyReviewResponse(
         List<String> images,
         float score,
         List<MyReviewResponse.ReviewReactionCount> reviewReactionCount,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         Long gymId,
         String gymName

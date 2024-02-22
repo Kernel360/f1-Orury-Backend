@@ -11,13 +11,12 @@ import org.orury.domain.gym.db.model.GymLike;
 import org.orury.domain.gym.db.model.GymLikePK;
 import org.orury.domain.gym.dto.GymLikeDto;
 import org.orury.domain.user.dto.UserPrincipal;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gyms/like")
+@RequestMapping("/gyms/like")
 @RestController
 public class GymLikeController {
     private final GymLikeService gymLikeService;
@@ -25,29 +24,23 @@ public class GymLikeController {
 
     @Operation(summary = "암장 좋아요 생성", description = "암장 id를 받아, 암장 좋아요를 생성한다.")
     @PostMapping("/{gymId}")
-    public ApiResponse<Object> createGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse createGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         gymService.isValidate(gymId);
         GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
 
         gymLikeService.createGymLike(gymLikeDto);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(GymMessage.GYM_LIKE_CREATED.getMessage())
-                .build();
+        return ApiResponse.of(GymMessage.GYM_LIKE_CREATED.getMessage());
     }
 
     @Operation(summary = "암장 좋아요 삭제", description = "암장 id를 받아, 암장 좋아요를 삭제한다.")
     @DeleteMapping("/{gymId}")
-    public ApiResponse<Object> deleteGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse deleteGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         gymService.isValidate(gymId);
         GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
 
         gymLikeService.deleteGymLike(gymLikeDto);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(GymMessage.GYM_LIKE_DELETED.getMessage())
-                .build();
+        return ApiResponse.of(GymMessage.GYM_LIKE_DELETED.getMessage());
     }
 }

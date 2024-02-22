@@ -1,5 +1,6 @@
 package org.orury.client.review.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.dto.UserDto;
@@ -15,7 +16,9 @@ public record ReviewsResponse(
         List<ReviewReactionCount> reviewReactionCount,
         String myReaction,
         Writer writer,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         boolean isMine
 

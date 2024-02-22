@@ -22,7 +22,6 @@ import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.dto.UserDto;
 import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +30,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -41,36 +40,29 @@ public class UserController {
 
     @Operation(summary = "마이페이지 조회", description = "id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
     @GetMapping()
-    public ApiResponse<Object> readMypage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse readMypage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         MypageResponse mypageResponse = MypageResponse.of(userDto);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_READ.getMessage())
-                .data(mypageResponse)
-                .build();
+        return ApiResponse.of(UserMessage.USER_READ.getMessage(), mypageResponse);
     }
 
     @Operation(summary = "프로필 사진 수정", description = "request에 담긴 id에 해당하는 유저의 프로필 사진을 수정합니다.")
     @PostMapping("/profile-image")
-    public ApiResponse<Object> updateProfileImage(
+    public ApiResponse updateProfileImage(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart(required = false) MultipartFile image
     ) {
         UserDto userDto = userService.getUserDtoById(userPrincipal.id());
         userService.updateProfileImage(userDto, image);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_PROFILEIMAGE_UPDATED.getMessage())
-                .build();
+        return ApiResponse.of(UserMessage.USER_PROFILEIMAGE_UPDATED.getMessage());
     }
 
     @Operation(summary = "유저 정보 수정", description = "request에 담긴 id에 해당하는 유저의 정보를 수정합니다. 현재 닉네임만 수정 가능합니다. ")
     @PatchMapping
-    public ApiResponse<Object> updateUserInfo(
+    public ApiResponse updateUserInfo(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserInfoRequest userInfoRequest
     ) {
@@ -79,16 +71,12 @@ public class UserController {
 
         userService.updateUserInfo(updateUserDto);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_UPDATED.getMessage())
-                .build();
-
+        return ApiResponse.of(UserMessage.USER_UPDATED.getMessage());
     }
 
     @Operation(summary = "내가 쓴 게시글 조회", description = "user_id로 내가 쓴 게시글을 조회한다.")
     @GetMapping("/posts")
-    public ApiResponse<WithCursorResponse<MyPostResponse>> getPostsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
+    public ApiResponse getPostsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
 
         List<PostDto> postDtos = postService.getPostDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<MyPostResponse> myPostResponses = postDtos.stream()
@@ -97,16 +85,12 @@ public class UserController {
 
         WithCursorResponse<MyPostResponse> cursorResponse = WithCursorResponse.of(myPostResponses, cursor);
 
-        return ApiResponse.<WithCursorResponse<MyPostResponse>>builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_POSTS_READ.getMessage())
-                .data(cursorResponse)
-                .build();
+        return ApiResponse.of(UserMessage.USER_POSTS_READ.getMessage(), cursorResponse);
     }
 
     @Operation(summary = "내가 쓴 리뷰 조회", description = "user_id로 내가 쓴 리뷰를 조회한다.")
     @GetMapping("/reviews")
-    public ApiResponse<WithCursorResponse<MyReviewResponse>> getReviewsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
+    public ApiResponse getReviewsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
 
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<MyReviewResponse> myReviewResponses = reviewDtos.stream()
@@ -115,16 +99,12 @@ public class UserController {
 
         WithCursorResponse<MyReviewResponse> cursorResponse = WithCursorResponse.of(myReviewResponses, cursor);
 
-        return ApiResponse.<WithCursorResponse<MyReviewResponse>>builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_REVIEWS_READ.getMessage())
-                .data(cursorResponse)
-                .build();
+        return ApiResponse.of(UserMessage.USER_REVIEWS_READ.getMessage(), cursorResponse);
     }
 
     @Operation(summary = "내가 쓴 댓글 조회", description = "user_id로 내가 쓴 댓글을 조회한다.")
     @GetMapping("/comments")
-    public ApiResponse<WithCursorResponse<MyCommentResponse>> getCommentsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
+    public ApiResponse getCommentsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
 
         List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
         List<MyCommentResponse> myCommentResponses = commmentDtos.stream()
@@ -133,23 +113,15 @@ public class UserController {
 
         WithCursorResponse<MyCommentResponse> cursorResponse = WithCursorResponse.of(myCommentResponses, cursor);
 
-        return ApiResponse.<WithCursorResponse<MyCommentResponse>>builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_COMMENTS_READ.getMessage())
-                .data(cursorResponse)
-                .build();
+        return ApiResponse.of(UserMessage.USER_COMMENTS_READ.getMessage(), cursorResponse);
     }
 
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping
-    public ApiResponse<Object> deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         UserDto user = userService.getUserDtoById(userPrincipal.id());
         userService.deleteUser(user);
 
-        return ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message(UserMessage.USER_DELETED.getMessage())
-                .build();
+        return ApiResponse.of(UserMessage.USER_DELETED.getMessage());
     }
-
 }

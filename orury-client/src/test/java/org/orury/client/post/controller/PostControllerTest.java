@@ -401,14 +401,10 @@ class PostControllerTest extends ControllerTest {
         ;
 
         //then
-        then(userService).should()
-                .getUserDtoById(any());
-        then(postService).should()
-                .getPostDtoById(any());
-        then(postService).should(never())
-                .isValidate(any(), any());
-        then(postService).should(never())
-                .deletePost(any());
+        then(userService).should().getUserDtoById(any());
+        then(postService).should().getPostDtoById(any());
+        then(postService).should(never()).isValidate(any(), any());
+        then(postService).should(never()).deletePost(any());
     }
 
     @DisplayName("[DELETE] 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외 처리 - 실패")
@@ -420,12 +416,9 @@ class PostControllerTest extends ControllerTest {
         UserDto userDto = createUserDto();
         PostErrorCode code = PostErrorCode.FORBIDDEN;
 
-        given(userService.getUserDtoById(NumberConstants.USER_ID))
-                .willReturn(userDto);
-        given(postService.getPostDtoById(postId))
-                .willReturn(postDto);
-        willThrow(new BusinessException(code)).given(postService)
-                .isValidate(postDto, userDto);
+        given(userService.getUserDtoById(NumberConstants.USER_ID)).willReturn(userDto);
+        given(postService.getPostDtoById(postId)).willReturn(postDto);
+        willThrow(new BusinessException(code)).given(postService).isValidate(postDto, userDto);
 
         //when
         mvc.perform(delete("/api/v1/posts/" + postId)
@@ -437,14 +430,10 @@ class PostControllerTest extends ControllerTest {
         ;
 
         //then
-        then(userService).should()
-                .getUserDtoById(any());
-        then(postService).should()
-                .getPostDtoById(any());
-        then(postService).should()
-                .isValidate(any(), any());
-        then(postService).should(never())
-                .deletePost(any());
+        then(userService).should().getUserDtoById(any());
+        then(postService).should().getPostDtoById(any());
+        then(postService).should().isValidate(any(), any());
+        then(postService).should(never()).deletePost(any());
     }
 
     @DisplayName("[GET] 카테고리: 자유게시판, '카테고리와 cursor값에 따른 다음 게시글 목록' 조회")
@@ -473,15 +462,9 @@ class PostControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts()
-                        .get(0)
-                        .id()))
-                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts()
-                        .get(1)
-                        .id()))
-                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts()
-                        .get(9)
-                        .id()))
+                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts().get(0).id()))
+                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts().get(1).id()))
+                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts().get(9).id()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))
         ;
 
@@ -557,15 +540,9 @@ class PostControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts()
-                        .get(0)
-                        .id()))
-                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts()
-                        .get(1)
-                        .id()))
-                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts()
-                        .get(9)
-                        .id()))
+                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts().get(0).id()))
+                .andExpect(jsonPath("$.data.posts[1].id").value(response.posts().get(1).id()))
+                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts().get(9).id()))
                 .andExpect(jsonPath("$.data.cursor").value(response.cursor()))
         ;
 
@@ -672,12 +649,8 @@ class PostControllerTest extends ControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(code.getMessage()))
-                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts()
-                        .get(0)
-                        .id()))
-                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts()
-                        .get(9)
-                        .id()))
+                .andExpect(jsonPath("$.data.posts[0].id").value(response.posts().get(0).id()))
+                .andExpect(jsonPath("$.data.posts[9].id").value(response.posts().get(9).id()))
                 .andExpect(jsonPath("$.data.next_page").value(response.nextPage()))
         ;
     }

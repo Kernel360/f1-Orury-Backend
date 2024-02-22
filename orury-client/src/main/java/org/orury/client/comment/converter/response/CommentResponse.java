@@ -1,5 +1,6 @@
 package org.orury.client.comment.converter.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.comment.dto.CommentDto;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,9 @@ public record CommentResponse(
         Long userId,
         String userNickname,
         String userProfileImage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         boolean isLike,
         int deleted
