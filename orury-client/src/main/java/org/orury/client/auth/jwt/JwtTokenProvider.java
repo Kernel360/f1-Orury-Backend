@@ -111,8 +111,8 @@ public class JwtTokenProvider {
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
-        refreshTokenRepositor.findByValue(refreshToken)
-                .orElseThrow(() -> new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN));
+        if (!refreshTokenRepository.existsByValue(refreshToken))
+            throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
 
         // Access 토큰, Refresh 토큰 모두 재발급
         return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
