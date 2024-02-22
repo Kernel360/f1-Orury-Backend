@@ -44,7 +44,7 @@ public class CommentService {
     public List<CommentDto> getCommentDtosByPost(PostDto postDto, Long cursor, Pageable pageable) {
         List<Comment> parentComments = (cursor.equals(NumberConstants.LAST_CURSOR))
                 ? new ArrayList<>()
-                : commentRepository.findByPost_IdAndParentIdAndIdGreaterThanOrderByIdAsc(postDto.id(), NumberConstants.PARENT_COMMENT, cursor, pageable);
+                : commentRepository.findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(postDto.id(), NumberConstants.PARENT_COMMENT, cursor, pageable);
         List<Comment> allComments = new LinkedList<>();
         parentComments.forEach(
                 comment -> {

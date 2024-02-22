@@ -1,10 +1,7 @@
 package org.fastcampus.oruryclient.auth.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.auth.dto.LoginDto;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record LoginResponse(
         Long id,
         String email,

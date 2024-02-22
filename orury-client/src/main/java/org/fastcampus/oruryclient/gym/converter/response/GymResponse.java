@@ -1,7 +1,5 @@
 package org.fastcampus.oruryclient.gym.converter.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.fastcampus.orurydomain.global.constants.Constants;
 import org.fastcampus.orurydomain.gym.dto.GymDto;
 
@@ -10,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GymResponse(
         Long id,
         String name,

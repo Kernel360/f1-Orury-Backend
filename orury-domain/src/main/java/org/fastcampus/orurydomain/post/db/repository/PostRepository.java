@@ -25,7 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
-    List<Post> findByUser_Id(Long userId);
+    List<Post> findByUserId(Long userId);
 
 
     @Modifying
