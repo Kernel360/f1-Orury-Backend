@@ -17,6 +17,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
+    boolean existsByIdAndParentId(Long commentId, Long parentId);
+
     @Modifying
     @Query("UPDATE comment SET likeCount = likeCount + 1 WHERE id = :id")
     void increaseLikeCount(Long id);

@@ -100,11 +100,9 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public void validateParentComment(Long parentCommentId) {
-        if (!parentCommentId.equals(NumberConstants.PARENT_COMMENT)) {
-            Comment parentComment = commentRepository.findById(parentCommentId)
-                    .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
-            if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
-                throw new BusinessException(CommentErrorCode.BAD_REQUEST);
+        if (parentCommentId.equals(NumberConstants.PARENT_COMMENT)) return;
+        if (!commentRepository.existsByIdAndParentId(parentCommentId, NumberConstants.PARENT_COMMENT)) {
+            throw new BusinessException(CommentErrorCode.BAD_REQUEST);
         }
     }
 
