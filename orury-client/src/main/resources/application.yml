@@ -1,4 +1,5 @@
 server:
+  port: 8085
   tomcat.mbeanregistry.enabled: true
 debug: false
 management.endpoints.web.exposure.include: "prometheus"
@@ -14,22 +15,20 @@ springdoc:
   show-actuator: true
 
 spring:
+  profiles:
+    default: dev
   mvc:
     cors:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
   datasource:
-    read:
-      jdbc-url: ENC(KkrDs/i2Asal3Qe2/GRo7vBh3Jdu3ozFVNy6sQzXYwKLScBRkm4jB4uWWCBF+rm/2t2XWE67sKRNXyL5fOChWLZ3hmp6KsMo4JSGjwXG8lzcStqVPMQ8jRq+cjaEALI4)
-      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
-      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
-      driver-class-name: com.mysql.cj.jdbc.Driver
-    write:
-      jdbc-url: ENC(nYHDbyPX77wt52BMec5vJQLAWDcuiHS06QrV34A4AoEjrCnmNAmWNO/x0FUvNmvRhCPhaPkS1z9bhK7lyRVKocHukRjc5jwbf0XiceDDO2OtxDAfSPTvZg==)
-      username: ENC(VUKxrYEb2eEVncT0XD7eeg==)
-      password: ENC(cGqwrzSfPJ96ZWhzjecvMoL80gulmH1r)
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    #    url: ${LOCAL_DB_NAME}
+    #    username: ${LOCAL_DB_USER_NAME}
+    #    password: ${LOCAL_DB_USER_PASSWORD}
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     properties:
       hibernate:
@@ -49,8 +48,6 @@ spring:
   jwt:
     secret:
       ENC(s+e66U0YV1+iNWMLFl0LCHmARANd5yCv3k41u0iPDpCyfG7+PUgpsYNyUP7SFk/PUNPuK/wnNod399PK2kW+qllbWZzqNwp6msfDx1xP8DCiTHCZXE4rcNZDYji0bM9uzyxIDCGMyDE=)
-  jackson:
-    property-naming-strategy: SNAKE_CASE
 cloud:
   aws:
     s3:
@@ -77,7 +74,8 @@ decorator:
 ---
 spring:
   profiles:
-    include: secret, dev
+    include: secret
+
 ---
 oauth-login:
   client:
