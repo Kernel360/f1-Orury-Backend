@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewReactionService {
     private final ReviewRepository reviewRepository;
     private final ReviewReactionRepository reviewReactionRepository;
-    private final int minReactionType = 1;
-    private final int maxReactionType = 5;
+    private static final int minReactionType = 1;
+    private static final int maxReactionType = 5;
 
     @Transactional(readOnly = true)
     public int getReactionType(Long userId, Long reviewId) {
