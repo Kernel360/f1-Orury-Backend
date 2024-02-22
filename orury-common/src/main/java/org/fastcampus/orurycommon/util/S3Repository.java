@@ -32,15 +32,11 @@ public class S3Repository {
 
     public List<String> getUrls(String domain, List<String> images) {
         return images.stream()
-                .map(it -> amazonS3.getUrl(bucket + domain, it)
-                        .toString())
+                .map(it -> amazonS3.getUrl(bucket + domain, it).toString())
                 .toList();
     }
 
     public List<String> upload(String domain, List<MultipartFile> multipartFiles) {
-        // 파일이 없으면 빈 리스트를 반환합니다.
-        if (isEmpty(multipartFiles)) return List.of();
-
         // 파일들을 임시로 저장합니다.
         List<File> files = multipartFiles.stream()
                 .map(this::convert)
@@ -52,7 +48,6 @@ public class S3Repository {
         // 임시 파일들을 삭제합니다.
         files.forEach(this::removeFile);
 
-        //파일 고유 이름을 반환
         return fileNames;
     }
 
@@ -66,15 +61,6 @@ public class S3Repository {
                     // 해당 버킷 경로의 S3에 파일을 삭제합니다.
                     amazonS3.deleteObject(bucket + domain, it);
                 });
-    }
-
-    public boolean isEmpty(List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) return true;
-        // 파일이 없으면 true를 반환합니다.
-        for (MultipartFile file : files) {
-            if (file == null || file.isEmpty()) return true;
-        }
-        return false;
     }
 
     private File convert(MultipartFile multipartFile) {
@@ -109,9 +95,7 @@ public class S3Repository {
 
     private String requestPutObject(String folder, File file) {
         // 파일 이름을 랜덤하게 생성하여 중복을 방지합니다.
-        String fileName = UUID.randomUUID()
-                .toString()
-                .substring(0, 15);
+        String fileName = UUID.randomUUID().toString().substring(0, 15);
         try {
             amazonS3.putObject(new PutObjectRequest(folder, fileName, file)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
