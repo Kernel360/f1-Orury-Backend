@@ -3,6 +3,7 @@ package org.fastcampus.oruryclient.comment.converter.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.fastcampus.orurydomain.comment.dto.CommentDto;
 
+import org.fastcampus.orurydomain.comment.dto.CommentDto;
 import java.time.LocalDateTime;
 
 public record CommentResponse(
