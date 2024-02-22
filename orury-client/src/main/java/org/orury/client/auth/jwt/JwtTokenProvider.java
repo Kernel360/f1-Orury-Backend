@@ -68,7 +68,7 @@ public class JwtTokenProvider {
             throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
         } catch (final ExpiredJwtException exception) {
             if (Objects.nonNull(exception.getClaims().get("email"))) {
-                throw new AuthException(TokenErrorCode.EXPIRED_SIGNUP_TOKEN);
+                throw new AuthException(TokenErrorCode.EXPIRED_NO_USER_TOKEN);
             }
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         } catch (final JwtException exception) {
