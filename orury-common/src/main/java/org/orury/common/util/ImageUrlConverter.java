@@ -1,9 +1,12 @@
 package org.orury.common.util;
 
-import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ImageUrlConverter {
@@ -19,7 +22,7 @@ public class ImageUrlConverter {
     }
 
     public static String splitUrlToImage(String url) {
-        if (url == null || url.isEmpty()) return "";
+        if (Objects.isNull(url) || url.isEmpty()) return Strings.EMPTY;
         return Arrays.stream(url.split("/"))
                 .reduce((first, second) -> second)
                 .orElse("");

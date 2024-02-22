@@ -15,12 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReviewReactionService {
     private final ReviewRepository reviewRepository;
     private final ReviewReactionRepository reviewReactionRepository;
+    private static final int minReactionType = 1;
+    private static final int maxReactionType = 5;
 
     @Transactional(readOnly = true)
     public int getReactionType(Long userId, Long reviewId) {
@@ -39,7 +44,7 @@ public class ReviewReactionService {
                 .orElseThrow(() -> new BusinessException(ReviewReactionErrorCode.BAD_REQUEST));
 
         int reactionTypeInput = reviewReactionDto.reactionType();
-        if (reactionTypeInput < 1 || reactionTypeInput > 5) {
+        if (reactionTypeInput < minReactionType || reactionTypeInput > maxReactionType) {
             throw new BusinessException(ReviewReactionErrorCode.BAD_REQUEST);
         }
 
