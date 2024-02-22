@@ -1,6 +1,6 @@
 #!/bin/bash
-BUILD_JAR=$(ls /home/ec2-user/orury/orury-client/build/libs/orury-client-0.0.1-SNAPSHOT.jar)
-BATCH_JAR=$(ls /home/ec2-user/orury/orury-batch/build/libs/orury-batch-0.0.1-SNAPSHOT.jar)
+BUILD_JAR=$(ls /home/ec2-user/orury/orury-client/build/libs/orury-client.jar)
+BATCH_JAR=$(ls /home/ec2-user/orury/orury-batch/build/libs/orury-batch.jar)
 
 JAR_NAME=$(basename $BUILD_JAR)
 BATCH_JAR_NAME=$(basename $BATCH_JAR)
@@ -17,7 +17,7 @@ echo "> batch build 파일명: $JAR_NAME" >> /home/ec2-user/orury/log/batch_succ
 
 echo "> build 파일 복사" >> /home/ec2-user/orury/log/deploy_success.log
 echo "> build 파일 복사" >> /home/ec2-user/orury/log/batch_success.log
-DEPLOY_PATH=/home/ec2-user/
+DEPLOY_PATH=/home/ec2-user/orury/
 cp $BUILD_JAR $DEPLOY_PATH
 cp $BATCH_JAR $DEPLOY_PATH
 
@@ -50,8 +50,5 @@ DEPLOY_BATCH_JAR=$DEPLOY_PATH$BATCH_JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/orury/log/deploy_success.log
 echo "> BATCH_JAR 배포"    >> /home/ec2-user/orury/log/batch_success.log
 
-cd /home/ec2-user/orury
-
-sudo docker-compose up -d
 sudo nohup java -jar $DEPLOY_JAR >> /home/ec2-user/orury/log/tomcat.log 2>/home/ec2-user/orury/log/deploy_error.log &
 sudo nohup java -jar $DEPLOY_BATCH_JAR >> /home/ec2-user/orury/log/batch.log 2>/home/ec2-user/orury/log/batch_error.log &
