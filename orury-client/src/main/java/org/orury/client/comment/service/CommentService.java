@@ -2,7 +2,6 @@ package org.orury.client.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.converter.message.CommentMessage;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUtils;
@@ -80,19 +79,9 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(CommentDto commentDto) {
-        CommentDto deletingCommentDto = CommentDto.of(
-                commentDto.id(),
-                CommentMessage.COMMENT_DELETED.getMessage(),
-                commentDto.parentId(),
-                0,
-                commentDto.postDto(),
-                commentDto.userDto(),
-                NumberConstants.IS_DELETED,
-                commentDto.createdAt(),
-                null
-        );
-        commentRepository.save(deletingCommentDto.toEntity());
-        commentLikeRepository.deleteByCommentLikePK_CommentId(deletingCommentDto.id());
+        Comment deletingComment = commentDto.toEntity().delete();
+        commentRepository.save(deletingComment);
+        commentLikeRepository.deleteByCommentLikePK_CommentId(deletingComment.getId());
         postRepository.decreaseCommentCount(commentDto.postDto().id());
     }
 

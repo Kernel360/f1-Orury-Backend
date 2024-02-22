@@ -1,5 +1,7 @@
 ////build.gradle 파일
 dependencies {
+    implementation project(':orury-common')
+
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
