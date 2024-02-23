@@ -1,17 +1,14 @@
 package org.orury.client.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.global.constants.Constants;
 import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.db.model.RefreshToken;
 import org.orury.domain.auth.db.repository.RefreshTokenRepository;
 import org.orury.domain.auth.dto.JwtToken;
+import org.orury.domain.global.constants.Constants;
 import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -67,10 +65,13 @@ public class JwtTokenProvider {
         try {
             claims = parseToken(accessToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
-            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.INVALID_ACCESS_TOKEN);
+        } catch (final ExpiredJwtException exception) {
+            if (Objects.nonNull(exception.getClaims().get("email"))) {
+                throw new AuthException(TokenErrorCode.EXPIRED_NO_USER_TOKEN);
+            }
+            throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         } catch (final JwtException exception) {
-            log.error("### Error when parsing token: {}", exception.getMessage());
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
 
@@ -110,8 +111,8 @@ public class JwtTokenProvider {
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
-        refreshTokenRepository.findByValue(refreshToken)
-                .orElseThrow(() -> new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN));
+        if (!refreshTokenRepository.existsByValue(refreshToken))
+            throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
 
         // Access 토큰, Refresh 토큰 모두 재발급
         return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
