@@ -1,4 +1,4 @@
-package org.orury.common.util;
+package org.orury.domain.global.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
+import org.orury.common.util.ImageUrlConverter;
+import org.orury.common.util.S3Folder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
