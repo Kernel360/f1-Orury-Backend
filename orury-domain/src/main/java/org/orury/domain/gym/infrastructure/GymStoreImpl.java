@@ -22,22 +22,19 @@ public class GymStoreImpl implements GymStore {
     }
 
     @Override
-    public void increaseReviewCount(Long gymId) {
+    public void increaseReviewCountAndTotalScore(Long gymId, float reviewScore) {
         gymRepository.increaseReviewCount(gymId);
-    }
-
-    @Override
-    public void decreaseReviewCount(Long gymId) {
-        gymRepository.decreaseReviewCount(gymId);
-    }
-
-    @Override
-    public void addTotalScore(Long gymId, float reviewScore) {
         gymRepository.addTotalScore(gymId, reviewScore);
     }
 
     @Override
-    public void subtractTotalScore(Long gymId, float reviewScore) {
+    public void updateTotalScore(Long gymId, float oldScore, float newScore) {
+        gymRepository.addTotalScore(gymId, newScore - oldScore);
+    }
+
+    @Override
+    public void decreaseReviewCountAndTotalScore(Long gymId, float reviewScore) {
+        gymRepository.decreaseReviewCount(gymId);
         gymRepository.subtractTotalScore(gymId, reviewScore);
     }
 

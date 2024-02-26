@@ -7,13 +7,11 @@ public interface GymStore {
 
     void decreaseLikeCount(Long gymId);
 
-    void increaseReviewCount(Long gymId);
+    void increaseReviewCountAndTotalScore(Long gymId, float reviewScore);
 
-    void decreaseReviewCount(Long gymId);
+    void updateTotalScore(Long gymId, float oldScore, float newScore);
 
-    void addTotalScore(Long gymId, float reviewScore);
-
-    void subtractTotalScore(Long gymId, float reviewScore);
+    void decreaseReviewCountAndTotalScore(Long gymId, float reviewScore);
 
     void saveGymLike(GymLike gymLike);
 
