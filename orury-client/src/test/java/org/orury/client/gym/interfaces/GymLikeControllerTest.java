@@ -1,12 +1,12 @@
-package org.orury.client.gym.controller;
+package org.orury.client.gym.interfaces;
 
-import org.orury.client.config.ControllerTest;
-import org.orury.client.config.WithUserPrincipal;
-import org.orury.client.gym.converter.message.GymMessage;
-import org.orury.common.error.code.GymErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.orury.client.config.ControllerTest;
+import org.orury.client.config.WithUserPrincipal;
+import org.orury.client.gym.interfaces.message.GymMessage;
+import org.orury.common.error.code.GymErrorCode;
+import org.orury.common.error.exception.BusinessException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;

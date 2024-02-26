@@ -1,17 +1,17 @@
-package org.orury.client.gym.controller;
+package org.orury.client.gym.interfaces;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.orury.client.config.ControllerTest;
 import org.orury.client.config.WithUserPrincipal;
-import org.orury.client.gym.converter.message.GymMessage;
+import org.orury.client.gym.interfaces.message.GymMessage;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.dto.GymDto;
+import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.db.model.User;
 import org.orury.domain.user.dto.UserDto;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;

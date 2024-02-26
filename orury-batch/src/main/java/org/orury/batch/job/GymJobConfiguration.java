@@ -8,7 +8,7 @@ import org.orury.batch.dto.GymResponse;
 import org.orury.batch.dto.KakaoMapGymResponse;
 import org.orury.batch.util.Constant;
 import org.orury.batch.util.SqlQuery;
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;

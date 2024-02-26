@@ -1,15 +1,15 @@
 package org.orury.client.gym.service;
 
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.model.GymLikePK;
-import org.orury.domain.gym.db.repository.GymLikeRepository;
-import org.orury.domain.gym.db.repository.GymRepository;
-import org.orury.domain.gym.dto.GymLikeDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.gym.domain.dto.GymLikeDto;
+import org.orury.domain.gym.domain.entity.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
+import org.orury.domain.gym.infrastructure.GymLikeRepository;
+import org.orury.domain.gym.infrastructure.GymRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
