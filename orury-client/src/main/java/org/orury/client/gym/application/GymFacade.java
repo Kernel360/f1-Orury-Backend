@@ -22,13 +22,7 @@ public class GymFacade {
 
     public GymResponse getGymById(Long gymId, Long userId) {
         var gymDto = gymService.getGymDtoById(gymId);
-        var doingBusiness = gymService.checkDoingBusiness(gymDto);
-        var isLike = gymService.isLiked(userId, gymId);
-
-        var reviewDtos = reviewService.getAllReviewDtosByGymId(gymId);
-        var gymReviewStatistics = GymReviewStatistics.of(reviewDtos);
-
-        return GymResponse.of(gymDto, doingBusiness, isLike, gymReviewStatistics);
+        return convertGymDtoToGymResponse(gymDto, userId);
     }
 
     public List<GymsResponse> getGymsBySearchWordAndLocation(String searchWord, float latitude, float longitude, Long userId) {
@@ -46,6 +40,15 @@ public class GymFacade {
         gymService.isValidate(gymId);
         var gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userId, gymId)));
         gymService.deleteGymLike(gymLikeDto);
+    }
+
+    private GymResponse convertGymDtoToGymResponse(GymDto gymDto, Long userId) {
+        var doingBusiness = gymService.checkDoingBusiness(gymDto);
+        var isLike = gymService.isLiked(userId, gymDto.id());
+        var reviewDtos = reviewService.getAllReviewDtosByGymId(gymDto.id());
+        var gymReviewStatistics = GymReviewStatistics.of(reviewDtos);
+
+        return GymResponse.of(gymDto, doingBusiness, isLike, gymReviewStatistics);
     }
 
     private List<GymsResponse> convertGymDtosToGymsResponses(List<GymDto> gymDtos, Long userId) {
