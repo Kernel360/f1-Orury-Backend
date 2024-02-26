@@ -1,4 +1,4 @@
-package org.orury.client.global.config;
+package org.orury.domain.global.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
