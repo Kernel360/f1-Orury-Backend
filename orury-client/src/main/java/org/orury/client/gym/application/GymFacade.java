@@ -6,6 +6,7 @@ import org.orury.client.gym.interfaces.response.GymReviewStatistics;
 import org.orury.client.gym.interfaces.response.GymsResponse;
 import org.orury.client.review.service.ReviewService;
 import org.orury.domain.gym.domain.GymService;
+import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
@@ -32,15 +33,7 @@ public class GymFacade {
 
     public List<GymsResponse> getGymsBySearchWordAndLocation(String searchWord, float latitude, float longitude, Long userId) {
         var gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude);
-
-        return gymDtos.stream()
-                .map(gymDto -> {
-                    var isLike = gymService.isLiked(userId, gymDto.id());
-                    var doingBusiness = gymService.checkDoingBusiness(gymDto);
-
-                    return GymsResponse.of(gymDto, doingBusiness, isLike);
-                })
-                .toList();
+        return convertGymDtosToGymsResponses(gymDtos, userId);
     }
 
     public void createGymLike(Long gymId, Long userId) {
@@ -53,5 +46,16 @@ public class GymFacade {
         gymService.isValidate(gymId);
         var gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userId, gymId)));
         gymService.deleteGymLike(gymLikeDto);
+    }
+
+    private List<GymsResponse> convertGymDtosToGymsResponses(List<GymDto> gymDtos, Long userId) {
+        return gymDtos.stream()
+                .map(gymDto -> {
+                    var isLike = gymService.isLiked(userId, gymDto.id());
+                    var doingBusiness = gymService.checkDoingBusiness(gymDto);
+
+                    return GymsResponse.of(gymDto, doingBusiness, isLike);
+                })
+                .toList();
     }
 }
