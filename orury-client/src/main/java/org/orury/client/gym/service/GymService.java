@@ -7,9 +7,10 @@ import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
 import org.orury.common.util.ImageUtils;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.gym.db.model.Gym;
-import org.orury.domain.gym.db.repository.GymRepository;
+import org.orury.domain.gym.GymReader;
+import org.orury.domain.gym.GymStore;
 import org.orury.domain.gym.dto.GymDto;
+import org.orury.domain.gym.dto.GymLikeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +23,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class GymService {
-    private final GymRepository gymRepository;
+    private final GymReader gymReader;
+    private final GymStore gymStore;
     private final ImageUtils imageUtils;
 
     @Transactional(readOnly = true)
     public GymDto getGymDtoById(Long id) {
-        Gym gym = gymRepository.findById(id).orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
+        var gym = gymReader.findGymById(id);
         var urls = imageUtils.getUrls(S3Folder.GYM.getName(), gym.getImages());
         return GymDto.from(gym, urls);
     }
 
     @Transactional(readOnly = true)
     public List<GymDto> getGymDtosBySearchWordOrderByDistanceAsc(String searchWord, float latitude, float longitude) {
-        return gymRepository.findByNameContaining(searchWord).stream()
+        return gymReader.findGymsBySearchWord(searchWord).stream()
                 .map(it -> GymDto.from(it, imageUtils.getUrls(S3Folder.GYM.getName(), it.getImages())))
                 .sorted((g1, g2) -> {
                     double distance1 = getDistance(latitude, longitude, g1.latitude(), g1.longitude());
@@ -42,6 +44,25 @@ public class GymService {
                     return (distance1 < distance2) ? -1 : 1;
                 })
                 .toList();
+    }
+
+    @Transactional
+    public void createGymLike(GymLikeDto gymLikeDto) {
+        if (gymReader.existGymLikeById(gymLikeDto.gymLikePK())) return;
+        gymStore.saveGymLike(gymLikeDto.toEntity());
+        gymStore.increaseLikeCount(gymLikeDto.gymLikePK().getGymId());
+    }
+
+    @Transactional
+    public void deleteGymLike(GymLikeDto gymLikeDto) {
+        if (!gymReader.existGymLikeById(gymLikeDto.gymLikePK())) return;
+        gymStore.deleteGymLike(gymLikeDto.toEntity());
+        gymStore.decreaseLikeCount(gymLikeDto.gymLikePK().getGymId());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isLiked(Long userId, Long gymId) {
+        return gymReader.existsGymLikeByUserIdAndGymId(userId, gymId);
     }
 
     public boolean checkDoingBusiness(GymDto gymDto) {
@@ -66,6 +87,6 @@ public class GymService {
 
     @Transactional(readOnly = true)
     public void isValidate(Long gymId) {
-        gymRepository.findById(gymId).orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
+        if (!gymReader.existsGymById(gymId)) throw new BusinessException(GymErrorCode.NOT_FOUND);
     }
 }

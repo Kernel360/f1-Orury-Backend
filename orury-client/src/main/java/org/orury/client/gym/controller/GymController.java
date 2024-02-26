@@ -7,11 +7,13 @@ import org.orury.client.gym.converter.message.GymMessage;
 import org.orury.client.gym.converter.response.GymResponse;
 import org.orury.client.gym.converter.response.GymReviewStatistics;
 import org.orury.client.gym.converter.response.GymsResponse;
-import org.orury.client.gym.service.GymLikeService;
 import org.orury.client.gym.service.GymService;
 import org.orury.client.review.service.ReviewService;
 import org.orury.domain.base.converter.ApiResponse;
+import org.orury.domain.gym.db.model.GymLike;
+import org.orury.domain.gym.db.model.GymLikePK;
 import org.orury.domain.gym.dto.GymDto;
+import org.orury.domain.gym.dto.GymLikeDto;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +27,6 @@ import java.util.List;
 @RestController
 public class GymController {
     private final GymService gymService;
-    private final GymLikeService gymLikeService;
     private final ReviewService reviewService;
 
     @Operation(summary = "암장 상세 조회", description = "gymId를 받아, 암장을 상세 정보를 돌려준다.")
@@ -34,7 +35,7 @@ public class GymController {
 
         GymDto gymDto = gymService.getGymDtoById(id);
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
-        boolean isLike = gymLikeService.isLiked(userPrincipal.id(), id);
+        boolean isLike = gymService.isLiked(userPrincipal.id(), id);
 
         List<ReviewDto> reviewDtos = reviewService.getAllReviewDtosByGymId(id);
         GymReviewStatistics gymReviewStatistics = GymReviewStatistics.of(reviewDtos);
@@ -55,12 +56,34 @@ public class GymController {
 
         List<GymsResponse> response = gymDtos.stream()
                 .map(gymDto -> {
-                    boolean isLike = gymLikeService.isLiked(userPrincipal.id(), gymDto.id());
+                    boolean isLike = gymService.isLiked(userPrincipal.id(), gymDto.id());
                     boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
 
                     return GymsResponse.of(gymDto, doingBusiness, isLike);
                 })
                 .toList();
         return ApiResponse.of(GymMessage.GYM_READ.getMessage(), response);
+    }
+
+    @Operation(summary = "암장 좋아요 생성", description = "암장 id를 받아, 암장 좋아요를 생성한다.")
+    @PostMapping("/like/{gymId}")
+    public ApiResponse createGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        gymService.isValidate(gymId);
+        GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
+
+        gymService.createGymLike(gymLikeDto);
+
+        return ApiResponse.of(GymMessage.GYM_LIKE_CREATED.getMessage());
+    }
+
+    @Operation(summary = "암장 좋아요 삭제", description = "암장 id를 받아, 암장 좋아요를 삭제한다.")
+    @DeleteMapping("/like/{gymId}")
+    public ApiResponse deleteGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        gymService.isValidate(gymId);
+        GymLikeDto gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userPrincipal.id(), gymId)));
+
+        gymService.deleteGymLike(gymLikeDto);
+
+        return ApiResponse.of(GymMessage.GYM_LIKE_DELETED.getMessage());
     }
 }
