@@ -50,4 +50,14 @@ public class GymStoreImpl implements GymStore {
     public void deleteGymLike(GymLike gymLike) {
         gymLikeRepository.delete(gymLike);
     }
+
+    @Override
+    public void deleteGymLikesByUserId(Long userId) {
+        gymLikeRepository.findByGymLikePK_UserId(userId).forEach(
+                gymLike -> {
+                    gymRepository.decreaseLikeCount(gymLike.getGymLikePK().getGymId());
+                    gymLikeRepository.delete(gymLike);
+                }
+        );
+    }
 }

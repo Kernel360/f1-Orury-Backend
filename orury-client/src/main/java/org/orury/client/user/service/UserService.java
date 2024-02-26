@@ -5,13 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
-import org.orury.domain.global.domain.ImageUtils;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.comment.db.repository.CommentLikeRepository;
 import org.orury.domain.comment.db.repository.CommentRepository;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.infrastructure.GymLikeRepository;
-import org.orury.domain.gym.infrastructure.GymRepository;
+import org.orury.domain.global.domain.ImageUtils;
+import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.db.repository.PostLikeRepository;
 import org.orury.domain.post.db.repository.PostRepository;
 import org.orury.domain.review.db.repository.ReviewReactionRepository;
@@ -35,8 +34,7 @@ public class UserService {
     private final CommentLikeRepository commentLikeRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewReactionRepository reviewReactionRepository;
-    private final GymRepository gymRepository;
-    private final GymLikeRepository gymLikeRepository;
+    private final GymStore gymStore;
 
     public UserDto getUserDtoById(Long id) {
         User user = userRepository.findById(id)
@@ -61,7 +59,7 @@ public class UserService {
     @Transactional
     public void deleteUser(UserDto userDto) {
         deleteReviewReactionsByUserId(userDto.id());
-        deleteGymLikesByUserId(userDto.id());
+        gymStore.deleteGymLikesByUserId(userDto.id());
         deleteCommentLikesByUserId(userDto.id());
         deletePostLikesByUserId(userDto.id());
         deletePostsByUserId(userDto.id());
@@ -92,17 +90,6 @@ public class UserService {
                             reviewRepository.decreaseReactionCount(reviewReaction.getReviewReactionPK()
                                     .getReviewId(), reviewReaction.getReactionType());
                             reviewReactionRepository.delete(reviewReaction);
-                        }
-                );
-    }
-
-    private void deleteGymLikesByUserId(Long userId) {
-        gymLikeRepository.findByGymLikePK_UserId(userId)
-                .forEach(
-                        gymLike -> {
-                            gymRepository.decreaseLikeCount(gymLike.getGymLikePK()
-                                    .getGymId());
-                            gymLikeRepository.delete(gymLike);
                         }
                 );
     }

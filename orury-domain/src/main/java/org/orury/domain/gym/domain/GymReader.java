@@ -1,7 +1,6 @@
 package org.orury.domain.gym.domain;
 
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 
 import java.util.List;
@@ -16,6 +15,4 @@ public interface GymReader {
     boolean existGymLikeById(GymLikePK gymLikePK);
 
     boolean existsGymLikeByUserIdAndGymId(Long userId, Long gymId);
-
-    List<GymLike> findGymLikeByUserId(Long userId);
 }

@@ -18,4 +18,6 @@ public interface GymStore {
     void saveGymLike(GymLike gymLike);
 
     void deleteGymLike(GymLike gymLike);
+
+    void deleteGymLikesByUserId(Long userId);
 }

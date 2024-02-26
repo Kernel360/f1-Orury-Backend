@@ -5,7 +5,6 @@ import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.gym.domain.GymReader;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Repository;
 
@@ -41,10 +40,5 @@ public class GymReaderImpl implements GymReader {
     @Override
     public boolean existsGymLikeByUserIdAndGymId(Long userId, Long gymId) {
         return gymLikeRepository.existsByGymLikePK_UserIdAndGymLikePK_GymId(userId, gymId);
-    }
-
-    @Override
-    public List<GymLike> findGymLikeByUserId(Long userId) {
-        return gymLikeRepository.findByGymLikePK_UserId(userId);
     }
 }
