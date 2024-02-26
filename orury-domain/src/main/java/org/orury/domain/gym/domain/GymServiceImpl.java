@@ -45,17 +45,15 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional
     public void createGymLike(GymLikeDto gymLikeDto) {
-        if (gymReader.existGymLikeById(gymLikeDto.gymLikePK())) return;
-        gymStore.saveGymLike(gymLikeDto.toEntity());
-        gymStore.increaseLikeCount(gymLikeDto.gymLikePK().getGymId());
+        if (gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
+        gymStore.createGymLike(gymLikeDto.toEntity());
     }
 
     @Override
     @Transactional
     public void deleteGymLike(GymLikeDto gymLikeDto) {
-        if (!gymReader.existGymLikeById(gymLikeDto.gymLikePK())) return;
+        if (!gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
         gymStore.deleteGymLike(gymLikeDto.toEntity());
-        gymStore.decreaseLikeCount(gymLikeDto.gymLikePK().getGymId());
     }
 
     @Override

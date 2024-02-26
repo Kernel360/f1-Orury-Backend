@@ -33,7 +33,7 @@ public class GymReaderImpl implements GymReader {
     }
 
     @Override
-    public boolean existGymLikeById(GymLikePK gymLikePK) {
+    public boolean existsGymLikeById(GymLikePK gymLikePK) {
         return gymLikeRepository.existsById(gymLikePK);
     }
 

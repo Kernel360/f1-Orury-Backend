@@ -12,16 +12,6 @@ public class GymStoreImpl implements GymStore {
     private final GymLikeRepository gymLikeRepository;
 
     @Override
-    public void increaseLikeCount(Long gymId) {
-        gymRepository.increaseLikeCount(gymId);
-    }
-
-    @Override
-    public void decreaseLikeCount(Long gymId) {
-        gymRepository.decreaseLikeCount(gymId);
-    }
-
-    @Override
     public void increaseReviewCountAndTotalScore(Long gymId, float reviewScore) {
         gymRepository.increaseReviewCount(gymId);
         gymRepository.addTotalScore(gymId, reviewScore);
@@ -39,13 +29,15 @@ public class GymStoreImpl implements GymStore {
     }
 
     @Override
-    public void saveGymLike(GymLike gymLike) {
+    public void createGymLike(GymLike gymLike) {
         gymLikeRepository.save(gymLike);
+        gymRepository.increaseLikeCount(gymLike.getGymLikePK().getGymId());
     }
 
     @Override
     public void deleteGymLike(GymLike gymLike) {
         gymLikeRepository.delete(gymLike);
+        gymRepository.decreaseLikeCount(gymLike.getGymLikePK().getGymId());
     }
 
     @Override

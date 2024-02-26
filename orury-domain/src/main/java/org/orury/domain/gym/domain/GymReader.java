@@ -12,7 +12,7 @@ public interface GymReader {
 
     List<Gym> findGymsBySearchWord(String searchWord);
 
-    boolean existGymLikeById(GymLikePK gymLikePK);
+    boolean existsGymLikeById(GymLikePK gymLikePK);
 
     boolean existsGymLikeByUserIdAndGymId(Long userId, Long gymId);
 }
