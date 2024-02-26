@@ -1,7 +1,7 @@
-package org.orury.domain.gym.dto;
+package org.orury.domain.gym.domain.dto;
 
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.model.GymLikePK;
+import org.orury.domain.gym.domain.entity.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
 
 public record GymLikeDto(
         GymLikePK gymLikePK

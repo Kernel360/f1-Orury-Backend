@@ -1,5 +1,10 @@
 ////build.gradle 파일
 dependencies {
+    implementation project(':orury-common')
+
+    //S3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.268'
+
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

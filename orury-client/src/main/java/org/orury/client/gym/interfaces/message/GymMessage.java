@@ -1,4 +1,4 @@
-package org.orury.client.gym.converter.message;
+package org.orury.client.gym.interfaces.message;
 
 import lombok.Getter;
 

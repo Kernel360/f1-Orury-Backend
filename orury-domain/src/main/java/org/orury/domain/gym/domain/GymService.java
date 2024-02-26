@@ -1,7 +1,7 @@
-package org.orury.client.gym.service;
+package org.orury.domain.gym.domain;
 
-import org.orury.domain.gym.dto.GymDto;
-import org.orury.domain.gym.dto.GymLikeDto;
+import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.gym.domain.dto.GymLikeDto;
 
 import java.util.List;
 

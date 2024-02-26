@@ -1,8 +1,8 @@
-package org.orury.domain.gym;
+package org.orury.domain.gym.domain;
 
-import org.orury.domain.gym.db.model.Gym;
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.model.GymLikePK;
+import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.gym.domain.entity.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
 
 import java.util.List;
 

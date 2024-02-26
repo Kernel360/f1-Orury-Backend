@@ -1,14 +1,12 @@
-package org.orury.client.gym.infrastructure;
+package org.orury.domain.gym.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.gym.GymReader;
-import org.orury.domain.gym.db.model.Gym;
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.model.GymLikePK;
-import org.orury.domain.gym.db.repository.GymLikeRepository;
-import org.orury.domain.gym.db.repository.GymRepository;
+import org.orury.domain.gym.domain.GymReader;
+import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.gym.domain.entity.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

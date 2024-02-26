@@ -1,6 +1,6 @@
-package org.orury.domain.gym;
+package org.orury.domain.gym.domain;
 
-import org.orury.domain.gym.db.model.GymLike;
+import org.orury.domain.gym.domain.entity.GymLike;
 
 public interface GymStore {
     void increaseLikeCount(Long gymId);

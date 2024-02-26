@@ -1,14 +1,14 @@
 package org.orury.client.gym.application;
 
 import lombok.RequiredArgsConstructor;
-import org.orury.client.gym.converter.response.GymResponse;
-import org.orury.client.gym.converter.response.GymReviewStatistics;
-import org.orury.client.gym.converter.response.GymsResponse;
-import org.orury.client.gym.service.GymService;
+import org.orury.client.gym.interfaces.response.GymResponse;
+import org.orury.client.gym.interfaces.response.GymReviewStatistics;
+import org.orury.client.gym.interfaces.response.GymsResponse;
 import org.orury.client.review.service.ReviewService;
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.model.GymLikePK;
-import org.orury.domain.gym.dto.GymLikeDto;
+import org.orury.domain.gym.domain.GymService;
+import org.orury.domain.gym.domain.dto.GymLikeDto;
+import org.orury.domain.gym.domain.entity.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,13 +30,13 @@ public class GymFacade {
         return GymResponse.of(gymDto, doingBusiness, isLike, gymReviewStatistics);
     }
 
-    public List<GymsResponse> getGymsByLocation(String searchWord, float latitude, float longitude, Long userId) {
+    public List<GymsResponse> getGymsBySearchWordAndLocation(String searchWord, float latitude, float longitude, Long userId) {
         var gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude);
 
         return gymDtos.stream()
                 .map(gymDto -> {
-                    boolean isLike = gymService.isLiked(userId, gymDto.id());
-                    boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
+                    var isLike = gymService.isLiked(userId, gymDto.id());
+                    var doingBusiness = gymService.checkDoingBusiness(gymDto);
 
                     return GymsResponse.of(gymDto, doingBusiness, isLike);
                 })

@@ -1,4 +1,4 @@
-package org.orury.client.gym.converter.response;
+package org.orury.client.gym.interfaces.response;
 
 import org.orury.domain.review.dto.ReviewDto;
 

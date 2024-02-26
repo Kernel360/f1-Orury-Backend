@@ -1,17 +1,15 @@
-package org.orury.client.gym.service;
+package org.orury.domain.gym.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
-import org.orury.common.util.ImageUtils;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.gym.GymReader;
-import org.orury.domain.gym.GymStore;
-import org.orury.domain.gym.db.model.Gym;
-import org.orury.domain.gym.dto.GymDto;
-import org.orury.domain.gym.dto.GymLikeDto;
+import org.orury.domain.global.domain.ImageUtils;
+import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.gym.domain.dto.GymLikeDto;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

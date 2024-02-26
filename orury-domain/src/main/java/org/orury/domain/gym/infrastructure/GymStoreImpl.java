@@ -1,10 +1,8 @@
-package org.orury.client.gym.infrastructure;
+package org.orury.domain.gym.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.orury.domain.gym.GymStore;
-import org.orury.domain.gym.db.model.GymLike;
-import org.orury.domain.gym.db.repository.GymLikeRepository;
-import org.orury.domain.gym.db.repository.GymRepository;
+import org.orury.domain.gym.domain.GymStore;
+import org.orury.domain.gym.domain.entity.GymLike;
 import org.springframework.stereotype.Repository;
 
 @Repository

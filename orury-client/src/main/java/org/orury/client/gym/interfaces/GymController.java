@@ -1,11 +1,10 @@
-package org.orury.client.gym.controller;
+package org.orury.client.gym.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.gym.application.GymFacade;
-import org.orury.client.gym.converter.message.GymMessage;
-import org.orury.client.review.service.ReviewService;
+import org.orury.client.gym.interfaces.message.GymMessage;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class GymController {
     private final GymFacade gymFacade;
-    private final ReviewService reviewService;
 
     @Operation(summary = "암장 상세 조회", description = "gymId를 받아, 암장을 상세 정보를 돌려준다.")
     @GetMapping("/{id}")
@@ -28,13 +26,13 @@ public class GymController {
 
     @Operation(summary = "암장 목록 검색", description = "검색어와 위치 좌표(경도, 위도)를 받아, 검색어를 포함하는 암장 목록을 가까운 순으로 돌려준다.")
     @GetMapping("/search")
-    public ApiResponse getGymsByLocation(
+    public ApiResponse getGymsBySearchWordAndLocation(
             @RequestParam("search_word") String searchWord,
             @RequestParam float latitude,
             @RequestParam float longitude,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        var gymsResponse = gymFacade.getGymsByLocation(searchWord, latitude, longitude, userPrincipal.id());
+        var gymsResponse = gymFacade.getGymsBySearchWordAndLocation(searchWord, latitude, longitude, userPrincipal.id());
         return ApiResponse.of(GymMessage.GYM_READ.getMessage(), gymsResponse);
     }
 

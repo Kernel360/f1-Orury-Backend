@@ -1,7 +1,7 @@
-package org.orury.domain.gym.dto;
+package org.orury.domain.gym.domain.dto;
 
 
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
