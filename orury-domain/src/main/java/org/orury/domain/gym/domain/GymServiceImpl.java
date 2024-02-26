@@ -73,10 +73,10 @@ public class GymServiceImpl implements GymService {
         DayOfWeek today = LocalDateTime.now().getDayOfWeek();
         String businessHour = gymDto.businessHours().get(today);
 
+        LocalTime nowTime = LocalTime.now();
         LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
         LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
-        LocalTime nowTime = LocalTime.now();
-
+        
         return nowTime.isAfter(openTime) && nowTime.isBefore(closeTime);
     }
 
