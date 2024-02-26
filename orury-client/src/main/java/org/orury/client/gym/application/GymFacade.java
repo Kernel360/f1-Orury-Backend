@@ -8,8 +8,6 @@ import org.orury.client.review.service.ReviewService;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
-import org.orury.domain.gym.domain.entity.GymLike;
-import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,15 +28,13 @@ public class GymFacade {
         return convertGymDtosToGymsResponses(gymDtos, userId);
     }
 
-    public void createGymLike(Long gymId, Long userId) {
-        gymService.isValidate(gymId);
-        var gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userId, gymId)));
+    public void createGymLike(GymLikeDto gymLikeDto) {
+        gymService.isValidate(gymLikeDto.gymLikePK().getGymId());
         gymService.createGymLike(gymLikeDto);
     }
 
-    public void deleteGymLike(Long gymId, Long userId) {
-        gymService.isValidate(gymId);
-        var gymLikeDto = GymLikeDto.from(GymLike.of(GymLikePK.of(userId, gymId)));
+    public void deleteGymLike(GymLikeDto gymLikeDto) {
+        gymService.isValidate(gymLikeDto.gymLikePK().getGymId());
         gymService.deleteGymLike(gymLikeDto);
     }
 

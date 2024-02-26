@@ -6,7 +6,7 @@ import org.orury.domain.gym.domain.entity.GymLikePK;
 public record GymLikeDto(
         GymLikePK gymLikePK
 ) {
-    private static GymLikeDto of(GymLikePK gymLikePK) {
+    public static GymLikeDto of(GymLikePK gymLikePK) {
         return new GymLikeDto(gymLikePK);
     }
 

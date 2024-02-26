@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.client.gym.application.GymFacade;
 import org.orury.client.gym.interfaces.message.GymMessage;
 import org.orury.domain.base.converter.ApiResponse;
+import org.orury.domain.gym.domain.dto.GymLikeDto;
+import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -39,14 +41,16 @@ public class GymController {
     @Operation(summary = "암장 좋아요 생성", description = "암장 id를 받아, 암장 좋아요를 생성한다.")
     @PostMapping("/like/{gymId}")
     public ApiResponse createGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        gymFacade.createGymLike(gymId, userPrincipal.id());
+        var gymLikeDto = GymLikeDto.of(GymLikePK.of(userPrincipal.id(), gymId));
+        gymFacade.createGymLike(gymLikeDto);
         return ApiResponse.of(GymMessage.GYM_LIKE_CREATED.getMessage());
     }
 
     @Operation(summary = "암장 좋아요 삭제", description = "암장 id를 받아, 암장 좋아요를 삭제한다.")
     @DeleteMapping("/like/{gymId}")
     public ApiResponse deleteGymLike(@PathVariable Long gymId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        gymFacade.deleteGymLike(gymId, userPrincipal.id());
+        var gymLikeDto = GymLikeDto.of(GymLikePK.of(userPrincipal.id(), gymId));
+        gymFacade.deleteGymLike(gymLikeDto);
         return ApiResponse.of(GymMessage.GYM_LIKE_DELETED.getMessage());
     }
 }
