@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -73,9 +74,7 @@ public class GymServiceImpl implements GymService {
     public boolean checkDoingBusiness(GymDto gymDto) {
         DayOfWeek today = LocalDateTime.now().getDayOfWeek();
         String businessHour = gymDto.businessHours().get(today);
-
-        if (businessHour == null)
-            return false;
+        if (businessHour == null) return false;
 
         LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
         LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
@@ -87,11 +86,9 @@ public class GymServiceImpl implements GymService {
     private List<GymDto> sortGymsByDistanceAsc(List<Gym> gyms, float latitude, float longitude) {
         return gyms.stream()
                 .map(it -> GymDto.from(it, imageUtils.getUrls(S3Folder.GYM.getName(), it.getImages())))
-                .sorted((g1, g2) -> {
-                    double distance1 = getDistance(latitude, longitude, g1.latitude(), g1.longitude());
-                    double distance2 = getDistance(latitude, longitude, g2.latitude(), g2.longitude());
-                    return (distance1 < distance2) ? -1 : 1;
-                })
+                .sorted(Comparator.comparingDouble(
+                        o -> getDistance(latitude, longitude, o.latitude(), o.longitude())
+                ))
                 .toList();
     }
 
