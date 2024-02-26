@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(TestJpaConfig.class)
+@Import({TestJpaConfig.class, FlywayTestConfiguration.class})
 @DataJpaTest
 public @interface RepositoryTest {
 }
