@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLike;
-import org.orury.domain.post.db.repository.PostRepository;
+import org.orury.domain.post.infrastructure.PostRepository;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor

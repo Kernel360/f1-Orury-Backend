@@ -2,7 +2,7 @@ package org.orury.domain.comment.domain;
 
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 
 import java.util.List;
 

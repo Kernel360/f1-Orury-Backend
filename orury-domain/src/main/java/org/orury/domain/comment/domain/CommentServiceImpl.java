@@ -9,7 +9,7 @@ import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.ImageUtils;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
