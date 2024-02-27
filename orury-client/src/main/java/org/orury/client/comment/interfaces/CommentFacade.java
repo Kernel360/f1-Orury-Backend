@@ -5,11 +5,11 @@ import org.orury.client.comment.application.request.CommentCreateRequest;
 import org.orury.client.comment.application.request.CommentUpdateRequest;
 import org.orury.client.comment.application.response.CommentResponse;
 import org.orury.client.comment.application.response.CommentsWithCursorResponse;
-import org.orury.client.post.service.PostService;
 import org.orury.client.user.service.UserService;
 import org.orury.domain.comment.domain.CommentService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
+import org.orury.domain.post.domain.PostService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
