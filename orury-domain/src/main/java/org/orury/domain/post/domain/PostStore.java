@@ -11,4 +11,6 @@ public interface PostStore {
     void save(PostLike postLike);
 
     void delete(PostLike postLike);
+
+    void updateViewCount(Long id);
 }

@@ -27,6 +27,11 @@ public class PostStoreImpl implements PostStore {
     }
 
     @Override
+    public void updateViewCount(Long id) {
+        postRepository.updateViewCount(id);
+    }
+
+    @Override
     public void save(Post post) {
         postRepository.save(post);
     }
