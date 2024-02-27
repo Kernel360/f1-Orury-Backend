@@ -20,7 +20,7 @@ public class ImageReaderImpl implements ImageReader {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-g
+
     @Value("${cloud.aws.s3.default-image}")
     private String defaultImage;
 

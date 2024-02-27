@@ -1,7 +1,7 @@
 package org.orury.domain.config;
 
 import org.orury.domain.comment.db.model.Comment;
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.post.db.Post;
 import org.orury.domain.review.db.model.Review;
 import org.orury.domain.user.db.model.User;
