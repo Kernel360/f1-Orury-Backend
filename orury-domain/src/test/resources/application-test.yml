@@ -35,6 +35,3 @@ spring:
   flyway:
     enabled: false
 
-  flyway:
-    enabled: false
-
