@@ -1,4 +1,4 @@
-package org.orury.common.config;
+package org.orury.domain.global.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -11,11 +11,10 @@ import org.orury.client.comment.controller.CommentController;
 import org.orury.client.comment.controller.CommentLikeController;
 import org.orury.client.comment.service.CommentLikeService;
 import org.orury.client.comment.service.CommentService;
-import org.orury.client.gym.controller.GymController;
-import org.orury.client.gym.controller.GymLikeController;
-import org.orury.client.gym.service.GymLikeService;
-import org.orury.client.gym.service.GymService;
-import org.orury.client.post.interfaces.PostController;
+import org.orury.client.gym.interfaces.GymController;
+import org.orury.domain.gym.domain.GymService;
+import org.orury.client.post.controller.PostController;
+import org.orury.client.post.controller.PostLikeController;
 import org.orury.client.post.service.PostLikeService;
 import org.orury.client.post.service.PostService;
 import org.orury.client.review.controller.ReviewController;
@@ -39,7 +38,6 @@ import org.springframework.test.web.servlet.MockMvc;
         CommentController.class,
         CommentLikeController.class,
         GymController.class,
-        GymLikeController.class,
         PostController.class,
         ReviewController.class,
         ReviewReactionController.class,
@@ -64,9 +62,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected GymService gymService;
-
-    @MockBean
-    protected GymLikeService gymLikeService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;

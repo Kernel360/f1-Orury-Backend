@@ -1,7 +1,7 @@
-package org.orury.domain.gym.db.repository;
+package org.orury.domain.gym.infrastructure;
 
-import org.orury.domain.gym.db.model.GymLikePK;
-import org.orury.domain.gym.db.model.GymLike;
+import org.orury.domain.gym.domain.entity.GymLikePK;
+import org.orury.domain.gym.domain.entity.GymLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

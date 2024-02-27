@@ -1,6 +1,6 @@
-package org.orury.domain.gym.db.repository;
+package org.orury.domain.gym.infrastructure;
 
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

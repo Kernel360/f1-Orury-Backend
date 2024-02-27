@@ -6,7 +6,7 @@ import org.orury.batch.client.KakaoMapClient;
 import org.orury.batch.config.JobCompletionNotificationListener;
 import org.orury.batch.dto.GymResponse;
 import org.orury.batch.util.SqlQuery;
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;

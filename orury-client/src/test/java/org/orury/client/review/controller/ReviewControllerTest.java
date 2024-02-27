@@ -1,6 +1,8 @@
 //package org.orury.client.review.controller;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
 //import org.orury.client.config.ControllerTest;
 //import org.orury.client.config.WithUserPrincipal;
 //import org.orury.client.review.converter.message.ReviewMessage;
@@ -13,11 +15,9 @@
 //import org.orury.common.error.code.UserErrorCode;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.gym.dto.GymDto;
+//import org.orury.domain.gym.domain.dto.GymDto;
 //import org.orury.domain.review.dto.ReviewDto;
 //import org.orury.domain.user.dto.UserDto;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
 //import org.springframework.http.MediaType;
 //import org.springframework.mock.web.MockMultipartFile;
 //

@@ -1,7 +1,9 @@
-package org.orury.common.util;
+package org.orury.domain.global.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.common.util.S3Folder;
+import org.orury.domain.global.infrastructure.S3Repository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 

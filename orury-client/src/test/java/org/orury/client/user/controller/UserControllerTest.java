@@ -1,6 +1,8 @@
 //package org.orury.client.user.controller;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
 //import org.orury.client.config.ControllerTest;
 //import org.orury.client.config.WithUserPrincipal;
 //import org.orury.client.global.WithCursorResponse;
@@ -12,12 +14,10 @@
 //import org.orury.client.user.converter.response.MypageResponse;
 //import org.orury.domain.comment.dto.CommentDto;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.gym.dto.GymDto;
+//import org.orury.domain.gym.domain.dto.GymDto;
 //import org.orury.domain.post.dto.PostDto;
 //import org.orury.domain.review.dto.ReviewDto;
 //import org.orury.domain.user.dto.UserDto;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
 //import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.http.MediaType;

@@ -1,17 +1,16 @@
 package org.orury.client.auth.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.orury.domain.global.constants.Constants;
-import org.orury.common.error.code.TokenErrorCode;
-import org.orury.common.error.exception.AuthException;
-import org.orury.domain.auth.db.model.RefreshToken;
-import org.orury.domain.auth.db.repository.RefreshTokenRepository;
-import org.orury.domain.user.dto.UserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.common.error.code.TokenErrorCode;
+import org.orury.common.error.exception.AuthException;
+import org.orury.domain.auth.db.repository.RefreshTokenRepository;
+import org.orury.domain.global.constants.Constants;
+import org.orury.domain.user.dto.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,6 +47,7 @@ class JwtTokenProviderTest {
     // 만료된 토큰
     private final String EXPIRED_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBvcnVyeS5jb20iLCJpZCI6MSwiaWF0IjoxNzA2MjQzNzE2LCJleHAiOjE3MDYyNDM3NzZ9.nTKrQ7HxWiS9dG0WixQ6F578ugkSfN2TosXUnHr_fpc";
     private final String EXPIRED_REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBvcnVyeS5jb20iLCJpZCI6MSwiaWF0IjoxNzA2MjQzNzE2LCJleHAiOjE3MDYyNDM4MzZ9.v8AKma4QS3zCg1UzejUPf-uuY5BpwM7OiACNljY-QxM";
+    private final String EXPIRED_NO_USER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBvcnVyeS5jb20iLCJlbWFpbCI6ImVtYWlsQG9ydXJ5LmNvbSIsImlhdCI6MTcwODYwMTgzOCwiZXhwIjoxNzA4NjAzNjM4fQ.nljAg1le8v6I0H6EKcF1pcgLzRUxY_jHHiQKKygA6mg";
 
     @BeforeEach
     public void setUp() {
@@ -175,34 +174,52 @@ class JwtTokenProviderTest {
                 () -> jwtTokenProvider.getAuthenticationFromAccessToken(accessToken));
 
         assertEquals(TokenErrorCode.EXPIRED_ACCESS_TOKEN.getStatus(), exception.getStatus());
+        assertEquals(TokenErrorCode.EXPIRED_ACCESS_TOKEN.getMessage(), exception.getMessage());
+    }
+
+    @DisplayName("만료된 비회원용 액세스토큰이 들어오면, ExpiredNoUserToken 예외를 반환한다.")
+    @Test
+    void when_ExpiredNoUserAccessToken_Then_ExpiredAccessTokenException() {
+        // given
+        String accessToken = EXPIRED_NO_USER_TOKEN;
+
+        // when & then
+        AuthException exception = assertThrows(AuthException.class,
+                () -> jwtTokenProvider.getAuthenticationFromAccessToken(accessToken));
+
+        assertEquals(TokenErrorCode.EXPIRED_NO_USER_TOKEN.getStatus(), exception.getStatus());
+        assertEquals(TokenErrorCode.EXPIRED_NO_USER_TOKEN.getMessage(), exception.getMessage());
     }
 
     @DisplayName("만료되지 않고 유효한 형식의 리프레쉬토큰으로부터 생성한 인증객체를 정상적으로 반환한다.")
     @Test
     void should_RetrieveAuthenticationFromNormalRefreshToken() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
-        given(refreshTokenRepository.findByValue(anyString()))
-                .willReturn(Optional.of(mock(RefreshToken.class)));
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
+        given(refreshTokenRepository.existsByValue(anyString()))
+                .willReturn(true);
 
         // when
-        jwtTokenProvider.reissueJwtTokens(refreshToken);
+        jwtTokenProvider.reissueJwtTokens(request);
 
         // then
         then(refreshTokenRepository).should()
-                .findByValue(anyString());
+                .existsByValue(anyString());
     }
 
     @DisplayName("리프레쉬토큰이 null로 들어오면, InvalidRefreshToken 예외를 반환한다.")
     @Test
     void when_NullRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = null;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        given(request.getHeader("Authorization")).willReturn(null);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -211,11 +228,14 @@ class JwtTokenProviderTest {
     @Test
     void when_invalidPrefixRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Orury " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Orury " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -224,11 +244,14 @@ class JwtTokenProviderTest {
     @Test
     void when_MalFormedRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN.substring(0, 20);
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN.substring(0, 20);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -237,11 +260,14 @@ class JwtTokenProviderTest {
     @Test
     void when_IllegalArgument_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + "IamNOTjwtTOKEN";
+        String refreshTokenHeader = "Bearer " + "IamNOTjwtTOKEN";
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -250,11 +276,14 @@ class JwtTokenProviderTest {
     @Test
     void when_ExpiredRefreshToken_Then_ExpiredRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + EXPIRED_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.EXPIRED_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -263,19 +292,22 @@ class JwtTokenProviderTest {
     @Test
     void when_RefreshTokenBeforeReissue_Then_ExpiredRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
-        given(refreshTokenRepository.findByValue(anyString()))
-                .willReturn(Optional.empty());
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
+
+        given(refreshTokenRepository.existsByValue(anyString()))
+                .willReturn(false);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.EXPIRED_REFRESH_TOKEN.getStatus(), exception.getStatus());
 
         then(refreshTokenRepository).should()
-                .findByValue(anyString());
+                .existsByValue(anyString());
     }
 
     @DisplayName("id와 email을 받으면, 액세스토큰과 리프레시토큰을 생성하고 저장하여 돌려준다.")

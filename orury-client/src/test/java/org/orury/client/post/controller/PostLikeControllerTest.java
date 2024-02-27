@@ -1,14 +1,14 @@
 //package org.orury.client.post.controller;
 //
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
 //import org.orury.client.config.ControllerTest;
 //import org.orury.client.config.WithUserPrincipal;
-//import org.orury.client.post.common.message.PostMessage;
+//import org.orury.client.post.converter.message.PostMessage;
 //import org.orury.common.error.code.PostErrorCode;
 //import org.orury.common.error.exception.BusinessException;
-//import org.orury.domain.post.db.PostLikePK;
+//import org.orury.domain.post.db.model.PostLikePK;
 //import org.orury.domain.post.dto.PostLikeDto;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
 //
 //import static org.mockito.ArgumentMatchers.any;
 //import static org.mockito.BDDMockito.then;

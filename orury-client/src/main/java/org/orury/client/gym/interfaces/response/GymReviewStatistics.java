@@ -1,4 +1,4 @@
-package org.orury.client.gym.converter.response;
+package org.orury.client.gym.interfaces.response;
 
 import org.orury.domain.review.dto.ReviewDto;
 
@@ -54,7 +54,7 @@ public record GymReviewStatistics(
             return counts.entrySet().stream()
                     .map(o -> new MonthlyReviewCount(
                             o.getKey().getValue(),
-                            (float) o.getValue()[0] / (int) o.getValue()[1],
+                            Math.round((float) o.getValue()[0] * 100 / (int) o.getValue()[1]) / 100f,
                             (int) o.getValue()[1]))
                     .toList();
         }
