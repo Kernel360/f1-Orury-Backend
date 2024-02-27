@@ -1,0 +1,28 @@
+package org.orury.domain.post;
+
+import org.orury.domain.post.dto.PostDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+public interface PostService {
+    List<PostDto> getPostDtosByCategory(int category, Long cursor, Pageable pageable);
+
+    List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable);
+
+    List<PostDto> getPostDtosByUserId(Long userId, Long cursor, Pageable pageable);
+
+    Page<PostDto> getHotPostDtos(Pageable pageable);
+
+    PostDto getPostDtoById(Long id);
+
+    void createPost(PostDto postDto, List<MultipartFile> files);
+
+    void deletePost(PostDto postDto);
+
+    void addViewCount(PostDto postDto);
+
+    int getNextPage(Page<PostDto> postDtos, int page);
+}
