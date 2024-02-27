@@ -1,6 +1,7 @@
 package org.orury.domain.post.domain;
 
 import org.orury.domain.post.domain.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,9 @@ public interface PostService {
 
     void deletePost(PostDto postDto);
 
-    void addViewCount(PostDto postDto);
-
     int getNextPage(Page<PostDto> postDtos, int page);
+
+    void createPostLike(PostLikeDto postLikeDto);
+
+    void deletePostLike(PostLikeDto postLikeDto);
 }

@@ -6,8 +6,9 @@ import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -67,11 +68,14 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
         var post = postReader.findById(id);
-        return postImageConverter(post);
+        var isLike = postReader.isPostLiked(post.getUser().getId(), id);
+        var links = imageReader.getImageLinks(POST, post.getImages());
+        return PostDto.from(post, links, isLike);
     }
 
     @Override
     public void createPost(PostDto postDto, List<MultipartFile> files) {
+        // id == null -> 생성, id != null -> 수정
         if (postDto.id() != null) {
             var oldImages = postDto.images();
             if (!ImageUtil.imagesValidation(oldImages)) imageStore.delete(POST, oldImages);
@@ -88,13 +92,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void addViewCount(PostDto postDto) {
-        postStore.updateViewCount(postDto.id());
+    public int getNextPage(Page<PostDto> postDtos, int page) {
+        return (postDtos.hasNext()) ? page + 1 : NumberConstants.LAST_PAGE;
     }
 
     @Override
-    public int getNextPage(Page<PostDto> postDtos, int page) {
-        return (postDtos.hasNext()) ? page + 1 : NumberConstants.LAST_PAGE;
+    public void createPostLike(PostLikeDto postLikeDto) {
+        postReader.findById(postLikeDto.postLikePK().getPostId());
+        if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
+        postStore.save(postLikeDto.toEntity());
+    }
+
+    @Override
+    public void deletePostLike(PostLikeDto postLikeDto) {
+        postReader.findById(postLikeDto.postLikePK().getPostId());
+        if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
+        postStore.delete(postLikeDto.toEntity());
     }
 
     private PostDto postImageConverter(Post post) {
