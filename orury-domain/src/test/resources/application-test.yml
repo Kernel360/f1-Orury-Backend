@@ -32,4 +32,6 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  flyway:
+    enabled: false
 

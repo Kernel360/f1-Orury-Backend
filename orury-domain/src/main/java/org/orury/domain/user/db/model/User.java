@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.global.constants.NumberConstants;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,5 +61,11 @@ public class User extends AuditingField {
 
     public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, int isDeleted) {
         return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, isDeleted);
+    }
+
+    public User delete(String defaultImage) {
+        this.profileImage = defaultImage;
+        this.isDeleted = NumberConstants.IS_DELETED;
+        return this;
     }
 }

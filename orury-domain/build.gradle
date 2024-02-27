@@ -3,7 +3,7 @@ dependencies {
     //flyway
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
-    
+        implementation project(':orury-common')
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

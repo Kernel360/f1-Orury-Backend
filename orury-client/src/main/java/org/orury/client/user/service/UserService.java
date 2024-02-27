@@ -9,7 +9,6 @@ import org.orury.common.util.ImageUtils;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.comment.db.repository.CommentLikeRepository;
 import org.orury.domain.comment.db.repository.CommentRepository;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.db.repository.GymLikeRepository;
 import org.orury.domain.gym.db.repository.GymRepository;
 import org.orury.domain.post.db.repository.PostLikeRepository;
@@ -67,22 +66,9 @@ public class UserService {
         deletePostsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
+        var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
 
-        User user = User.of(
-                userDto.id(),
-                userDto.email(),
-                userDto.nickname(),
-                userDto.password(),
-                userDto.signUpType(),
-                userDto.gender(),
-                userDto.birthday(),
-                imageUtils.getUserDefaultImage(),
-                userDto.createdAt(),
-                null,
-                NumberConstants.IS_DELETED
-        );
-
-        userRepository.save(user);
+        userRepository.save(deletingUser);
     }
 
     private void deleteReviewReactionsByUserId(Long userId) {
