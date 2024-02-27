@@ -12,10 +12,7 @@ import org.orury.client.comment.controller.CommentLikeController;
 import org.orury.client.comment.service.CommentLikeService;
 import org.orury.client.comment.service.CommentService;
 import org.orury.client.gym.interfaces.GymController;
-import org.orury.domain.gym.domain.GymService;
-import org.orury.client.post.controller.PostController;
-import org.orury.client.post.controller.PostLikeController;
-import org.orury.client.post.service.PostLikeService;
+import org.orury.client.post.interfaces.PostController;
 import org.orury.client.post.service.PostService;
 import org.orury.client.review.controller.ReviewController;
 import org.orury.client.review.controller.ReviewReactionController;
@@ -24,6 +21,8 @@ import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.controller.UserController;
 import org.orury.client.user.service.UserService;
 import org.orury.common.config.SlackMessage;
+import org.orury.domain.gym.domain.GymService;
+import org.orury.domain.post.domain.PostLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,7 +38,6 @@ import org.springframework.test.web.servlet.MockMvc;
         CommentLikeController.class,
         GymController.class,
         PostController.class,
-        PostLikeController.class,
         ReviewController.class,
         ReviewReactionController.class,
         UserController.class

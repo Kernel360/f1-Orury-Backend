@@ -3,7 +3,7 @@
 //import io.swagger.v3.oas.annotations.Operation;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
-//import org.fastcampus.oruryadmin.domain.notice.db.model.Notice;
+//import org.fastcampus.oruryadmin.domain.notice.entity.entity.Notice;
 //import org.fastcampus.oruryadmin.domain.notice.service.NoticeService;
 //import org.fastcampus.oruryclient.base.converter.ApiResponse;
 //import org.springframework.web.bind.annotation.PostMapping;

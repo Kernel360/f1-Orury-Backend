@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.constants.Constants;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.db.model.Post;
+import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

@@ -2,6 +2,8 @@ package org.orury.client.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.domain.post.infrastructure.PostLikeRepository;
+import org.orury.domain.post.infrastructure.PostRepository;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
@@ -10,8 +12,6 @@ import org.orury.domain.comment.db.repository.CommentLikeRepository;
 import org.orury.domain.comment.db.repository.CommentRepository;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.gym.domain.GymStore;
-import org.orury.domain.post.db.repository.PostLikeRepository;
-import org.orury.domain.post.db.repository.PostRepository;
 import org.orury.domain.review.db.repository.ReviewReactionRepository;
 import org.orury.domain.review.db.repository.ReviewRepository;
 import org.orury.domain.user.db.model.User;
