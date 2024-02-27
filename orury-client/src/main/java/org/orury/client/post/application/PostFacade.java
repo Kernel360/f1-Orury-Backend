@@ -9,10 +9,8 @@ import org.orury.client.post.interfaces.response.PostsWithPageResponse;
 import org.orury.client.user.service.UserService;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.post.domain.PostLikeService;
 import org.orury.domain.post.domain.PostService;
-import org.orury.domain.post.domain.db.PostLike;
-import org.orury.domain.post.domain.db.PostLikePK;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.user.dto.UserDto;
@@ -32,7 +30,6 @@ import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_
 public class PostFacade {
     private final PostService postService;
     private final UserService userService;
-    private final PostLikeService postLikeService;
 
     public void createPost(Long userId, PostRequest request, List<MultipartFile> files) {
         var user = userService.getUserDtoById(userId);
@@ -58,9 +55,7 @@ public class PostFacade {
     public PostResponse getPostById(Long userId, Long postId) {
         PostDto post = postService.getPostDtoById(postId);
         UserDto user = userService.getUserDtoById(userId);
-        postService.addViewCount(post);
-        boolean isLike = postLikeService.isLiked(userId, postId);
-        return PostResponse.of(post, user, isLike);
+        return PostResponse.of(post, user);
     }
 
     public List<PostsResponse> getPostsByCategory(int category, Long cursor, Pageable pageable) {
@@ -86,13 +81,13 @@ public class PostFacade {
     }
 
     public void createPostLike(Long userId, Long postId) {
-        var postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(userId, postId)));
-        postLikeService.createPostLike(postLikeDto);
+        var postLikeDto = PostLikeDto.of(PostLikePK.of(userId, postId));
+        postService.createPostLike(postLikeDto);
     }
 
     public void deletePostLike(Long userId, Long postId) {
-        var postLikeDto = PostLikeDto.from(PostLike.of(PostLikePK.of(userId, postId)));
-        postLikeService.deletePostLike(postLikeDto);
+        var postLikeDto = PostLikeDto.of(PostLikePK.of(userId, postId));
+        postService.deletePostLike(postLikeDto);
     }
 
     private void isValidate(PostDto postDto, UserDto userDto) {
