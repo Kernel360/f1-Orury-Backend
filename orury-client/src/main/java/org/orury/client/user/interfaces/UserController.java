@@ -1,8 +1,5 @@
 package org.orury.client.user.interfaces;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.client.comment.service.CommentService;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.post.service.PostService;
@@ -17,16 +14,27 @@ import org.orury.client.user.interfaces.response.MypageResponse;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.comment.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,13 +79,7 @@ public class UserController {
     @Operation(summary = "내가 쓴 게시글 조회", description = "user_id로 내가 쓴 게시글을 조회한다.")
     @GetMapping("/posts")
     public ApiResponse getPostsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
-
-        List<PostDto> postDtos = postService.getPostDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
-        List<MyPostResponse> myPostResponses = postDtos.stream()
-                .map(MyPostResponse::of)
-                .toList();
-
-        WithCursorResponse<MyPostResponse> cursorResponse = WithCursorResponse.of(myPostResponses, cursor);
+        WithCursorResponse<MyPostResponse> cursorResponse = userFacade.getPostsByUserId(userPrincipal.id(), cursor);
 
         return ApiResponse.of(UserMessage.USER_POSTS_READ.getMessage(), cursorResponse);
     }
