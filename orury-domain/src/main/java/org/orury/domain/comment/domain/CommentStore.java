@@ -13,4 +13,6 @@ public interface CommentStore {
     void createCommentLike(CommentLike commentLike);
 
     void deleteCommentLike(CommentLike commentLike);
+
+    void deleteCommentLikesByUserId(Long userId);
 }

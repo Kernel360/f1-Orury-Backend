@@ -44,4 +44,14 @@ public class CommentStoreImpl implements CommentStore {
         commentLikeRepository.delete(commentLike);
         commentRepository.decreaseLikeCount(commentLike.getCommentLikePK().getCommentId());
     }
+
+    @Override
+    public void deleteCommentLikesByUserId(Long userId) {
+        commentLikeRepository.findByCommentLikePK_UserId(userId).forEach(
+                commentLike -> {
+                    commentRepository.decreaseLikeCount(commentLike.getCommentLikePK().getCommentId());
+                    commentLikeRepository.delete(commentLike);
+                }
+        );
+    }
 }
