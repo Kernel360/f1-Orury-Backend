@@ -2,10 +2,9 @@ package org.orury.client.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.common.error.code.PostErrorCode;
-import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.post.db.repository.PostLikeRepository;
-import org.orury.domain.post.db.repository.PostRepository;
+import org.orury.client.post.infrastructure.PostLikeRepository;
+import org.orury.domain.post.PostReader;
+import org.orury.domain.post.PostStore;
 import org.orury.domain.post.dto.PostLikeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,30 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostLikeServiceImpl implements PostLikeService {
     private final PostLikeRepository postLikeRepository;
-    private final PostRepository postRepository;
+    private final PostStore postStore;
+    private final PostReader postReader;
 
     @Override
     public void createPostLike(PostLikeDto postLikeDto) {
-        postRepository.findById(postLikeDto.postLikePK()
-                        .getPostId())
-                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        if (postLikeRepository.existsByPostLikePK(postLikeDto.postLikePK())) return;
-
+        postReader.findById(postLikeDto.postLikePK().getPostId());
+        if (!postLikeRepository.existsByPostLikePK(postLikeDto.postLikePK())) return;
         postLikeRepository.save(postLikeDto.toEntity());
-        postRepository.increaseLikeCount(postLikeDto.postLikePK()
-                .getPostId());
+        postStore.increaseLikeCount(postLikeDto.postLikePK().getPostId());
     }
 
     @Override
     public void deletePostLike(PostLikeDto postLikeDto) {
-        postRepository.findById(postLikeDto.postLikePK()
-                        .getPostId())
-                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
+        postReader.findById(postLikeDto.postLikePK().getPostId());
         if (!postLikeRepository.existsByPostLikePK(postLikeDto.postLikePK())) return;
-
         postLikeRepository.delete(postLikeDto.toEntity());
-        postRepository.decreaseLikeCount(postLikeDto.postLikePK()
-                .getPostId());
+        postStore.decreaseLikeCount(postLikeDto.postLikePK().getPostId());
     }
 
     @Override
@@ -47,4 +39,5 @@ public class PostLikeServiceImpl implements PostLikeService {
     public boolean isLiked(Long userId, Long postId) {
         return postLikeRepository.existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
     }
+
 }
