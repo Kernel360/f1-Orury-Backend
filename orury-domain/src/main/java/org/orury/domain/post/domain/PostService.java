@@ -28,4 +28,6 @@ public interface PostService {
     void createPostLike(PostLikeDto postLikeDto);
 
     void deletePostLike(PostLikeDto postLikeDto);
+
+    void updateViewCount(Long id);
 }

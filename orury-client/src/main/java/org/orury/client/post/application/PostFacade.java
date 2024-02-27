@@ -53,6 +53,7 @@ public class PostFacade {
     public PostResponse getPostById(Long userId, Long postId) {
         PostDto post = postService.getPostDtoById(postId);
         UserDto user = userService.getUserDtoById(userId);
+        postService.updateViewCount(postId);
         return PostResponse.of(post, user);
     }
 

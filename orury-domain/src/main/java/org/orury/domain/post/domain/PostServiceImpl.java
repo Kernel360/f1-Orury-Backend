@@ -6,9 +6,9 @@ import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
+import org.orury.domain.post.domain.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -99,15 +99,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public void createPostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
-        if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
+        if (postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
         postStore.save(postLikeDto.toEntity());
     }
 
     @Override
     public void deletePostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
-        if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
+        if (postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
         postStore.delete(postLikeDto.toEntity());
+    }
+
+    @Override
+    public void updateViewCount(Long id) {
+        postStore.updateViewCount(id);
     }
 
     private PostDto postImageConverter(Post post) {
