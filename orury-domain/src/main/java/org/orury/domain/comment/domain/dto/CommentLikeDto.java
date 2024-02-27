@@ -9,7 +9,7 @@ import org.orury.domain.comment.domain.entity.CommentLikePK;
 public record CommentLikeDto(
         CommentLikePK commentLikePK
 ) {
-    private static CommentLikeDto of(
+    public static CommentLikeDto of(
             CommentLikePK commentLikePK
     ) {
         return new CommentLikeDto(

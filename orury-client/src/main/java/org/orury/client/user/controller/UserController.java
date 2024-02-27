@@ -106,7 +106,7 @@ public class UserController {
     @GetMapping("/comments")
     public ApiResponse getCommentsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
 
-        List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
+        List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor);
         List<MyCommentResponse> myCommentResponses = commmentDtos.stream()
                 .map(MyCommentResponse::of)
                 .toList();
