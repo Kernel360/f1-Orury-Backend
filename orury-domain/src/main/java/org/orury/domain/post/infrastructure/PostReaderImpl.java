@@ -1,12 +1,12 @@
-package org.orury.client.post.infrastructure;
+package org.orury.domain.post.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.PostReader;
-import org.orury.domain.post.db.Post;
+import org.orury.domain.post.domain.PostReader;
+import org.orury.domain.post.domain.db.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;

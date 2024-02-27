@@ -1,7 +1,7 @@
 package org.orury.domain.comment.dto;
 
 import org.orury.domain.comment.db.model.Comment;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;

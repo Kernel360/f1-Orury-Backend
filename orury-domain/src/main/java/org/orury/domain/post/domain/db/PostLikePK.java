@@ -1,4 +1,4 @@
-package org.orury.domain.post.db;
+package org.orury.domain.post.domain.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

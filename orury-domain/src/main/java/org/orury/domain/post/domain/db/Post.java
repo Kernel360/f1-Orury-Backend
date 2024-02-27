@@ -1,11 +1,11 @@
-package org.orury.domain.post.db;
+package org.orury.domain.post.domain.db;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.user.db.model.User;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.EntityImageConverter;
+import org.orury.domain.user.db.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

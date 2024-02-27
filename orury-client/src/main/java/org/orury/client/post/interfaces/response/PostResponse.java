@@ -1,7 +1,7 @@
-package org.orury.client.post.common.response;
+package org.orury.client.post.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;

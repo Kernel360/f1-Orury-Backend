@@ -2,7 +2,7 @@ package org.orury.client.comment.converter.request;
 
 import org.orury.domain.comment.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 
 public record CommentCreateRequest(

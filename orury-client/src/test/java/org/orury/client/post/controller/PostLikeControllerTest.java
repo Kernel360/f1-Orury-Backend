@@ -6,7 +6,7 @@
 //import org.orury.common.error.code.PostErrorCode;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.post.db.model.PostLikePK;
-//import org.orury.domain.post.dto.PostLikeDto;
+//import org.orury.domain.post.domain.dto.PostLikeDto;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
 //

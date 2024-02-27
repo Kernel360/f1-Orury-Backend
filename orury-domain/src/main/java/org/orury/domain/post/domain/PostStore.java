@@ -1,6 +1,6 @@
-package org.orury.domain.post;
+package org.orury.domain.post.domain;
 
-import org.orury.domain.post.db.Post;
+import org.orury.domain.post.domain.db.Post;
 
 public interface PostStore {
     void updateViewCount(Long id);

@@ -1,4 +1,4 @@
-package org.orury.domain.post;
+package org.orury.domain.post.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,8 @@ import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.post.db.Post;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

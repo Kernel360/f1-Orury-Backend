@@ -1,6 +1,6 @@
-package org.orury.client.post.service;
+package org.orury.domain.post.domain;
 
-import org.orury.domain.post.dto.PostLikeDto;
+import org.orury.domain.post.domain.dto.PostLikeDto;
 
 public interface PostLikeService {
     void createPostLike(PostLikeDto postLikeDto);

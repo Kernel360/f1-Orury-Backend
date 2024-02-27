@@ -13,7 +13,7 @@
 //import org.orury.common.error.code.UserErrorCode;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.post.dto.PostDto;
+//import org.orury.domain.post.domain.dto.PostDto;
 //import org.orury.domain.user.dto.UserDto;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

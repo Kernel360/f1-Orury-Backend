@@ -2,7 +2,7 @@ package org.orury.client.user.converter.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.client.global.IdIdentifiable;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 
 import java.time.LocalDateTime;
 

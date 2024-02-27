@@ -27,7 +27,7 @@
 //import org.orury.domain.post.db.model.PostLikePK;
 //import org.orury.domain.post.db.repository.PostLikeRepository;
 //import org.orury.domain.post.db.repository.PostRepository;
-//import org.orury.domain.post.dto.PostDto;
+//import org.orury.domain.post.domain.dto.PostDto;
 //import org.orury.domain.review.db.model.Review;
 //import org.orury.domain.review.db.model.ReviewReaction;
 //import org.orury.domain.review.db.model.ReviewReactionPK;

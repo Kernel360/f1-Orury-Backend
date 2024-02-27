@@ -2,8 +2,8 @@ package org.orury.client.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.post.infrastructure.PostLikeRepository;
-import org.orury.client.post.infrastructure.PostRepository;
+import org.orury.domain.post.infrastructure.PostLikeRepository;
+import org.orury.domain.post.infrastructure.PostRepository;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;

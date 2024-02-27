@@ -1,11 +1,9 @@
-package org.orury.client.post.service;
+package org.orury.domain.post.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.infrastructure.PostLikeRepository;
-import org.orury.domain.post.PostReader;
-import org.orury.domain.post.PostStore;
-import org.orury.domain.post.dto.PostLikeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

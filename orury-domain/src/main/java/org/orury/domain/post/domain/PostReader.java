@@ -1,6 +1,6 @@
-package org.orury.domain.post;
+package org.orury.domain.post.domain;
 
-import org.orury.domain.post.db.Post;
+import org.orury.domain.post.domain.db.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

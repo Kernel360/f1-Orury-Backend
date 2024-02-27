@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.post.application.PostFacade;
-import org.orury.client.post.common.request.PostRequest;
-import org.orury.client.post.common.response.PostsWithCursorResponse;
+import org.orury.client.post.interfaces.request.PostRequest;
+import org.orury.client.post.interfaces.response.PostsWithCursorResponse;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.dto.UserPrincipal;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.orury.client.post.common.message.PostMessage.*;
+import static org.orury.client.post.interfaces.message.PostMessage.*;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
-package org.orury.domain.post;
+package org.orury.domain.post.domain;
 
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;

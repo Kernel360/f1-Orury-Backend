@@ -1,6 +1,6 @@
-package org.orury.domain.post.dto;
+package org.orury.domain.post.domain.dto;
 
-import org.orury.domain.post.db.Post;
+import org.orury.domain.post.domain.db.Post;
 import org.orury.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;

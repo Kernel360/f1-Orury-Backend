@@ -1,4 +1,4 @@
-package org.orury.client.post.infrastructure;
+package org.orury.domain.post.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

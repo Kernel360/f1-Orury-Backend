@@ -1,9 +1,9 @@
-package org.orury.client.post.infrastructure;
+package org.orury.domain.post.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.post.PostStore;
-import org.orury.domain.post.db.Post;
+import org.orury.domain.post.domain.PostStore;
+import org.orury.domain.post.domain.db.Post;
 import org.springframework.stereotype.Component;
 
 @Slf4j
