@@ -1,4 +1,4 @@
-package org.orury.client.post.converter.response;
+package org.orury.client.post.common.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.post.dto.PostDto;
@@ -39,9 +39,12 @@ public record PostResponse(
                 postDto.createdAt(),
                 postDto.updatedAt(),
                 mine(postDto, userDto),
-                postDto.userDto().id(),
-                postDto.userDto().nickname(),
-                postDto.userDto().profileImage(),
+                postDto.userDto()
+                        .id(),
+                postDto.userDto()
+                        .nickname(),
+                postDto.userDto()
+                        .profileImage(),
                 isLike
         );
     }

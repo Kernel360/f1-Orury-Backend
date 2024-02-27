@@ -1,4 +1,4 @@
-package org.orury.client.post.converter.request;
+package org.orury.client.post.common.request;
 
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;

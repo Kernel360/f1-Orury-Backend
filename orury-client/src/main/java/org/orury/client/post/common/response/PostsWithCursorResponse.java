@@ -1,4 +1,4 @@
-package org.orury.client.post.converter.response;
+package org.orury.client.post.common.response;
 
 import org.orury.domain.global.constants.NumberConstants;
 
@@ -9,11 +9,8 @@ public record PostsWithCursorResponse(
         Long cursor
 ) {
     public static PostsWithCursorResponse of(List<PostsResponse> posts, Long cursor) {
-
         Long newCursor = (posts.isEmpty())
-                ? determineCursorWhenEmpty(cursor)
-                : posts.get(posts.size() - 1).id();
-
+                ? determineCursorWhenEmpty(cursor) : posts.get(posts.size() - 1).id();
         return new PostsWithCursorResponse(posts, newCursor);
     }
 

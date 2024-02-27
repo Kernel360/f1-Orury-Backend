@@ -12,7 +12,7 @@ import org.orury.domain.comment.db.repository.CommentRepository;
 import org.orury.domain.comment.dto.CommentDto;
 import org.orury.domain.comment.dto.CommentLikeDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.db.repository.PostRepository;
+import org.orury.client.post.infrastructure.PostRepository;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 import org.springframework.data.domain.Pageable;

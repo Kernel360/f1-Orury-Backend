@@ -1,4 +1,4 @@
-package org.orury.client.post.converter.message;
+package org.orury.client.post.common.message;
 
 import lombok.Getter;
 

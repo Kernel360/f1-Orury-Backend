@@ -1,4 +1,4 @@
-package org.orury.domain.post.db.model;
+package org.orury.domain.post.db;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EqualsAndHashCode(of = {"postLikePK"}, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "post_like")
-public class PostLike{
+public class PostLike {
     @EmbeddedId
     private PostLikePK postLikePK;
 

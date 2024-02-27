@@ -1,4 +1,4 @@
-package org.orury.client.post.converter.response;
+package org.orury.client.post.common.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.post.dto.PostDto;

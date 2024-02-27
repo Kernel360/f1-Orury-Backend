@@ -1,6 +1,6 @@
-package org.orury.domain.post.db.repository;
+package org.orury.client.post.infrastructure;
 
-import org.orury.domain.post.db.model.Post;
+import org.orury.domain.post.db.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
