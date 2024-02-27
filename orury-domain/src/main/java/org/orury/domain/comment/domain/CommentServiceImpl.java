@@ -10,6 +10,7 @@ import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.post.dto.PostDto;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +34,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentDtosByPost(PostDto postDto, Long cursor) {
-        var comments = commentReader.getCommentsByPostIdAndCursor(postDto.id(), cursor);
+        var pageRequest = PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE);
+        var comments = commentReader.getCommentsByPostIdAndCursor(postDto.id(), cursor, pageRequest);
         return convertCommentsToCommentDtos(comments);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentDtosByUserId(Long userId, Long cursor) {
-        var comments = commentReader.getCommentsByUserIdAndCursor(userId, cursor);
+        var pageRequest = PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE);
+        var comments = commentReader.getCommentsByUserIdAndCursor(userId, cursor, pageRequest);
         return convertCommentsToCommentDtos(comments);
     }
 

@@ -2,6 +2,7 @@ package org.orury.domain.comment.domain;
 
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface CommentReader {
 
     boolean existsCommentLikeByUserIdAndCommentId(Long userId, Long commentId);
 
-    List<Comment> getCommentsByPostIdAndCursor(Long postId, Long cursor);
+    List<Comment> getCommentsByPostIdAndCursor(Long postId, Long cursor, PageRequest pageRequest);
 
-    List<Comment> getCommentsByUserIdAndCursor(Long userId, Long cursor);
+    List<Comment> getCommentsByUserIdAndCursor(Long userId, Long cursor, PageRequest pageRequest);
 }

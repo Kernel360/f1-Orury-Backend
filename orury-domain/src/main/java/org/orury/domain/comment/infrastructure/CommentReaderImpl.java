@@ -42,10 +42,10 @@ public class CommentReaderImpl implements CommentReader {
     }
 
     @Override
-    public List<Comment> getCommentsByPostIdAndCursor(Long postId, Long cursor) {
+    public List<Comment> getCommentsByPostIdAndCursor(Long postId, Long cursor, PageRequest pageRequest) {
         List<Comment> parentComments = (cursor.equals(NumberConstants.LAST_CURSOR))
                 ? Collections.emptyList()
-                : commentRepository.findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(postId, NumberConstants.PARENT_COMMENT, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE));
+                : commentRepository.findByPostIdAndParentIdAndIdGreaterThanOrderByIdAsc(postId, NumberConstants.PARENT_COMMENT, cursor, pageRequest);
         List<Comment> allComments = new LinkedList<>();
         parentComments.forEach(
                 parentComment -> {
@@ -58,9 +58,9 @@ public class CommentReaderImpl implements CommentReader {
     }
 
     @Override
-    public List<Comment> getCommentsByUserIdAndCursor(Long userId, Long cursor) {
+    public List<Comment> getCommentsByUserIdAndCursor(Long userId, Long cursor, PageRequest pageRequest) {
         return (cursor.equals(NumberConstants.FIRST_CURSOR))
-                ? commentRepository.findByUserIdOrderByIdDesc(userId, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))
-                : commentRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE));
+                ? commentRepository.findByUserIdOrderByIdDesc(userId, pageRequest)
+                : commentRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageRequest);
     }
 }
