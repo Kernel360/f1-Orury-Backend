@@ -67,6 +67,21 @@ dependencies {
 
     // feign client
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+
+    // MapStruct
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+    annotationProcessor(
+            'org.projectlombok:lombok',
+            'org.projectlombok:lombok-mapstruct-binding:0.1.0'
+    )
+
+    //Validation 라이브러리
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'org.apache.commons:commons-lang3:3.9'
+
+    //S3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.268'
 }
 
 dependencyManagement {
