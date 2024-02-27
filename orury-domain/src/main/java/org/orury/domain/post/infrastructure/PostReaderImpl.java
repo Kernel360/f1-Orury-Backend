@@ -52,10 +52,8 @@ public class PostReaderImpl implements PostReader {
 
     @Override
     public Post findById(Long id) {
-        var post = postRepository.findById(id)
+        return postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        postRepository.updateViewCount(id);
-        return post;
     }
 
     @Override
