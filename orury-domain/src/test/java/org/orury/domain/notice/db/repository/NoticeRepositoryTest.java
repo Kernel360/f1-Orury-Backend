@@ -1,12 +1,12 @@
 package org.orury.domain.notice.db.repository;
 
-import org.orury.domain.admin.db.model.Admin;
-import org.orury.domain.admin.db.repository.AdminRepository;
-import org.orury.domain.notice.db.model.Notice;
-import org.orury.domain.admin.dto.RoleType;
-import org.orury.domain.config.RepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.orury.domain.admin.db.model.Admin;
+import org.orury.domain.admin.db.repository.AdminRepository;
+import org.orury.domain.admin.dto.RoleType;
+import org.orury.domain.config.RepositoryTest;
+import org.orury.domain.notice.db.model.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;

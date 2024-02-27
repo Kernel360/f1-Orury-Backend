@@ -195,13 +195,15 @@ class JwtTokenProviderTest {
     @Test
     void should_RetrieveAuthenticationFromNormalRefreshToken() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
         given(refreshTokenRepository.existsByValue(anyString()))
                 .willReturn(true);
 
         // when
-        jwtTokenProvider.reissueJwtTokens(refreshToken);
+        jwtTokenProvider.reissueJwtTokens(request);
 
         // then
         then(refreshTokenRepository).should()
@@ -212,11 +214,12 @@ class JwtTokenProviderTest {
     @Test
     void when_NullRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = null;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        given(request.getHeader("Authorization")).willReturn(null);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -225,11 +228,14 @@ class JwtTokenProviderTest {
     @Test
     void when_invalidPrefixRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Orury " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Orury " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -238,11 +244,14 @@ class JwtTokenProviderTest {
     @Test
     void when_MalFormedRefreshToken_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN.substring(0, 20);
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN.substring(0, 20);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -251,11 +260,14 @@ class JwtTokenProviderTest {
     @Test
     void when_IllegalArgument_Then_InvalidRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + "IamNOTjwtTOKEN";
+        String refreshTokenHeader = "Bearer " + "IamNOTjwtTOKEN";
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.INVALID_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -264,11 +276,14 @@ class JwtTokenProviderTest {
     @Test
     void when_ExpiredRefreshToken_Then_ExpiredRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + EXPIRED_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.EXPIRED_REFRESH_TOKEN.getStatus(), exception.getStatus());
     }
@@ -277,14 +292,17 @@ class JwtTokenProviderTest {
     @Test
     void when_RefreshTokenBeforeReissue_Then_ExpiredRefreshTokenException() {
         // given
-        String refreshToken = "Bearer " + VALID_REFRESH_TOKEN;
+        String refreshTokenHeader = "Bearer " + VALID_REFRESH_TOKEN;
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        given(request.getHeader("Authorization")).willReturn(refreshTokenHeader);
 
         given(refreshTokenRepository.existsByValue(anyString()))
                 .willReturn(false);
 
         // when & then
         AuthException exception = assertThrows(AuthException.class,
-                () -> jwtTokenProvider.reissueJwtTokens(refreshToken));
+                () -> jwtTokenProvider.reissueJwtTokens(request));
 
         assertEquals(TokenErrorCode.EXPIRED_REFRESH_TOKEN.getStatus(), exception.getStatus());
 

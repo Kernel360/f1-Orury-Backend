@@ -30,7 +30,7 @@ import java.util.Objects;
 public class JwtTokenProvider {
 
     private static final String JWT_TOKEN_PREFIX = "Bearer ";
-    private static final String ACCESS_TOKEN_HEADER_NAME = "Authorization";
+    private static final String TOKEN_HEADER_NAME = "Authorization";
 
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
@@ -47,7 +47,7 @@ public class JwtTokenProvider {
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
-        String accessTokenHeader = request.getHeader(ACCESS_TOKEN_HEADER_NAME);
+        String accessTokenHeader = request.getHeader(TOKEN_HEADER_NAME);
 
         // AccessToken 헤더가 없거나 Bearer 토큰이 아닌 경우
         if (accessTokenHeader == null || !accessTokenHeader.startsWith(JWT_TOKEN_PREFIX)) {
@@ -90,14 +90,15 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
-    public JwtToken reissueJwtTokens(String refreshToken) {
+    public JwtToken reissueJwtTokens(HttpServletRequest request) {
+        String refreshTokenHeader = request.getHeader(TOKEN_HEADER_NAME);
         // Refresh 토큰 헤더가 없거나 Bearer 토큰이 아닌 경우
-        if (refreshToken == null || !refreshToken.startsWith(JWT_TOKEN_PREFIX)) {
+        if (refreshTokenHeader == null || !refreshTokenHeader.startsWith(JWT_TOKEN_PREFIX)) {
             throw new AuthException(TokenErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         // Refresh 토큰 추출
-        refreshToken = refreshToken.split(" ")[1].trim();
+        String refreshToken = refreshTokenHeader.split(" ")[1].trim();
 
         // Refresh 토큰 검증
         Claims claims;

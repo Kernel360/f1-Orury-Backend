@@ -1,4 +1,4 @@
-package org.orury.admin.global.config;
+package org.orury.domain.global.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

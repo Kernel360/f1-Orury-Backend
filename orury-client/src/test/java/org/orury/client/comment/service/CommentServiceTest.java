@@ -1,5 +1,10 @@
 package org.orury.client.comment.service;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.domain.ImageUtils;
@@ -16,11 +21,6 @@ import org.orury.domain.post.db.repository.PostRepository;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.db.model.User;
 import org.orury.domain.user.dto.UserDto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -314,18 +314,18 @@ class CommentServiceTest {
     @DisplayName("부모 댓글 id가 유효한 값이면, 아무런 수행을 하지 않는다.")
     void when_ValidParentCommentId_Then_DoNothing() {
         // given
-        Comment parentComment = createComment(1L, 0L);
+        Comment parentComment = createComment(1L, NumberConstants.PARENT_COMMENT);
         Long parentCommentId = parentComment.getId();
 
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.of(parentComment));
+        when(commentRepository.existsByIdAndParentId(anyLong(), anyLong()))
+                .thenReturn(true);
 
         // when
         commentService.validateParentComment(parentCommentId);
 
         // then
         verify(commentRepository, times(1))
-                .findById(parentCommentId);
+                .existsByIdAndParentId(anyLong(), anyLong());
     }
 
     @Test
@@ -334,28 +334,8 @@ class CommentServiceTest {
         // given
         Long parentCommentId = 2L;
 
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> commentService.validateParentComment(parentCommentId));
-
-        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
-
-        verify(commentRepository, times(1))
-                .findById(parentCommentId);
-    }
-
-    @Test
-    @DisplayName("부모 댓글 id가 존재하지만 해당 id의 댓글이 자녀댓글로 판명나면, BAD_REQUEST 예외 발생")
-    void when_ParentCommentIdTurnedOutToChildComment_Throw_BadRequestException() {
-        // given
-        Comment parentComment = createComment(2L, 1L);
-        Long parentCommentId = parentComment.getId();
-
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.of(parentComment));
+        when(commentRepository.existsByIdAndParentId(anyLong(), anyLong()))
+                .thenReturn(false);
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class,
@@ -364,7 +344,7 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(parentCommentId);
+                .existsByIdAndParentId(anyLong(), anyLong());
     }
 
     @Test
