@@ -22,9 +22,9 @@ public class CommentFacade {
     private final UserService userService;
 
     public void createComment(CommentCreateRequest request, Long userId) {
+        commentService.validateParentComment(request.parentId());
         var userDto = userService.getUserDtoById(userId);
         var postDto = postService.getPostDtoById(request.postId());
-        commentService.validateParentComment(request.parentId());
         var commentDto = request.toDto(userDto, postDto);
         commentService.createComment(commentDto);
     }
