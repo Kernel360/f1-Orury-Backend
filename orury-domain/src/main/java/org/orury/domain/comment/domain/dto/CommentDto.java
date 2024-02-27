@@ -1,6 +1,6 @@
-package org.orury.domain.comment.dto;
+package org.orury.domain.comment.domain.dto;
 
-import org.orury.domain.comment.db.model.Comment;
+import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 

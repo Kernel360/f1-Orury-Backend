@@ -1,6 +1,6 @@
-package org.orury.client.comment.converter.request;
+package org.orury.client.comment.application.request;
 
-import org.orury.domain.comment.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;

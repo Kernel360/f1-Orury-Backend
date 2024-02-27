@@ -14,8 +14,8 @@
 //import org.orury.domain.comment.db.model.Comment;
 //import org.orury.domain.comment.db.model.CommentLike;
 //import org.orury.domain.comment.db.model.CommentLikePK;
-//import org.orury.domain.comment.db.repository.CommentLikeRepository;
-//import org.orury.domain.comment.db.repository.CommentRepository;
+//import org.orury.domain.comment.infrastructure.CommentLikeRepository;
+//import org.orury.domain.comment.infrastructure.CommentRepository;
 //import org.orury.domain.global.constants.NumberConstants;
 //import org.orury.domain.gym.domain.entity.Gym;
 //import org.orury.domain.gym.domain.entity.GymLike;

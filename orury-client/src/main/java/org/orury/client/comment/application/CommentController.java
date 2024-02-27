@@ -1,20 +1,22 @@
-package org.orury.client.comment.controller;
+package org.orury.client.comment.application;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.converter.message.CommentMessage;
-import org.orury.client.comment.converter.request.CommentCreateRequest;
-import org.orury.client.comment.converter.request.CommentUpdateRequest;
-import org.orury.client.comment.converter.response.CommentResponse;
-import org.orury.client.comment.converter.response.CommentsWithCursorResponse;
-import org.orury.client.comment.service.CommentLikeService;
-import org.orury.client.comment.service.CommentService;
+import org.orury.client.comment.application.message.CommentMessage;
+import org.orury.client.comment.application.request.CommentCreateRequest;
+import org.orury.client.comment.application.request.CommentUpdateRequest;
+import org.orury.client.comment.application.response.CommentResponse;
+import org.orury.client.comment.application.response.CommentsWithCursorResponse;
 import org.orury.client.post.service.PostService;
 import org.orury.client.user.service.UserService;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.base.converter.ApiResponse;
-import org.orury.domain.comment.dto.CommentDto;
+import org.orury.domain.comment.domain.CommentService;
+import org.orury.domain.comment.domain.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentLikeDto;
+import org.orury.domain.comment.domain.entity.CommentLike;
+import org.orury.domain.comment.domain.entity.CommentLikePK;
+import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
 import org.orury.domain.user.dto.UserPrincipal;
@@ -31,7 +33,6 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final CommentLikeService commentLikeService;
     private final UserService userService;
     private final PostService postService;
 
@@ -56,7 +57,7 @@ public class CommentController {
 
         List<CommentResponse> commentResponses = commentDtos.stream()
                 .map(commentDto -> {
-                    boolean isLike = commentLikeService.isLiked(userPrincipal.id(), commentDto.id());
+                    boolean isLike = commentService.isLiked(userPrincipal.id(), commentDto.id());
                     return CommentResponse.of(commentDto, userPrincipal.id(), isLike);
                 })
                 .toList();
@@ -89,5 +90,27 @@ public class CommentController {
         commentService.deleteComment(commentDto);
 
         return ApiResponse.of(CommentMessage.COMMENT_DELETED.getMessage());
+    }
+
+    @Operation(summary = "댓글 좋아요 생성", description = "댓글 id를 받아, 댓글 좋아요를 생성한다.")
+    @PostMapping("/like/{commentId}")
+    public ApiResponse createCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
+        commentService.isValidate(commentLikeDto);
+
+        commentService.createCommentLike(commentLikeDto);
+
+        return ApiResponse.of(CommentMessage.COMMENT_LIKE_CREATED.getMessage());
+    }
+
+    @Operation(summary = "댓글 좋아요 삭제", description = "댓글 id를 받아, 댓글 좋아요를 삭제한다.")
+    @DeleteMapping("/like/{commentId}")
+    public ApiResponse deleteCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommentLikeDto commentLikeDto = CommentLikeDto.from(CommentLike.of(CommentLikePK.of(userPrincipal.id(), commentId)));
+        commentService.isValidate(commentLikeDto);
+
+        commentService.deleteCommentLike(commentLikeDto);
+
+        return ApiResponse.of(CommentMessage.COMMENT_LIKE_DELETED.getMessage());
     }
 }

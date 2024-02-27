@@ -1,4 +1,4 @@
-package org.orury.client.comment.converter.message;
+package org.orury.client.comment.application.message;
 
 import lombok.Getter;
 

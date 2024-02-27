@@ -1,7 +1,7 @@
-package org.orury.domain.comment.dto;
+package org.orury.domain.comment.domain.dto;
 
-import org.orury.domain.comment.db.model.CommentLike;
-import org.orury.domain.comment.db.model.CommentLikePK;
+import org.orury.domain.comment.domain.entity.CommentLike;
+import org.orury.domain.comment.domain.entity.CommentLikePK;
 
 /**
  * DTO for {@link CommentLike}

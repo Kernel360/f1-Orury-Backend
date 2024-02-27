@@ -1,17 +1,17 @@
-package org.orury.client.comment.service;
+package org.orury.domain.comment.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.converter.message.CommentMessage;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.global.domain.ImageUtils;
-import org.orury.domain.comment.db.model.Comment;
-import org.orury.domain.comment.db.repository.CommentLikeRepository;
-import org.orury.domain.comment.db.repository.CommentRepository;
-import org.orury.domain.comment.dto.CommentDto;
-import org.orury.domain.comment.dto.CommentLikeDto;
+import org.orury.domain.comment.domain.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentLikeDto;
+import org.orury.domain.comment.domain.entity.Comment;
+import org.orury.domain.comment.infrastructure.CommentLikeRepository;
+import org.orury.domain.comment.infrastructure.CommentRepository;
+import org.orury.domain.global.constants.Constants;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.post.db.repository.PostRepository;
 import org.orury.domain.post.dto.PostDto;
 import org.orury.domain.user.dto.UserDto;
@@ -82,7 +82,7 @@ public class CommentService {
     public void deleteComment(CommentDto commentDto) {
         CommentDto deletingCommentDto = CommentDto.of(
                 commentDto.id(),
-                CommentMessage.COMMENT_DELETED.getMessage(),
+                Constants.DELETED_COMMENT_CONTENT.getMessage(),
                 commentDto.parentId(),
                 0,
                 commentDto.postDto(),
@@ -124,5 +124,30 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         return CommentDto.from(comment);
+    }
+
+    @Transactional
+    public void createCommentLike(CommentLikeDto commentLikeDto) {
+        commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+        if (commentLikeRepository.existsById(commentLikeDto.commentLikePK())) return;
+
+        commentLikeRepository.save(commentLikeDto.toEntity());
+        commentRepository.increaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
+    }
+
+    @Transactional
+    public void deleteCommentLike(CommentLikeDto commentLikeDto) {
+        commentRepository.findById(commentLikeDto.commentLikePK().getCommentId())
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+        if (!commentLikeRepository.existsById(commentLikeDto.commentLikePK())) return;
+
+        commentLikeRepository.delete(commentLikeDto.toEntity());
+        commentRepository.decreaseLikeCount(commentLikeDto.commentLikePK().getCommentId());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isLiked(Long userId, Long commentId) {
+        return commentLikeRepository.existsCommentLikeByCommentLikePK_UserIdAndCommentLikePK_CommentId(userId, commentId);
     }
 }
