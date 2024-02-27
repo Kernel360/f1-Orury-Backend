@@ -6,7 +6,8 @@ import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.PostReader;
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostReaderImpl implements PostReader {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     public List<Post> findByCategoryOrderByIdDesc(int category, Long cursor, Pageable pageable) {
@@ -50,7 +52,19 @@ public class PostReaderImpl implements PostReader {
 
     @Override
     public Post findById(Long id) {
-        return postRepository.findById(id)
+        var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
+        postRepository.updateViewCount(id);
+        return post;
+    }
+
+    @Override
+    public boolean isPostLiked(Long userId, Long postId) {
+        return postLikeRepository.existsPostLikeByPostLikePK_UserIdAndPostLikePK_PostId(userId, postId);
+    }
+
+    @Override
+    public boolean existsByPostLikePK(PostLikePK postLikePK) {
+        return postLikeRepository.existsByPostLikePK(postLikePK);
     }
 }

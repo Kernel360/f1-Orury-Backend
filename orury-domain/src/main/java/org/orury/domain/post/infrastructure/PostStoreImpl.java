@@ -3,7 +3,8 @@ package org.orury.domain.post.infrastructure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.post.domain.entity.PostLike;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -11,30 +12,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostStoreImpl implements PostStore {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
-    public void updateViewCount(Long id) {
-        postRepository.updateViewCount(id);
+    public void save(PostLike postLike) {
+        postLikeRepository.save(postLike);
+        postRepository.increaseLikeCount(postLike.getPostLikePK().getPostId());
     }
 
     @Override
-    public void increaseCommentCount(Long id) {
-
-    }
-
-    @Override
-    public void decreaseCommentCount(Long id) {
-
-    }
-
-    @Override
-    public void increaseLikeCount(Long id) {
-
-    }
-
-    @Override
-    public void decreaseLikeCount(Long id) {
-
+    public void delete(PostLike postLike) {
+        postLikeRepository.delete(postLike);
+        postRepository.decreaseLikeCount(postLike.getPostLikePK().getPostId());
     }
 
     @Override

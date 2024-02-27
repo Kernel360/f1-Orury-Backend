@@ -1,6 +1,7 @@
 package org.orury.domain.post.domain;
 
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,8 @@ public interface PostReader {
     );
 
     Post findById(Long id);
+
+    boolean isPostLiked(Long userId, Long postId);
+
+    boolean existsByPostLikePK(PostLikePK postLikePK);
 }
