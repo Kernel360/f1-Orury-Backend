@@ -10,9 +10,9 @@ import org.orury.client.user.service.UserService;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.post.domain.PostService;
-import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.user.dto.UserDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 
@@ -40,15 +39,14 @@ public class PostFacade {
     public void updatePost(Long userId, PostRequest request, List<MultipartFile> files) {
         var user = userService.getUserDtoById(userId);
         var oldPost = postService.getPostDtoById(request.id());
-        isValidate(oldPost, user);
+        isValidate(oldPost, userId);
         var newPost = request.toDto(oldPost, user);
         postService.createPost(newPost, files);
     }
 
     public void deletePost(Long userId, Long postId) {
-        var user = userService.getUserDtoById(userId);
         var post = postService.getPostDtoById(postId);
-        isValidate(post, user);
+        isValidate(post, userId);
         postService.deletePost(post);
     }
 
@@ -90,8 +88,8 @@ public class PostFacade {
         postService.deletePostLike(postLikeDto);
     }
 
-    private void isValidate(PostDto postDto, UserDto userDto) {
-        if (!Objects.equals(postDto.userDto().id(), userDto.id()))
+    private void isValidate(PostDto postDto, Long userId) {
+        if (postDto.userDto().id().equals(userId))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
     }
 }
