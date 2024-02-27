@@ -106,7 +106,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
-        if (postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
+        if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
         postStore.delete(postLikeDto.toEntity());
     }
 
