@@ -3,9 +3,11 @@ package org.orury.domain.comment.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.user.db.model.User;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.global.constants.Constants;
+import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.db.model.Post;
+import org.orury.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -57,5 +59,12 @@ public class Comment extends AuditingField {
 
     public static Comment of(Long id, String content, Long parentId, int likeCount, Post post, User user, int deleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new Comment(id, content, parentId, likeCount, post, user, deleted, createdAt, updatedAt);
+    }
+
+    public Comment delete() {
+        this.content = Constants.DELETED_COMMENT_CONTENT.getMessage();
+        this.deleted = NumberConstants.IS_DELETED;
+        this.likeCount = 0;
+        return this;
     }
 }

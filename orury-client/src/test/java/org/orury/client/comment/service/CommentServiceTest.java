@@ -315,18 +315,18 @@ class CommentServiceTest {
     @DisplayName("부모 댓글 id가 유효한 값이면, 아무런 수행을 하지 않는다.")
     void when_ValidParentCommentId_Then_DoNothing() {
         // given
-        Comment parentComment = createComment(1L, 0L);
+        Comment parentComment = createComment(1L, NumberConstants.PARENT_COMMENT);
         Long parentCommentId = parentComment.getId();
 
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.of(parentComment));
+        when(commentRepository.existsByIdAndParentId(anyLong(), anyLong()))
+                .thenReturn(true);
 
         // when
         commentService.validateParentComment(parentCommentId);
 
         // then
         verify(commentRepository, times(1))
-                .findById(parentCommentId);
+                .existsByIdAndParentId(anyLong(), anyLong());
     }
 
     @Test
@@ -335,28 +335,8 @@ class CommentServiceTest {
         // given
         Long parentCommentId = 2L;
 
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> commentService.validateParentComment(parentCommentId));
-
-        assertEquals(CommentErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
-
-        verify(commentRepository, times(1))
-                .findById(parentCommentId);
-    }
-
-    @Test
-    @DisplayName("부모 댓글 id가 존재하지만 해당 id의 댓글이 자녀댓글로 판명나면, BAD_REQUEST 예외 발생")
-    void when_ParentCommentIdTurnedOutToChildComment_Throw_BadRequestException() {
-        // given
-        Comment parentComment = createComment(2L, 1L);
-        Long parentCommentId = parentComment.getId();
-
-        when(commentRepository.findById(anyLong()))
-                .thenReturn(Optional.of(parentComment));
+        when(commentRepository.existsByIdAndParentId(anyLong(), anyLong()))
+                .thenReturn(false);
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class,
@@ -365,7 +345,7 @@ class CommentServiceTest {
         assertEquals(CommentErrorCode.BAD_REQUEST.getStatus(), exception.getStatus());
 
         verify(commentRepository, times(1))
-                .findById(parentCommentId);
+                .existsByIdAndParentId(anyLong(), anyLong());
     }
 
     @Test
