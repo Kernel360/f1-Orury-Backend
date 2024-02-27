@@ -10,11 +10,11 @@ import org.orury.client.user.service.UserService;
 import org.orury.domain.comment.domain.CommentService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CommentFacade {
     private final CommentService commentService;

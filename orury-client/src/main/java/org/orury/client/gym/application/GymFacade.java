@@ -8,11 +8,11 @@ import org.orury.client.review.service.ReviewService;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class GymFacade {
     private final GymService gymService;
