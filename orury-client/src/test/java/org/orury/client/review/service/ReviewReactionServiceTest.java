@@ -3,7 +3,7 @@ package org.orury.client.review.service;
 import org.orury.common.error.code.ReviewReactionErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.db.model.Review;
 import org.orury.domain.review.db.model.ReviewReaction;
 import org.orury.domain.review.db.model.ReviewReactionPK;

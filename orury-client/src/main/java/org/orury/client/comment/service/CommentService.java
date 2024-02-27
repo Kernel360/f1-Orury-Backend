@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.common.util.ImageUtils;
+import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.comment.db.model.Comment;
 import org.orury.domain.comment.db.repository.CommentLikeRepository;
 import org.orury.domain.comment.db.repository.CommentRepository;

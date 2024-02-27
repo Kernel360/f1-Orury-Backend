@@ -1,6 +1,6 @@
 package org.orury.batch.dto;
 
-import org.orury.domain.gym.dto.GymDto;
+import org.orury.domain.gym.domain.dto.GymDto;
 
 public record GymResponse(
         String placeName,

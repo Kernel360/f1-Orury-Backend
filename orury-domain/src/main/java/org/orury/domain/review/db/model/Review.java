@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.EntityImageConverter;
-import org.orury.domain.gym.db.model.Gym;
+import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.user.db.model.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

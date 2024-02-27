@@ -1,9 +1,14 @@
 ////build.gradle 파일
 dependencies {
+    implementation project(':orury-common')
+
+    //S3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.268'
+
     //flyway
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
-        implementation project(':orury-common')
+
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

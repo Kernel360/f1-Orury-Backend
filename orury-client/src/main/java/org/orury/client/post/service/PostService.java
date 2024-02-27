@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.common.util.ImageUtils;
+import org.orury.domain.global.domain.ImageUtils;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.db.model.Post;
