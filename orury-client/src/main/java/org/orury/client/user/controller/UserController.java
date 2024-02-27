@@ -17,7 +17,7 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.comment.domain.CommentService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.dto.UserDto;
 import org.orury.domain.user.dto.UserPrincipal;

@@ -12,10 +12,10 @@
 //import org.orury.domain.gym.domain.dto.GymDto;
 //import org.orury.domain.gym.domain.entity.Gym;
 //import org.orury.domain.gym.infrastructure.GymRepository;
-//import org.orury.domain.review.db.model.Review;
-//import org.orury.domain.review.db.repository.ReviewRepository;
+//import org.orury.domain.review.entity.model.Review;
+//import org.orury.domain.review.entity.repository.ReviewRepository;
 //import org.orury.domain.review.dto.ReviewDto;
-//import org.orury.domain.user.db.model.User;
+//import org.orury.domain.user.entity.model.User;
 //import org.orury.domain.user.dto.UserDto;
 //import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Pageable;
