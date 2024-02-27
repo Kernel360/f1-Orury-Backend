@@ -1,6 +1,5 @@
 package org.orury.client.review.controller;
 
-import org.orury.client.gym.service.GymService;
 import org.orury.client.review.converter.message.ReviewMessage;
 import org.orury.client.review.converter.request.ReviewCreateRequest;
 import org.orury.client.review.converter.request.ReviewUpdateRequest;
