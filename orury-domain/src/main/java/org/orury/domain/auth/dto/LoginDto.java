@@ -1,7 +1,7 @@
 package org.orury.domain.auth.dto;
 
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 public record LoginDto(
         UserDto userDto,

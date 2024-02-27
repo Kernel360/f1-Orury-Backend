@@ -18,7 +18,7 @@ import org.orury.domain.auth.dto.JwtToken;
 import org.orury.domain.auth.dto.LoginDto;
 import org.orury.domain.auth.dto.SignUpDto;
 import org.orury.domain.base.converter.ApiResponse;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

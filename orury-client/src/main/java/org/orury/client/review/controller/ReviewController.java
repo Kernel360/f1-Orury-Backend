@@ -1,8 +1,6 @@
 package org.orury.client.review.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.orury.client.gym.service.GymService;
 import org.orury.client.review.converter.message.ReviewMessage;
 import org.orury.client.review.converter.request.ReviewCreateRequest;
 import org.orury.client.review.converter.request.ReviewUpdateRequest;
@@ -10,20 +8,32 @@ import org.orury.client.review.converter.response.ReviewsResponse;
 import org.orury.client.review.converter.response.ReviewsWithCursorResponse;
 import org.orury.client.review.service.ReviewReactionService;
 import org.orury.client.review.service.ReviewService;
-import org.orury.client.user.service.UserService;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.dto.ReviewDto;
-import org.orury.domain.user.dto.UserDto;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.UserService;
+import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
