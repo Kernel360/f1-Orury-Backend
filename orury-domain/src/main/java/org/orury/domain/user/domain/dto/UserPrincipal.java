@@ -1,4 +1,4 @@
-package org.orury.domain.user.dto;
+package org.orury.domain.user.domain.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
