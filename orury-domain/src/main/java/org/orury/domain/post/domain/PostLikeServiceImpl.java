@@ -2,7 +2,7 @@ package org.orury.client.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.post.infrastructure.PostLikeRepository;
+import org.orury.domain.post.infrastructure.PostLikeRepository;
 import org.orury.domain.post.PostReader;
 import org.orury.domain.post.PostStore;
 import org.orury.domain.post.dto.PostLikeDto;
