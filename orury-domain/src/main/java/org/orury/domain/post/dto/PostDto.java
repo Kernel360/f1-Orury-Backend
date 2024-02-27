@@ -1,6 +1,6 @@
 package org.orury.domain.post.dto;
 
-import org.orury.domain.post.db.model.Post;
+import org.orury.domain.post.db.Post;
 import org.orury.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -61,6 +61,22 @@ public record PostDto(
                 entity.getCommentCount(),
                 entity.getLikeCount(),
                 entity.getImages(),
+                entity.getCategory(),
+                UserDto.from(entity.getUser()),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
+    public static PostDto from(Post entity, List<String> images) {
+        return PostDto.of(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getViewCount(),
+                entity.getCommentCount(),
+                entity.getLikeCount(),
+                images,
                 entity.getCategory(),
                 UserDto.from(entity.getUser()),
                 entity.getCreatedAt(),

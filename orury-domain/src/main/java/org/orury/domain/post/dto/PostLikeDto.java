@@ -1,7 +1,7 @@
 package org.orury.domain.post.dto;
 
-import org.orury.domain.post.db.model.PostLike;
-import org.orury.domain.post.db.model.PostLikePK;
+import org.orury.domain.post.db.PostLike;
+import org.orury.domain.post.db.PostLikePK;
 
 /**
  * DTO for {@link PostLike}
