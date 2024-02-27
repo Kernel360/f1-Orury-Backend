@@ -1,6 +1,6 @@
 package org.orury.domain.post.domain.dto;
 
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -21,6 +21,7 @@ public record PostDto(
         List<String> images,
         int category,
         UserDto userDto,
+        boolean isLike,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -47,6 +48,7 @@ public record PostDto(
                 images,
                 category,
                 userDto,
+                false,
                 createdAt,
                 updatedAt
         );
@@ -79,6 +81,23 @@ public record PostDto(
                 images,
                 entity.getCategory(),
                 UserDto.from(entity.getUser()),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
+    public static PostDto from(Post entity, List<String> links, boolean isLike) {
+        return new PostDto(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getViewCount(),
+                entity.getCommentCount(),
+                entity.getLikeCount(),
+                links,
+                entity.getCategory(),
+                UserDto.from(entity.getUser()),
+                isLike,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

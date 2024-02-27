@@ -26,7 +26,7 @@ public record PostResponse(
         String userProfileImage,
         boolean isLike
 ) {
-    public static PostResponse of(PostDto postDto, UserDto userDto, boolean isLike) {
+    public static PostResponse of(PostDto postDto, UserDto userDto) {
         return new PostResponse(
                 postDto.id(),
                 postDto.title(),
@@ -39,19 +39,14 @@ public record PostResponse(
                 postDto.createdAt(),
                 postDto.updatedAt(),
                 mine(postDto, userDto),
-                postDto.userDto()
-                        .id(),
-                postDto.userDto()
-                        .nickname(),
-                postDto.userDto()
-                        .profileImage(),
-                isLike
+                postDto.userDto().id(),
+                postDto.userDto().nickname(),
+                postDto.userDto().profileImage(),
+                postDto.isLike()
         );
     }
 
     private static boolean mine(PostDto postDto, UserDto userDto) {
-        return postDto.userDto()
-                .id()
-                .equals(userDto.id());
+        return postDto.userDto().id().equals(userDto.id());
     }
 }
