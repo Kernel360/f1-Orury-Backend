@@ -64,7 +64,7 @@ public class GymServiceImpl implements GymService {
 
     @Override
     @Transactional(readOnly = true)
-    public void isValidate(Long gymId) {
+    public void validate(Long gymId) {
         if (!gymReader.existsGymById(gymId)) throw new BusinessException(GymErrorCode.NOT_FOUND);
     }
 
@@ -76,7 +76,7 @@ public class GymServiceImpl implements GymService {
         LocalTime nowTime = LocalTime.now();
         LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
         LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
-        
+
         return nowTime.isAfter(openTime) && nowTime.isBefore(closeTime);
     }
 
