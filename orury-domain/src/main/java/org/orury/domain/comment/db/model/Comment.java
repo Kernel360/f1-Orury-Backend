@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.user.db.model.User;
 import org.orury.domain.base.db.AuditingField;
-import org.orury.domain.post.db.model.Post;
+import org.orury.domain.post.db.Post;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
