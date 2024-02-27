@@ -9,8 +9,8 @@
 //import org.orury.domain.post.infrastructure.PostRepository;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.post.domain.db.Post;
-//import org.orury.domain.post.domain.db.PostLikePK;
+//import org.orury.domain.post.domain.entity.Post;
+//import org.orury.domain.post.domain.entity.PostLikePK;
 //import org.orury.domain.post.domain.dto.PostLikeDto;
 //import org.orury.domain.user.dto.UserDto;
 //import org.springframework.test.context.ActiveProfiles;

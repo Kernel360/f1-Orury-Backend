@@ -19,7 +19,7 @@ public class FlywayTestConfiguration {
     public Flyway flyway() {
         return Flyway.configure()
                 .dataSource(dataSource)
-                .locations("classpath:db/migration/")
+                .locations("classpath:entity/migration/")
                 .cleanOnValidationError(true)
                 .baselineOnMigrate(true)
                 .initSql("SET FOREIGN_KEY_CHECKS = 0;")

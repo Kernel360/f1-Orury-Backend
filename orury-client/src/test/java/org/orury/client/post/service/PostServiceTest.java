@@ -4,10 +4,10 @@
 ////import org.orury.common.error.exception.BusinessException;
 ////import org.orury.common.util.ImageUtils;
 ////import org.orury.domain.global.constants.NumberConstants;
-////import org.orury.domain.post.domain.db.Post;
+////import org.orury.domain.post.domain.entity.Post;
 ////import org.orury.domain.post.infrastructure.PostRepository;
 ////import org.orury.domain.post.domain.dto.PostDto;
-////import org.orury.domain.user.db.model.User;
+////import org.orury.domain.user.entity.model.User;
 ////import org.orury.domain.user.dto.UserDto;
 ////import org.junit.jupiter.api.BeforeEach;
 ////import org.junit.jupiter.api.DisplayName;
@@ -529,9 +529,9 @@
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.global.constants.NumberConstants;
 //import org.orury.domain.global.domain.ImageUtils;
-//import org.orury.domain.post.domain.db.Post;
+//import org.orury.domain.post.domain.entity.Post;
 //import org.orury.domain.post.domain.dto.PostDto;
-//import org.orury.domain.user.db.model.User;
+//import org.orury.domain.user.entity.model.User;
 //import org.orury.domain.user.dto.UserDto;
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.PageRequest;

@@ -10,7 +10,7 @@
 //import org.orury.domain.global.constants.NumberConstants;
 //import org.orury.domain.gym.domain.dto.GymDto;
 //import org.orury.domain.review.dto.ReviewDto;
-//import org.orury.domain.user.db.model.User;
+//import org.orury.domain.user.entity.model.User;
 //import org.orury.domain.user.dto.UserDto;
 //import org.springframework.http.MediaType;
 //

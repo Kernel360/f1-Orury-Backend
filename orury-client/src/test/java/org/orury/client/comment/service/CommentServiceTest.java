@@ -16,7 +16,7 @@ import org.orury.domain.comment.dto.CommentDto;
 import org.orury.domain.comment.dto.CommentLikeDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.ImageUtils;
-import org.orury.domain.post.domain.db.Post;
+import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.infrastructure.PostRepository;
 import org.orury.domain.user.db.model.User;

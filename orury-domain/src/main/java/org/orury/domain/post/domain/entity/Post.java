@@ -1,4 +1,4 @@
-package org.orury.domain.post.domain.db;
+package org.orury.domain.post.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
