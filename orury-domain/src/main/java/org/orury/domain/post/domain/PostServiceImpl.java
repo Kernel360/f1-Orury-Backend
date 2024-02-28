@@ -9,6 +9,7 @@ import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.user.db.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -117,6 +118,12 @@ public class PostServiceImpl implements PostService {
 
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
-        return PostDto.from(post, links);
+        var userProfileImage = userProfileImageConverter(post.getUser());
+
+        return PostDto.from(post, links, userProfileImage);
+    }
+
+    private String userProfileImageConverter(User user) {
+        return imageReader.getUserImageLink(user.getProfileImage());
     }
 }
