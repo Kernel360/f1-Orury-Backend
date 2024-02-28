@@ -1,10 +1,5 @@
 package org.orury.domain.user.domain;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.post.infrastructure.PostLikeRepository;
-import org.orury.domain.post.infrastructure.PostRepository;
-import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.S3Folder;
@@ -12,6 +7,7 @@ import org.orury.domain.comment.db.repository.CommentLikeRepository;
 import org.orury.domain.comment.db.repository.CommentRepository;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.gym.domain.GymStore;
+import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.review.db.repository.ReviewReactionRepository;
 import org.orury.domain.review.db.repository.ReviewRepository;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -20,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -27,8 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserReader userReader;
     private final UserStore userStore;
     private final ImageUtils imageUtils;
-    private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
+    private final PostStore postStore;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ReviewRepository reviewRepository;
@@ -63,8 +61,8 @@ public class UserServiceImpl implements UserService {
         deleteReviewReactionsByUserId(userDto.id());
         gymStore.deleteGymLikesByUserId(userDto.id());
         deleteCommentLikesByUserId(userDto.id());
-        deletePostLikesByUserId(userDto.id());
-        deletePostsByUserId(userDto.id());
+        postStore.deletePostLikesByUserId(userDto.id());
+        postStore.deletePostsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
         var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
@@ -90,27 +88,6 @@ public class UserServiceImpl implements UserService {
                             commentRepository.decreaseLikeCount(commentLike.getCommentLikePK()
                                     .getCommentId());
                             commentLikeRepository.delete(commentLike);
-                        }
-                );
-    }
-
-    private void deletePostLikesByUserId(Long userId) {
-        postLikeRepository.findByPostLikePK_UserId(userId)
-                .forEach(
-                        postLike -> {
-                            postRepository.decreaseCommentCount(postLike.getPostLikePK()
-                                    .getPostId());
-                            postLikeRepository.delete(postLike);
-                        }
-                );
-    }
-
-    private void deletePostsByUserId(Long userId) {
-        postRepository.findByUserId(userId)
-                .forEach(
-                        post -> {
-                            imageUtils.oldS3ImagesDelete(S3Folder.POST.getName(), post.getImages());
-                            postRepository.delete(post);
                         }
                 );
     }
