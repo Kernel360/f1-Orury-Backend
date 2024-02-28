@@ -43,18 +43,7 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml {
-            enabled true
-            destination file("${buildDir}/jacoco/index.xml")
-        }
-        csv {
-            enabled true
-            destination file("${buildDir}/jacoco/index.csv")
-        }
-        html {
-            enabled true
-            destination file("${buildDir}/jacoco/index.html")
-        }
+        html.destination file("${buildDir}/jacoco/html")
     }
 }
 
