@@ -23,11 +23,11 @@ public record ReviewsResponse(
         boolean isMine
 
 ) {
-    public static ReviewsResponse of(ReviewDto reviewDto, UserDto userDto, int myReaction) {
+    public static ReviewsResponse of(ReviewDto reviewDto, UserDto userDto, Long loginId, int myReaction) {
 //
         boolean isMine = reviewDto.userDto()
                 .id()
-                .equals(userDto.id());
+                .equals(loginId);
 
         List<ReviewReactionCount> reviewReactionCount = List.of(
                 new ReviewReactionCount("thumb", reviewDto.thumbCount()),

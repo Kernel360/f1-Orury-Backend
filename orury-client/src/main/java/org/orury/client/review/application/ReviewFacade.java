@@ -64,14 +64,14 @@ public class ReviewFacade {
                 .map(reviewDto -> {
                     int myReaction = reviewService.getReactionType(userId, reviewDto.id());
                     UserDto userDto = userService.getUserDtoById(reviewDto.userDto().id());
-                    return ReviewsResponse.of(reviewDto, userDto, myReaction);
+                    return ReviewsResponse.of(reviewDto, userDto, userId, myReaction);
                 })
                 .toList();
         return ReviewsWithCursorResponse.of(reviewsResponses, gymName);
     }
 
-    public void processReviewReaction(ReviewReactionRequest request, Long userId) {
-        ReviewReactionPK reactionPK = ReviewReactionPK.of(userId, request.reviewId());
+    public void processReviewReaction(Long reviewId, ReviewReactionRequest request, Long userId) {
+        ReviewReactionPK reactionPK = ReviewReactionPK.of(userId, reviewId);
         ReviewReaction reviewReaction = ReviewReaction.of(reactionPK, request.reactionType());
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
