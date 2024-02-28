@@ -70,8 +70,8 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 반응 생성/수정/삭제", description = "reviewId를 받아, 리뷰반응을 생성/수정/삭제 한다.")
     @PostMapping("/{id}/reaction")
-    public ApiResponse processReviewReaction(@RequestBody ReviewReactionRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        reviewFacade.processReviewReaction(request, userPrincipal.id());
+    public ApiResponse processReviewReaction(@PathVariable Long id, @RequestBody ReviewReactionRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        reviewFacade.processReviewReaction(id, request, userPrincipal.id());
         return ApiResponse.of(ReviewMessage.REVIEW_REACTION_PROCESSED.getMessage());
     }
 }
