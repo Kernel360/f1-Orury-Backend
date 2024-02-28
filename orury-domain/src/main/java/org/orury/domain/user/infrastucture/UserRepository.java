@@ -1,6 +1,6 @@
-package org.orury.domain.user.db.repository;
+package org.orury.domain.user.infrastucture;
 
-import org.orury.domain.user.db.model.User;
+import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

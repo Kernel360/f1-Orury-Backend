@@ -1,19 +1,19 @@
 package org.orury.client.post.application;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
+
 import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
 import org.orury.client.post.interfaces.response.PostsWithPageResponse;
-import org.orury.client.user.service.UserService;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.PostLikePK;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.UserService;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor

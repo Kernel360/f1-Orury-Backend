@@ -2,6 +2,7 @@ package org.orury.client.review.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
@@ -12,7 +13,7 @@ import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.db.model.Review;
 import org.orury.domain.review.db.repository.ReviewRepository;
 import org.orury.domain.review.dto.ReviewDto;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

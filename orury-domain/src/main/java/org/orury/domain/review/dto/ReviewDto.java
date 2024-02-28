@@ -2,7 +2,7 @@ package org.orury.domain.review.dto;
 
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.db.model.Review;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

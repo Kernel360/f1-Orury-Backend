@@ -3,13 +3,14 @@ package org.orury.client.auth.jwt;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
 import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.db.model.RefreshToken;
 import org.orury.domain.auth.db.repository.RefreshTokenRepository;
 import org.orury.domain.auth.dto.JwtToken;
 import org.orury.domain.global.constants.Constants;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collections;

@@ -1,13 +1,22 @@
-package org.orury.domain.user.db.model;
+package org.orury.domain.user.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.constants.NumberConstants;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ToString

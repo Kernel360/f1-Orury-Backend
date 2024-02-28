@@ -1,23 +1,38 @@
 //package org.orury.client.user.controller;
 //
+//import static org.mockito.ArgumentMatchers.any;
+//import static org.mockito.BDDMockito.given;
+//import static org.mockito.BDDMockito.then;
+//import static org.mockito.Mockito.times;
+//import static org.springframework.http.HttpMethod.POST;
+//import static org.springframework.http.MediaType.APPLICATION_JSON;
+//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//
 //import com.fasterxml.jackson.core.JsonProcessingException;
+//
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
 //import org.orury.client.config.ControllerTest;
 //import org.orury.client.config.WithUserPrincipal;
 //import org.orury.client.global.WithCursorResponse;
-//import org.orury.client.user.converter.message.UserMessage;
-//import org.orury.client.user.converter.request.UserInfoRequest;
-//import org.orury.client.user.converter.response.MyCommentResponse;
-//import org.orury.client.user.converter.response.MyPostResponse;
-//import org.orury.client.user.converter.response.MyReviewResponse;
-//import org.orury.client.user.converter.response.MypageResponse;
+//import org.orury.client.user.interfaces.message.UserMessage;
+//import org.orury.client.user.interfaces.request.UserInfoRequest;
+//import org.orury.client.user.interfaces.response.MyCommentResponse;
+//import org.orury.client.user.interfaces.response.MyPostResponse;
+//import org.orury.client.user.interfaces.response.MyReviewResponse;
+//import org.orury.client.user.interfaces.response.MypageResponse;
 //import org.orury.domain.comment.dto.CommentDto;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.gym.domain.dto.GymDto;
-//import org.orury.domain.post.domain.dto.PostDto;
+//import org.orury.domain.gym.dto.GymDto;
+//import org.orury.domain.post.dto.PostDto;
 //import org.orury.domain.review.dto.ReviewDto;
-//import org.orury.domain.user.dto.UserDto;
+//import org.orury.domain.user.domain.dto.UserDto;
 //import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.http.MediaType;
@@ -27,17 +42,6 @@
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;
 //import java.util.List;
-//
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.BDDMockito.then;
-//import static org.mockito.Mockito.times;
-//import static org.springframework.http.HttpMethod.POST;
-//import static org.springframework.http.MediaType.APPLICATION_JSON;
-//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 //
 ////@Disabled
 //@DisplayName("[Controller] 유저 마이페이지 관련 테스트")

@@ -3,6 +3,7 @@ package org.orury.client.review.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.orury.client.review.converter.message.ReviewMessage;
 import org.orury.client.review.converter.request.ReviewReactionRequest;
 import org.orury.client.review.service.ReviewReactionService;
@@ -10,7 +11,7 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.review.db.model.ReviewReaction;
 import org.orury.domain.review.db.model.ReviewReactionPK;
 import org.orury.domain.review.dto.ReviewReactionDto;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

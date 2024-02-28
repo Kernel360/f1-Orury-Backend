@@ -1,7 +1,7 @@
 package org.orury.domain.post.domain.dto;
 
 import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

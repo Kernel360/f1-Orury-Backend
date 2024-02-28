@@ -1,8 +1,8 @@
-package org.orury.domain.user.dto;
+package org.orury.domain.user.domain.dto;
 
 import org.orury.domain.global.constants.Constants;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.db.model.User;
+import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

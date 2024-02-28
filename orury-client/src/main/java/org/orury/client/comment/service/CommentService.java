@@ -13,7 +13,7 @@ import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.infrastructure.PostRepository;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

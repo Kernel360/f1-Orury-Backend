@@ -1,7 +1,7 @@
 package org.orury.client.auth.converter.request;
 
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;

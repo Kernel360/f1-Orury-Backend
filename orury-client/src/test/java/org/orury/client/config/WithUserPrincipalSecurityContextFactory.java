@@ -1,7 +1,7 @@
 package org.orury.client.config;
 
 import org.orury.domain.global.constants.Constants;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
