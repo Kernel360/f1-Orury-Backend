@@ -2,7 +2,6 @@ package org.orury.client.user.interfaces;
 
 import org.orury.client.comment.service.CommentService;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.post.service.PostService;
 import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
@@ -42,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class UserController {
     private final UserFacade userFacade;
-    private final PostService postService;
     private final ReviewService reviewService;
     private final CommentService commentService;
 
