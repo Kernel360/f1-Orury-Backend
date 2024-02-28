@@ -9,12 +9,11 @@ import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.review.interfaces.response.ReviewsResponse;
 import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
-import org.orury.client.review.service.ReviewReactionService;
-import org.orury.client.review.service.ReviewService;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.review.domain.ReviewService;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.ReviewReaction;
@@ -35,7 +34,6 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewService reviewService;
-    private final ReviewReactionService reviewReactionService;
     private final UserService userService;
     private final GymService gymService;
 
@@ -99,7 +97,7 @@ public class ReviewController {
         List<ReviewDto> reviewDtos = reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
-                    int myReaction = reviewReactionService.getReactionType(userPrincipal.id(), reviewDto.id());
+                    int myReaction = reviewService.getReactionType(userPrincipal.id(), reviewDto.id());
                     UserDto userDto = userService.getUserDtoById(reviewDto.userDto().id());
                     return ReviewsResponse.of(reviewDto, userDto, myReaction);
                 })
@@ -111,14 +109,14 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 반응 생성/수정/삭제", description = "reviewId를 받아, 리뷰반응을 생성/수정/삭제 한다.")
-    @PostMapping
+    @PostMapping("/{id}/reaction")
     public ApiResponse processReviewReaction(@RequestBody ReviewReactionRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         ReviewReactionPK reactionPK = ReviewReactionPK.of(userPrincipal.id(), request.reviewId());
         ReviewReaction reviewReaction = ReviewReaction.of(reactionPK, request.reactionType());
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
-        reviewReactionService.processReviewReaction(reviewReactionDto);
+        reviewService.processReviewReaction(reviewReactionDto);
 
         return ApiResponse.of(ReviewMessage.REVIEW_REACTION_PROCESSED.getMessage());
     }
