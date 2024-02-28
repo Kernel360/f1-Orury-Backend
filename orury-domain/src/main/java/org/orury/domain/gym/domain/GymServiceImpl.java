@@ -46,7 +46,7 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional
     public void createGymLike(GymLikeDto gymLikeDto) {
-        validateGymId(gymLikeDto.gymLikePK().getGymId());
+        validateGym(gymLikeDto.gymLikePK().getGymId());
         if (gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
         gymStore.createGymLike(gymLikeDto.toEntity());
     }
@@ -54,7 +54,7 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional
     public void deleteGymLike(GymLikeDto gymLikeDto) {
-        validateGymId(gymLikeDto.gymLikePK().getGymId());
+        validateGym(gymLikeDto.gymLikePK().getGymId());
         if (!gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
         gymStore.deleteGymLike(gymLikeDto.toEntity());
     }
@@ -65,7 +65,7 @@ public class GymServiceImpl implements GymService {
         return gymReader.existsGymLikeByUserIdAndGymId(userId, gymId);
     }
 
-    private void validateGymId(Long gymId) {
+    private void validateGym(Long gymId) {
         if (!gymReader.existsGymById(gymId)) throw new BusinessException(GymErrorCode.NOT_FOUND);
     }
 
