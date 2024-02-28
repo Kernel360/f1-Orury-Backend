@@ -1,4 +1,4 @@
-package org.orury.client.review.converter.response;
+package org.orury.client.review.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

@@ -1,4 +1,4 @@
-package org.orury.client.review.converter.request;
+package org.orury.client.review.interfaces.request;
 
 public record ReviewReactionRequest(
         Long reviewId,
