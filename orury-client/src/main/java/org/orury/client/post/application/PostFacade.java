@@ -1,13 +1,11 @@
 package org.orury.client.post.application;
 
-import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
 import org.orury.client.post.interfaces.response.PostsWithPageResponse;
-import org.orury.common.error.code.PostErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
@@ -21,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,15 +36,13 @@ public class PostFacade {
 
     public void updatePost(Long userId, PostRequest request, List<MultipartFile> files) {
         var user = userService.getUserDtoById(userId);
-        var oldPost = postService.getPostDtoById(request.id());
-        isValidate(oldPost, userId);
+        var oldPost = postService.getPostDtoById(userId, request.id());
         var newPost = request.toDto(oldPost, user);
         postService.createPost(newPost, files);
     }
 
     public void deletePost(Long userId, Long postId) {
-        var post = postService.getPostDtoById(postId);
-        isValidate(post, userId);
+        var post = postService.getPostDtoById(userId, postId);
         postService.deletePost(post);
     }
 
@@ -88,10 +83,5 @@ public class PostFacade {
     public void deletePostLike(Long userId, Long postId) {
         var postLikeDto = PostLikeDto.of(PostLikePK.of(userId, postId));
         postService.deletePostLike(postLikeDto);
-    }
-
-    private void isValidate(PostDto postDto, Long userId) {
-        if (postDto.userDto().id().equals(userId))
-            throw new BusinessException(PostErrorCode.FORBIDDEN);
     }
 }

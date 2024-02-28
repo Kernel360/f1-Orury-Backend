@@ -2,6 +2,8 @@ package org.orury.domain.post.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.common.error.code.PostErrorCode;
+import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
@@ -68,9 +70,17 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
         var post = postReader.findById(id);
-        var isLike = postReader.isPostLiked(post.getUser().getId(), id);
-        var links = imageReader.getImageLinks(POST, post.getImages());
-        return PostDto.from(post, links, isLike);
+        return postImageConverter(post);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PostDto getPostDtoById(Long userId, Long postId) {
+        var post = postReader.findById(postId);
+        var postUser = post.getUser().getId();
+        if (!postUser.equals(userId))
+            throw new BusinessException(PostErrorCode.FORBIDDEN);
+        return postImageConverter(post);
     }
 
     @Override
@@ -117,6 +127,8 @@ public class PostServiceImpl implements PostService {
 
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
-        return PostDto.from(post, links);
+        var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());
+        var isLike = postReader.isPostLiked(post.getUser().getId(), post.getId());
+        return PostDto.from(post, links, profileLink, isLike);
     }
 }

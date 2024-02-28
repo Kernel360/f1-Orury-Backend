@@ -17,7 +17,9 @@ public interface PostService {
 
     Page<PostDto> getHotPostDtos(Pageable pageable);
 
-    PostDto getPostDtoById(Long id);
+    PostDto getPostDtoById(Long postId);
+
+    PostDto getPostDtoById(Long userId, Long postId);
 
     void createPost(PostDto postDto, List<MultipartFile> files);
 
