@@ -8,7 +8,7 @@ public record ReviewReactionDto(
         ReviewReactionPK reviewReactionPK,
         int reactionType
 ) {
-    private static ReviewReactionDto of(
+    public static ReviewReactionDto of(
             ReviewReactionPK reviewReactionPK,
             int reactionType
     ) {

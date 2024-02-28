@@ -12,7 +12,6 @@ import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.domain.ReviewService;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
-import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -33,26 +32,20 @@ public class ReviewFacade {
         UserDto userDto = userService.getUserDtoById(userId);
         GymDto gymDto = gymService.getGymDtoById(request.gymId());
 
-        reviewService.isExist(userDto, gymDto);
-
         ReviewDto reviewDto = request.toDto(userDto, gymDto);
 
         reviewService.createReview(reviewDto, image);
     }
 
     public void updateReview(Long reviewId, Long userId, ReviewUpdateRequest request, List<MultipartFile> image) {
-        ReviewDto beforeReviewDto = reviewService.getReviewDtoById(reviewId);
-
-        reviewService.isValidate(beforeReviewDto.userDto().id(), userId);
-
+        ReviewDto beforeReviewDto = reviewService.getReviewDtoById(reviewId, userId);
         ReviewDto updateReviewDto = request.toDto(beforeReviewDto);
+
         reviewService.updateReview(beforeReviewDto, updateReviewDto, image);
     }
 
     public void deleteReview(Long reviewId, Long userId) {
-        ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId);
-
-        reviewService.isValidate(userId, reviewDto.userDto().id());
+        ReviewDto reviewDto = reviewService.getReviewDtoById(reviewId, userId);
 
         reviewService.deleteReview(reviewDto);
     }
@@ -72,8 +65,7 @@ public class ReviewFacade {
 
     public void processReviewReaction(Long reviewId, ReviewReactionRequest request, Long userId) {
         ReviewReactionPK reactionPK = ReviewReactionPK.of(userId, reviewId);
-        ReviewReaction reviewReaction = ReviewReaction.of(reactionPK, request.reactionType());
-        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.of(reactionPK, request.reactionType());
 
         reviewService.processReviewReaction(reviewReactionDto);
     }

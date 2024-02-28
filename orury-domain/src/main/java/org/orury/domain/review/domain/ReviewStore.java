@@ -17,4 +17,6 @@ public interface ReviewStore {
     void delete(Review review);
 
     void delete(ReviewReaction reviewReaction);
+
+    void deleteReviewReactionsByUserId(Long id);
 }

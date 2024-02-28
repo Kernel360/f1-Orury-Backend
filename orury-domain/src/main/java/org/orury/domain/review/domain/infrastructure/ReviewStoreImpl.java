@@ -48,4 +48,16 @@ public class ReviewStoreImpl implements ReviewStore {
     public void delete(ReviewReaction reviewReaction) {
         reviewReactionRepository.delete(reviewReaction);
     }
+
+    @Override
+    public void deleteReviewReactionsByUserId(Long id) {
+        reviewReactionRepository.findByReviewReactionPK_UserId(id)
+                .forEach(
+                        reviewReaction -> {
+                            reviewRepository.decreaseReactionCount(reviewReaction.getReviewReactionPK()
+                                    .getReviewId(), reviewReaction.getReactionType());
+                            reviewReactionRepository.delete(reviewReaction);
+                        }
+                );
+    }
 }

@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         deleteCommentLikesByUserId(userDto.id());
         postStore.deletePostLikesByUserId(userDto.id());
         postStore.deletePostsByUserId(userDto.id());
+        reviewStore.deleteReviewReactionsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
         var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
