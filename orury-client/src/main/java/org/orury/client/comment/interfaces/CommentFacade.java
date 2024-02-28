@@ -22,7 +22,6 @@ public class CommentFacade {
     private final UserService userService;
 
     public void createComment(CommentCreateRequest request, Long userId) {
-        commentService.validateParentComment(request.parentId());
         var userDto = userService.getUserDtoById(userId);
         var postDto = postService.getPostDtoById(request.postId());
         var commentDto = request.toDto(userDto, postDto);
@@ -37,24 +36,20 @@ public class CommentFacade {
 
     public void updateComment(CommentUpdateRequest request, Long userId) {
         var commentDto = commentService.getCommentDtoById(request.id());
-        commentService.validate(commentDto, userId);
         var updatingCommentDto = request.toDto(commentDto);
-        commentService.updateComment(updatingCommentDto);
+        commentService.updateComment(updatingCommentDto, userId);
     }
 
     public void deleteComment(Long commentId, Long userId) {
         var commentDto = commentService.getCommentDtoById(commentId);
-        commentService.validate(commentDto, userId);
-        commentService.deleteComment(commentDto);
+        commentService.deleteComment(commentDto, userId);
     }
 
     public void createCommentLike(CommentLikeDto commentLikeDto) {
-        commentService.validate(commentLikeDto);
         commentService.createCommentLike(commentLikeDto);
     }
 
     public void deleteCommentLike(CommentLikeDto commentLikeDto) {
-        commentService.validate(commentLikeDto);
         commentService.deleteCommentLike(commentLikeDto);
     }
 

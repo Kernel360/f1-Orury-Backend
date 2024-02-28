@@ -13,15 +13,9 @@ public interface CommentService {
 
     List<CommentDto> getCommentDtosByUserId(Long userId, Long cursor);
 
-    void updateComment(CommentDto commentDto);
+    void updateComment(CommentDto commentDto, Long userId);
 
-    void deleteComment(CommentDto commentDto);
-
-    void validate(CommentDto commentDto, Long userId);
-
-    void validate(CommentLikeDto commentLikeDto);
-
-    void validateParentComment(Long parentCommentId);
+    void deleteComment(CommentDto commentDto, Long userId);
 
     CommentDto getCommentDtoById(Long id);
 

@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void createComment(CommentDto commentDto) {
+        validateParentComment(commentDto.parentId());
         commentStore.createComment(commentDto.toEntity());
     }
 
@@ -49,37 +50,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void updateComment(CommentDto commentDto) {
+    public void updateComment(CommentDto commentDto, Long userId) {
+        validateCommentCreator(commentDto, userId);
         commentStore.updateComment(commentDto.toEntity());
     }
 
     @Override
     @Transactional
-    public void deleteComment(CommentDto commentDto) {
+    public void deleteComment(CommentDto commentDto, Long userId) {
+        validateCommentCreator(commentDto, userId);
         commentStore.deleteComment(commentDto.toEntity());
-    }
-
-    @Override
-    public void validate(CommentDto commentDto, Long userId) {
-        if (!Objects.equals(commentDto.userDto().id(), userId))
-            throw new BusinessException(CommentErrorCode.FORBIDDEN);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public void validate(CommentLikeDto commentLikeDto) {
-        var comment = commentReader.getCommentById(commentLikeDto.commentLikePK().getCommentId());
-        if (comment.getDeleted() == NumberConstants.IS_DELETED)
-            throw new BusinessException(CommentErrorCode.FORBIDDEN);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public void validateParentComment(Long parentCommentId) {
-        if (parentCommentId.equals(NumberConstants.PARENT_COMMENT)) return;
-        var parentComment = commentReader.getCommentById(parentCommentId);
-        if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
-            throw new BusinessException(CommentErrorCode.BAD_REQUEST);
     }
 
     @Override
@@ -92,6 +72,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void createCommentLike(CommentLikeDto commentLikeDto) {
+        validateComment(commentLikeDto.commentLikePK().getCommentId());
         if (!commentReader.existsCommentById(commentLikeDto.commentLikePK().getCommentId()))
             throw new BusinessException(CommentErrorCode.NOT_FOUND);
         if (commentReader.existsCommentLikeById(commentLikeDto.commentLikePK())) return;
@@ -101,6 +82,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteCommentLike(CommentLikeDto commentLikeDto) {
+        validateComment(commentLikeDto.commentLikePK().getCommentId());
         if (!commentReader.existsCommentById(commentLikeDto.commentLikePK().getCommentId()))
             throw new BusinessException(CommentErrorCode.NOT_FOUND);
         if (!commentReader.existsCommentLikeById(commentLikeDto.commentLikePK())) return;
@@ -111,6 +93,24 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public boolean isLiked(Long userId, Long commentId) {
         return commentReader.existsCommentLikeByUserIdAndCommentId(userId, commentId);
+    }
+
+    private void validateCommentCreator(CommentDto commentDto, Long userId) {
+        if (!Objects.equals(commentDto.userDto().id(), userId))
+            throw new BusinessException(CommentErrorCode.FORBIDDEN);
+    }
+
+    private void validateComment(Long commentId) {
+        var comment = commentReader.getCommentById(commentId);
+        if (comment.getDeleted() == NumberConstants.IS_DELETED)
+            throw new BusinessException(CommentErrorCode.FORBIDDEN);
+    }
+
+    private void validateParentComment(Long parentCommentId) {
+        if (parentCommentId.equals(NumberConstants.PARENT_COMMENT)) return;
+        var parentComment = commentReader.getCommentById(parentCommentId);
+        if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
+            throw new BusinessException(CommentErrorCode.BAD_REQUEST);
     }
 
     private List<CommentDto> convertCommentsToCommentDtos(List<Comment> comments) {
