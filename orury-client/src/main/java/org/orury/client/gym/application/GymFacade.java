@@ -29,12 +29,10 @@ public class GymFacade {
     }
 
     public void createGymLike(GymLikeDto gymLikeDto) {
-        gymService.validate(gymLikeDto.gymLikePK().getGymId());
         gymService.createGymLike(gymLikeDto);
     }
 
     public void deleteGymLike(GymLikeDto gymLikeDto) {
-        gymService.validate(gymLikeDto.gymLikePK().getGymId());
         gymService.deleteGymLike(gymLikeDto);
     }
 

@@ -16,7 +16,5 @@ public interface GymService {
 
     boolean isLiked(Long userId, Long gymId);
 
-    void validate(Long gymId);
-
     boolean checkDoingBusiness(GymDto gymDto);
 }
