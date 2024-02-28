@@ -1,7 +1,5 @@
 package org.orury.domain.user.domain;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.S3Folder;
@@ -15,6 +13,9 @@ import org.orury.domain.user.domain.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -60,8 +61,8 @@ public class UserServiceImpl implements UserService {
         reviewStore.deleteReviewReactionsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
-
         var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
+
         userStore.save(deletingUser);
     }
 
