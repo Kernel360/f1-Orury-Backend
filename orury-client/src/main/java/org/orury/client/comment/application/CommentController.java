@@ -63,6 +63,6 @@ public class CommentController {
     public ApiResponse deleteCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         CommentLikeDto commentLikeDto = CommentLikeDto.of(CommentLikePK.of(userPrincipal.id(), commentId));
         commentFacade.deleteCommentLike(commentLikeDto);
-        return ApiResponse.of(COMMENT_LIKE_DELETED.getMessage());용
+        return ApiResponse.of(COMMENT_LIKE_DELETED.getMessage());
     }
 }
