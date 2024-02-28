@@ -74,8 +74,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void createCommentLike(CommentLikeDto commentLikeDto) {
         validateComment(commentLikeDto.commentLikePK().getCommentId());
-        if (!commentReader.existsCommentById(commentLikeDto.commentLikePK().getCommentId()))
-            throw new BusinessException(CommentErrorCode.NOT_FOUND);
         if (commentReader.existsCommentLikeById(commentLikeDto.commentLikePK())) return;
         commentStore.createCommentLike(commentLikeDto.toEntity());
     }
@@ -84,8 +82,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteCommentLike(CommentLikeDto commentLikeDto) {
         validateComment(commentLikeDto.commentLikePK().getCommentId());
-        if (!commentReader.existsCommentById(commentLikeDto.commentLikePK().getCommentId()))
-            throw new BusinessException(CommentErrorCode.NOT_FOUND);
         if (!commentReader.existsCommentLikeById(commentLikeDto.commentLikePK())) return;
         commentStore.deleteCommentLike(commentLikeDto.toEntity());
     }
