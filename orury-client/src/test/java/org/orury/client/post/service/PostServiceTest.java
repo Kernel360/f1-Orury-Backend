@@ -13,7 +13,10 @@ import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostServiceImpl;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.domain.dto.PostDto;
+import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.post.domain.entity.PostLike;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.Page;
@@ -30,8 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -40,7 +42,6 @@ import static org.orury.common.error.code.PostErrorCode.NOT_FOUND;
 import static org.orury.common.util.S3Folder.POST;
 import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 import static org.orury.domain.global.constants.NumberConstants.USER_ID;
-import static org.springframework.test.util.AssertionErrors.fail;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 게시글 테스트")
@@ -173,7 +174,7 @@ class PostServiceTest {
         //when
         try {
             postService.getPostDtoById(2L, 1L);
-            fail("fail");
+            fail();
         } catch (BusinessException e) {
             assertThat(e.getMessage()).isEqualTo(FORBIDDEN.getMessage());
         }
@@ -442,6 +443,40 @@ class PostServiceTest {
         // then
         assertEquals(expectPostDtos, resultPostDtos);
         then(postReader).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("유저가 게시글에 좋아요를 누르면 좋아요 테이블에 데이터가 생성")
+    void when_UserPostLike_Then_CreatePostLikeSuccessFully() {
+        // given
+        PostLikeDto postLikeDto = createPostLike();
+        PostLike postLike = postLikeDto.toEntity();
+        given(postReader.existsByPostLikePK(any())).willReturn(false);
+
+        // when
+        postService.createPostLike(postLikeDto);
+
+        // then
+        verify(postStore, times(1)).save(postLike);
+    }
+
+    @Test
+    @DisplayName("유저가 게시글에 좋아요를 누르면 좋아요 테이블에 데이터가 삭제")
+    void when_UserPostLike_Then_DeletePostLikeSuccessFully() {
+        // given
+        PostLikeDto postLikeDto = createPostLike();
+        PostLike postLike = postLikeDto.toEntity();
+        given(postReader.existsByPostLikePK(any())).willReturn(true);
+
+        // when
+        postService.deletePostLike(postLikeDto);
+
+        // then
+        verify(postStore, times(1)).delete(postLike);
+    }
+
+    private PostLikeDto createPostLike() {
+        return PostLikeDto.of(PostLikePK.of(1L, 1L));
     }
 
     private MockMultipartFile createImagePart() {
