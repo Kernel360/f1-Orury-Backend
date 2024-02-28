@@ -2,30 +2,36 @@ package org.orury.domain.review.domain;
 
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.review.domain.dto.ReviewReactionDto;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ReviewService {
-    public void createReview(ReviewDto reviewDto, List<MultipartFile> images);
+    void createReview(ReviewDto reviewDto, List<MultipartFile> images);
 
-    public void isExist(UserDto userDto, GymDto gymDto);
+    void isExist(UserDto userDto, GymDto gymDto);
 
-    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> images);
+    void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> images);
 
-    public ReviewDto getReviewDtoById(Long id);
+    ReviewDto getReviewDtoById(Long id);
 
-    public void isValidate(Long id1, Long id2);
+    void isValidate(Long id1, Long id2);
 
-    public void deleteReview(ReviewDto reviewDto);
+    void deleteReview(ReviewDto reviewDto);
 
-    public List<ReviewDto> getReviewDtosByGymId(Long gymId, Long cursor, Pageable pageable);
+    List<ReviewDto> getReviewDtosByGymId(Long gymId, Long cursor, Pageable pageable);
 
-    public List<ReviewDto> getReviewDtosByUserId(Long userId, Long cursor, Pageable pageable);
+    List<ReviewDto> getReviewDtosByUserId(Long userId, Long cursor, Pageable pageable);
 
-    public List<ReviewDto> getAllReviewDtosByGymId(Long gymId);
+    List<ReviewDto> getAllReviewDtosByGymId(Long gymId);
+
+    public int getReactionType(Long userId, Long reviewId);
+
+    public void processReviewReaction(ReviewReactionDto reviewReactionDto);
+
 //    private List<ReviewDto> transferReview(List<Review> reviews);
 //
 //    private void imageUploadAndSave(ReviewDto reviewDto, List<MultipartFile> files);

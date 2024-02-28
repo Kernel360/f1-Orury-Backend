@@ -1,11 +1,20 @@
 package org.orury.domain.review.domain;
 
-import org.springframework.data.repository.query.Param;
+import org.orury.domain.review.domain.entity.Review;
+import org.orury.domain.review.domain.entity.ReviewReaction;
 
 public interface ReviewStore {
-    void increaseReactionCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
+    void increaseReactionCount(Long reviewId, int reactionType);
 
-    void decreaseReactionCount(@Param("reviewId") Long reviewId, @Param("reactionType") int reactionType);
+    void decreaseReactionCount(Long reviewId, int reactionType);
 
-    void updateReactionCount(@Param("reviewId") Long reviewId, @Param("oldReactionType") int oldReactionType, @Param("newReactionType") int newReactionType);
+    void updateReactionCount(Long reviewId, int oldReactionType, int newReactionType);
+
+    void save(Review review);
+
+    void save(ReviewReaction reviewReaction);
+
+    void delete(Review review);
+
+    void delete(ReviewReaction reviewReaction);
 }
