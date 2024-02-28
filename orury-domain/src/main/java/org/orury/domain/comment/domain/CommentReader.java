@@ -5,9 +5,10 @@ import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentReader {
-    Comment getCommentById(Long commentId);
+    Optional<Comment> findCommentById(Long commentId);
 
     boolean existsCommentById(Long commentId);
 

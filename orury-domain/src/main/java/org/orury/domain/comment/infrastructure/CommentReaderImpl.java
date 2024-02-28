@@ -1,8 +1,6 @@
 package org.orury.domain.comment.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.orury.common.error.code.CommentErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.comment.domain.CommentReader;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -21,9 +20,8 @@ public class CommentReaderImpl implements CommentReader {
     private final CommentLikeRepository commentLikeRepository;
 
     @Override
-    public Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
+    public Optional<Comment> findCommentById(Long commentId) {
+        return commentRepository.findById(commentId);
     }
 
     @Override

@@ -31,7 +31,8 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional(readOnly = true)
     public GymDto getGymDtoById(Long id) {
-        var gym = gymReader.findGymById(id);
+        Gym gym = gymReader.findGymById(id)
+                .orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
         var urls = imageReader.getImageLinks(GYM, gym.getImages());
         return GymDto.from(gym, urls);
     }

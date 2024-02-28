@@ -65,7 +65,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public CommentDto getCommentDtoById(Long id) {
-        Comment comment = commentReader.getCommentById(id);
+        Comment comment = commentReader.findCommentById(id)
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         return CommentDto.from(comment);
     }
 
@@ -101,14 +102,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validateComment(Long commentId) {
-        var comment = commentReader.getCommentById(commentId);
+        var comment = commentReader.findCommentById(commentId)
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         if (comment.getDeleted() == NumberConstants.IS_DELETED)
             throw new BusinessException(CommentErrorCode.FORBIDDEN);
     }
 
     private void validateParentComment(Long parentCommentId) {
         if (parentCommentId.equals(NumberConstants.PARENT_COMMENT)) return;
-        var parentComment = commentReader.getCommentById(parentCommentId);
+        var parentComment = commentReader.findCommentById(parentCommentId)
+                .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND));
         if (!parentComment.getParentId().equals(NumberConstants.PARENT_COMMENT))
             throw new BusinessException(CommentErrorCode.BAD_REQUEST);
     }
