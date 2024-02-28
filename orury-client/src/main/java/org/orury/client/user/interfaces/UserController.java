@@ -1,26 +1,24 @@
-package org.orury.client.user.controller;
+package org.orury.client.user.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.review.service.ReviewService;
-import org.orury.client.user.converter.message.UserMessage;
-import org.orury.client.user.converter.request.UserInfoRequest;
-import org.orury.client.user.converter.response.MyCommentResponse;
-import org.orury.client.user.converter.response.MyPostResponse;
-import org.orury.client.user.converter.response.MyReviewResponse;
-import org.orury.client.user.converter.response.MypageResponse;
-import org.orury.client.user.service.UserService;
+import org.orury.client.user.application.UserFacade;
+import org.orury.client.user.interfaces.message.UserMessage;
+import org.orury.client.user.interfaces.request.UserInfoRequest;
+import org.orury.client.user.interfaces.response.MyCommentResponse;
+import org.orury.client.user.interfaces.response.MyPostResponse;
+import org.orury.client.user.interfaces.response.MyReviewResponse;
+import org.orury.client.user.interfaces.response.MypageResponse;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.comment.domain.CommentService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.domain.PostService;
-import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.dto.ReviewDto;
-import org.orury.domain.user.dto.UserDto;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,16 +31,14 @@ import java.util.List;
 @RequestMapping("/user")
 @RestController
 public class UserController {
-    private final UserService userService;
-    private final PostService postService;
+    private final UserFacade userFacade;
     private final ReviewService reviewService;
     private final CommentService commentService;
 
     @Operation(summary = "마이페이지 조회", description = "id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
     @GetMapping()
     public ApiResponse readMypage(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-
-        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
+        UserDto userDto = userFacade.readMypage(userPrincipal.id());
         MypageResponse mypageResponse = MypageResponse.of(userDto);
 
         return ApiResponse.of(UserMessage.USER_READ.getMessage(), mypageResponse);
@@ -54,9 +50,7 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart(required = false) MultipartFile image
     ) {
-        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
-        userService.updateProfileImage(userDto, image);
-
+        userFacade.updateProfileImage(userPrincipal.id(), image);
         return ApiResponse.of(UserMessage.USER_PROFILEIMAGE_UPDATED.getMessage());
     }
 
@@ -66,10 +60,7 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserInfoRequest userInfoRequest
     ) {
-        UserDto userDto = userService.getUserDtoById(userPrincipal.id());
-        UserDto updateUserDto = UserInfoRequest.toDto(userDto, userInfoRequest);
-
-        userService.updateUserInfo(updateUserDto);
+        userFacade.updateUserInfo(userPrincipal.id(), userInfoRequest);
 
         return ApiResponse.of(UserMessage.USER_UPDATED.getMessage());
     }
@@ -77,13 +68,7 @@ public class UserController {
     @Operation(summary = "내가 쓴 게시글 조회", description = "user_id로 내가 쓴 게시글을 조회한다.")
     @GetMapping("/posts")
     public ApiResponse getPostsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
-
-        List<PostDto> postDtos = postService.getPostDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
-        List<MyPostResponse> myPostResponses = postDtos.stream()
-                .map(MyPostResponse::of)
-                .toList();
-
-        WithCursorResponse<MyPostResponse> cursorResponse = WithCursorResponse.of(myPostResponses, cursor);
+        WithCursorResponse<MyPostResponse> cursorResponse = userFacade.getPostsByUserId(userPrincipal.id(), cursor);
 
         return ApiResponse.of(UserMessage.USER_POSTS_READ.getMessage(), cursorResponse);
     }
@@ -119,8 +104,8 @@ public class UserController {
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping
     public ApiResponse deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        UserDto user = userService.getUserDtoById(userPrincipal.id());
-        userService.deleteUser(user);
+
+        userFacade.deleteUser(userPrincipal.id());
 
         return ApiResponse.of(UserMessage.USER_DELETED.getMessage());
     }

@@ -1,7 +1,7 @@
 package org.orury.client.post.interfaces.request;
 
 import org.orury.domain.post.domain.dto.PostDto;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;
 

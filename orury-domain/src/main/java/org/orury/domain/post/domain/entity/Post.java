@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.EntityImageConverter;
-import org.orury.domain.user.db.model.User;
+import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

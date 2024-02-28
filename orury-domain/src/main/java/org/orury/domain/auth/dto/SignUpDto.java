@@ -1,6 +1,6 @@
 package org.orury.domain.auth.dto;
 
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 public record SignUpDto(
         UserDto userDto,

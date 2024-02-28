@@ -13,4 +13,8 @@ public interface PostStore {
     void delete(PostLike postLike);
 
     void updateViewCount(Long id);
+
+    void deletePostLikesByUserId(Long id);
+
+    void deletePostsByUserId(Long id);
 }

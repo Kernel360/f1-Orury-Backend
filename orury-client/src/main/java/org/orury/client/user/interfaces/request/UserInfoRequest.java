@@ -1,7 +1,7 @@
-package org.orury.client.user.converter.request;
+package org.orury.client.user.interfaces.request;
 
 import org.orury.common.util.ImageUrlConverter;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 public record UserInfoRequest(
         String nickname

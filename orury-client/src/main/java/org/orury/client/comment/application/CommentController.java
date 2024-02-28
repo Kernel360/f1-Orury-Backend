@@ -9,7 +9,7 @@ import org.orury.client.comment.interfaces.CommentFacade;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

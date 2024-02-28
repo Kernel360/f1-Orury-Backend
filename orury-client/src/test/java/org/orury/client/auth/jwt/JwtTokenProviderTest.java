@@ -1,6 +1,7 @@
 package org.orury.client.auth.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.db.repository.RefreshTokenRepository;
 import org.orury.domain.global.constants.Constants;
-import org.orury.domain.user.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

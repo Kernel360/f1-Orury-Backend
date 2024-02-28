@@ -10,7 +10,7 @@ import org.orury.domain.review.db.model.ReviewReactionPK;
 import org.orury.domain.review.db.repository.ReviewReactionRepository;
 import org.orury.domain.review.db.repository.ReviewRepository;
 import org.orury.domain.review.dto.ReviewReactionDto;
-import org.orury.domain.user.db.model.User;
+import org.orury.domain.user.domain.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

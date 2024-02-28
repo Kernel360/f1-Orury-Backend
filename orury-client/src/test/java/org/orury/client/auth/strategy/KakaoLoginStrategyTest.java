@@ -1,5 +1,22 @@
 package org.orury.client.auth.strategy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.auth.converter.message.AuthMessage;
 import org.orury.client.auth.converter.request.LoginRequest;
 import org.orury.client.auth.jwt.JwtTokenProvider;
@@ -14,26 +31,13 @@ import org.orury.domain.auth.dto.kakao.KakaoAccountDto;
 import org.orury.domain.auth.dto.kakao.KakaoOAuthTokenDto;
 import org.orury.domain.auth.dto.kakao.Profile;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.db.model.User;
-import org.orury.domain.user.db.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.user.domain.entity.User;
+import org.orury.domain.user.infrastucture.UserRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Kakao OAuth 인증  테스트")

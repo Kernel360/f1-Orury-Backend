@@ -1,7 +1,5 @@
 package org.orury.client.auth.strategy;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.orury.client.auth.converter.message.AuthMessage;
 import org.orury.client.auth.converter.request.LoginRequest;
 import org.orury.client.auth.jwt.JwtTokenProvider;
@@ -12,14 +10,17 @@ import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.dto.JwtToken;
 import org.orury.domain.auth.dto.LoginDto;
 import org.orury.domain.auth.dto.kakao.KakaoOAuthTokenDto;
-import org.orury.domain.user.db.model.User;
-import org.orury.domain.user.db.repository.UserRepository;
-import org.orury.domain.user.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.entity.User;
+import org.orury.domain.user.infrastucture.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
