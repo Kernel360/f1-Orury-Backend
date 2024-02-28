@@ -75,6 +75,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPost(PostDto postDto, List<MultipartFile> files) {
         // id == null -> 생성, id != null -> 수정
         if (postDto.id() != null) {
@@ -86,6 +87,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(PostDto postDto) {
         var oldImages = postDto.images();
         if (!ImageUtil.imagesValidation(oldImages)) imageStore.delete(POST, oldImages);
@@ -98,6 +100,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
         if (postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
@@ -105,6 +108,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
         if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
@@ -112,6 +116,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void updateViewCount(Long id) {
         postStore.updateViewCount(id);
     }
