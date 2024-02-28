@@ -1,12 +1,13 @@
 package org.orury.client.user.application;
 
+import lombok.RequiredArgsConstructor;
 import org.orury.client.comment.service.CommentService;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.post.service.PostService;
 import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
