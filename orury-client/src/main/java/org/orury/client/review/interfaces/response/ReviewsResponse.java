@@ -1,15 +1,9 @@
 package org.orury.client.review.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.domain.global.constants.NumberConstants;
-<<<<<<< Updated upstream
-import org.orury.domain.review.dto.ReviewDto;
-import org.orury.domain.user.domain.dto.UserDto;
-=======
 import org.orury.domain.review.domain.dto.ReviewDto;
-import org.orury.domain.user.dto.UserDto;
->>>>>>> Stashed changes
+import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
