@@ -1,7 +1,11 @@
 package org.orury.client.review.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.review.converter.message.ReviewMessage;
 import org.orury.client.review.converter.request.ReviewCreateRequest;
+import org.orury.client.review.converter.request.ReviewReactionRequest;
 import org.orury.client.review.converter.request.ReviewUpdateRequest;
 import org.orury.client.review.converter.response.ReviewsResponse;
 import org.orury.client.review.converter.response.ReviewsWithCursorResponse;
@@ -11,28 +15,19 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.review.domain.dto.ReviewReactionDto;
+import org.orury.domain.review.domain.entity.ReviewReaction;
+import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -113,5 +108,18 @@ public class ReviewController {
         ReviewsWithCursorResponse response = ReviewsWithCursorResponse.of(reviewsResponses, gymName);
 
         return ApiResponse.of(ReviewMessage.REVIEWS_READ.getMessage(), response);
+    }
+
+    @Operation(summary = "리뷰 반응 생성/수정/삭제", description = "reviewId를 받아, 리뷰반응을 생성/수정/삭제 한다.")
+    @PostMapping
+    public ApiResponse processReviewReaction(@RequestBody ReviewReactionRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        ReviewReactionPK reactionPK = ReviewReactionPK.of(userPrincipal.id(), request.reviewId());
+        ReviewReaction reviewReaction = ReviewReaction.of(reactionPK, request.reactionType());
+        ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+
+        reviewReactionService.processReviewReaction(reviewReactionDto);
+
+        return ApiResponse.of(ReviewMessage.REVIEW_REACTION_PROCESSED.getMessage());
     }
 }

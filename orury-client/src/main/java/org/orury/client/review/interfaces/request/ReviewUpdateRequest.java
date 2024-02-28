@@ -1,6 +1,6 @@
 package org.orury.client.review.converter.request;
 
-import org.orury.domain.review.dto.ReviewDto;
+import org.orury.domain.review.domain.dto.ReviewDto;
 
 public record ReviewUpdateRequest(
         String content,
