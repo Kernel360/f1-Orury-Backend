@@ -14,8 +14,7 @@ import org.orury.client.comment.service.CommentService;
 import org.orury.client.gym.interfaces.GymController;
 import org.orury.client.post.interfaces.PostController;
 import org.orury.client.post.service.PostService;
-import org.orury.client.review.controller.ReviewController;
-import org.orury.client.review.controller.ReviewReactionController;
+import org.orury.client.review.interfaces.ReviewController;
 import org.orury.client.review.service.ReviewReactionService;
 import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.interfaces.UserController;
@@ -39,7 +38,6 @@ import org.springframework.test.web.servlet.MockMvc;
         GymController.class,
         PostController.class,
         ReviewController.class,
-        ReviewReactionController.class,
         UserController.class
 })
 @ActiveProfiles("test")

@@ -1,6 +1,6 @@
 package org.orury.domain.review.db.repository;
 
-import org.orury.domain.review.db.model.Review;
+import org.orury.domain.review.domain.entity.Review;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -51,6 +51,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "r.angryCount = CASE WHEN :oldReactionType = 5 THEN r.angryCount - 1 WHEN :newReactionType = 5 THEN r.angryCount + 1 ELSE r.angryCount END " +
             "where r.id = :reviewId")
     void updateReactionCount(@Param("reviewId") Long reviewId, @Param("oldReactionType") int oldReactionType, @Param("newReactionType") int newReactionType);
-
-
 }

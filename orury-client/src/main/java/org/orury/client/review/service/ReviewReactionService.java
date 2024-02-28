@@ -2,21 +2,18 @@ package org.orury.client.review.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.common.error.code.ReviewReactionErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.review.db.model.ReviewReaction;
-import org.orury.domain.review.db.model.ReviewReactionPK;
+import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.review.db.repository.ReviewReactionRepository;
 import org.orury.domain.review.db.repository.ReviewRepository;
-import org.orury.domain.review.dto.ReviewReactionDto;
+import org.orury.domain.review.domain.dto.ReviewReactionDto;
+import org.orury.domain.review.domain.entity.ReviewReaction;
+import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
