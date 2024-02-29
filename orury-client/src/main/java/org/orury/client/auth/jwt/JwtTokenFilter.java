@@ -48,10 +48,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/v1/auth/login", "/api/v1/auth/refresh", "/swagger-ui", "/v3/api-docs", "/favicon.ico", "/actuator/prometheus"};
+        String[] excludePath = {"/auth/login", "/auth/refresh", "/swagger-ui", "/v3/api-docs", "/favicon.ico", "/actuator/prometheus"};
         String path = request.getRequestURI();
         return Arrays.stream(excludePath)
-                .anyMatch(path::startsWith);
+                .anyMatch(path::contains);
     }
 
     private void jwtExceptionHandler(HttpServletResponse response, AuthException exception) {
