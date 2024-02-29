@@ -45,7 +45,7 @@ class UserStoreImplTest {
         then(userRepository).should(times(1)).save(any());
     }
 
-    private static User createUser(Long id) {
+    private User createUser(Long id) {
         return User.of(
                 id,
                 "userEmail",

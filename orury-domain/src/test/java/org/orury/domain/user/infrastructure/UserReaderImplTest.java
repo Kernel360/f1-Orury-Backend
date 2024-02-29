@@ -48,7 +48,7 @@ class UserReaderImplTest {
         assertThat(actualUser).isEqualTo(user);
     }
 
-    private static User createUser(Long id) {
+    private User createUser(Long id) {
         return User.of(
                 id,
                 "userEmail",
@@ -64,11 +64,11 @@ class UserReaderImplTest {
         );
     }
 
-    public static Optional<User> createwrappingOptional(User user) {
+    public Optional<User> createwrappingOptional(User user) {
         return Optional.ofNullable(user);
     }
 
-    public static Optional<User> createEmptyOptional() {
+    public Optional<User> createEmptyOptional() {
         return Optional.empty();
     }
 

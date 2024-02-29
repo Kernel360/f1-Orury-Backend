@@ -196,7 +196,7 @@ class UserFacadeTest {
 
     // review, comment 받아서 추가 메서드 구현 예정 (컨트롤러도 리팩토링 한번 더 해야함)
 
-    private static UserDto createUserDto(Long id) {
+    private UserDto createUserDto(Long id) {
         return UserDto.of(
                 id,
                 "userEmail",

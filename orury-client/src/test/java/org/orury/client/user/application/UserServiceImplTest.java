@@ -157,7 +157,7 @@ class UserServiceImplTest {
     }
 
 
-    private static UserDto createUserDto(Long id) {
+    private UserDto createUserDto(Long id) {
         return UserDto.of(
                 id,
                 "userEmail",
@@ -173,7 +173,7 @@ class UserServiceImplTest {
         );
     }
 
-    private static User createUser(Long id) {
+    private User createUser(Long id) {
         return User.of(
                 id,
                 "userEmail",
@@ -189,7 +189,7 @@ class UserServiceImplTest {
         );
     }
 
-    private static UserDto createDeletedUserDto(Long id) {
+    private UserDto createDeletedUserDto(Long id) {
         return UserDto.of(
                 id,
                 "userEmail",
@@ -205,11 +205,11 @@ class UserServiceImplTest {
         );
     }
 
-    public static Optional<User> createwrappingOptional(User user) {
+    public Optional<User> createwrappingOptional(User user) {
         return Optional.ofNullable(user);
     }
 
-    public static Optional<User> createEmptyOptional() {
+    public Optional<User> createEmptyOptional() {
         return Optional.empty();
     }
 
