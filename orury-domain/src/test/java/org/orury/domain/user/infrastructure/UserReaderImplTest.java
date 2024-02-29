@@ -1,9 +1,9 @@
-package org.orury.domain.user.domain;
+package org.orury.domain.user.infrastructure;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.then;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,37 +12,40 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.entity.User;
+import org.orury.domain.user.infrastucture.UserReaderImpl;
 import org.orury.domain.user.infrastucture.UserRepository;
-import org.orury.domain.user.infrastucture.UserStoreImpl;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[UserStoreImpl] User StoreImpl 테스트")
+@DisplayName("[UserReaderImpl] User ReaderImpl 테스트")
 @ActiveProfiles("test")
-class UserStoreImplTest {
+class UserReaderImplTest {
     private UserRepository userRepository;
-    private UserStoreImpl userStoreImpl;
+    private UserReaderImpl userReaderImpl;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        userStoreImpl = new UserStoreImpl(userRepository);
+        userReaderImpl = new UserReaderImpl(userRepository);
     }
 
     @Test
-    @DisplayName("save(Long id) Test: User Entity가 들어오면 해당하는 엔티티를 저장한다. [성공]")
-    void should_saveUserEntity() {
+    @DisplayName("findUserById(Long id) Test : User id가 들어오면 Optional<User>를 반환한다. [성공]")
+    void should_ReturnOptional() {
         //given
-        User user = createUser(1L);
+        Long userId = 1L;
+        Optional<User> user = createwrappingOptional(createUser(1L));
+        given(userRepository.findById(anyLong())).willReturn(user);
 
         //when
-        userStoreImpl.save(user);
+        Optional<User> actualUser = userReaderImpl.findUserById(userId);
 
         //then
-        then(userRepository).should(times(1)).save(any());
+        assertThat(actualUser).isEqualTo(user);
     }
 
     private static User createUser(Long id) {
@@ -60,4 +63,14 @@ class UserStoreImplTest {
                 NumberConstants.IS_NOT_DELETED
         );
     }
+
+    public static Optional<User> createwrappingOptional(User user) {
+        return Optional.ofNullable(user);
+    }
+
+    public static Optional<User> createEmptyOptional() {
+        return Optional.empty();
+    }
+
+
 }
