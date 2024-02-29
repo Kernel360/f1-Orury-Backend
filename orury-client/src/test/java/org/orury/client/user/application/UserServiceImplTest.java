@@ -17,12 +17,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
@@ -45,7 +45,7 @@ class UserServiceImplTest {
     private ImageStore imageStore;
     private PostStore postStore;
     private GymStore gymStore;
-    private ReviewReader reviewReader;
+    private CommentStore commentStore;
     private ReviewStore reviewStore;
     private UserServiceImpl userServiceImpl;
 
@@ -57,12 +57,10 @@ class UserServiceImplTest {
         imageStore = mock(ImageStore.class);
         postStore = mock(PostStore.class);
         gymStore = mock(GymStore.class);
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
-        reviewReader = mock(ReviewReader.class);
+        commentStore = mock(CommentStore.class);
         reviewStore = mock(ReviewStore.class);
 
-        userServiceImpl = new UserServiceImpl(userReader, userStore, imageReader, imageStore, postStore, gymStore, commentRepository, commentLikeRepository, reviewRepository, reviewReactionRepository);
+        userServiceImpl = new UserServiceImpl(userReader, userStore, imageReader, imageStore, postStore, commentStore, reviewStore, gymStore);
     }
 
     @Test
