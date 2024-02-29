@@ -144,7 +144,7 @@ class GymStoreImplTest {
                 .delete(any());
     }
 
-    private static GymLike createGymLike(Long gymId) {
+    private GymLike createGymLike(Long gymId) {
         return GymLike.of(GymLikePK.of(1L, gymId));
     }
 }
