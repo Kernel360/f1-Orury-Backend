@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.orury.client.gym.interfaces.response.GymResponse;
 import org.orury.client.gym.interfaces.response.GymReviewStatistics;
 import org.orury.client.gym.interfaces.response.GymsResponse;
-import org.orury.client.review.service.ReviewService;
+import org.orury.client.review.application.ReviewService;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;

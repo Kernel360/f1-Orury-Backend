@@ -1,7 +1,7 @@
 package org.orury.client.post.application;
 
-import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
@@ -21,8 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 
 @Slf4j
 @RequiredArgsConstructor

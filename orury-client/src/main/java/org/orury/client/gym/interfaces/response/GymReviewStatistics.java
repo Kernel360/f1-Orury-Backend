@@ -1,6 +1,6 @@
 package org.orury.client.gym.interfaces.response;
 
-import org.orury.domain.review.dto.ReviewDto;
+import org.orury.domain.review.domain.dto.ReviewDto;
 
 import java.time.Month;
 import java.util.EnumMap;

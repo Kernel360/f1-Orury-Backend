@@ -1,14 +1,14 @@
-package org.orury.domain.review.dto;
+package org.orury.domain.review.domain.dto;
 
-import org.orury.domain.review.db.model.ReviewReaction;
-import org.orury.domain.review.db.model.ReviewReactionPK;
+import org.orury.domain.review.domain.entity.ReviewReaction;
+import org.orury.domain.review.domain.entity.ReviewReactionPK;
 
 
 public record ReviewReactionDto(
         ReviewReactionPK reviewReactionPK,
         int reactionType
 ) {
-    private static ReviewReactionDto of(
+    public static ReviewReactionDto of(
             ReviewReactionPK reviewReactionPK,
             int reactionType
     ) {
