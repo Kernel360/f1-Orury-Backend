@@ -75,7 +75,7 @@ public record ReviewDto(
         );
     }
 
-    public static ReviewDto from(Review entity, List<String> imgUrls) {
+    public static ReviewDto from(Review entity, List<String> imgUrls, String profileImgUrl) {
         return ReviewDto.of(
                 entity.getId(),
                 entity.getContent(),
@@ -86,7 +86,7 @@ public record ReviewDto(
                 entity.getHelpCount(),
                 entity.getThumbCount(),
                 entity.getAngryCount(),
-                UserDto.from(entity.getUser()),
+                UserDto.from(entity.getUser(), profileImgUrl),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

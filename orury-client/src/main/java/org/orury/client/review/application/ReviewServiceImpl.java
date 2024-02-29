@@ -64,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewReader.findById(reviewId);
         isValidate(review.getId(), userId);
         var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), review.getImages());
-        return ReviewDto.from(review, urls);
+        return ReviewDto.from(review, urls, review.getUser().getProfileImage());
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class ReviewServiceImpl implements ReviewService {
                 ? reviewReader.findByGymIdOrderByIdDesc(gymId, pageable)
                 : reviewReader.findByGymIdAndIdLessThanOrderByIdDesc(gymId, cursor, pageable);
 
-        return converReviewsToReviewDtos(reviews);
+        return convertReviewsToReviewDtos(reviews);
     }
 
     @Override
@@ -90,13 +90,13 @@ public class ReviewServiceImpl implements ReviewService {
                 ? reviewReader.findByUserIdOrderByIdDesc(userId, pageable)
                 : reviewReader.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
 
-        return converReviewsToReviewDtos(reviews);
+        return convertReviewsToReviewDtos(reviews);
     }
 
     @Override
     public List<ReviewDto> getAllReviewDtosByGymId(Long gymId) {
         var reviews = reviewReader.findByGymId(gymId);
-        return converReviewsToReviewDtos(reviews);
+        return convertReviewsToReviewDtos(reviews);
     }
 
     @Override
@@ -137,11 +137,12 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    private List<ReviewDto> converReviewsToReviewDtos(List<Review> reviews) {
+    private List<ReviewDto> convertReviewsToReviewDtos(List<Review> reviews) {
         return reviews.stream()
                 .map(it -> {
                     var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), it.getImages());
-                    return ReviewDto.from(it, urls);
+                    var profileImgUrl = imageUtils.getUserImageUrl(it.getUser().getProfileImage());
+                    return ReviewDto.from(it, urls, profileImgUrl);
                 })
                 .toList();
     }

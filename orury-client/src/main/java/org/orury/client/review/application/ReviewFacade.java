@@ -55,8 +55,7 @@ public class ReviewFacade {
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
                     int myReaction = reviewService.getReactionType(userId, reviewDto.id());
-                    UserDto userDto = userService.getUserDtoById(reviewDto.userDto().id());
-                    return ReviewsResponse.of(reviewDto, userDto, userId, myReaction);
+                    return ReviewsResponse.of(reviewDto, userId, myReaction);
                 })
                 .toList();
         return ReviewsWithCursorResponse.of(reviewsResponses, gymName);
