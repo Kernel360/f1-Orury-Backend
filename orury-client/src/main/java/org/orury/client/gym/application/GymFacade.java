@@ -4,15 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.orury.client.gym.interfaces.response.GymResponse;
 import org.orury.client.gym.interfaces.response.GymReviewStatistics;
 import org.orury.client.gym.interfaces.response.GymsResponse;
-import org.orury.client.review.service.ReviewService;
-import org.orury.domain.gym.domain.GymService;
+import org.orury.client.review.application.ReviewService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class GymFacade {
     private final GymService gymService;
@@ -29,12 +28,10 @@ public class GymFacade {
     }
 
     public void createGymLike(GymLikeDto gymLikeDto) {
-        gymService.isValidate(gymLikeDto.gymLikePK().getGymId());
         gymService.createGymLike(gymLikeDto);
     }
 
     public void deleteGymLike(GymLikeDto gymLikeDto) {
-        gymService.isValidate(gymLikeDto.gymLikePK().getGymId());
         gymService.deleteGymLike(gymLikeDto);
     }
 
