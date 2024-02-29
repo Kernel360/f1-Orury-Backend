@@ -63,7 +63,7 @@ public class LoggerFilter extends OncePerRequestFilter {
         String[] excludePath = {"/swagger-ui", "/v3/api-docs", "/actuator/prometheus"};
         String path = request.getRequestURI();
         return Arrays.stream(excludePath)
-                .anyMatch(path::startsWith);
+                .anyMatch(path::contains);
     }
 
     private String extractRequestHeader(ContentCachingRequestWrapper req) {
