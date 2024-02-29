@@ -1,4 +1,4 @@
-package org.orury.domain.review.domain;
+package org.orury.client.review.application;
 
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;

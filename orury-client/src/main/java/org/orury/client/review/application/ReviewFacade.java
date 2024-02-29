@@ -9,7 +9,6 @@ import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.review.domain.ReviewService;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;

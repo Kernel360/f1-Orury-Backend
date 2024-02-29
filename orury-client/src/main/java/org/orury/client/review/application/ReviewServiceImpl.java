@@ -1,4 +1,4 @@
-package org.orury.domain.review.domain;
+package org.orury.client.review.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +12,8 @@ import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.review.domain.ReviewReader;
+import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.Review;
