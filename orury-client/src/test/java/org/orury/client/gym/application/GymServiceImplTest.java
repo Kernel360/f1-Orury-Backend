@@ -9,8 +9,6 @@ import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.gym.domain.GymReader;
-import org.orury.domain.gym.domain.GymService;
-import org.orury.domain.gym.domain.GymServiceImpl;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
@@ -23,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -59,7 +58,7 @@ class GymServiceImplTest {
         List<String> images = List.of("image1", "image2", "image3");
 
         given(gymReader.findGymById(gymId))
-                .willReturn(gym);
+                .willReturn(Optional.of(gym));
         given(imageReader.getImageLinks(GYM, gym.getImages()))
                 .willReturn(images);
 
@@ -84,7 +83,7 @@ class GymServiceImplTest {
         Long gymId = 2L;
 
         given(gymReader.findGymById(gymId))
-                .willThrow(new BusinessException(GymErrorCode.NOT_FOUND));
+                .willReturn(Optional.empty());
 
         // when & then
         assertThrows(BusinessException.class,
