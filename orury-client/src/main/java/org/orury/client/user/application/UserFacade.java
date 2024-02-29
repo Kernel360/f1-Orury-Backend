@@ -1,13 +1,12 @@
 package org.orury.client.user.application;
 
+
 import lombok.RequiredArgsConstructor;
-import org.orury.client.comment.service.CommentService;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.post.service.PostService;
-import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -22,8 +21,6 @@ import java.util.List;
 public class UserFacade {
     private final UserService userService;
     private final PostService postService;
-    private final ReviewService reviewService;
-    private final CommentService commentService;
 
     public UserDto readMypage(Long id) {
         return userService.getUserDtoById(id);

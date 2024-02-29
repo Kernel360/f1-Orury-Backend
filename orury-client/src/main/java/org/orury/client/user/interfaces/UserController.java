@@ -3,7 +3,7 @@ package org.orury.client.user.interfaces;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.service.CommentService;
+import org.orury.client.comment.application.CommentService;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.application.UserFacade;
@@ -14,7 +14,7 @@ import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.client.user.interfaces.response.MypageResponse;
 import org.orury.domain.base.converter.ApiResponse;
-import org.orury.domain.comment.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -91,7 +91,7 @@ public class UserController {
     @GetMapping("/comments")
     public ApiResponse getCommentsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
 
-        List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
+        List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor);
         List<MyCommentResponse> myCommentResponses = commmentDtos.stream()
                 .map(MyCommentResponse::of)
                 .toList();

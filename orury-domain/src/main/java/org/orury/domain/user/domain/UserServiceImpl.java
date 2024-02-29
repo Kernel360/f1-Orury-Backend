@@ -5,12 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.comment.db.repository.CommentLikeRepository;
-import org.orury.domain.comment.db.repository.CommentRepository;
+import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
@@ -26,9 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserStore userStore;
     private final ImageUtils imageUtils;
     private final PostStore postStore;
-    private final CommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
-    private final ReviewReader reviewReader;
+    private final CommentStore commentStore;
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
 
@@ -57,39 +53,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(UserDto userDto) {
-        deleteReviewReactionsByUserId(userDto.id());
         gymStore.deleteGymLikesByUserId(userDto.id());
-        deleteCommentLikesByUserId(userDto.id());
+        commentStore.deleteCommentLikesByUserId(userDto.id());
         postStore.deletePostLikesByUserId(userDto.id());
         postStore.deletePostsByUserId(userDto.id());
         reviewStore.deleteReviewReactionsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
+
         var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
-
         userStore.save(deletingUser);
-    }
-
-    private void deleteReviewReactionsByUserId(Long userId) {
-        reviewReader.findReviewReactionsByUserId(userId)
-                .forEach(
-                        reviewReaction -> {
-                            reviewStore.decreaseReactionCount(reviewReaction.getReviewReactionPK()
-                                    .getReviewId(), reviewReaction.getReactionType());
-                            reviewStore.delete(reviewReaction);
-                        }
-                );
-    }
-
-    private void deleteCommentLikesByUserId(Long userId) {
-        commentLikeRepository.findByCommentLikePK_UserId(userId)
-                .forEach(
-                        commentLike -> {
-                            commentRepository.decreaseLikeCount(commentLike.getCommentLikePK()
-                                    .getCommentId());
-                            commentLikeRepository.delete(commentLike);
-                        }
-                );
     }
 
     private void imageUploadAndSave(UserDto userDto, MultipartFile file) {

@@ -1,12 +1,13 @@
-package org.orury.domain.gym.domain;
+package org.orury.client.gym.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
-import org.orury.common.util.S3Folder;
-import org.orury.domain.global.domain.ImageUtils;
+import org.orury.domain.global.image.ImageReader;
+import org.orury.domain.gym.domain.GymReader;
+import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.Gym;
@@ -19,19 +20,22 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 
+import static org.orury.common.util.S3Folder.GYM;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class GymServiceImpl implements GymService {
     private final GymReader gymReader;
     private final GymStore gymStore;
-    private final ImageUtils imageUtils;
+    private final ImageReader imageReader;
 
     @Override
     @Transactional(readOnly = true)
     public GymDto getGymDtoById(Long id) {
-        var gym = gymReader.findGymById(id);
-        var urls = imageUtils.getUrls(S3Folder.GYM.getName(), gym.getImages());
+        Gym gym = gymReader.findGymById(id)
+                .orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
+        var urls = imageReader.getImageLinks(GYM, gym.getImages());
         return GymDto.from(gym, urls);
     }
 
@@ -45,6 +49,7 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional
     public void createGymLike(GymLikeDto gymLikeDto) {
+        validateGym(gymLikeDto.gymLikePK().getGymId());
         if (gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
         gymStore.createGymLike(gymLikeDto.toEntity());
     }
@@ -52,6 +57,7 @@ public class GymServiceImpl implements GymService {
     @Override
     @Transactional
     public void deleteGymLike(GymLikeDto gymLikeDto) {
+        validateGym(gymLikeDto.gymLikePK().getGymId());
         if (!gymReader.existsGymLikeById(gymLikeDto.gymLikePK())) return;
         gymStore.deleteGymLike(gymLikeDto.toEntity());
     }
@@ -62,9 +68,7 @@ public class GymServiceImpl implements GymService {
         return gymReader.existsGymLikeByUserIdAndGymId(userId, gymId);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public void isValidate(Long gymId) {
+    private void validateGym(Long gymId) {
         if (!gymReader.existsGymById(gymId)) throw new BusinessException(GymErrorCode.NOT_FOUND);
     }
 
@@ -76,13 +80,13 @@ public class GymServiceImpl implements GymService {
         LocalTime nowTime = LocalTime.now();
         LocalTime openTime = BusinessHoursConverter.extractOpenTime(businessHour);
         LocalTime closeTime = BusinessHoursConverter.extractCloseTime(businessHour);
-        
+
         return nowTime.isAfter(openTime) && nowTime.isBefore(closeTime);
     }
 
     private List<GymDto> sortGymsByDistanceAsc(List<Gym> gyms, float latitude, float longitude) {
         return gyms.stream()
-                .map(it -> GymDto.from(it, imageUtils.getUrls(S3Folder.GYM.getName(), it.getImages())))
+                .map(it -> GymDto.from(it, imageReader.getImageLinks(GYM, it.getImages())))
                 .sorted(Comparator.comparingDouble(
                         o -> getDistance(latitude, longitude, o.latitude(), o.longitude())
                 ))

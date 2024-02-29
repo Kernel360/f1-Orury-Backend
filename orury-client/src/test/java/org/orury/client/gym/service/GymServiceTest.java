@@ -8,7 +8,7 @@
 //import org.orury.common.error.code.GymErrorCode;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.domain.global.domain.ImageUtils;
-//import org.orury.domain.gym.domain.GymService;
+//import org.orury.client.gym.application.GymService;
 //import org.orury.domain.gym.domain.dto.GymDto;
 //import org.orury.domain.gym.domain.entity.Gym;
 //import org.orury.domain.gym.infrastructure.GymRepository;

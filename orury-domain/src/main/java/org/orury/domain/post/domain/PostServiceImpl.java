@@ -9,6 +9,7 @@ import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPost(PostDto postDto, List<MultipartFile> files) {
         // id == null -> 생성, id != null -> 수정
         if (postDto.id() != null) {
@@ -85,6 +87,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(PostDto postDto) {
         var oldImages = postDto.images();
         if (!ImageUtil.imagesValidation(oldImages)) imageStore.delete(POST, oldImages);
@@ -97,6 +100,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
         if (postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
@@ -104,6 +108,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePostLike(PostLikeDto postLikeDto) {
         postReader.findById(postLikeDto.postLikePK().getPostId());
         if (!postReader.existsByPostLikePK(postLikeDto.postLikePK())) return;
@@ -111,12 +116,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void updateViewCount(Long id) {
         postStore.updateViewCount(id);
     }
 
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
-        return PostDto.from(post, links);
+        var userProfileImage = userProfileImageConverter(post.getUser());
+
+        return PostDto.from(post, links, userProfileImage);
+    }
+
+    private String userProfileImageConverter(User user) {
+        return imageReader.getUserImageLink(user.getProfileImage());
     }
 }

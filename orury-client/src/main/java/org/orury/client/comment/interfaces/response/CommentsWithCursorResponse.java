@@ -1,4 +1,4 @@
-package org.orury.client.comment.converter.response;
+package org.orury.client.comment.interfaces.response;
 
 import org.orury.domain.global.constants.NumberConstants;
 

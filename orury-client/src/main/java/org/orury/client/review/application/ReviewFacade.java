@@ -1,13 +1,13 @@
 package org.orury.client.review.application;
 
 import lombok.RequiredArgsConstructor;
+import org.orury.client.gym.application.GymService;
 import org.orury.client.review.interfaces.request.ReviewCreateRequest;
 import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.review.interfaces.response.ReviewsResponse;
 import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;

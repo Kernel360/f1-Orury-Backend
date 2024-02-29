@@ -1,4 +1,4 @@
-package org.orury.domain.comment.db.model;
+package org.orury.domain.comment.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

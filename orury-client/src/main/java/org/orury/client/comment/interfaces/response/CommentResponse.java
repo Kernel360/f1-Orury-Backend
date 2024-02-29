@@ -1,7 +1,7 @@
-package org.orury.client.comment.converter.response;
+package org.orury.client.comment.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.orury.domain.comment.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentDto;
 
 import java.time.LocalDateTime;
 

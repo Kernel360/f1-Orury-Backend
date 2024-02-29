@@ -1,4 +1,4 @@
-package org.orury.domain.gym.domain;
+package org.orury.client.gym.application;
 
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
@@ -15,8 +15,6 @@ public interface GymService {
     void deleteGymLike(GymLikeDto gymLikeDto);
 
     boolean isLiked(Long userId, Long gymId);
-
-    void isValidate(Long gymId);
 
     boolean checkDoingBusiness(GymDto gymDto);
 }

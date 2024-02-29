@@ -1,6 +1,6 @@
-package org.orury.client.comment.converter.request;
+package org.orury.client.comment.interfaces.request;
 
-import org.orury.domain.comment.dto.CommentDto;
+import org.orury.domain.comment.domain.dto.CommentDto;
 
 public record CommentUpdateRequest(
         Long id,
