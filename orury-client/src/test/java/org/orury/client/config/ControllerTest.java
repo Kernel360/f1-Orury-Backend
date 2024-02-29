@@ -13,7 +13,7 @@ import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.interfaces.GymController;
 import org.orury.client.post.interfaces.PostController;
 import org.orury.client.review.application.ReviewService;
-import org.orury.client.review.controller.ReviewController;
+import org.orury.client.review.interfaces.ReviewController;
 import org.orury.client.user.interfaces.UserController;
 import org.orury.common.config.SlackMessage;
 import org.orury.domain.post.domain.PostLikeService;

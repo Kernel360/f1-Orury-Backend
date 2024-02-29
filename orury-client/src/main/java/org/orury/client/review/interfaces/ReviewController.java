@@ -3,16 +3,13 @@ package org.orury.client.review.interfaces;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.gym.application.GymService;
 import org.orury.client.review.application.ReviewFacade;
-import org.orury.client.review.application.ReviewService;
 import org.orury.client.review.interfaces.message.ReviewMessage;
 import org.orury.client.review.interfaces.request.ReviewCreateRequest;
 import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
 import org.orury.domain.base.converter.ApiResponse;
-import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +23,6 @@ import java.util.List;
 @RestController
 public class ReviewController {
     private final ReviewFacade reviewFacade;
-    private final ReviewService reviewService;
-    private final UserService userService;
-    private final GymService gymService;
 
     @Operation(summary = "리뷰 생성", description = "requestbody로 리뷰 정보를 받아, 리뷰를 생성한다.")
     @PostMapping
