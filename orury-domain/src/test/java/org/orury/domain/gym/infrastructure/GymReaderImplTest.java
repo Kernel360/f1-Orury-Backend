@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.common.error.code.GymErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.gym.domain.GymReader;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLikePK;
@@ -16,7 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -59,7 +58,7 @@ class GymReaderImplTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 암장id가 들어오면, NotFound 예외를 반환한다.")
+    @DisplayName("존재하지 않는 암장id가 들어와도, (NotFound 예외를 발생시키지 않고) Option.empty()를 반환한다.")
     void when_NotExistingGymId_Then_NotFoundException() {
         // given
         Long gymId = 4L;
@@ -68,10 +67,10 @@ class GymReaderImplTest {
                 .willReturn(Optional.empty());
 
         // when & then
-        Exception exception = assertThrows(BusinessException.class,
-                () -> gymReader.findGymById(gymId));
+        gymReader.findGymById(gymId);
 
-        assertEquals(GymErrorCode.NOT_FOUND.getMessage(), exception.getMessage());
+        then(gymRepository).should(times(1))
+                .findById(anyLong());
     }
 
     @Test
