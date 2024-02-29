@@ -1,7 +1,7 @@
-package org.orury.client.review.converter.request;
+package org.orury.client.review.interfaces.request;
 
 import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.review.dto.ReviewDto;
+import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;

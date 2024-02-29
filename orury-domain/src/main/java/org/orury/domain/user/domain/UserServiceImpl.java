@@ -9,8 +9,7 @@ import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.review.db.repository.ReviewReactionRepository;
-import org.orury.domain.review.db.repository.ReviewRepository;
+import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,7 @@ public class UserServiceImpl implements UserService {
     private final ImageUtils imageUtils;
     private final PostStore postStore;
     private final CommentStore commentStore;
-    private final ReviewRepository reviewRepository;
-    private final ReviewReactionRepository reviewReactionRepository;
+    private final ReviewStore reviewStore;
     private final GymStore gymStore;
 
     @Override
@@ -55,27 +53,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(UserDto userDto) {
-        deleteReviewReactionsByUserId(userDto.id());
         gymStore.deleteGymLikesByUserId(userDto.id());
         commentStore.deleteCommentLikesByUserId(userDto.id());
         postStore.deletePostLikesByUserId(userDto.id());
         postStore.deletePostsByUserId(userDto.id());
+        reviewStore.deleteReviewReactionsByUserId(userDto.id());
 
         imageUtils.oldS3ImagesDelete(S3Folder.USER.getName(), userDto.profileImage());
+
         var deletingUser = userDto.toEntity().delete(imageUtils.getUserDefaultImage());
-
         userStore.save(deletingUser);
-    }
-
-    private void deleteReviewReactionsByUserId(Long userId) {
-        reviewReactionRepository.findByReviewReactionPK_UserId(userId)
-                .forEach(
-                        reviewReaction -> {
-                            reviewRepository.decreaseReactionCount(reviewReaction.getReviewReactionPK()
-                                    .getReviewId(), reviewReaction.getReactionType());
-                            reviewReactionRepository.delete(reviewReaction);
-                        }
-                );
     }
 
     private void imageUploadAndSave(UserDto userDto, MultipartFile file) {

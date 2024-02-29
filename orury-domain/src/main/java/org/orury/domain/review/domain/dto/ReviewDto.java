@@ -1,7 +1,7 @@
-package org.orury.domain.review.dto;
+package org.orury.domain.review.domain.dto;
 
 import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.review.db.model.Review;
+import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -75,7 +75,7 @@ public record ReviewDto(
         );
     }
 
-    public static ReviewDto from(Review entity, List<String> imgUrls) {
+    public static ReviewDto from(Review entity, List<String> imgUrls, String profileImgUrl) {
         return ReviewDto.of(
                 entity.getId(),
                 entity.getContent(),
@@ -86,7 +86,7 @@ public record ReviewDto(
                 entity.getHelpCount(),
                 entity.getThumbCount(),
                 entity.getAngryCount(),
-                UserDto.from(entity.getUser()),
+                UserDto.from(entity.getUser(), profileImgUrl),
                 GymDto.from(entity.getGym()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

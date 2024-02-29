@@ -1,4 +1,4 @@
-package org.orury.domain.review.db.model;
+package org.orury.domain.review.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;

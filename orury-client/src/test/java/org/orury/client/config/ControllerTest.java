@@ -12,10 +12,8 @@ import org.orury.client.comment.interfaces.CommentController;
 import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.interfaces.GymController;
 import org.orury.client.post.interfaces.PostController;
+import org.orury.client.review.application.ReviewService;
 import org.orury.client.review.controller.ReviewController;
-import org.orury.client.review.controller.ReviewReactionController;
-import org.orury.client.review.service.ReviewReactionService;
-import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.interfaces.UserController;
 import org.orury.common.config.SlackMessage;
 import org.orury.domain.post.domain.PostLikeService;
@@ -36,7 +34,6 @@ import org.springframework.test.web.servlet.MockMvc;
         GymController.class,
         PostController.class,
         ReviewController.class,
-        ReviewReactionController.class,
         UserController.class
 })
 @ActiveProfiles("test")
@@ -70,9 +67,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ReviewService reviewService;
-
-    @MockBean
-    protected ReviewReactionService reviewReactionService;
 
     @MockBean
     protected UserService userService;

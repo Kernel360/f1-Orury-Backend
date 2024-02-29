@@ -1,10 +1,8 @@
-package org.orury.client.review.converter.response;
+package org.orury.client.review.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.review.dto.ReviewDto;
-import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.review.domain.dto.ReviewDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,11 +22,11 @@ public record ReviewsResponse(
         boolean isMine
 
 ) {
-    public static ReviewsResponse of(ReviewDto reviewDto, UserDto userDto, int myReaction) {
+    public static ReviewsResponse of(ReviewDto reviewDto, Long loginId, int myReaction) {
 //
         boolean isMine = reviewDto.userDto()
                 .id()
-                .equals(userDto.id());
+                .equals(loginId);
 
         List<ReviewReactionCount> reviewReactionCount = List.of(
                 new ReviewReactionCount("thumb", reviewDto.thumbCount()),
@@ -41,7 +39,7 @@ public record ReviewsResponse(
         Writer writer = new Writer(reviewDto.userDto()
                 .id(), reviewDto.userDto()
                 .nickname(),
-                userDto.profileImage()
+                reviewDto.userDto().profileImage()
         );
 
         String myReactionType = mapReactionType(myReaction);

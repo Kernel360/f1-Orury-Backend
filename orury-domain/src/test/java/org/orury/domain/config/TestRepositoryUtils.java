@@ -3,7 +3,7 @@ package org.orury.domain.config;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.review.db.model.Review;
+import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;

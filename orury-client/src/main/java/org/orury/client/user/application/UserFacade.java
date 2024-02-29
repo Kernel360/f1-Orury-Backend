@@ -2,9 +2,7 @@ package org.orury.client.user.application;
 
 
 import lombok.RequiredArgsConstructor;
-import org.orury.client.comment.application.CommentService;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.domain.global.constants.NumberConstants;
@@ -23,8 +21,6 @@ import java.util.List;
 public class UserFacade {
     private final UserService userService;
     private final PostService postService;
-    private final ReviewService reviewService;
-    private final CommentService commentService;
 
     public UserDto readMypage(Long id) {
         return userService.getUserDtoById(id);
