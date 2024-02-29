@@ -1,9 +1,11 @@
-package org.orury.domain.comment.domain;
+package org.orury.client.comment.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.comment.domain.CommentReader;
+import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;

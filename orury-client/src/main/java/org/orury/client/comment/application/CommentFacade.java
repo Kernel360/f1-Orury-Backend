@@ -1,11 +1,10 @@
-package org.orury.client.comment.interfaces;
+package org.orury.client.comment.application;
 
 import lombok.RequiredArgsConstructor;
-import org.orury.client.comment.application.request.CommentCreateRequest;
-import org.orury.client.comment.application.request.CommentUpdateRequest;
-import org.orury.client.comment.application.response.CommentResponse;
-import org.orury.client.comment.application.response.CommentsWithCursorResponse;
-import org.orury.domain.comment.domain.CommentService;
+import org.orury.client.comment.interfaces.request.CommentCreateRequest;
+import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
+import org.orury.client.comment.interfaces.response.CommentResponse;
+import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.post.domain.PostService;

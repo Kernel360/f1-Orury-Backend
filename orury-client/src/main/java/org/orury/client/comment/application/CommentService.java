@@ -1,4 +1,4 @@
-package org.orury.domain.comment.domain;
+package org.orury.client.comment.application;
 
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;

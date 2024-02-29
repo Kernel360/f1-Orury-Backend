@@ -2,11 +2,11 @@ package org.orury.client.user.application;
 
 
 import lombok.RequiredArgsConstructor;
+import org.orury.client.comment.application.CommentService;
 import org.orury.client.global.WithCursorResponse;
 import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyPostResponse;
-import org.orury.domain.comment.domain.CommentService;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;

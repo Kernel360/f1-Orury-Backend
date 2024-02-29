@@ -1,11 +1,11 @@
-package org.orury.client.comment.application;
+package org.orury.client.comment.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.comment.application.request.CommentCreateRequest;
-import org.orury.client.comment.application.request.CommentUpdateRequest;
-import org.orury.client.comment.interfaces.CommentFacade;
+import org.orury.client.comment.application.CommentFacade;
+import org.orury.client.comment.interfaces.request.CommentCreateRequest;
+import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
@@ -13,7 +13,7 @@ import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import static org.orury.client.comment.application.message.CommentMessage.*;
+import static org.orury.client.comment.interfaces.message.CommentMessage.*;
 
 @Slf4j
 @RequiredArgsConstructor

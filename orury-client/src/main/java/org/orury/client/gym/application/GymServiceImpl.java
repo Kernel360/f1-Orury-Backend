@@ -1,4 +1,4 @@
-package org.orury.domain.gym.domain;
+package org.orury.client.gym.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,8 @@ import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
 import org.orury.domain.global.image.ImageReader;
+import org.orury.domain.gym.domain.GymReader;
+import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.Gym;

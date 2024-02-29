@@ -1,4 +1,4 @@
-package org.orury.client.comment.application.request;
+package org.orury.client.comment.interfaces.request;
 
 import org.orury.domain.comment.domain.dto.CommentDto;
 

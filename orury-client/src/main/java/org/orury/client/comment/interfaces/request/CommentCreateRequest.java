@@ -1,9 +1,9 @@
-package org.orury.client.comment.application.request;
+package org.orury.client.comment.interfaces.request;
 
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.post.domain.dto.PostDto;
+import org.orury.domain.user.domain.dto.UserDto;
 
 public record CommentCreateRequest(
         String content,

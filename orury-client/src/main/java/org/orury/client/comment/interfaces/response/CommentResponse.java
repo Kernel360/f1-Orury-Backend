@@ -1,4 +1,4 @@
-package org.orury.client.comment.application.response;
+package org.orury.client.comment.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.comment.domain.dto.CommentDto;
