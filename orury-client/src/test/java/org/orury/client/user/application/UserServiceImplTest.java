@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.comment.db.repository.CommentLikeRepository;
-import org.orury.domain.comment.db.repository.CommentRepository;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
@@ -47,8 +45,6 @@ class UserServiceImplTest {
     private ImageStore imageStore;
     private PostStore postStore;
     private GymStore gymStore;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
     private ReviewReader reviewReader;
     private ReviewStore reviewStore;
     private UserServiceImpl userServiceImpl;

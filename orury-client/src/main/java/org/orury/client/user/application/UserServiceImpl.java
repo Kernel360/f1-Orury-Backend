@@ -1,14 +1,16 @@
-package org.orury.domain.user.domain;
+package org.orury.client.user.application;
 
+import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
+import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
-import org.orury.common.util.S3Folder;
-import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.review.domain.ReviewStore;
+import org.orury.domain.user.domain.UserReader;
+import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.beans.factory.annotation.Value;
