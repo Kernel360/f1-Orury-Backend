@@ -1,14 +1,5 @@
 //package org.orury.client.user.service;
 //
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.mockito.ArgumentMatchers.anyLong;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.BDDMockito.then;
-//import static org.mockito.Mockito.anyString;
-//import static org.mockito.Mockito.atLeastOnce;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.times;
-//
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
@@ -18,6 +9,7 @@
 //import org.orury.common.error.code.UserErrorCode;
 //import org.orury.common.error.exception.BusinessException;
 //import org.orury.common.util.ImageUrlConverter;
+//import org.orury.domain.global.domain.ImageUtils;
 //import org.orury.common.util.S3Folder;
 //import org.orury.domain.comment.db.model.Comment;
 //import org.orury.domain.comment.db.model.CommentLike;
@@ -30,26 +22,25 @@
 //import org.orury.domain.comment.entity.repository.CommentLikeRepository;
 //import org.orury.domain.comment.entity.repository.CommentRepository;
 //import org.orury.domain.global.constants.NumberConstants;
-//import org.orury.domain.global.domain.ImageUtils;
 //import org.orury.domain.gym.domain.entity.Gym;
 //import org.orury.domain.gym.domain.entity.GymLike;
 //import org.orury.domain.gym.domain.entity.GymLikePK;
 //import org.orury.domain.gym.infrastructure.GymLikeRepository;
 //import org.orury.domain.gym.infrastructure.GymRepository;
-//import org.orury.domain.post.domain.dto.PostDto;
 //import org.orury.domain.post.entity.model.Post;
 //import org.orury.domain.post.entity.model.PostLike;
 //import org.orury.domain.post.entity.model.PostLikePK;
 //import org.orury.domain.post.entity.repository.PostLikeRepository;
 //import org.orury.domain.post.entity.repository.PostRepository;
+//import org.orury.domain.post.domain.dto.PostDto;
 //import org.orury.domain.review.entity.model.Review;
 //import org.orury.domain.review.entity.model.ReviewReaction;
 //import org.orury.domain.review.entity.model.ReviewReactionPK;
 //import org.orury.domain.review.entity.repository.ReviewReactionRepository;
 //import org.orury.domain.review.entity.repository.ReviewRepository;
-//import org.orury.domain.user.dto.UserDto;
 //import org.orury.domain.user.entity.model.User;
 //import org.orury.domain.user.entity.repository.UserRepository;
+//import org.orury.domain.user.dto.UserDto;
 //import org.springframework.mock.web.MockMultipartFile;
 //import org.springframework.test.context.ActiveProfiles;
 //import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +51,12 @@
 //import java.util.Arrays;
 //import java.util.List;
 //import java.util.Optional;
+//
+//import static org.assertj.core.api.Assertions.assertThat;
+//import static org.mockito.ArgumentMatchers.anyLong;
+//import static org.mockito.BDDMockito.given;
+//import static org.mockito.BDDMockito.then;
+//import static org.mockito.Mockito.*;
 //
 //@ExtendWith(MockitoExtension.class)
 //@DisplayName("[Service] 유저 테스트")
