@@ -35,5 +35,5 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
     @Query("UPDATE gym SET totalScore = totalScore - :reviewScore WHERE id = :gymId")
     void subtractTotalScore(@Param("gymId") Long gymId, @Param("reviewScore") float reviewScore);
 
-
+    List<Gym> findByLatitudeBetweenAndLongitudeBetweenOrderByLikeCount(double bottomLatitude, double topLatitude, double leftLongitude, double rightLongitude);
 }
