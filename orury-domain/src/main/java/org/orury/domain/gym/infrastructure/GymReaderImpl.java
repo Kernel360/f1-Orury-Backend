@@ -7,6 +7,7 @@ import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -28,6 +29,15 @@ public class GymReaderImpl implements GymReader {
     @Override
     public List<Gym> findGymsBySearchWord(String searchWord) {
         return gymRepository.findByNameContaining(searchWord);
+    }
+
+    public List<Gym> findGymsInAreaGrid(Map<String, Double> gridMap) {
+        return gymRepository.findByLatitudeBetweenAndLongitudeBetweenOrderByLikeCount(
+                gridMap.get("bottom"),
+                gridMap.get("top"),
+                gridMap.get("left"),
+                gridMap.get("right")
+        );
     }
 
     @Override
