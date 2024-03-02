@@ -104,18 +104,18 @@ class GymServiceImplTest {
         float currentLongitude = 10.111111f;
         Gym middleGym = createGym(
                 1L,
-                "20.000001",
-                "50.543210"
+                20.000001,
+                50.543210
         );
         Gym mostFarGym = createGym(
                 2L,
-                "50.123456",
-                "137.654321"
+                50.123456,
+                137.654321
         );
         Gym mostNearGym = createGym(
                 3L,
-                "11.110111",
-                "12.222222"
+                11.110111,
+                12.222222
         );
         List<Gym> searchedGyms = List.of(middleGym, mostFarGym, mostNearGym);
 
@@ -432,8 +432,8 @@ class GymServiceImplTest {
                 23,
                 12,
                 List.of(),
-                "123.456",
-                "123.456",
+                33.6514212,
+                126.2312121,
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
@@ -450,7 +450,7 @@ class GymServiceImplTest {
         );
     }
 
-    private static Gym createGym(Long id, String latitude, String longitude) {
+    private static Gym createGym(Long id, double latitude, double longitude) {
         return Gym.of(
                 id,
                 "gymName",
@@ -490,8 +490,8 @@ class GymServiceImplTest {
                 23,
                 12,
                 List.of(),
-                "37.513709",
-                "127.062144",
+                37.513709,
+                127.062144,
                 "더클라임",
                 "01012345678",
                 "gymInstagramLink.com",
@@ -521,8 +521,8 @@ class GymServiceImplTest {
                 23,
                 12,
                 List.of(),
-                "37.513709",
-                "127.062144",
+                37.513709,
+                127.062144,
                 "더클라임",
                 "01012345678",
                 "gymInstagramLink.com",
