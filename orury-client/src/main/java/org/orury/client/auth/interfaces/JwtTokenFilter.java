@@ -1,4 +1,4 @@
-package org.orury.client.auth.jwt;
+package org.orury.client.auth.interfaces;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.client.auth.application.jwt.JwtTokenService;
 import org.orury.common.error.code.ErrorResponse;
 import org.orury.common.error.exception.AuthException;
 import org.springframework.security.core.Authentication;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenService jwtTokenService;
 
     @Override
     protected void doFilterInternal(
@@ -29,19 +30,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String accessToken = null;
-        Authentication authentication = null;
         try {
-            accessToken = jwtTokenProvider.getTokenFromRequest(request);
-
-            authentication = jwtTokenProvider.getAuthenticationFromAccessToken(accessToken);
+            Authentication authentication = jwtTokenService.getAuthenticationFromRequest(request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AuthException e) {
             jwtExceptionHandler(response, e);
             return;
         }
-
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }
