@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Repository
 @RequiredArgsConstructor
 public class RefreshTokenStoreImpl implements RefreshTokenStore {
-    RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void save(Long id, String value) {
