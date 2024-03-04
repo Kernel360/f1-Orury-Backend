@@ -83,9 +83,4 @@ public class PostFacade {
         var postLikeDto = PostLikeDto.of(PostLikePK.of(userId, postId));
         postService.deletePostLike(postLikeDto);
     }
-
-    private void isValidate(PostDto postDto, Long userId) {
-        if (!postDto.userDto().id().equals(userId))
-            throw new BusinessException(PostErrorCode.FORBIDDEN);
-    }
 }
