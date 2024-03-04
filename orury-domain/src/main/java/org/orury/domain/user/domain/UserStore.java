@@ -5,5 +5,5 @@ import org.orury.domain.user.domain.entity.User;
 public interface UserStore {
     void save(User entity);
 
-    void saveAndFlush(User user);
+    Class<? extends Throwable> saveAndFlush(User user);
 }

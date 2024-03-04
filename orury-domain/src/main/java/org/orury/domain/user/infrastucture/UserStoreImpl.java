@@ -1,13 +1,9 @@
 package org.orury.domain.user.infrastucture;
 
-import org.orury.common.error.code.UserErrorCode;
-import org.orury.common.error.exception.BusinessException;
+import lombok.RequiredArgsConstructor;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.entity.User;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-
-import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,8 +16,9 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
-    public void saveAndFlush(User user) {
+    public Class<? extends Throwable> saveAndFlush(User user) {
         userRepository.saveAndFlush(user);
+        return null;
     }
 
 
