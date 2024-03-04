@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.orury.common.util.S3Folder.GYM;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymServiceImpl] 암장 ServiceImpl 테스트")
+@DisplayName("[Service] 암장 ServiceImpl 테스트")
 @ActiveProfiles("test")
 class GymServiceImplTest {
 

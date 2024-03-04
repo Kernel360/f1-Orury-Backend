@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymReaderImpl] 암장 ReaderImpl 테스트")
+@DisplayName("[Reader] 암장 ReaderImpl 테스트")
 @ActiveProfiles("test")
 class GymReaderImplTest {
     private GymReader gymReader;

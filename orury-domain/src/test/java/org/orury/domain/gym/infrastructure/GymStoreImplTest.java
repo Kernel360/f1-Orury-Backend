@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymStoreImpl] 암장 StoreImpl 테스트")
+@DisplayName("[Store] 암장 StoreImpl 테스트")
 @ActiveProfiles("test")
 class GymStoreImplTest {
     private GymStore gymStore;

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymFacade] 암장 Facade 테스트")
+@DisplayName("[Facade] 암장 Facade 테스트")
 @ActiveProfiles("test")
 class GymFacadeTest {
     GymFacade gymFacade;
