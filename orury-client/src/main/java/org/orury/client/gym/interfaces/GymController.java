@@ -39,7 +39,7 @@ public class GymController {
         return ApiResponse.of(GymMessage.GYM_READ.getMessage(), gymsResponse);
     }
 
-    @Operation(summary = "좌표 내 암장 목록 검색", description = "현지 위치 좌표와 영역 좌표(경도, 위도)를 받아, 영역 내의 암장 목록을 가까운 순으로 돌려준다.")
+    @Operation(summary = "좌표 내 암장 목록 검색", description = "현재 위치 좌표와 영역 좌표(경도, 위도)를 받아, 영역 내의 암장 목록을 가까운 순으로 돌려준다.")
     @GetMapping
     public ApiResponse getGymsByLocation(@RequestBody GymAreaRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
