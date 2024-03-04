@@ -1,17 +1,18 @@
 package org.orury.client.comment.application;
 
-import lombok.RequiredArgsConstructor;
 import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentResponse;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
+import org.orury.client.user.application.UserService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.post.domain.PostService;
-import org.orury.domain.user.domain.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
