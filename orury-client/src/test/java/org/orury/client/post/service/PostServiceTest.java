@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,7 +155,7 @@ class PostServiceTest {
     void when_ModifyOrDeletePostWithInvalidUser_Then_DontThrowException() {
         // given
         var post = createPost(1L, 1L);
-        given(postReader.findById(1L)).willReturn(post);
+        given(postReader.findById(1L)).willReturn(Optional.of(post));
 
         //when
         postService.getPostDtoById(1L, 1L);
@@ -169,7 +170,7 @@ class PostServiceTest {
     void when_ModifyOrDeletePostWithInvalidUser_Then_ModifySuccessfully() {
         // given
         var post = createPost(1L, 1L);
-        given(postReader.findById(1L)).willReturn(post);
+        given(postReader.findById(1L)).willReturn(Optional.of(post));
 
         //when
         try {
@@ -191,7 +192,7 @@ class PostServiceTest {
         Post post = expect.toEntity();
         String userImage = "test.png";
 
-        given(postReader.findById(1L)).willReturn(post);
+        given(postReader.findById(1L)).willReturn(Optional.of(post));
         given(postReader.isPostLiked(any(), any())).willReturn(false);
         given(imageReader.getImageLinks(any(), any())).willReturn(post.getImages());
         given(imageReader.getUserImageLink(any())).willReturn(userImage);
