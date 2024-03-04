@@ -247,7 +247,7 @@ class AuthServiceImplTest {
                 .reissueJwtTokens(any());
     }
 
-    private static UserDto createUserDto() {
+    private UserDto createUserDto() {
         return UserDto.of(
                 1L,
                 "test@test.com",
