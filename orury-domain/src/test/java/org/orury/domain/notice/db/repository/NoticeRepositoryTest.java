@@ -10,6 +10,8 @@ import org.orury.domain.notice.domain.entity.Notice;
 import org.orury.domain.notice.infrastructure.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryTest
@@ -50,7 +52,7 @@ class NoticeRepositoryTest {
                 "name",
                 "email",
                 "pw",
-                RoleType.ROLE_ADMIN
+                Set.of(RoleType.ADMIN)
         );
 
     }
