@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Controller
 public class ViewController {
-    @GetMapping("/notices")
+    @GetMapping("/notice")
     public String notices() {
         return "notices";
     }
 
-    @GetMapping("/admins")
+    @GetMapping("/admin")
     public String admins() {
         return "admins";
     }
