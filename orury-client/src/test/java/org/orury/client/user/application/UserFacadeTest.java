@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@DisplayName("UserFacadeTest")
 class UserFacadeTest {
     private UserService userService;
     private PostService postService;
@@ -193,7 +194,7 @@ class UserFacadeTest {
         //then
         then(userService).should(times(1)).getUserDtoById(anyLong());
     }
-    
+
     private UserDto createUserDto(Long id) {
         return UserDto.of(
                 id,
