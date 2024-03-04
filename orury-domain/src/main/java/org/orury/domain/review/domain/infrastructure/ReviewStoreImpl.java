@@ -41,7 +41,7 @@ public class ReviewStoreImpl implements ReviewStore {
 
     @Override
     public void delete(Review review) {
-        reviewRepository.save(review);
+        reviewRepository.delete(review);
     }
 
     @Override
