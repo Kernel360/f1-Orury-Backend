@@ -440,7 +440,7 @@ class GymServiceImplTest {
         );
     }
 
-    private Gym createGym(Long id, String latitude, String longitude) {
+    private Gym createGym(Long id, double latitude, double longitude) {
         return Gym.of(
                 id,
                 "gymName",
