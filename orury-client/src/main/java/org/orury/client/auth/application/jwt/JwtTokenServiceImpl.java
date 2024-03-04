@@ -121,6 +121,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
     }
 
+    @Override
     public JwtToken issueJwtTokens(Long id, String email) {
         String accessToken = createJwtToken(id, email, ACCESS_TOKEN_EXPIRATION_TIME);
         String refreshToken = createJwtToken(id, email, REFRESH_TOKEN_EXPIRATION_TIME);
@@ -130,6 +131,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return JwtToken.of(accessToken, refreshToken);
     }
 
+    @Override
     public JwtToken issueNoUserJwtTokens(String email) {
         String accessToken = noUserCreateJwtToken(email);
 
