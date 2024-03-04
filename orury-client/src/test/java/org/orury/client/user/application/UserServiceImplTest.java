@@ -109,6 +109,8 @@ class UserServiceImplTest {
 
         // then
         then(imageStore).should(times(1)).delete(any());
+        then(imageStore).should(times(1)).upload(any());
+        then(userStore).should(times(1)).save(any());
     }
 
     @Test
@@ -135,26 +137,27 @@ class UserServiceImplTest {
 
         // then
         then(gymStore).should(times(1)).deleteGymLikesByUserId(any());
+        then(commentStore).should(times(1)).deleteCommentLikesByUserId(any());
         then(postStore).should(times(1)).deletePostLikesByUserId(any());
         then(postStore).should(times(1)).deletePostsByUserId(any());
         then(imageStore).should(times(1)).delete(any());
         then(userStore).should(times(1)).save(any());
     }
 
-    @Test
-    @DisplayName("imageUploadAndSave(UserDto userDto, MultipartFile file) Test : UserDto, file을 받아 이미지 업로드, 유저 정보 저장 [성공]")
-    void when_UploadImage_Then_UploadAndSaveSuccessfully() {
-        //given
-        UserDto userDto = createUserDto(1L);
-        MultipartFile image = mock(MultipartFile.class);
-
-        // when
-        userServiceImpl.imageUploadAndSave(userDto, image);
-
-        // then
-        then(imageStore).should(times(1)).upload(any());
-        then(userStore).should(times(1)).save(any());
-    }
+//    @Test
+//    @DisplayName("imageUploadAndSave(UserDto userDto, MultipartFile file) Test : UserDto, file을 받아 이미지 업로드, 유저 정보 저장 [성공]")
+//    void when_UploadImage_Then_UploadAndSaveSuccessfully() {
+//        //given
+//        UserDto userDto = createUserDto(1L);
+//        MultipartFile image = mock(MultipartFile.class);
+//
+//        // when
+//        userServiceImpl.imageUploadAndSave(userDto, image);
+//
+//        // then
+//        then(imageStore).should(times(1)).upload(any());
+//        then(userStore).should(times(1)).save(any());
+//    }
 
 
     private UserDto createUserDto(Long id) {

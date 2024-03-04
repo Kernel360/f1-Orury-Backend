@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         userStore.save(deletingUser);
     }
 
-    void imageUploadAndSave(UserDto userDto, MultipartFile file) {
+    private void imageUploadAndSave(UserDto userDto, MultipartFile file) {
         // 빈 파일이 들어왔는지에 대해서는 upload 메소드에서 유효성 검사해줌.
         String image = imageStore.upload(file);
         userStore.save(userDto.toEntity(image));
