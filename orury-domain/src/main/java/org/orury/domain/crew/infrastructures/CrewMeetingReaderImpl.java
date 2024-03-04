@@ -1,0 +1,11 @@
+package org.orury.domain.crew.infrastructures;
+
+import lombok.RequiredArgsConstructor;
+import org.orury.domain.crew.domain.CrewMeetingReader;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class CrewMeetingReaderImpl implements CrewMeetingReader {
+    private final CrewMeetingRepository crewMeetingRepository;
+}
