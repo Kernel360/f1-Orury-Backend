@@ -116,7 +116,7 @@ class ReviewFacadeTest {
         Long gymId = 1L;
         Long userId = 1L;
         Long cursor = 1L;
-        GymDto gymDto = createGymDto();
+        GymDto gymDto = createGymDto(gymName);
         List<ReviewDto> reviewDtos = List.of(
                 createReviewDto(1L),
                 createReviewDto(2L),
@@ -124,13 +124,12 @@ class ReviewFacadeTest {
         );
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
-                    int myReaction = reviewService.getReactionType(userId, reviewDto.id());
+                    int myReaction = 1;
                     return ReviewsResponse.of(reviewDto, userId, myReaction);
                 })
                 .toList();
 
-        given(gymDto.name()).willReturn(gymName);
-//        given(reviewService.getReactionType(anyLong(), anyLong())).willReturn(1); // 또는 원하는 int 값
+        given(reviewService.getReactionType(anyLong(), anyLong())).willReturn(1); // 또는 원하는 int 값
         given(gymService.getGymDtoById(gymId)).willReturn(gymDto);
         given(reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE)))
                 .willReturn(reviewDtos);
@@ -142,7 +141,7 @@ class ReviewFacadeTest {
         then(gymService).should(times(1))
                 .getGymDtoById(gymId);
         then(reviewService).should(times(1))
-                .getReviewDtosByGymId(anyLong(), anyLong(), PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE));
+                .getReviewDtosByGymId(anyLong(), anyLong(), any());
         then(reviewService).should(times(reviewsResponses.size()))
                 .getReactionType(anyLong(), anyLong());
     }
@@ -201,10 +200,10 @@ class ReviewFacadeTest {
         );
     }
 
-    private GymDto createGymDto() {
+    private GymDto createGymDto(String gymName) {
         return GymDto.of(
                 1L,
-                "더클라임 봉은사점",
+                gymName,
                 "kakaoid",
                 "서울시 도로명주소",
                 "서울시 지번주소",
@@ -247,6 +246,37 @@ class ReviewFacadeTest {
                 createGymDto(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
+        );
+    }
+
+    private GymDto createGymDto() {
+        return GymDto.of(
+                1L,
+                "더클라임 봉은사점",
+                "kakaoid",
+                "서울시 도로명주소",
+                "서울시 지번주소",
+                25.3f,
+                23,
+                12,
+                List.of(),
+                "37.513709",
+                "127.062144",
+                "더클라임",
+                "01012345678",
+                "instalink.com",
+                "MONDAY",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                "11:00-23:11",
+                "12:00-23:22",
+                "13:00-23:33",
+                "14:00-23:44",
+                "15:00-23:55",
+                "16:00-23:66",
+                "17:00-23:77",
+                "gymHomepageLink",
+                "gymRemark"
         );
     }
 
