@@ -47,7 +47,7 @@ class UserServiceImplTest {
     private GymStore gymStore;
     private CommentStore commentStore;
     private ReviewStore reviewStore;
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -60,7 +60,7 @@ class UserServiceImplTest {
         commentStore = mock(CommentStore.class);
         reviewStore = mock(ReviewStore.class);
 
-        userServiceImpl = new UserServiceImpl(userReader, userStore, imageReader, imageStore, postStore, commentStore, reviewStore, gymStore);
+        userService = new UserServiceImpl(userReader, userStore, imageReader, imageStore, postStore, commentStore, reviewStore, gymStore);
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserServiceImplTest {
         given(imageReader.getUserImageLink(anyString())).willReturn("test.png");
 
         //when
-        UserDto actualUserDto = userServiceImpl.getUserDtoById(anyLong());
+        UserDto actualUserDto = userService.getUserDtoById(anyLong());
 
         //then
         then(userReader).should(times(1)).findUserById(anyLong());
@@ -92,7 +92,7 @@ class UserServiceImplTest {
 
         // when & then
         BusinessException exception = Assertions.assertThrows(BusinessException.class,
-                () -> userServiceImpl.getUserDtoById(notExistsUserId));
+                () -> userService.getUserDtoById(notExistsUserId));
 
         assertThat(exception.getStatus()).isEqualTo(UserErrorCode.NOT_FOUND.getStatus());
     }
@@ -105,7 +105,7 @@ class UserServiceImplTest {
         MultipartFile image = mock(MultipartFile.class);
 
         // when
-        userServiceImpl.updateProfileImage(userDto, image);
+        userService.updateProfileImage(userDto, image);
 
         // then
         then(imageStore).should(times(1)).delete(any());
@@ -120,7 +120,7 @@ class UserServiceImplTest {
         UserDto userDto = createUserDto(1L);
 
         // when
-        userServiceImpl.updateUserInfo(userDto);
+        userService.updateUserInfo(userDto);
 
         // then
         then(userStore).should(times(1)).save(any());
@@ -133,7 +133,7 @@ class UserServiceImplTest {
         UserDto userDto = createUserDto(1L);
 
         // when
-        userServiceImpl.deleteUser(userDto);
+        userService.deleteUser(userDto);
 
         // then
         then(gymStore).should(times(1)).deleteGymLikesByUserId(any());
@@ -143,22 +143,6 @@ class UserServiceImplTest {
         then(imageStore).should(times(1)).delete(any());
         then(userStore).should(times(1)).save(any());
     }
-
-//    @Test
-//    @DisplayName("imageUploadAndSave(UserDto userDto, MultipartFile file) Test : UserDto, file을 받아 이미지 업로드, 유저 정보 저장 [성공]")
-//    void when_UploadImage_Then_UploadAndSaveSuccessfully() {
-//        //given
-//        UserDto userDto = createUserDto(1L);
-//        MultipartFile image = mock(MultipartFile.class);
-//
-//        // when
-//        userServiceImpl.imageUploadAndSave(userDto, image);
-//
-//        // then
-//        then(imageStore).should(times(1)).upload(any());
-//        then(userStore).should(times(1)).save(any());
-//    }
-
 
     private UserDto createUserDto(Long id) {
         return UserDto.of(
