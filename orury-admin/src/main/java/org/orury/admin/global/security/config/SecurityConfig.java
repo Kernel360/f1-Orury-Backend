@@ -3,7 +3,7 @@ package org.orury.admin.global.security.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.admin.global.security.dto.login.response.AdminPrincipal;
-import org.orury.domain.admin.domain.dto.AdminDto;
+import org.orury.domain.admin.domain.AdminService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,10 +17,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 
 import static org.orury.domain.admin.domain.dto.RoleType.ADMIN;
-import static org.orury.domain.admin.domain.dto.RoleType.USER;
 
 @Slf4j
 @Configuration
@@ -33,12 +31,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admins/**", "/notices/**", "/api/v1/admins/**", "/api/v1/notices/**").hasAuthority(ADMIN.getRoleName())
-                        .requestMatchers("/api/v1/login").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/admin/**", "/notice/**").hasAnyRole(ADMIN.name())
+                        .requestMatchers("/api/v1/login", "/api/v1/admins/**", "/api/v1/notices/**").permitAll()
                 )
                 .formLogin(login -> login
-                        .defaultSuccessUrl("/notices")
+                        .defaultSuccessUrl("/notice")
                         .failureUrl("/login?error").permitAll()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/login"))
@@ -46,11 +43,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService(AdminService adminService) {
         //역직렬화 에러로 임시 하드 코딩
         return username -> {
-            var roles = Set.of(USER, ADMIN);
-            var admin = AdminDto.of(1L, "chan", "chan", "{noop}123", roles);
+            var admin = adminService.findAdminByEmail(username);
             return AdminPrincipal.from(admin);
         };
     }
