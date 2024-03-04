@@ -3,7 +3,7 @@ package org.orury.client.user.interfaces.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.orury.client.global.IdIdentifiable;
-import org.orury.domain.review.dto.ReviewDto;
+import org.orury.domain.review.domain.dto.ReviewDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

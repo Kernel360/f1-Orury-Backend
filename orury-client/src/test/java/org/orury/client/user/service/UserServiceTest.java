@@ -11,6 +11,11 @@
 //import org.orury.common.util.ImageUrlConverter;
 //import org.orury.domain.global.domain.ImageUtils;
 //import org.orury.common.util.S3Folder;
+//import org.orury.domain.comment.db.model.Comment;
+//import org.orury.domain.comment.db.model.CommentLike;
+//import org.orury.domain.comment.db.model.CommentLikePK;
+//import org.orury.domain.comment.infrastructure.CommentLikeRepository;
+//import org.orury.domain.comment.infrastructure.CommentRepository;
 //import org.orury.domain.comment.entity.model.Comment;
 //import org.orury.domain.comment.entity.model.CommentLike;
 //import org.orury.domain.comment.entity.model.CommentLikePK;

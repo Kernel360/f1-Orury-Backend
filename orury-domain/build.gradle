@@ -36,3 +36,17 @@ tasks.named('jar') {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        html.destination file("${buildDir}/jacoco/html")
+    }
+}
+
+test {
+    finalizedBy 'jacocoTestReport'
+}

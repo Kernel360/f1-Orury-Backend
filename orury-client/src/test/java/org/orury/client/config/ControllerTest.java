@@ -7,19 +7,15 @@ import org.orury.client.auth.controller.AuthController;
 import org.orury.client.auth.jwt.JwtTokenProvider;
 import org.orury.client.auth.service.AuthService;
 import org.orury.client.auth.strategy.LoginStrategyManager;
-import org.orury.client.comment.controller.CommentController;
-import org.orury.client.comment.controller.CommentLikeController;
-import org.orury.client.comment.service.CommentLikeService;
-import org.orury.client.comment.service.CommentService;
+import org.orury.client.comment.application.CommentService;
+import org.orury.client.comment.interfaces.CommentController;
+import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.interfaces.GymController;
 import org.orury.client.post.interfaces.PostController;
-import org.orury.client.review.controller.ReviewController;
-import org.orury.client.review.controller.ReviewReactionController;
-import org.orury.client.review.service.ReviewReactionService;
-import org.orury.client.review.service.ReviewService;
+import org.orury.client.review.application.ReviewService;
+import org.orury.client.review.interfaces.ReviewController;
 import org.orury.client.user.interfaces.UserController;
 import org.orury.common.config.SlackMessage;
-import org.orury.domain.gym.domain.GymService;
 import org.orury.domain.post.domain.PostLikeService;
 import org.orury.domain.post.domain.PostService;
 import org.orury.domain.user.domain.UserService;
@@ -35,11 +31,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest({
         AuthController.class,
         CommentController.class,
-        CommentLikeController.class,
         GymController.class,
         PostController.class,
         ReviewController.class,
-        ReviewReactionController.class,
         UserController.class
 })
 @ActiveProfiles("test")
@@ -55,9 +49,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected CommentService commentService;
-
-    @MockBean
-    protected CommentLikeService commentLikeService;
 
     @MockBean
     protected GymService gymService;
@@ -76,9 +67,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ReviewService reviewService;
-
-    @MockBean
-    protected ReviewReactionService reviewReactionService;
 
     @MockBean
     protected UserService userService;
