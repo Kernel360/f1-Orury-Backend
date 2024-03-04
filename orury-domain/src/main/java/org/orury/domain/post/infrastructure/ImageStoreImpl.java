@@ -60,7 +60,7 @@ public class ImageStoreImpl implements ImageStore {
     public void delete(String profile) {
         if (StringUtils.isBlank(profile)) return;
         var link = ImageUtil.splitUrlToImage(profile);
-        amazonS3.deleteObject(bucket + USER, link);
+        amazonS3.deleteObject(bucket + USER.getName(), link);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ImageStoreImpl implements ImageStore {
         if (ImageUtil.imagesValidation(links)) return;
         links.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
-                .forEach(it -> amazonS3.deleteObject(bucket + domain, it));
+                .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
     }
 
     private File convert(MultipartFile multipartFile) {
@@ -86,7 +86,7 @@ public class ImageStoreImpl implements ImageStore {
     private List<String> putS3(S3Folder domain, List<File> files) {
         // S3에 파일들을 업로드
         return files.stream()
-                .map(it -> requestPutObject(domain.getName(), it))
+                .map(it -> requestPutObject(bucket + domain.getName(), it))
                 .toList();
     }
 
