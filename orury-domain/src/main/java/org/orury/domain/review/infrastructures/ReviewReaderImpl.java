@@ -1,4 +1,4 @@
-package org.orury.domain.review.domain.infrastructure;
+package org.orury.domain.review.infrastructures;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
