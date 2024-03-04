@@ -105,7 +105,7 @@ class GymReaderImplTest {
         String searchWord = "더클라임";
         List<Gym> gyms = List.of(createGym(1L), createGym(2L));
 
-        given(gymRepository.findByNameContaining(searchWord))
+        given(gymRepository.findByNameContainingOrAddressContainingOrRoadAddressContaining(searchWord, searchWord, searchWord))
                 .willReturn(gyms);
 
         // when
@@ -113,7 +113,7 @@ class GymReaderImplTest {
 
         // then
         then(gymRepository).should(times(1))
-                .findByNameContaining(anyString());
+                .findByNameContainingOrAddressContainingOrRoadAddressContaining(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -123,7 +123,7 @@ class GymReaderImplTest {
         String searchWord = "축구공";
         List<Gym> emptyList = Collections.emptyList();
 
-        given(gymRepository.findByNameContaining(searchWord))
+        given(gymRepository.findByNameContainingOrAddressContainingOrRoadAddressContaining(searchWord, searchWord, searchWord))
                 .willReturn(emptyList);
 
         // when
@@ -131,7 +131,7 @@ class GymReaderImplTest {
 
         // then
         then(gymRepository).should(times(1))
-                .findByNameContaining(anyString());
+                .findByNameContainingOrAddressContainingOrRoadAddressContaining(anyString(), anyString(), anyString());
     }
 
     @Test
