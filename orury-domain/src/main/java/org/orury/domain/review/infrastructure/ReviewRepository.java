@@ -1,4 +1,4 @@
-package org.orury.domain.review.domain.infrastructure;
+package org.orury.domain.review.infrastructure;
 
 import org.orury.domain.review.domain.entity.Review;
 import org.springframework.data.domain.Pageable;

@@ -11,6 +11,9 @@ import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
+import org.orury.domain.review.infrastructure.ReviewReactionRepository;
+import org.orury.domain.review.infrastructure.ReviewRepository;
+import org.orury.domain.review.infrastructure.ReviewStoreImpl;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
