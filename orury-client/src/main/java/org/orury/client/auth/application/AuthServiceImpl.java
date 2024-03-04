@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public LoginDto login(LoginRequest request) {
-        OAuthService oAuthService = oAuthServiceManager.getLoginStrategy(request.signUpType());
+        OAuthService oAuthService = oAuthServiceManager.getOAuthService(request.signUpType());
         String email = oAuthService.getEmailFromOAuthCode(request.code());
 
         // 이메일이 없는 고객인 경우
