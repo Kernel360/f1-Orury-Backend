@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface GymRepository extends JpaRepository<Gym, Long> {
-    List<Gym> findByNameContaining(String searchWord);
+    List<Gym> findByNameContainingOrAddressContainingOrRoadAddressContaining(String searchWord1, String searchWord2, String searchWord3);
 
     @Modifying
     @Query("UPDATE gym SET likeCount = likeCount + 1 WHERE id = :gymId")

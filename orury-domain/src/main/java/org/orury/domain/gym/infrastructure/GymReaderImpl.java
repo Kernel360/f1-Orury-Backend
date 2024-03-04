@@ -28,7 +28,7 @@ public class GymReaderImpl implements GymReader {
 
     @Override
     public List<Gym> findGymsBySearchWord(String searchWord) {
-        return gymRepository.findByNameContaining(searchWord);
+        return gymRepository.findByNameContainingOrAddressContainingOrRoadAddressContaining(searchWord, searchWord, searchWord);
     }
 
     public List<Gym> findGymsInAreaGrid(Map<String, Double> gridMap) {
