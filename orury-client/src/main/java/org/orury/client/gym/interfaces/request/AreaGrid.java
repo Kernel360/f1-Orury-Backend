@@ -19,14 +19,14 @@ public record AreaGrid(
     }
 }
 
-//      프론트에서 double로 값을 요청하지 못하거나 연산이 더 든다면, String으로 받아 아래 코드로 대체합니다.
-//        Map<String, Double> gridMap = new HashMap<>();
-//        try {
-//            gridMap.put("bottom", Double.parseDouble(bottomLatitude));
-//            gridMap.put("top", Double.parseDouble(topLatitude));
-//            gridMap.put("left", Double.parseDouble(leftLongitude));
-//            gridMap.put("right", Double.parseDouble(rightLongitude));
-//        } catch (NullPointerException | NumberFormatException exception) {
-//            throw new BusinessException(GymErrorCode.INVALID_GRID_TYPE);
-//        }
-//        return gridMap;
+// TODO: 프론트에서 double로 값을 요청하지 못하거나 연산이 더 든다면, String으로 받아 아래 코드로 대체합니다.
+//    Map<String, Double> gridMap = new HashMap<>();
+//    try {
+//        gridMap.put("bottom", Double.parseDouble(bottomLatitude));
+//        gridMap.put("top", Double.parseDouble(topLatitude));
+//        gridMap.put("left", Double.parseDouble(leftLongitude));
+//        gridMap.put("right", Double.parseDouble(rightLongitude));
+//    } catch (NullPointerException | NumberFormatException exception) {
+//        throw new BusinessException(GymErrorCode.INVALID_GRID_TYPE);
+//    }
+//    return gridMap;
