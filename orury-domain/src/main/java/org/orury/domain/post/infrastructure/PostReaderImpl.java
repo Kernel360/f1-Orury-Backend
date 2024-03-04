@@ -65,4 +65,9 @@ public class PostReaderImpl implements PostReader {
     public boolean existsByPostLikePK(PostLikePK postLikePK) {
         return postLikeRepository.existsByPostLikePK(postLikePK);
     }
+
+    @Override
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
 }

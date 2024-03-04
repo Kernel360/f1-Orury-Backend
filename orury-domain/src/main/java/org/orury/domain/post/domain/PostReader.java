@@ -26,4 +26,6 @@ public interface PostReader {
     boolean isPostLiked(Long userId, Long postId);
 
     boolean existsByPostLikePK(PostLikePK postLikePK);
+
+    List<Post> findAll();
 }
