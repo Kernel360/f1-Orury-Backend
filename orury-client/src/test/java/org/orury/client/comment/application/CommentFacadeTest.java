@@ -31,7 +31,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[CommentFacade] 댓글 Facade 테스트")
+@DisplayName("[Facade] 댓글 Facade 테스트")
 @ActiveProfiles("test")
 class CommentFacadeTest {
     CommentFacade commentFacade;

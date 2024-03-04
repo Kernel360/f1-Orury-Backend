@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[CommentStoreImpl] 댓글 StoreImpl 테스트")
+@DisplayName("[Store] 댓글 StoreImpl 테스트")
 @ActiveProfiles("test")
 class CommentStoreImplTest {
     private CommentStore commentStore;

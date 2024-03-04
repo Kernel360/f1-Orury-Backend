@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[CommentReaderImpl] 댓글 ReaderImpl 테스트")
+@DisplayName("[Reader] 댓글 ReaderImpl 테스트")
 @ActiveProfiles("test")
 class CommentReaderImplTest {
     private CommentReader commentReader;

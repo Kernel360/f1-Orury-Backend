@@ -36,7 +36,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[CommentServiceImpl] 댓글 ServiceImpl 테스트")
+@DisplayName("[Service] 댓글 ServiceImpl 테스트")
 @ActiveProfiles("test")
 class CommentServiceImplTest {
     private CommentService commentService;
