@@ -12,6 +12,7 @@ import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.global.infrastructure.S3Repository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import static org.orury.common.util.S3Folder.USER;
 @RequiredArgsConstructor
 public class ImageStoreImpl implements ImageStore {
     private final AmazonS3 amazonS3;
+    private final S3Repository s3Repository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -61,6 +63,12 @@ public class ImageStoreImpl implements ImageStore {
         if (StringUtils.isBlank(profile)) return;
         var link = ImageUtil.splitUrlToImage(profile);
         amazonS3.deleteObject(bucket + USER, link);
+    }
+
+    @Override
+    public void oldS3ImagesDelete(String domain, List<String> images) {
+        if (images == null || images.isEmpty()) return;
+        s3Repository.delete(domain, images);
     }
 
     @Override
