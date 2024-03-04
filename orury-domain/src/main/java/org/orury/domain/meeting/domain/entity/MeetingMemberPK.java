@@ -1,4 +1,4 @@
-package org.orury.domain.crew.domain.entity;
+package org.orury.domain.meeting.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -13,19 +13,19 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class CrewMeetingMemberPK implements Serializable {
+public class MeetingMemberPK implements Serializable {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Column(name = "meeting_id", nullable = false)
     private Long meetingId;
 
-    private CrewMeetingMemberPK(Long userId, Long meetingId) {
+    private MeetingMemberPK(Long userId, Long meetingId) {
         this.userId = userId;
         this.meetingId = meetingId;
     }
 
-    public static CrewMeetingMemberPK of(Long userId, Long meetingId) {
-        return new CrewMeetingMemberPK(userId, meetingId);
+    public static MeetingMemberPK of(Long userId, Long meetingId) {
+        return new MeetingMemberPK(userId, meetingId);
     }
 }

@@ -1,9 +1,10 @@
-package org.orury.domain.crew.domain.entity;
+package org.orury.domain.meeting.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.user.domain.entity.User;
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity(name = "crew_meeting")
-public class CrewMeeting extends AuditingField {
+public class Meeting extends AuditingField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -45,7 +46,7 @@ public class CrewMeeting extends AuditingField {
     @JoinColumn(name = "crew_id", nullable = false)
     private Crew crew;
 
-    private CrewMeeting(
+    private Meeting(
             Long id,
             LocalDateTime startTime,
             LocalDateTime endTime,
@@ -69,7 +70,7 @@ public class CrewMeeting extends AuditingField {
         this.updatedAt = updatedAt;
     }
 
-    public static CrewMeeting of(
+    public static Meeting of(
             Long id,
             LocalDateTime startTime,
             LocalDateTime endTime,
@@ -81,7 +82,7 @@ public class CrewMeeting extends AuditingField {
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        return new CrewMeeting(
+        return new Meeting(
                 id,
                 startTime,
                 endTime,

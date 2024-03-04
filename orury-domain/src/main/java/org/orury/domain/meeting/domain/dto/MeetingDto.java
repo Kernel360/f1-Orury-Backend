@@ -1,15 +1,16 @@
-package org.orury.domain.crew.domain.dto;
+package org.orury.domain.meeting.domain.dto;
 
-import org.orury.domain.crew.domain.entity.CrewMeeting;
+import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.gym.domain.dto.GymDto;
+import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link CrewMeeting}
+ * DTO for {@link Meeting}
  */
-public record CrewMeetingDto(
+public record MeetingDto(
         Long id,
         LocalDateTime startTime,
         LocalDateTime endTime,
@@ -21,7 +22,7 @@ public record CrewMeetingDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static CrewMeetingDto of(
+    public static MeetingDto of(
             Long id,
             LocalDateTime startTime,
             LocalDateTime endTime,
@@ -33,7 +34,7 @@ public record CrewMeetingDto(
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        return new CrewMeetingDto(
+        return new MeetingDto(
                 id,
                 startTime,
                 endTime,
@@ -47,8 +48,8 @@ public record CrewMeetingDto(
         );
     }
 
-    public static CrewMeetingDto from(CrewMeeting entity) {
-        return CrewMeetingDto.of(
+    public static MeetingDto from(Meeting entity) {
+        return MeetingDto.of(
                 entity.getId(),
                 entity.getStartTime(),
                 entity.getEndTime(),
@@ -62,8 +63,8 @@ public record CrewMeetingDto(
         );
     }
 
-    public CrewMeeting toEntity() {
-        return CrewMeeting.of(
+    public Meeting toEntity() {
+        return Meeting.of(
                 id,
                 startTime,
                 endTime,
