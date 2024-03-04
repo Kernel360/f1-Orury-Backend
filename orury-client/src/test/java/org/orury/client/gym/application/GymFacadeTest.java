@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymFacade] 암장 Facade 테스트")
+@DisplayName("[Facade] 암장 Facade 테스트")
 @ActiveProfiles("test")
 class GymFacadeTest {
     GymFacade gymFacade;
@@ -174,7 +174,7 @@ class GymFacadeTest {
                 .deleteGymLike(any());
     }
 
-    private static GymDto createGymDto(Long gymId) {
+    private GymDto createGymDto(Long gymId) {
         return GymDto.of(
                 gymId,
                 "더클라임 봉은사점",
@@ -205,7 +205,7 @@ class GymFacadeTest {
         );
     }
 
-    private static GymDto createGymDtoWithNoReview(Long gymId) {
+    private GymDto createGymDtoWithNoReview(Long gymId) {
         return GymDto.of(
                 gymId,
                 "더클라임 봉은사점",
@@ -236,7 +236,7 @@ class GymFacadeTest {
         );
     }
 
-    private static ReviewDto createReviewDto(Long id, GymDto gymDto, Long userId) {
+    private ReviewDto createReviewDto(Long id, GymDto gymDto, Long userId) {
         return ReviewDto.of(
                 id,
                 "reviewContent",
@@ -254,7 +254,7 @@ class GymFacadeTest {
         );
     }
 
-    private static User createUser(Long id) {
+    private User createUser(Long id) {
         return User.of(
                 id,
                 "userEmail",
@@ -270,7 +270,7 @@ class GymFacadeTest {
         );
     }
 
-    private static GymLikeDto createGymLikeDto(Long userId, Long gymId) {
+    private GymLikeDto createGymLikeDto(Long userId, Long gymId) {
         return GymLikeDto.of(GymLikePK.of(userId, gymId));
     }
 }
