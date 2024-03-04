@@ -1,4 +1,4 @@
-package org.orury.domain.post.domain;
+package org.orury.client.post.application;
 
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;

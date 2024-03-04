@@ -1,4 +1,4 @@
-package org.orury.domain.post.domain;
+package org.orury.client.post.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,8 @@ import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.post.domain.PostReader;
+import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
@@ -69,14 +71,16 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long id) {
-        var post = postReader.findById(id);
+        var post = postReader.findById(id)
+                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         return postImageConverter(post);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PostDto getPostDtoById(Long userId, Long postId) {
-        var post = postReader.findById(postId);
+        var post = postReader.findById(postId)
+                .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
         var postUser = post.getUser().getId();
         if (!postUser.equals(userId))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
@@ -122,7 +126,7 @@ public class PostServiceImpl implements PostService {
     public void updateViewCount(Long id) {
         postStore.updateViewCount(id);
     }
-
+    
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
         var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());

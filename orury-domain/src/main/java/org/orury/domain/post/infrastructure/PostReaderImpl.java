@@ -2,7 +2,8 @@ package org.orury.domain.post.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.common.error.exception.BusinessException;
+import org.orury.common.error.code.PostErrorCode;
+import org.orury.common.error.exception.InfraImplException;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.entity.Post;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import static org.orury.common.error.code.PostErrorCode.NOT_FOUND;
 
 @Slf4j
 @Component
@@ -52,9 +53,8 @@ public class PostReaderImpl implements PostReader {
     }
 
     @Override
-    public Post findById(Long id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(NOT_FOUND));
+    public Optional<Post> findById(Long id) {
+        return postRepository.findById(id);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class PostReaderImpl implements PostReader {
     @Override
     public boolean existsByPostLikePK(PostLikePK postLikePK) {
         if (postRepository.existsById(postLikePK.getPostId()))
-            throw new BusinessException(NOT_FOUND);
+            throw new InfraImplException(PostErrorCode.NOT_FOUND);
         return postLikeRepository.existsByPostLikePK(postLikePK);
     }
 }
