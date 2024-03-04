@@ -6,7 +6,6 @@ import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
 import org.orury.client.post.interfaces.response.PostsWithPageResponse;
-import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.PostLikePK;
