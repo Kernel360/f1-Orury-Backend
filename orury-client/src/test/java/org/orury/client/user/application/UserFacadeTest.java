@@ -193,9 +193,7 @@ class UserFacadeTest {
         //then
         then(userService).should(times(1)).getUserDtoById(anyLong());
     }
-
-    // review, comment 받아서 추가 메서드 구현 예정 (컨트롤러도 리팩토링 한번 더 해야함)
-
+    
     private UserDto createUserDto(Long id) {
         return UserDto.of(
                 id,
