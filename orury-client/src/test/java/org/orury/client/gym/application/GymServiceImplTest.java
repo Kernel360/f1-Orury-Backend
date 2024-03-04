@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.orury.common.util.S3Folder.GYM;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymServiceImpl] 암장 ServiceImpl 테스트")
+@DisplayName("[Service] 암장 ServiceImpl 테스트")
 @ActiveProfiles("test")
 class GymServiceImplTest {
 
@@ -303,7 +303,7 @@ class GymServiceImplTest {
 
     @Test
     @DisplayName("유저id와 암장id에 대해 좋아요가 존재하면, true를 반환한다.")
-    void when_idsOfExitingGymLike_Then_ReturnTrue() {
+    void when_IdOfExitingGymLike_Then_ReturnTrue() {
         // given
         Long userId = 1L;
         Long gymId = 2L;
@@ -311,13 +311,8 @@ class GymServiceImplTest {
         given(gymReader.existsGymLikeByUserIdAndGymId(userId, gymId))
                 .willReturn(true);
 
-        boolean expectedValue = true;
-
-        // when
-        boolean isLiked = gymService.isLiked(userId, gymId);
-
-        // then
-        assertEquals(expectedValue, isLiked);
+        // when & then
+        assertTrue(gymService.isLiked(userId, gymId));
 
         then(gymReader).should(times(1))
                 .existsGymLikeByUserIdAndGymId(anyLong(), anyLong());
@@ -325,7 +320,7 @@ class GymServiceImplTest {
 
     @Test
     @DisplayName("유저id와 암장id에 대해 좋아요가 존재하지 않으면, false를 반환한다.")
-    void when_idsOfNotExitingGymLike_Then_ReturnFalse() {
+    void when_IdOfNotExitingGymLike_Then_ReturnFalse() {
         //given
         Long userId = 1L;
         Long gymId = 2L;
@@ -333,13 +328,8 @@ class GymServiceImplTest {
         given(gymReader.existsGymLikeByUserIdAndGymId(userId, gymId))
                 .willReturn(false);
 
-        boolean expectedValue = false;
-
-        // when
-        boolean isLiked = gymService.isLiked(userId, gymId);
-
-        //then
-        assertEquals(expectedValue, isLiked);
+        // when & then
+        assertFalse(gymService.isLiked(userId, gymId));
 
         then(gymReader).should(times(1))
                 .existsGymLikeByUserIdAndGymId(anyLong(), anyLong());
@@ -421,7 +411,7 @@ class GymServiceImplTest {
         assertFalse(doingBusiness);
     }
 
-    private static Gym createGym(Long id) {
+    private Gym createGym(Long id) {
         return Gym.of(
                 id,
                 "gymName",
@@ -450,7 +440,7 @@ class GymServiceImplTest {
         );
     }
 
-    private static Gym createGym(Long id, double latitude, double longitude) {
+    private Gym createGym(Long id, String latitude, String longitude) {
         return Gym.of(
                 id,
                 "gymName",
@@ -479,7 +469,7 @@ class GymServiceImplTest {
         );
     }
 
-    private static GymDto createGymDto(LocalTime openTime, LocalTime closeTime) {
+    private GymDto createGymDto(LocalTime openTime, LocalTime closeTime) {
         return GymDto.of(
                 1L,
                 "더클라임 봉은사점",
@@ -510,7 +500,7 @@ class GymServiceImplTest {
         );
     }
 
-    private static GymDto createGymDto(String businessHour) {
+    private GymDto createGymDto(String businessHour) {
         return GymDto.of(
                 1L,
                 "더클라임 봉은사점",
@@ -541,7 +531,7 @@ class GymServiceImplTest {
         );
     }
 
-    private static GymLikeDto createGymLikeDto(GymLikePK gymLikePK) {
+    private GymLikeDto createGymLikeDto(GymLikePK gymLikePK) {
         return GymLikeDto.from(GymLike.of(gymLikePK));
     }
 }
