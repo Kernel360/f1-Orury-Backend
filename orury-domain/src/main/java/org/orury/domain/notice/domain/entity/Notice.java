@@ -1,9 +1,9 @@
-package org.orury.domain.notice.db.model;
+package org.orury.domain.notice.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.admin.db.model.Admin;
+import org.orury.domain.admin.domain.entity.Admin;
 import org.orury.domain.base.db.AuditingField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

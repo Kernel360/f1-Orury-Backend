@@ -1,9 +1,9 @@
-package org.orury.domain.notice.dto;
+package org.orury.domain.notice.domain.dto;
 
 
-import org.orury.domain.admin.db.model.Admin;
-import org.orury.domain.notice.db.model.Notice;
-import org.orury.domain.admin.dto.AdminDto;
+import org.orury.domain.admin.domain.dto.AdminDto;
+import org.orury.domain.admin.domain.entity.Admin;
+import org.orury.domain.notice.domain.entity.Notice;
 
 import java.time.LocalDateTime;
 

@@ -1,12 +1,7 @@
-server.port: 8080
+server.port: 8090
 debug: false
-management.endpoints.web.exposure.include: "*"
+#management.endpoints.web.exposure.include: "*"
 
-logging:
-  level:
-    
-    org.springframework.web.servlet: info
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
 springdoc:
   show-actuator: true
 spring:
@@ -15,13 +10,13 @@ spring:
       allowed-origins: "*"
       allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-admin
+
   datasource:
-    url: ${LOCAL_DB_NAME}
-    username: ${LOCAL_DB_USER_NAME}
-    password: ${LOCAL_DB_USER_PASSWORD}
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
     open-in-view: false
-    defer-datasource-initialization: true
     hibernate.ddl-auto: update
     show-sql: true
     properties:
@@ -63,6 +58,25 @@ jwt:
   #  echo org-fastcampus-orury-core-api-admin-batch-org-fastcampus-orury-core-api-admin-batch | base64
   secret: b3JnLWZhc3RjYW1wdXMtb3J1cnktY29yZS1hcGktYWRtaW4tYmF0Y2gtb3JnLWZhc3RjYW1wdXMtb3J1cnktY29yZS1hcGktYWRtaW4tYmF0Y2gK
   token-validity-in-seconds: 86400
+
+cloud:
+  aws:
+    s3:
+      bucket: ENC(DWaoEy70NtH+lhLIr08FR4qd/T11UK+X)
+      default-image: default-user-profile
+      url: https://s3.ap-northeast-2.amazonaws.com/
+    credentials:
+      accessKey: ENC(yfr+1GPLxMHuTbbID6K7Jbs0Dm9iuuK9yFjrOJv8jCU=)
+      secretKey: ENC(nnQ4XTkipeaA+bE6zKD6kI04Axa+E2Qjmw081EgZHpPXhPEBV/dgwqf9YeN1a0vJebMq0yceQJQ=)
+    region:
+      static: ap-northeast-2
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+slack:
+  token: ENC(7Pd4U/iPDtDF5quQM5TzMXF7jsfv+QQYCDdckH+/T8vbz/QOYTOKX6iAGdqM5gRVusZ84cC93RpQE8qK1kW4f6tdoIf5GDu2)
+  channel: ENC(9i8/M3HKZDCGoJWCM1B1Lg6ECmK4eudW)
 ---
 
 spring:

@@ -1,6 +1,6 @@
-package org.orury.domain.notice.db.repository;
+package org.orury.domain.notice.infrastructure;
 
-import org.orury.domain.notice.db.model.Notice;
+import org.orury.domain.notice.domain.entity.Notice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
