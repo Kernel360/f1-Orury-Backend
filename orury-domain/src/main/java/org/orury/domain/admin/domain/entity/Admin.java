@@ -1,10 +1,13 @@
-package org.orury.domain.admin.db.model;
+package org.orury.domain.admin.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.domain.admin.dto.RoleType;
+import org.orury.domain.admin.domain.dto.RoleType;
+import org.orury.domain.admin.domain.dto.RoleTypesConverter;
 import org.orury.domain.base.db.AuditingField;
+
+import java.util.Set;
 
 @Slf4j
 @ToString
@@ -27,17 +30,18 @@ public class Admin extends AuditingField {
     private String password;
 
     @Column(name = "role", length = 20, nullable = false)
+    @Convert(converter = RoleTypesConverter.class)
     @Enumerated(EnumType.STRING)
-    private RoleType role;
+    private Set<RoleType> roleTypes;
 
-    private Admin(String name, String email, String password, RoleType role) {
+    private Admin(String name, String email, String password, Set<RoleType> roleTypes) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roleTypes = roleTypes;
     }
 
-    public static Admin of(String name, String email, String password, RoleType role) {
-        return new Admin(name, email, password, role);
+    public static Admin of(String name, String email, String password, Set<RoleType> roleTypes) {
+        return new Admin(name, email, password, roleTypes);
     }
 }

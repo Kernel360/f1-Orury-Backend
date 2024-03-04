@@ -1,4 +1,4 @@
-package org.orury.admin.admin.converter.response;
+package org.orury.admin.admin.interfaces;
 
 public record AdminResponse(
         String name,

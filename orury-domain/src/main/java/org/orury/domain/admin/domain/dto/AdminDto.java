@@ -1,8 +1,9 @@
-package org.orury.domain.admin.dto;
+package org.orury.domain.admin.domain.dto;
 
-import org.orury.domain.admin.db.model.Admin;
+import org.orury.domain.admin.domain.entity.Admin;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * DTO for {@link Admin}
@@ -12,22 +13,23 @@ public record AdminDto(
         String name,
         String email,
         String password,
-        RoleType role,
+        Set<RoleType> roleTypes,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public static AdminDto of(
+            Long id,
             String name,
             String email,
             String password,
-            RoleType role
+            Set<RoleType> roleTypes
     ) {
         return AdminDto.of(
-                null,
+                id,
                 name,
                 email,
                 password,
-                role,
+                roleTypes,
                 null,
                 null
         );
@@ -38,7 +40,7 @@ public record AdminDto(
             String name,
             String email,
             String password,
-            RoleType role,
+            Set<RoleType> roleTypes,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -47,7 +49,7 @@ public record AdminDto(
                 name,
                 email,
                 password,
-                role,
+                roleTypes,
                 createdAt,
                 updatedAt
         );
@@ -59,7 +61,7 @@ public record AdminDto(
                 entity.getName(),
                 entity.getEmail(),
                 entity.getPassword(),
-                entity.getRole(),
+                entity.getRoleTypes(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
@@ -70,7 +72,7 @@ public record AdminDto(
                 name,
                 email,
                 password,
-                role
+                roleTypes
         );
     }
 }
