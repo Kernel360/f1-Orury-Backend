@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("")
+@DisplayName("[Service] AuthServiceImpl 테스트")
 @ActiveProfiles("test")
 class AuthServiceImplTest {
     private AuthService authService;

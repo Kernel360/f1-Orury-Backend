@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("jwtTokenServiceImpl 테스트")
+@DisplayName("[Service] JwtTokenServiceImpl 테스트")
 @ActiveProfiles("test")
 class JwtTokenServiceImplTest {
 

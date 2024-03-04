@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("")
+@DisplayName("[Service] KakaoOAuthService 테스트")
 @ActiveProfiles("test")
 class KakaoOAuthServiceTest {
 

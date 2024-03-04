@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("JwtTokenFilter 테스트")
+@DisplayName("[Filter] JwtTokenFilter 테스트")
 @ActiveProfiles("test")
 class JwtTokenFilterTest {
 
