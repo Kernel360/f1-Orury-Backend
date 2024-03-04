@@ -1,7 +1,9 @@
 //build.gradle 파일
 dependencies {
-//    implementation project(':orury-common')
     implementation project(':orury-domain')
+
+    //devtools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
@@ -23,6 +25,9 @@ dependencies {
 
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //json
+    implementation 'org.json:json:20231013'
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'

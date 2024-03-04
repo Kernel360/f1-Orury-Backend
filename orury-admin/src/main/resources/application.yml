@@ -1,9 +1,17 @@
 server.port: 8090
+tomcat.mbeanregistry.enabled: true
 debug: false
-#management.endpoints.web.exposure.include: "*"
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql.BasicBinder: trace
+  org.springframework.web.servlet: info
+  org.springframework.jdbc.core.JdbcTemplate: DEBUG
+  org.springframework.jdbc.core.StatementCreatorUtils: TRACE
 
 springdoc:
   show-actuator: true
+
 spring:
   mvc:
     cors:
@@ -16,22 +24,18 @@ spring:
     username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
     password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
   jpa:
-    open-in-view: false
-    hibernate.ddl-auto: update
-    show-sql: true
     properties:
-      hibernate.format_sql: true
-      hibernate.default_batch_fetch_size: 100
+      hibernate:
+        default_batch_fetch_size: 100
+    hibernate.ddl-auto: validate
+    open-in-view: false
+
   sql.init.mode: always
-  data.rest:
-    base-path: /api
-    detection-strategy: annotated
-    baseline-on-migrate: true
+
   devtools:
     livereload:
       enabled: true
-  freemarker:
-    cache: false
+
   thymeleaf:
     cache: false
     prefix=file: src/main/resources/templates/
