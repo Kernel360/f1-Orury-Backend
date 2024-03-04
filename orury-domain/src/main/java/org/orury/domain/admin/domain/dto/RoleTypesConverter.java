@@ -2,11 +2,13 @@ package org.orury.domain.admin.domain.dto;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Converter
 public class RoleTypesConverter implements AttributeConverter<Set<RoleType>, String> {
 
@@ -15,7 +17,7 @@ public class RoleTypesConverter implements AttributeConverter<Set<RoleType>, Str
     @Override
     public String convertToDatabaseColumn(Set<RoleType> attribute) {
         return attribute.stream()
-                .map(RoleType::name)
+                .map(RoleType::getRoleName)
                 .sorted()
                 .collect(Collectors.joining(DELIMITER));
     }
