@@ -8,13 +8,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
+import org.orury.client.user.application.UserService;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
-import org.orury.domain.user.domain.UserService;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.test.context.ActiveProfiles;
 
