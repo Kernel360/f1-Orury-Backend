@@ -1,17 +1,15 @@
 //build.gradle 파일
 dependencies {
-    implementation project(':orury-common')
+//    implementation project(':orury-common')
     implementation project(':orury-domain')
 
-    //Security
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
-    //security jwt
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     //jakarta.xml.bind
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.0'
@@ -22,6 +20,9 @@ dependencies {
     compileOnly 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
     compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
     compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
+
+    //mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
