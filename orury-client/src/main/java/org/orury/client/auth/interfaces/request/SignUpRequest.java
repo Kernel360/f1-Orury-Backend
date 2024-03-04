@@ -1,4 +1,4 @@
-package org.orury.client.auth.converter.request;
+package org.orury.client.auth.interfaces.request;
 
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;

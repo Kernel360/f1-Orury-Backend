@@ -1,6 +1,6 @@
-package org.orury.client.auth.converter.response;
+package org.orury.client.auth.interfaces.response;
 
-import org.orury.domain.auth.dto.SignUpDto;
+import org.orury.domain.auth.domain.dto.SignUpDto;
 
 public record SignUpResponse(
         Long id,

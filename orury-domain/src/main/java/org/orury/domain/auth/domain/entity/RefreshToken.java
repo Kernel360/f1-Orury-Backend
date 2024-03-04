@@ -1,4 +1,4 @@
-package org.orury.domain.auth.db.model;
+package org.orury.domain.auth.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package org.orury.domain.auth.dto.apple;
+package org.orury.domain.auth.domain.dto.apple;
 
 public record AppleIdTokenPayload(
         String sub,

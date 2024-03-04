@@ -1,4 +1,4 @@
-package org.orury.domain.auth.dto.kakao;
+package org.orury.domain.auth.domain.dto.kakao;
 
 public record KakaoAccount(
         Profile profile,

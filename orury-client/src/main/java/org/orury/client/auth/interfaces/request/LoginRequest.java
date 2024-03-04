@@ -1,4 +1,4 @@
-package org.orury.client.auth.converter.request;
+package org.orury.client.auth.interfaces.request;
 
 public record LoginRequest(
         String code,

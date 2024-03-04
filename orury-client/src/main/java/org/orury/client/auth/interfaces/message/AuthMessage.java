@@ -1,4 +1,4 @@
-package org.orury.client.auth.converter.message;
+package org.orury.client.auth.interfaces.message;
 
 import lombok.Getter;
 

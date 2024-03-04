@@ -1,4 +1,4 @@
-package org.orury.domain.auth.dto;
+package org.orury.domain.auth.domain.dto;
 
 public record JwtToken(
         String accessToken,

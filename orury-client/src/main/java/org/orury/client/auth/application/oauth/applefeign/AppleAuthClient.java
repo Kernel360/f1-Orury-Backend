@@ -1,7 +1,7 @@
-package org.orury.client.auth.strategy.applefeign;
+package org.orury.client.auth.application.oauth.applefeign;
 
 import org.orury.client.global.config.FeignConfig;
-import org.orury.domain.auth.dto.apple.AppleOAuthTokenDto;
+import org.orury.domain.auth.domain.dto.apple.AppleOAuthTokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;

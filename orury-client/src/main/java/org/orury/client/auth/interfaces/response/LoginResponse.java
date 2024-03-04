@@ -1,6 +1,8 @@
-package org.orury.client.auth.converter.response;
+package org.orury.client.auth.interfaces.response;
 
-import org.orury.domain.auth.dto.LoginDto;
+import org.orury.domain.auth.domain.dto.LoginDto;
+
+import java.util.Objects;
 
 public record LoginResponse(
         Long id,
@@ -47,6 +49,14 @@ public record LoginResponse(
                 null,
                 loginDto.jwtToken().accessToken(),
                 null
+        );
+    }
+
+    public boolean isNoUser() {
+        return (Objects.isNull(id)
+                && Objects.isNull(email)
+                && Objects.isNull(nickname)
+                && Objects.isNull(refreshToken)
         );
     }
 }

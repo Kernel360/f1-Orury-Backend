@@ -1,4 +1,4 @@
-package org.orury.domain.auth.dto;
+package org.orury.domain.auth.domain.dto;
 
 import org.orury.domain.user.domain.dto.UserDto;
 

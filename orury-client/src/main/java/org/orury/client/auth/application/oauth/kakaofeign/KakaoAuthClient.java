@@ -1,7 +1,7 @@
-package org.orury.client.auth.strategy.kakaofeign;
+package org.orury.client.auth.application.oauth.kakaofeign;
 
 import org.orury.client.global.config.FeignConfig;
-import org.orury.domain.auth.dto.kakao.KakaoOAuthTokenDto;
+import org.orury.domain.auth.domain.dto.kakao.KakaoOAuthTokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
