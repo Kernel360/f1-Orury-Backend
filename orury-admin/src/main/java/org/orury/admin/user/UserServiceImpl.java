@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
      * 유저 status를 B로 변경하여 저장 -> 삭제(제제)
      */
     @Override
-    public void deleteUser(UserDto userDto) {
+    public void banUser(UserDto userDto) {
         var user = userDto.toEntity(UserStatus.BAN);
         userStore.save(user);
     }

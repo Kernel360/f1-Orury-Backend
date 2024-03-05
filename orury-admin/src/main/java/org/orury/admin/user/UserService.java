@@ -9,5 +9,5 @@ public interface UserService {
 
     List<UserDto> getUsers();
 
-    void deleteUser(UserDto userDto);
+    void banUser(UserDto userDto);
 }

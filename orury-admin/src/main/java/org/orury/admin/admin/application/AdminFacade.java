@@ -36,9 +36,9 @@ public class AdminFacade {
         postService.deletePost(post);
     }
 
-    public void deleteUser(Long userId) {
+    public void banUser(Long userId) {
         var user = userService.getUser(userId);
-        userService.deleteUser(user);
+        userService.banUser(user);
     }
 
     public PostDto getPost(Long postId) {
