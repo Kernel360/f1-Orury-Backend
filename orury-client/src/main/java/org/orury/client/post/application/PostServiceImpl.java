@@ -126,7 +126,7 @@ public class PostServiceImpl implements PostService {
     public void updateViewCount(Long id) {
         postStore.updateViewCount(id);
     }
-    
+
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
         var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());

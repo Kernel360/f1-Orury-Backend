@@ -1,9 +1,9 @@
 package org.orury.domain.post.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.image.ImageReader;

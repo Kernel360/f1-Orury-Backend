@@ -22,4 +22,8 @@ public class UserStoreImpl implements UserStore {
     }
 
 
+    @Override
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }

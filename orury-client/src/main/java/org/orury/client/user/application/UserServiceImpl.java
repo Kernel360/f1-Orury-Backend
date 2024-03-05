@@ -1,5 +1,7 @@
 package org.orury.client.user.application;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.ImageUrlConverter;
@@ -17,9 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,8 +41,8 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserDtoById(Long id) {
         User user = userReader.findUserById(id)
                 .orElseThrow(() -> new BusinessException(UserErrorCode.NOT_FOUND));
-        String profileUrl = imageReader.getUserImageLink(user.getProfileImage());
-        return UserDto.from(user, profileUrl);
+        var profileLink = imageReader.getUserImageLink(user.getProfileImage());
+        return UserDto.from(user, profileLink);
     }
 
     @Override

@@ -68,4 +68,9 @@ public class PostReaderImpl implements PostReader {
             throw new InfraImplException(PostErrorCode.NOT_FOUND);
         return postLikeRepository.existsByPostLikePK(postLikePK);
     }
+
+    @Override
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
 }
