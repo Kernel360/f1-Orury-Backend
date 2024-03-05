@@ -3,9 +3,9 @@ package org.orury.domain.post.infrastructure;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
 import org.orury.common.util.ImageUrlConverter;
@@ -62,7 +62,7 @@ public class ImageStoreImpl implements ImageStore {
     public void delete(String profile) {
         if (StringUtils.isBlank(profile)) return;
         var link = ImageUtil.splitUrlToImage(profile);
-        amazonS3.deleteObject(bucket + USER, link);
+        amazonS3.deleteObject(bucket + USER.getName(), link);
     }
 
     @Override
@@ -73,10 +73,9 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public void delete(S3Folder domain, List<String> links) {
-        if (ImageUtil.imagesValidation(links)) return;
         links.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
-                .forEach(it -> amazonS3.deleteObject(bucket + domain, it));
+                .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
     }
 
     private File convert(MultipartFile multipartFile) {
@@ -94,7 +93,7 @@ public class ImageStoreImpl implements ImageStore {
     private List<String> putS3(S3Folder domain, List<File> files) {
         // S3에 파일들을 업로드
         return files.stream()
-                .map(it -> requestPutObject(domain.getName(), it))
+                .map(it -> requestPutObject(bucket + domain.getName(), it))
                 .toList();
     }
 

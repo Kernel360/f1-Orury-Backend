@@ -30,7 +30,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +51,6 @@ class ReviewServiceImplTest {
     private ImageStore imageStore;
 
     private ReviewService reviewService;
-
-
-    private static final int minReactionType = 1;
-    private static final int maxReactionType = 5;
 
     @BeforeEach
     void setUp() {
@@ -162,8 +157,6 @@ class ReviewServiceImplTest {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        Long gymId = 1L;
-        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
 
         given(reviewReader.findById(reviewId))
                 .willReturn(Optional.empty());
@@ -439,8 +432,8 @@ class ReviewServiceImplTest {
                 23,
                 12,
                 List.of(),
-                "123.456",
-                "123.456",
+                123.456,
+                123.456,
                 "gymBrand",
                 "010-1234-5678",
                 "gymInstaLink",
@@ -475,23 +468,6 @@ class ReviewServiceImplTest {
         );
     }
 
-    private static Review createReviewAboutGym(Long id) {
-        return Review.of(
-                id,
-                "reviewContent",
-                List.of(), 4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                createUser(id),
-                createGym(1L),
-                null,
-                null
-        );
-    }
-
     private static ReviewDto createReviewDto(Long reviewId, Long userId, Long gymId) {
         return ReviewDto.of(
                 reviewId,
@@ -508,16 +484,6 @@ class ReviewServiceImplTest {
                 null,
                 null
         );
-    }
-
-    private static List<Review> createReviewsAboutGym() {
-        List<Review> reviews = new ArrayList<>();
-
-        for (Long l = 1L; l <= 10L; l++) {
-            reviews.add(createReviewAboutGym(l));
-        }
-
-        return reviews;
     }
 
     private static ReviewReactionPK createReviewReactionPK(

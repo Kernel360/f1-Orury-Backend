@@ -55,38 +55,20 @@ public record PostDto(
     }
 
     public static PostDto from(Post entity) {
-        return PostDto.of(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getContent(),
-                entity.getViewCount(),
-                entity.getCommentCount(),
-                entity.getLikeCount(),
+        return PostDto.from(
+                entity,
                 entity.getImages(),
-                entity.getCategory(),
-                UserDto.from(entity.getUser()),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUser().getProfileImage(),
+                false
         );
     }
 
-    public static PostDto from(Post entity, List<String> images) {
-        return PostDto.of(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getContent(),
-                entity.getViewCount(),
-                entity.getCommentCount(),
-                entity.getLikeCount(),
-                images,
-                entity.getCategory(),
-                UserDto.from(entity.getUser()),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
-        );
-    }
-
-    public static PostDto from(Post entity, List<String> links, boolean isLike) {
+    public static PostDto from(
+            Post entity,
+            List<String> links,
+            String profileLink,
+            boolean isLike
+    ) {
         return new PostDto(
                 entity.getId(),
                 entity.getTitle(),
@@ -96,24 +78,8 @@ public record PostDto(
                 entity.getLikeCount(),
                 links,
                 entity.getCategory(),
-                UserDto.from(entity.getUser()),
+                UserDto.from(entity.getUser(), profileLink),
                 isLike,
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
-        );
-    }
-
-    public static PostDto from(Post entity, List<String> imgUrls, String postUserImageUrl) {
-        return PostDto.of(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getContent(),
-                entity.getViewCount(),
-                entity.getCommentCount(),
-                entity.getLikeCount(),
-                imgUrls,
-                entity.getCategory(),
-                UserDto.from(entity.getUser(), postUserImageUrl),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

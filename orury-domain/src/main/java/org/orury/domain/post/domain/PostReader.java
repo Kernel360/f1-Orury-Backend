@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface PostReader {
     List<Post> findByCategoryOrderByIdDesc(int category, Long cursor, Pageable pageable);
@@ -21,9 +22,11 @@ public interface PostReader {
             Pageable pageable
     );
 
-    Post findById(Long id);
+    Optional<Post> findById(Long id);
 
     boolean isPostLiked(Long userId, Long postId);
 
     boolean existsByPostLikePK(PostLikePK postLikePK);
+
+    List<Post> findAll();
 }

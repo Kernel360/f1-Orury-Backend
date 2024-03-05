@@ -12,5 +12,4 @@ public interface UserService {
     void updateUserInfo(UserDto userDto);
 
     void deleteUser(UserDto userDto);
-
 }

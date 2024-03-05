@@ -2,6 +2,7 @@ package org.orury.client.gym.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.client.gym.interfaces.request.AreaGrid;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
@@ -43,6 +44,13 @@ public class GymServiceImpl implements GymService {
     @Transactional(readOnly = true)
     public List<GymDto> getGymDtosBySearchWordOrderByDistanceAsc(String searchWord, float latitude, float longitude) {
         var gyms = gymReader.findGymsBySearchWord(searchWord);
+        return sortGymsByDistanceAsc(gyms, latitude, longitude);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GymDto> getGymDtosByAreaGridOrderByDistanceAsc(AreaGrid areaGrid, float latitude, float longitude) {
+        var gyms = gymReader.findGymsInAreaGrid(areaGrid.toGridMap());
         return sortGymsByDistanceAsc(gyms, latitude, longitude);
     }
 
