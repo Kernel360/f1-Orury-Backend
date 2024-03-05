@@ -59,7 +59,13 @@ class AuthServiceImplTest {
     @DisplayName("email 중복되지 않는 경우, 회원정보 저장하고 JwtToken 발급하여 반환한다.")
     void when_NotDuplicatedEmail_Then_SaveUserAndRetrieveJwtToken() {
         // given
-        UserDto userDto = createUserDto();
+        String email = "orury@orury.com";
+        UserDto userDto = createUserDto(email);
+        Long userId = 1L;
+        User user = createUser(userId, email);
+
+        given(userReader.findByEmail(email))
+                .willReturn(Optional.of(user));
 
         // when
         authService.signUp(userDto);
@@ -67,6 +73,8 @@ class AuthServiceImplTest {
         // then
         then(userStore).should(times(1))
                 .saveAndFlush(any());
+        then(userReader).should(times(1))
+                .findByEmail(anyString());
         then(jwtTokenService).should(times(1))
                 .issueJwtTokens(anyLong(), anyString());
     }
@@ -75,7 +83,8 @@ class AuthServiceImplTest {
     @DisplayName("email 중복인 경우, 회원정보 저장 실패하고 DuplicatedUser 예외를 반환한다.")
     void when_DuplicatedEmail_Then_DuplicatedUserException() {
         // given
-        UserDto userDto = createUserDto();
+        String email = "orury@orury.com";
+        UserDto userDto = createUserDto(email);
 
         given(userStore.saveAndFlush(any()))
                 .willThrow(DataIntegrityViolationException.class);
@@ -88,6 +97,32 @@ class AuthServiceImplTest {
 
         then(userStore).should(times(1))
                 .saveAndFlush(any());
+        then(userReader).should(never())
+                .findByEmail(anyString());
+        then(jwtTokenService).should(never())
+                .issueJwtTokens(anyLong(), anyString());
+    }
+
+    @Test
+    @DisplayName("save된 유저의 email을 조회했으나, 존재하지 않는 User로 조회되면, NotExistingUserAccount 예외를 반환한다.")
+    void when_UserWithSignUpEmailDoesNotExist_Then_NotExistingUserAccountException() {
+        // given
+        String email = "orury@orury.com";
+        UserDto userDto = createUserDto(email);
+
+        given(userReader.findByEmail(email))
+                .willReturn(Optional.empty());
+
+        // when & then
+        Exception exception = assertThrows(AuthException.class,
+                () -> authService.signUp(userDto));
+
+        assertEquals(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT.getMessage(), exception.getMessage());
+
+        then(userStore).should(times(1))
+                .saveAndFlush(any());
+        then(userReader).should(times(1))
+                .findByEmail(anyString());
         then(jwtTokenService).should(never())
                 .issueJwtTokens(anyLong(), anyString());
     }
@@ -247,10 +282,10 @@ class AuthServiceImplTest {
                 .reissueJwtTokens(any());
     }
 
-    private UserDto createUserDto() {
+    private UserDto createUserDto(String email) {
         return UserDto.of(
                 1L,
-                "test@test.com",
+                email,
                 "test",
                 "password",
                 1,
@@ -267,6 +302,22 @@ class AuthServiceImplTest {
         return LoginRequest.of(
                 "OAuth_Authentication_Code",
                 signUpType
+        );
+    }
+
+    private User createUser(Long userId, String email) {
+        return User.of(
+                userId,
+                email,
+                "userNickname",
+                "userPassword",
+                1,
+                1,
+                null,
+                "userProfileImage",
+                null,
+                null,
+                NumberConstants.IS_NOT_DELETED
         );
     }
 
