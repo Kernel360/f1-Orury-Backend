@@ -7,6 +7,7 @@ import org.orury.domain.notice.domain.entity.Notice;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -15,9 +16,8 @@ public class NoticeReaderImpl implements NoticeReader {
     private final NoticeRepository noticeRepository;
 
     @Override
-    public Notice getNotice(Long noticeId) {
-        return noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("없없"));
+    public Optional<Notice> getNotice(Long noticeId) {
+        return noticeRepository.findById(noticeId);
     }
 
     @Override

@@ -1,7 +1,8 @@
-package org.orury.domain.admin.domain;
+package org.orury.admin.admin.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.domain.admin.domain.AdminReader;
 import org.orury.domain.admin.domain.dto.AdminDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminDto findAdminByEmail(String email) {
         var admin = adminReader.findByEmail(email);
-        var dto = AdminDto.from(admin);
-        log.debug("admin : {}", admin);
-        log.debug("dto : {}", dto);
-        return dto;
+        return AdminDto.from(admin);
     }
 
     @Override

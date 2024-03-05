@@ -2,9 +2,8 @@ package org.orury.admin.notice.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.admin.admin.application.AdminService;
 import org.orury.admin.notice.interfaces.request.NoticeRequest;
-import org.orury.domain.admin.domain.AdminService;
-import org.orury.domain.notice.domain.NoticeService;
 import org.orury.domain.notice.domain.dto.NoticeDto;
 import org.springframework.stereotype.Service;
 

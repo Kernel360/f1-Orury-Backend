@@ -2,8 +2,8 @@ package org.orury.admin.global.security.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.admin.admin.application.AdminService;
 import org.orury.admin.global.security.dto.login.response.AdminPrincipal;
-import org.orury.domain.admin.domain.AdminService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

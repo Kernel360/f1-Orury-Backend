@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.admin.post.application.PostService;
 import org.orury.admin.user.UserService;
-import org.orury.domain.admin.domain.AdminService;
 import org.orury.domain.admin.domain.dto.AdminDto;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
