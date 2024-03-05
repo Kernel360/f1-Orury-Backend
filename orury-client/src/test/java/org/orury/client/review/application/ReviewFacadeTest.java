@@ -68,6 +68,8 @@ class ReviewFacadeTest {
         reviewFacade.createReview(1L, request, images);
 
         // then
+        then(userService).should(times(1)).getUserDtoById(any());
+        then(gymService).should(times(1)).getGymDtoById(any());
         then(reviewService).should(times(1)).createReview(any(), any());
     }
 
