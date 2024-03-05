@@ -14,7 +14,7 @@ public interface MeetingService {
 
     List<MeetingDto> getPastMeetingDtosByCrewId(Long crewId, Long userId);
 
-    List<String> getUserImagesByMeetingId(Long memberId);
+    List<String> getUserImagesByMeeting(MeetingDto meetingDto);
 
     void updateMeeting(MeetingDto meetingDto, Long userId);
 

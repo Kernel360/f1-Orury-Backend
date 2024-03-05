@@ -36,7 +36,7 @@ public class MeetingFacade {
     public List<MeetingsResponse> getPresentMeetings(Long crewId, Long userId) {
         List<MeetingDto> meetingDtos = meetingService.getPresentMeetingDtosByCrewId(crewId, userId);
         return meetingDtos.stream().map(meetingDto -> {
-            List<String> userImages = meetingService.getUserImagesByMeetingId(meetingDto.id());
+            List<String> userImages = meetingService.getUserImagesByMeeting(meetingDto);
             return MeetingsResponse.of(meetingDto, userImages, userId);
         }).toList();
     }
@@ -44,7 +44,7 @@ public class MeetingFacade {
     public List<MeetingsResponse> getPastMeetings(Long crewId, Long userId) {
         List<MeetingDto> meetingDtos = meetingService.getPastMeetingDtosByCrewId(crewId, userId);
         return meetingDtos.stream().map(meetingDto -> {
-            List<String> userImages = meetingService.getUserImagesByMeetingId(meetingDto.id());
+            List<String> userImages = meetingService.getUserImagesByMeeting(meetingDto);
             return MeetingsResponse.of(meetingDto, userImages, userId);
         }).toList();
     }
