@@ -1,4 +1,4 @@
-package org.orury.domain.notice.domain;
+package org.orury.admin.notice.application;
 
 
 import org.orury.domain.admin.domain.dto.AdminDto;

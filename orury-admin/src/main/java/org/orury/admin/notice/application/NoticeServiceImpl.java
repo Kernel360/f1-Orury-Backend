@@ -1,8 +1,10 @@
-package org.orury.domain.notice.domain;
+package org.orury.admin.notice.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.admin.domain.dto.AdminDto;
+import org.orury.domain.notice.domain.NoticeReader;
+import org.orury.domain.notice.domain.NoticeStore;
 import org.orury.domain.notice.domain.dto.NoticeDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
