@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface UserReader {
     Optional<User> findUserById(Long id);
+
+    Optional<User> findByEmail(String email);
 }
