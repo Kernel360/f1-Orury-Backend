@@ -1,0 +1,88 @@
+server.port: 8090
+tomcat.mbeanregistry.enabled: true
+debug: false
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql.BasicBinder: trace
+  org.springframework.web.servlet: info
+  org.springframework.jdbc.core.JdbcTemplate: DEBUG
+  org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+
+springdoc:
+  show-actuator: true
+
+spring:
+  mvc:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET, POST, PUT, DELETE"
+  application.name: orury-admin
+
+  datasource:
+    url: ENC(+jNy+HRl5S5QeokxoLB89WTqqqa7EGm73Cpm2N4KXnu1yH3puewQxOUDussQQ9Qd)
+    username: ENC(ICwwkDRBtwGBxA6nGngL8g==)
+    password: ENC(HnXBRmSMLrFNxOsi9z6Iz+9nuM5BBLw2)
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+    hibernate.ddl-auto: validate
+    open-in-view: false
+
+  sql.init.mode: always
+
+  devtools:
+    livereload:
+      enabled: true
+
+  thymeleaf:
+    cache: false
+    prefix=file: src/main/resources/templates/
+  #  security:
+  #    oauth2:
+  #      client:
+  #        registration:
+  #          kakao:
+  #            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+  #            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+  #            authorization-grant-type: authorization_code
+  #            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+  #            client-authentication-method: client_secret_post
+  #        provider:
+  #          kakao:
+  #            authorization-uri: https://kauth.kakao.com/oauth/authorize
+  #            token-uri: https://kauth.kakao.com/oauth/token
+  #            user-info-uri: https://kapi.kakao.com/v2/user/me
+  #            user-name-attribute: id
+
+jwt:
+  header: Authorization
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  #  echo org-fastcampus-orury-core-api-admin-batch-org-fastcampus-orury-core-api-admin-batch | base64
+  secret: b3JnLWZhc3RjYW1wdXMtb3J1cnktY29yZS1hcGktYWRtaW4tYmF0Y2gtb3JnLWZhc3RjYW1wdXMtb3J1cnktY29yZS1hcGktYWRtaW4tYmF0Y2gK
+  token-validity-in-seconds: 86400
+
+cloud:
+  aws:
+    s3:
+      bucket: ENC(DWaoEy70NtH+lhLIr08FR4qd/T11UK+X)
+      default-image: default-user-profile
+      url: https://s3.ap-northeast-2.amazonaws.com/
+    credentials:
+      accessKey: ENC(yfr+1GPLxMHuTbbID6K7Jbs0Dm9iuuK9yFjrOJv8jCU=)
+      secretKey: ENC(nnQ4XTkipeaA+bE6zKD6kI04Axa+E2Qjmw081EgZHpPXhPEBV/dgwqf9YeN1a0vJebMq0yceQJQ=)
+    region:
+      static: ap-northeast-2
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+slack:
+  token: ENC(7Pd4U/iPDtDF5quQM5TzMXF7jsfv+QQYCDdckH+/T8vbz/QOYTOKX6iAGdqM5gRVusZ84cC93RpQE8qK1kW4f6tdoIf5GDu2)
+  channel: ENC(9i8/M3HKZDCGoJWCM1B1Lg6ECmK4eudW)
+---
+
+spring:
+  config.activate.on-profile: test
+  datasource.url: jdbc:h2:mem:testdb

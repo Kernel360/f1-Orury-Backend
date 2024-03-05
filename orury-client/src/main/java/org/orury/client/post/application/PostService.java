@@ -32,4 +32,6 @@ public interface PostService {
     void deletePostLike(PostLikeDto postLikeDto);
 
     void updateViewCount(Long id);
+
+    List<PostDto> getPosts();
 }
