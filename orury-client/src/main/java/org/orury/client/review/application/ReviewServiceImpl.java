@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId);
-        isValidate(review.getId(), userId);
+        isValidate(review.getUser().getId(), userId);
         var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), review.getImages());
         return ReviewDto.from(review, urls, review.getUser().getProfileImage());
     }
