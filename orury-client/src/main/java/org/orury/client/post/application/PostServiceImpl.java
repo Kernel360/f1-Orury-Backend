@@ -127,11 +127,6 @@ public class PostServiceImpl implements PostService {
         postStore.updateViewCount(id);
     }
 
-    @Override
-    public List<PostDto> getPosts() {
-        return postReader.findAll().stream().map(this::postImageConverter).toList();
-    }
-
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
         var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());

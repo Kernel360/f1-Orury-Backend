@@ -60,4 +60,12 @@ public class AdminController {
         return adminFacade.getPosts();
     }
 
+    @Operation(summary = "게시글 조회", description = "postId에 담긴 값으로 게시글을 조회합니다.")
+    @GetMapping("/posts/{postId}")
+    public PostDto getPost(
+            @PathVariable Long postId
+    ) {
+        return adminFacade.getPost(postId);
+    }
+
 }

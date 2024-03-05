@@ -1,49 +1,49 @@
 CREATE TABLE IF NOT EXISTS `crew_member` (
-                                              `user_id`       bigint      NOT NULL,
-                                              `crew_id`       bigint      NOT NULL,
+                                              `user_id`	      bigint	   NOT NULL,
+                                              `crew_id`	      bigint	   NOT NULL,
                                               `created_at`    DATETIME     NOT NULL,
                                               `updated_at`    DATETIME     NULL
      );
 
 CREATE TABLE IF NOT EXISTS `crew` (
-                                      `id`              bigint         NOT NULL,
-                                      `name`            varchar(15)        NOT NULL,
-                                      `member_count`    int                NOT NULL    DEFAULT 1,
-                                      `capacity`        int                NOT NULL,
-                                      `region`          varchar(100)   NOT NULL,
-                                      `description`     text           NULL,
-                                      `icon`            varchar(20)        NULL,
-                                      `is_deleted`      tinyint            NOT NULL   DEFAULT 0,
-                                      `user_id`         bigint(32)     NOT NULL,
+                                      `id`	            bigint      	NOT NULL,
+                                      `name`	        varchar(15)	    NOT NULL,
+                                      `member_count`	int	            NOT NULL    DEFAULT 1,
+                                      `capacity`	    int	            NOT NULL,
+                                      `region`	        varchar(100)	NOT NULL,
+                                      `description`	    text	        NULL,
+                                      `icon`	        varchar(20)	    NULL,
+                                      `is_deleted`	    tinyint	        NOT NULL	DEFAULT 0,
+                                      `user_id`	        bigint(32)	    NOT NULL,
                                       `created_at`      DATETIME        NOT NULL,
                                       `updated_at`      DATETIME        NULL
     );
 
 CREATE TABLE IF NOT EXISTS `crew_meeting` (
-                                              `id`              bigint     NOT NULL,
-                                              `start_time`      datetime   NOT NULL,
-                                              `end_time`        datetime   NOT NULL,
-                                              `member_count`    int            NOT NULL   DEFAULT 0,
-                                              `capacity`        int            NOT NULL,
-                                              `user_id`         bigint     NOT NULL,
-                                              `gym_id`          bigint     NOT NULL,
-                                              `crew_id`         bigint     NOT NULL,
+                                              `id`	            bigint	    NOT NULL,
+                                              `start_time`	    datetime	NOT NULL,
+                                              `end_time`	    datetime	NOT NULL,
+                                              `member_count`	int	        NOT NULL	DEFAULT 0,
+                                              `capacity`	    int	        NOT NULL,
+                                              `user_id`	        bigint	    NOT NULL,
+                                              `gym_id`	        bigint	    NOT NULL,
+                                              `crew_id`	        bigint	    NOT NULL,
                                               `created_at`      DATETIME    NOT NULL,
                                               `updated_at`      DATETIME    NULL
     );
 
 CREATE TABLE IF NOT EXISTS `crew_application` (
-                                                  `user_id`         bigint         NOT NULL,
-                                                  `crew_id`         bigint         NOT NULL,
-                                                  `description`     varchar(100)   NULL,
-                                                  `is_declined`     tinyint        NOT NULL   DEFAULT 0,
+                                                  `user_id`     	bigint      	NOT NULL,
+                                                  `crew_id`     	bigint      	NOT NULL,
+                                                  `description`	    varchar(100)	NULL,
+                                                  `is_declined`	    tinyint     	NOT NULL	DEFAULT 0,
                                                   `created_at`      DATETIME        NOT NULL,
                                                   `updated_at`      DATETIME        NULL
     );
 
 CREATE TABLE IF NOT EXISTS `crew_meeting_member` (
-                                                     `meeting_id`   bigint     NOT NULL,
-                                                     `user_id`      bigint     NOT NULL
+                                                     `meeting_id`	bigint  	NOT NULL,
+                                                     `user_id`  	bigint  	NOT NULL
 );
 
 ALTER TABLE `crew_member` ADD CONSTRAINT `PK_CREW_MEMBER` PRIMARY KEY (

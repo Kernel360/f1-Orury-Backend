@@ -8,5 +8,7 @@ import java.util.List;
 public interface UserReader {
     Optional<User> findUserById(Long id);
 
+    Optional<User> findByEmail(String email);
+
     List<User> findAll();
 }
