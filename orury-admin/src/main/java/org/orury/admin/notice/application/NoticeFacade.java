@@ -3,7 +3,7 @@ package org.orury.admin.notice.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.admin.notice.interfaces.request.NoticeRequest;
-import org.orury.domain.admin.domain.AdminServiceImpl;
+import org.orury.domain.admin.domain.AdminService;
 import org.orury.domain.notice.domain.NoticeService;
 import org.orury.domain.notice.domain.dto.NoticeDto;
 import org.springframework.stereotype.Service;
@@ -15,23 +15,23 @@ import java.util.List;
 @Service
 public class NoticeFacade {
     private final NoticeService noticeService;
-    private final AdminServiceImpl adminServiceImpl;
+    private final AdminService adminService;
 
     public void createNotice(Long adminId, NoticeRequest request) {
-        var admin = adminServiceImpl.getAdmin(adminId);
+        var admin = adminService.getAdmin(adminId);
         var notice = request.toDto(admin);
         noticeService.createNotice(admin, notice);
     }
 
     public void updateNotice(Long adminId, NoticeRequest request) {
-        var admin = adminServiceImpl.getAdmin(adminId);
+        var admin = adminService.getAdmin(adminId);
         var oldNotice = noticeService.getNotice(request.id());
         var newNotice = request.toDto(admin, oldNotice);
         noticeService.createNotice(admin, newNotice);
     }
 
     public void deleteNotice(Long adminId, Long noticeId) {
-        adminServiceImpl.getAdmin(adminId);
+        adminService.getAdmin(adminId);
         noticeService.deleteNotice(noticeId);
     }
 
