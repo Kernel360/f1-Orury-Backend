@@ -7,7 +7,8 @@ public enum S3Folder {
     POST("post"),
     REVIEW("review"),
     USER("user"),
-    GYM("gym");
+    GYM("gym"),
+    CREW("crew");
 
     private final String name;
 
