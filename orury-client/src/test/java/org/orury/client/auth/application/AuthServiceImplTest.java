@@ -71,11 +71,11 @@ class AuthServiceImplTest {
         authService.signUp(userDto);
 
         // then
-        then(userStore).should(times(1))
+        then(userStore).should(only())
                 .saveAndFlush(any());
         then(userReader).should(times(1))
                 .findByEmail(anyString());
-        then(jwtTokenService).should(times(1))
+        then(jwtTokenService).should(only())
                 .issueJwtTokens(anyLong(), anyString());
     }
 
@@ -95,7 +95,7 @@ class AuthServiceImplTest {
 
         assertEquals(UserErrorCode.DUPLICATED_USER.getMessage(), exception.getMessage());
 
-        then(userStore).should(times(1))
+        then(userStore).should(only())
                 .saveAndFlush(any());
         then(userReader).should(never())
                 .findByEmail(anyString());
