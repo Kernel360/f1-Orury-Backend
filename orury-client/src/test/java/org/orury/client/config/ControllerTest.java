@@ -1,7 +1,6 @@
 package org.orury.client.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.auth.application.AuthService;
@@ -12,6 +11,7 @@ import org.orury.client.comment.application.CommentService;
 import org.orury.client.comment.interfaces.CommentController;
 import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.interfaces.GymController;
+import org.orury.client.post.application.PostService;
 import org.orury.client.post.interfaces.PostController;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.review.interfaces.ReviewController;
@@ -19,7 +19,6 @@ import org.orury.client.user.application.UserService;
 import org.orury.client.user.interfaces.UserController;
 import org.orury.common.config.SlackMessage;
 import org.orury.domain.post.domain.PostLikeService;
-import org.orury.domain.post.domain.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
