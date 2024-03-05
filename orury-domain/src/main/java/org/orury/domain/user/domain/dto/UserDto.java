@@ -113,6 +113,22 @@ public record UserDto(
         );
     }
 
+    public User toEntity(UserStatus status) {
+        return User.of(
+                id,
+                email,
+                nickname,
+                password,
+                signUpType,
+                gender,
+                birthday,
+                profileImage,
+                createdAt,
+                updatedAt,
+                status
+        );
+    }
+
     private static String checkStatus(User user) {
         var status = user.getStatus();
         if (status == UserStatus.E) return user.getNickname();
