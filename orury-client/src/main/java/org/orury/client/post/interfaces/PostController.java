@@ -1,13 +1,8 @@
 package org.orury.client.post.interfaces;
 
-import static org.orury.client.post.interfaces.message.PostMessage.POSTS_READ;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_CREATED;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_DELETED;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_LIKE_CREATED;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_LIKE_DELETED;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_READ;
-import static org.orury.client.post.interfaces.message.PostMessage.POST_UPDATED;
-
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.post.application.PostFacade;
 import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostsWithCursorResponse;
@@ -16,22 +11,12 @@ import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.orury.client.post.interfaces.message.PostMessage.*;
 
 @Slf4j
 @RequiredArgsConstructor

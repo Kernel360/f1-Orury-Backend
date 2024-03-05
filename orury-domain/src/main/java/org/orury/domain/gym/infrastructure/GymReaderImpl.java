@@ -1,14 +1,13 @@
 package org.orury.domain.gym.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.orury.common.error.code.GymErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.gym.domain.GymReader;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,9 +16,8 @@ public class GymReaderImpl implements GymReader {
     private final GymLikeRepository gymLikeRepository;
 
     @Override
-    public Gym findGymById(Long id) {
-        return gymRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
+    public Optional<Gym> findGymById(Long id) {
+        return gymRepository.findById(id);
     }
 
     @Override

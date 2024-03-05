@@ -1,8 +1,6 @@
 package org.orury.client.user.interfaces;
 
-import org.orury.client.comment.service.CommentService;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.review.service.ReviewService;
 import org.orury.client.user.application.UserFacade;
 import org.orury.client.user.interfaces.message.UserMessage;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
@@ -11,12 +9,8 @@ import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.client.user.interfaces.response.MypageResponse;
 import org.orury.domain.base.converter.ApiResponse;
-import org.orury.domain.comment.dto.CommentDto;
-import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.review.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserPrincipal;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class UserController {
     private final UserFacade userFacade;
-    private final ReviewService reviewService;
-    private final CommentService commentService;
 
     @Operation(summary = "마이페이지 조회", description = "id에 해당하는 유저의 정보를 조회합니다. 닉네임, 생일, 프로필사진, 이메일, 성별이 return 됩니다. ")
     @GetMapping()
@@ -85,13 +75,7 @@ public class UserController {
     @Operation(summary = "내가 쓴 리뷰 조회", description = "user_id로 내가 쓴 리뷰를 조회한다.")
     @GetMapping("/reviews")
     public ApiResponse getReviewsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
-
-        List<ReviewDto> reviewDtos = reviewService.getReviewDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
-        List<MyReviewResponse> myReviewResponses = reviewDtos.stream()
-                .map(MyReviewResponse::of)
-                .toList();
-
-        WithCursorResponse<MyReviewResponse> cursorResponse = WithCursorResponse.of(myReviewResponses, cursor);
+        WithCursorResponse<MyReviewResponse> cursorResponse = userFacade.getReviewsByUserId(userPrincipal.id(), cursor);
 
         return ApiResponse.of(UserMessage.USER_REVIEWS_READ.getMessage(), cursorResponse);
     }
@@ -99,13 +83,7 @@ public class UserController {
     @Operation(summary = "내가 쓴 댓글 조회", description = "user_id로 내가 쓴 댓글을 조회한다.")
     @GetMapping("/comments")
     public ApiResponse getCommentsByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Long cursor) {
-
-        List<CommentDto> commmentDtos = commentService.getCommentDtosByUserId(userPrincipal.id(), cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
-        List<MyCommentResponse> myCommentResponses = commmentDtos.stream()
-                .map(MyCommentResponse::of)
-                .toList();
-
-        WithCursorResponse<MyCommentResponse> cursorResponse = WithCursorResponse.of(myCommentResponses, cursor);
+        WithCursorResponse<MyCommentResponse> cursorResponse = userFacade.getCommentsByUserId(userPrincipal.id(), cursor);
 
         return ApiResponse.of(UserMessage.USER_COMMENTS_READ.getMessage(), cursorResponse);
     }
@@ -113,7 +91,6 @@ public class UserController {
     @Operation(summary = "회원 탈퇴", description = "id에 해당하는 회원을 탈퇴합니다. ")
     @DeleteMapping
     public ApiResponse deleteUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-
         userFacade.deleteUser(userPrincipal.id());
 
         return ApiResponse.of(UserMessage.USER_DELETED.getMessage());

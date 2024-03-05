@@ -27,7 +27,7 @@ public class ImageReaderImpl implements ImageReader {
     @Override
     public String getUserImageLink(String profile) {
         if (StringUtils.isBlank(profile)) return defaultImage;
-        return getUrls(S3Folder.USER, List.of(profile)).toString();
+        return getUrls(S3Folder.USER, List.of(profile)).get(0);
     }
 
     @Override
