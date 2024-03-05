@@ -1,6 +1,7 @@
 //build.gradle 파일
 dependencies {
     implementation project(':orury-domain')
+    implementation project(':orury-common')
 
     //devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
