@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,11 +77,18 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     @Transactional(readOnly = true)
     public List<String> getUserImagesByMeeting(MeetingDto meetingDto) {
-        List<MeetingMember> meetingMembers = meetingMemberReader.getMeetingMembersByMeetingIdMaximum(meetingDto.id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS);
-        return meetingMembers.stream().map(meetingMember -> {
+        List<String> userImages = new LinkedList<>();
+
+        String meetingCreatorImage = meetingDto.userDto().profileImage();
+        userImages.add(imageReader.getUserImageLink(meetingCreatorImage));
+
+        List<MeetingMember> members = meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(meetingDto.id(), meetingDto.userDto().id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS - 1);
+        members.forEach(meetingMember -> {
             User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
-            return imageReader.getUserImageLink(user.getProfileImage());
-        }).toList();
+            userImages.add(imageReader.getUserImageLink(user.getProfileImage()));
+        });
+
+        return userImages;
     }
 
     @Override

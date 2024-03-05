@@ -11,7 +11,7 @@ import java.util.List;
 public interface MeetingMemberRepository extends JpaRepository<MeetingMember, MeetingMemberPK> {
     boolean existsByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(Long meetingId, Long userId);
 
-    Page<MeetingMember> findByMeetingMemberPK_MeetingId(Long meetingId, PageRequest pageRequest);
+    Page<MeetingMember> findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserIdNot(Long meetingId, Long meetingCreatorId, PageRequest pageRequest);
 
     List<MeetingMember> findByMeetingMemberPK_MeetingId(Long meetingId);
 }
