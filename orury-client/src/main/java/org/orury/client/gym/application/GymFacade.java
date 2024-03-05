@@ -1,6 +1,7 @@
 package org.orury.client.gym.application;
 
 import lombok.RequiredArgsConstructor;
+import org.orury.client.gym.interfaces.request.AreaGrid;
 import org.orury.client.gym.interfaces.response.GymResponse;
 import org.orury.client.gym.interfaces.response.GymReviewStatistics;
 import org.orury.client.gym.interfaces.response.GymsResponse;
@@ -24,6 +25,11 @@ public class GymFacade {
 
     public List<GymsResponse> getGymsBySearchWordAndLocation(String searchWord, float latitude, float longitude, Long userId) {
         var gymDtos = gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude);
+        return convertGymDtosToGymsResponses(gymDtos, userId);
+    }
+
+    public List<GymsResponse> getGymDtosByAreaGridOrderByDistanceAsc(AreaGrid areaGrid, float latitude, float longitude, Long userId) {
+        var gymDtos = gymService.getGymDtosByAreaGridOrderByDistanceAsc(areaGrid, latitude, longitude);
         return convertGymDtosToGymsResponses(gymDtos, userId);
     }
 

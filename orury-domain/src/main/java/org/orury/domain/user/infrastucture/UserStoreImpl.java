@@ -16,6 +16,13 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
+    public Class<? extends Throwable> saveAndFlush(User user) {
+        userRepository.saveAndFlush(user);
+        return null;
+    }
+
+
+    @Override
     public void delete(Long userId) {
         userRepository.deleteById(userId);
     }

@@ -19,6 +19,11 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }

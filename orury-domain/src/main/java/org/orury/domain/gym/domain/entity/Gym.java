@@ -33,7 +33,7 @@ public class Gym extends AuditingField {
     private String address;
 
     @Column(name = "total_score")
-    private Float totalScore;
+    private float totalScore;
 
     @Column(name = "review_count")
     private int reviewCount;
@@ -45,11 +45,11 @@ public class Gym extends AuditingField {
     @Column(name = "images")
     private List<String> images;
 
-    @Column(name = "latitude", nullable = false)
-    private String latitude;
+    @Column(name = "latitude", nullable = false, columnDefinition = "double")
+    private double latitude;
 
-    @Column(name = "longitude", nullable = false)
-    private String longitude;
+    @Column(name = "longitude", nullable = false, columnDefinition = "double")
+    private double longitude;
 
     @Column(name = "brand")
     private String brand;
@@ -96,12 +96,12 @@ public class Gym extends AuditingField {
             String kakaoId,
             String roadAddress,
             String address,
-            Float totalScore,
+            float totalScore,
             int reviewCount,
             int likeCount,
             List<String> images,
-            String latitude,
-            String longitude,
+            double latitude,
+            double longitude,
             String brand,
             String phoneNumber,
             String instagramLink,
@@ -148,12 +148,12 @@ public class Gym extends AuditingField {
             String kakaoId,
             String roadAddress,
             String address,
-            Float totalScore,
+            float totalScore,
             int reviewCount,
             int likeCount,
             List<String> images,
-            String latitude,
-            String longitude,
+            double latitude,
+            double longitude,
             String brand,
             String phoneNumber,
             String instagramLink,
