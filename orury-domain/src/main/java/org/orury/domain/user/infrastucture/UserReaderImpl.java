@@ -21,4 +21,9 @@ public class UserReaderImpl implements UserReader {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findUserById(userId);
+    }
 }
