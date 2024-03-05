@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("[GymReaderImpl] 암장 ReaderImpl 테스트")
+@DisplayName("[Reader] 암장 ReaderImpl 테스트")
 @ActiveProfiles("test")
 class GymReaderImplTest {
     private GymReader gymReader;
@@ -187,7 +187,7 @@ class GymReaderImplTest {
         assertFalse(gymReader.existsGymLikeByUserIdAndGymId(userId, gymId));
     }
 
-    private static Gym createGym(Long id) {
+    private Gym createGym(Long id) {
         return Gym.of(
                 id,
                 "gymName",
@@ -216,7 +216,7 @@ class GymReaderImplTest {
         );
     }
 
-    private static GymLikePK createGymLikePK() {
+    private GymLikePK createGymLikePK() {
         return GymLikePK.of(1L, 1L);
     }
 }
