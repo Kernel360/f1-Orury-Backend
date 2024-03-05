@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(UserDto userDto) {
-        var user = userDto.toEntity(UserStatus.B);
+        var user = userDto.toEntity(UserStatus.BAN);
         userStore.save(user);
     }
 

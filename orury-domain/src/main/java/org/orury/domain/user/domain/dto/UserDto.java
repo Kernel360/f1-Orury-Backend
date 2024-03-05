@@ -131,7 +131,7 @@ public record UserDto(
 
     private static String checkStatus(User user) {
         var status = user.getStatus();
-        if (status == UserStatus.E) return user.getNickname();
+        if (status == UserStatus.ENABLE) return user.getNickname();
         return status.getDescription();
     }
 }

@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 제제 당한 유저인 경우 예외 처리
-        if (user.getStatus() == UserStatus.B)
+        if (user.getStatus() == UserStatus.BAN)
             throw new AuthException(AuthErrorCode.BAN_USER);
 
         // 다른 소셜 로그인으로 가입한 회원인 경우
