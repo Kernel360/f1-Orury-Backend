@@ -3,12 +3,16 @@ package org.orury.client.auth.application.jwt;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.common.error.code.AuthErrorCode;
 import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
+import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.auth.domain.RefreshTokenReader;
 import org.orury.domain.auth.domain.RefreshTokenStore;
 import org.orury.domain.auth.domain.dto.JwtToken;
+import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,11 +45,18 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private final SecretKey secretKey;
     private final RefreshTokenReader refreshTokenReader;
     private final RefreshTokenStore refreshTokenStore;
+    private final UserReader userReader;
 
-    public JwtTokenServiceImpl(@Value("${spring.jwt.secret}") String secret, RefreshTokenReader refreshTokenReader, RefreshTokenStore refreshTokenStore) {
+    public JwtTokenServiceImpl(
+            @Value("${spring.jwt.secret}") String secret,
+            RefreshTokenReader refreshTokenReader,
+            RefreshTokenStore refreshTokenStore,
+            UserReader userReader
+    ) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.refreshTokenReader = refreshTokenReader;
         this.refreshTokenStore = refreshTokenStore;
+        this.userReader = userReader;
     }
 
     @Override
@@ -68,7 +79,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     private Authentication getAuthenticationFromAccessToken(String accessToken) {
         Claims claims;
-
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER.getMessage()));
         try {
             claims = parseToken(accessToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
@@ -84,16 +95,15 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
         // 비회원은 토큰에 email 필드가 있으므로, 해당 필드로 검증 가능
         if (Objects.nonNull(claims.get("email"))) {
-            // 임시 Authentication 세팅
-            UserPrincipal userDetails = UserPrincipal.fromToken(0L, claims.get("email").toString(), ROLE_USER.getMessage());
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER.getMessage()));
-
-            return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+            return userReader.findByEmail(claims.get("email").toString()).stream()
+                    .filter(it -> it.getStatus() == UserStatus.ENABLE)
+                    .map(it -> UserPrincipal.fromToken(0L, it.getEmail(), ROLE_USER.getMessage()))
+                    .map(it -> new UsernamePasswordAuthenticationToken(it, "", authorities))
+                    .findFirst()
+                    .orElseThrow(() -> new BusinessException(AuthErrorCode.BAN_USER));
         }
 
         UserPrincipal userDetails = UserPrincipal.fromToken((long) (int) claims.get("id"), claims.getSubject(), ROLE_USER.getMessage());
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER.getMessage()));
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
