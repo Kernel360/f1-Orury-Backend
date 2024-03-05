@@ -29,9 +29,12 @@ public class LoggerFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         var req = new ContentCachingRequestWrapper(request);
         var res = new ContentCachingResponseWrapper(response);
+
+        //왜 이게 최초 로그인시 실행되는지 모르겠지만 일단 조건문으로 막았습니다.
+        if (req.getRequestURI().equals("/highLightTitle.png")) return;
+
         log.info("=== INIT URI : {}", req.getRequestURI());
 
         filterChain.doFilter(req, res);
@@ -49,7 +52,8 @@ public class LoggerFilter extends OncePerRequestFilter {
         String responseHeaderValues = extractResponseHeader(res);
         String responseBody = new String(res.getContentAsByteArray());
 
-        log.info("=== URI : {} , HTTP Method : {} , Header : {} , ResponseBody : {}", uri, method, responseHeaderValues, responseBody);
+        if (!responseBody.contains("<head>"))
+            log.info("=== URI : {} , HTTP Method : {} , Header : {} , ResponseBody : {}", uri, method, responseHeaderValues, responseBody);
 
         if (res.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             var template = LogTemplate.of(uri, requestBody, requestPart, responseBody);

@@ -5,6 +5,7 @@ import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,6 +21,11 @@ public class UserReaderImpl implements UserReader {
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override

@@ -6,4 +6,6 @@ public interface UserStore {
     void save(User entity);
 
     Class<? extends Throwable> saveAndFlush(User user);
+
+    void delete(Long userId);
 }

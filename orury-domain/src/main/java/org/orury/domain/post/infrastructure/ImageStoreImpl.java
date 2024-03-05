@@ -3,9 +3,9 @@ package org.orury.domain.post.infrastructure;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
 import org.orury.common.util.ImageUrlConverter;
@@ -65,7 +65,6 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public void delete(S3Folder domain, List<String> links) {
-        if (ImageUtil.imagesValidation(links)) return;
         links.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
                 .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
