@@ -6,6 +6,7 @@ import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link Meeting}
@@ -19,6 +20,7 @@ public record MeetingDto(
         UserDto userDto,
         GymDto gymDto,
         CrewDto crewDto,
+        Boolean isParticipated,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -31,6 +33,7 @@ public record MeetingDto(
             UserDto userDto,
             GymDto gymDto,
             CrewDto crewDto,
+            Boolean isParticipated,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
@@ -43,6 +46,7 @@ public record MeetingDto(
                 userDto,
                 gymDto,
                 crewDto,
+                isParticipated,
                 createdAt,
                 updatedAt
         );
@@ -58,6 +62,23 @@ public record MeetingDto(
                 UserDto.from(entity.getUser()),
                 GymDto.from(entity.getGym()),
                 CrewDto.from(entity.getCrew()),
+                null,
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+
+    public static MeetingDto from(Meeting entity, boolean isParticipated, String userImage, List<String> gymImages) {
+        return MeetingDto.of(
+                entity.getId(),
+                entity.getStartTime(),
+                entity.getEndTime(),
+                entity.getMemberCount(),
+                entity.getCapacity(),
+                UserDto.from(entity.getUser(), userImage),
+                GymDto.from(entity.getGym(), gymImages),
+                CrewDto.from(entity.getCrew()),
+                isParticipated,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

@@ -8,4 +8,6 @@ public interface UserReader {
     Optional<User> findUserById(Long id);
 
     Optional<User> findByEmail(String email);
+
+    User getUserById(Long userId);
 }
