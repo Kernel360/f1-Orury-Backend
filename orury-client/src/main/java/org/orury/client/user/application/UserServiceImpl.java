@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -43,7 +41,8 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserDtoById(Long id) {
         User user = userReader.findUserById(id)
                 .orElseThrow(() -> new BusinessException(UserErrorCode.NOT_FOUND));
-        return transferUserDto(user);
+        var profileLink = imageReader.getUserImageLink(user.getProfileImage());
+        return UserDto.from(user, profileLink);
     }
 
     @Override
@@ -71,16 +70,6 @@ public class UserServiceImpl implements UserService {
         imageStore.delete(userDto.profileImage());
         var deletingUser = userDto.toEntity().delete(defaultImage);
         userStore.save(deletingUser);
-    }
-
-    @Override
-    public List<UserDto> getUsers() {
-        return userReader.findAll().stream().map(this::transferUserDto).toList();
-    }
-
-    private UserDto transferUserDto(User user) {
-        var profileLink = imageReader.getUserImageLink(user.getProfileImage());
-        return UserDto.from(user, profileLink);
     }
 
     private void imageUploadAndSave(UserDto userDto, MultipartFile file) {
