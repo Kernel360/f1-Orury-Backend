@@ -17,6 +17,7 @@ import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,10 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.isNull(user)) {
             return LoginDto.fromNoUser(oAuthService.getSignUpType(), jwtTokenService.issueNoUserJwtTokens(email), AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage());
         }
+
+        // 제제 당한 유저인 경우 예외 처리
+        if (user.getStatus() == UserStatus.B)
+            throw new AuthException(AuthErrorCode.BAN_USER);
 
         // 다른 소셜 로그인으로 가입한 회원인 경우
         if (user.getSignUpType() != oAuthService.getSignUpType()) {
