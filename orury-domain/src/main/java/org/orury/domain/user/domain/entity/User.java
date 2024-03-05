@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.user.domain.dto.UserStatus;
+import org.orury.domain.user.domain.dto.UserStatusConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,8 +43,8 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status")
+    @Convert(converter = UserStatusConverter.class)
     private UserStatus status;
 
     private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
@@ -66,7 +67,7 @@ public class User extends AuditingField {
 
     public User delete(String defaultImage) {
         this.profileImage = defaultImage;
-        this.status = UserStatus.L;
+        this.status = UserStatus.LEAVE;
         return this;
     }
 }
