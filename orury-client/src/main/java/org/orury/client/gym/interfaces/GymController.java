@@ -1,23 +1,17 @@
 package org.orury.client.gym.interfaces;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.gym.application.GymFacade;
 import org.orury.client.gym.interfaces.message.GymMessage;
+import org.orury.client.gym.interfaces.request.GymAreaRequest;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,6 +36,19 @@ public class GymController {
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         var gymsResponse = gymFacade.getGymsBySearchWordAndLocation(searchWord, latitude, longitude, userPrincipal.id());
+        return ApiResponse.of(GymMessage.GYM_READ.getMessage(), gymsResponse);
+    }
+
+    @Operation(summary = "좌표 내 암장 목록 검색", description = "현재 위치 좌표와 영역 좌표(경도, 위도)를 받아, 영역 내의 암장 목록을 가까운 순으로 돌려준다.")
+    @GetMapping
+    public ApiResponse getGymsByLocation(@RequestBody GymAreaRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        var gymsResponse = gymFacade.getGymDtosByAreaGridOrderByDistanceAsc(
+                request.areaGrid(),
+                request.latitude(),
+                request.longitude(),
+                userPrincipal.id()
+        );
         return ApiResponse.of(GymMessage.GYM_READ.getMessage(), gymsResponse);
     }
 
