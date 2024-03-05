@@ -3,10 +3,10 @@ package org.orury.client.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.auth.controller.AuthController;
-import org.orury.client.auth.jwt.JwtTokenProvider;
-import org.orury.client.auth.service.AuthService;
-import org.orury.client.auth.strategy.LoginStrategyManager;
+import org.orury.client.auth.application.AuthService;
+import org.orury.client.auth.application.jwt.JwtTokenService;
+import org.orury.client.auth.application.oauth.OAuthServiceManager;
+import org.orury.client.auth.interfaces.AuthController;
 import org.orury.client.comment.application.CommentService;
 import org.orury.client.comment.interfaces.CommentController;
 import org.orury.client.gym.application.GymService;
@@ -54,10 +54,10 @@ public abstract class ControllerTest {
     protected GymService gymService;
 
     @MockBean
-    protected JwtTokenProvider jwtTokenProvider;
+    protected JwtTokenService jwtTokenService;
 
     @MockBean
-    protected LoginStrategyManager loginStrategyManager;
+    protected OAuthServiceManager OAuthServiceManager;
 
     @MockBean
     protected PostService postService;
