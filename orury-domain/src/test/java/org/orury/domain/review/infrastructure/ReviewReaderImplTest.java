@@ -1,4 +1,4 @@
-package org.orury.domain.review.domain.infrastructure;
+package org.orury.domain.review.infrastructure;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +13,6 @@ import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
-import org.orury.domain.review.infrastructure.ReviewReactionRepository;
-import org.orury.domain.review.infrastructure.ReviewReaderImpl;
-import org.orury.domain.review.infrastructure.ReviewRepository;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
