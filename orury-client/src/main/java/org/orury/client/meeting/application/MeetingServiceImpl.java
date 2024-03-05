@@ -77,17 +77,15 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     @Transactional(readOnly = true)
     public List<String> getUserImagesByMeeting(MeetingDto meetingDto) {
+        UserDto meetingCreator = meetingDto.userDto();
+        List<MeetingMember> otherMembers = meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(meetingDto.id(), meetingDto.userDto().id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS - 1);
+
         List<String> userImages = new LinkedList<>();
-
-        String meetingCreatorImage = meetingDto.userDto().profileImage();
-        userImages.add(imageReader.getUserImageLink(meetingCreatorImage));
-
-        List<MeetingMember> members = meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(meetingDto.id(), meetingDto.userDto().id(), NumberConstants.MAXIMUM_OF_MEETING_THUMBNAILS - 1);
-        members.forEach(meetingMember -> {
+        userImages.add(meetingCreator.profileImage());
+        otherMembers.forEach(meetingMember -> {
             User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
             userImages.add(imageReader.getUserImageLink(user.getProfileImage()));
         });
-
         return userImages;
     }
 
