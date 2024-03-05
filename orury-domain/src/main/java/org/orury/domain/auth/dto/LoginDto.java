@@ -1,7 +1,7 @@
 package org.orury.domain.auth.dto;
 
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 
 public record LoginDto(
         UserDto userDto,
@@ -37,7 +37,7 @@ public record LoginDto(
                         null,
                         null,
                         null,
-                        NumberConstants.IS_NOT_DELETED
+                        UserStatus.E
                 ),
                 jwtToken,
                 flag

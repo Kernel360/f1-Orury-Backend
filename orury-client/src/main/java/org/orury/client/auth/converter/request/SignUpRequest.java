@@ -1,6 +1,5 @@
 package org.orury.client.auth.converter.request;
 
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -33,7 +32,7 @@ public record SignUpRequest(
                 profileImage,
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                null
         );
     }
 }

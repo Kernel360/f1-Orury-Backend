@@ -1,7 +1,5 @@
 package org.orury.domain.user.domain.dto;
 
-import org.orury.domain.global.constants.Constants;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
@@ -21,7 +19,7 @@ public record UserDto(
         String profileImage,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        int isDeleted
+        UserStatus status
 ) {
     public static UserDto of(
             Long id,
@@ -34,7 +32,7 @@ public record UserDto(
             String profileImage,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
-            int isDeleted
+            UserStatus status
     ) {
         return new UserDto(
                 id,
@@ -47,7 +45,7 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt,
-                isDeleted
+                status
         );
     }
 
@@ -55,7 +53,7 @@ public record UserDto(
         return UserDto.of(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getNickname(),
+                checkStatus(entity),
                 entity.getPassword(),
                 entity.getSignUpType(),
                 entity.getGender(),
@@ -63,7 +61,7 @@ public record UserDto(
                 entity.getProfileImage(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
-                entity.getIsDeleted()
+                entity.getStatus()
         );
     }
 
@@ -71,7 +69,7 @@ public record UserDto(
         return UserDto.of(
                 entity.getId(),
                 entity.getEmail(),
-                (entity.getIsDeleted() == NumberConstants.IS_DELETED) ? Constants.DELETED_USER_NICKNAME.getMessage() : entity.getNickname(),
+                checkStatus(entity),
                 entity.getPassword(),
                 entity.getSignUpType(),
                 entity.getGender(),
@@ -79,7 +77,7 @@ public record UserDto(
                 imageUrl,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
-                entity.getIsDeleted()
+                entity.getStatus()
         );
     }
 
@@ -95,7 +93,7 @@ public record UserDto(
                 profileImage,
                 createdAt,
                 updatedAt,
-                isDeleted
+                status
         );
     }
 
@@ -111,7 +109,13 @@ public record UserDto(
                 newProfileImage,
                 createdAt,
                 updatedAt,
-                isDeleted
+                status
         );
+    }
+
+    private static String checkStatus(User user) {
+        var status = user.getStatus();
+        if (status == UserStatus.E) return user.getNickname();
+        return status.getDescription();
     }
 }
