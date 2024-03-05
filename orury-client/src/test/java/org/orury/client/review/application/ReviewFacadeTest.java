@@ -58,16 +58,17 @@ class ReviewFacadeTest {
     @Test
     void should_SaveReviewSuccessfully() {
         // given
+        Long userId = 1L;
         UserDto userDto = createUserDto();
         GymDto gymDto = createGymDto();
         ReviewCreateRequest request = createReviewCreateRequest();
         List<MultipartFile> images = createMultiFiles();
 
-        given(userService.getUserDtoById(1L)).willReturn(userDto);
-        given(gymService.getGymDtoById(1L)).willReturn(gymDto);
+        given(userService.getUserDtoById(userId)).willReturn(userDto);
+        given(gymService.getGymDtoById(userId)).willReturn(gymDto);
 
         // when
-        reviewFacade.createReview(1L, request, images);
+        reviewFacade.createReview(userId, request, images);
 
         // then
         then(userService).should(times(1)).getUserDtoById(any());
