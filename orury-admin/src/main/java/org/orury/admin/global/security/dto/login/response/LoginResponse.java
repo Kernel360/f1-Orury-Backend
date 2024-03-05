@@ -2,7 +2,7 @@ package org.orury.admin.global.security.dto.login.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.orury.domain.auth.dto.JwtToken;
+import org.orury.domain.auth.domain.dto.JwtToken;
 
 @Getter
 public class LoginResponse {

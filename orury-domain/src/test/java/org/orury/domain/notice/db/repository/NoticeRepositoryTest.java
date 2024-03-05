@@ -49,6 +49,7 @@ class NoticeRepositoryTest {
 
     private Admin createAdmin() {
         return Admin.of(
+                1L,
                 "name",
                 "email",
                 "pw",
