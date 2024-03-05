@@ -30,17 +30,17 @@ public class Admin extends AuditingField {
 
     @Column(name = "role", length = 20, nullable = false)
     @Convert(converter = RoleTypesConverter.class)
-//    @Enumerated(EnumType.STRING)
     private Set<RoleType> roleTypes;
 
-    private Admin(String name, String email, String password, Set<RoleType> roleTypes) {
+    private Admin(Long id, String name, String email, String password, Set<RoleType> roleTypes) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.roleTypes = roleTypes;
     }
 
-    public static Admin of(String name, String email, String password, Set<RoleType> roleTypes) {
-        return new Admin(name, email, password, roleTypes);
+    public static Admin of(Long id, String name, String email, String password, Set<RoleType> roleTypes) {
+        return new Admin(id, name, email, password, roleTypes);
     }
 }

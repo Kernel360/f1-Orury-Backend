@@ -69,6 +69,7 @@ public record AdminDto(
 
     public Admin toEntity() {
         return Admin.of(
+                id,
                 name,
                 email,
                 password,
