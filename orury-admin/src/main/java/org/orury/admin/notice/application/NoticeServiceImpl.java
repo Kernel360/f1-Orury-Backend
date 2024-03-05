@@ -2,6 +2,8 @@ package org.orury.admin.notice.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.orury.common.error.code.NoticeErrorCode;
+import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.admin.domain.dto.AdminDto;
 import org.orury.domain.notice.domain.NoticeReader;
 import org.orury.domain.notice.domain.NoticeStore;
@@ -32,7 +34,9 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public NoticeDto getNotice(Long noticeId) {
-        return NoticeDto.from(noticeReader.getNotice(noticeId));
+        var notice = noticeReader.getNotice(noticeId)
+                .orElseThrow(() -> new BusinessException(NoticeErrorCode.NOT_FOUND));
+        return NoticeDto.from(notice);
     }
 
     @Override
