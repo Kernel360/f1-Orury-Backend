@@ -61,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId);
         isValidate(review.getId(), userId);
-        var urls = imageReader.getUrls(S3Folder.REVIEW.getName(), review.getImages());
+        var urls = imageReader.getImageLinks(S3Folder.REVIEW, review.getImages());
         return ReviewDto.from(review, urls, review.getUser().getProfileImage());
     }
 
@@ -138,7 +138,7 @@ public class ReviewServiceImpl implements ReviewService {
     private List<ReviewDto> convertReviewsToReviewDtos(List<Review> reviews) {
         return reviews.stream()
                 .map(it -> {
-                    var urls = imageReader.getUrls(S3Folder.REVIEW.getName(), it.getImages());
+                    var urls = imageReader.getImageLinks(S3Folder.REVIEW, it.getImages());
                     var profileImgUrl = imageReader.getUserImageUrl(it.getUser().getProfileImage());
                     return ReviewDto.from(it, urls, profileImgUrl);
                 })

@@ -118,7 +118,7 @@ class ReviewServiceImplTest {
         Review review = createReview(reviewId, userId, gymId);
 
         given(reviewReader.findById(reviewId)).willReturn(review);
-        given(imageReader.getUrls(S3Folder.REVIEW.getName(), review.getImages())).willReturn(Collections.singletonList(urls));
+        given(imageReader.getImageLinks(S3Folder.REVIEW, review.getImages())).willReturn(Collections.singletonList(urls));
 
         // when
         reviewService.getReviewDtoById(reviewId, userId);
@@ -127,7 +127,7 @@ class ReviewServiceImplTest {
         then(reviewReader).should(times(1))
                 .findById(anyLong());
         then(imageReader).should(times(1))
-                .getUrls(anyString(), anyList());
+                .getImageLinks(any(), anyList());
     }
 
     @DisplayName("리뷰 Dto를 받아 리뷰를 성공적으로 삭제한다.")
