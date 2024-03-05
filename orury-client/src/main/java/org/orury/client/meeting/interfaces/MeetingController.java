@@ -32,14 +32,14 @@ public class MeetingController {
     }
 
     @Operation(summary = "현재 모임 목록 조회", description = "crewId를 받아, 현재 모임 목록을 반환한다.")
-    @GetMapping("/{crewId}/meetings")
+    @GetMapping("/{crewId}/meetings/present")
     public ApiResponse getPresentMeetings(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<MeetingsResponse> meetingsResponses = meetingFacade.getPresentMeetings(crewId, userPrincipal.id());
         return ApiResponse.of(MEETINGS_READ.getMessage(), meetingsResponses);
     }
 
     @Operation(summary = "과거 모임 목록 조회", description = "crewId를 받아, 과거 모임 목록을 반환한다.")
-    @GetMapping("/{crewId}/meetings")
+    @GetMapping("/{crewId}/meetings/past")
     public ApiResponse getPastMeetings(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<MeetingsResponse> meetingsResponses = meetingFacade.getPastMeetings(crewId, userPrincipal.id());
         return ApiResponse.of(MEETINGS_READ.getMessage(), meetingsResponses);
