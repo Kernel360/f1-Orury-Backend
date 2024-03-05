@@ -24,5 +24,5 @@ public interface MeetingService {
 
     void removeMeetingMember(MeetingDto meetingDto, Long userId);
 
-    List<UserDto> getMeetingMembersByMeeting(MeetingDto meetingDto);
+    List<UserDto> getUserDtosByMeeting(MeetingDto meetingDto);
 }

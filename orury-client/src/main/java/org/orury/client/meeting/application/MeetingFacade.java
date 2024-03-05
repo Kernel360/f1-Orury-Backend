@@ -73,7 +73,7 @@ public class MeetingFacade {
 
     public List<MeetingMembersResponse> getMeetingMembers(Long meetingId, Long userId) {
         MeetingDto meetingDto = meetingService.getMeetingDtoById(meetingId);
-        List<UserDto> userDtos = meetingService.getMeetingMembersByMeeting(meetingDto);
+        List<UserDto> userDtos = meetingService.getUserDtosByMeeting(meetingDto);
         return userDtos.stream()
                 .map(userDto -> MeetingMembersResponse.of(userDto, userId, meetingDto.userDto().id()))
                 .toList();

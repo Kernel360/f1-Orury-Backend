@@ -124,13 +124,9 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getMeetingMembersByMeeting(MeetingDto meetingDto) {
+    public List<UserDto> getUserDtosByMeeting(MeetingDto meetingDto) {
         List<MeetingMember> meetingMembers = meetingMemberReader.getMeetingMembersByMeetingId(meetingDto.id());
-        return meetingMembers.stream().map(meetingMember -> {
-            User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
-            String userImage = imageReader.getUserImageLink(user.getProfileImage());
-            return UserDto.from(user, userImage);
-        }).toList();
+        return convertMeetingMembersToUserDtos(meetingMembers);
     }
 
     private void validateMeetingCreator(Long meetingCreatorId, Long userId) {
@@ -156,6 +152,14 @@ public class MeetingServiceImpl implements MeetingService {
             String userImage = imageReader.getUserImageLink(meeting.getUser().getProfileImage());
             List<String> gymImages = imageReader.getImageLinks(GYM, meeting.getGym().getImages());
             return MeetingDto.from(meeting, isParticipated, userImage, gymImages);
+        }).toList();
+    }
+
+    private List<UserDto> convertMeetingMembersToUserDtos(List<MeetingMember> meetingMembers) {
+        return meetingMembers.stream().map(meetingMember -> {
+            User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
+            String userImage = imageReader.getUserImageLink(user.getProfileImage());
+            return UserDto.from(user, userImage);
         }).toList();
     }
 }
