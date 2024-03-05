@@ -37,6 +37,8 @@ public final class NumberConstants {
     public static final int HELP_REACTION = 3;
     public static final int LIKE_REACTION = 4;
     public static final int ANGRY_REACTION = 5;
+    // Maximum Number of User Profile Images from Thumbnail of Meetings List
+    public static final int MAXIMUM_OF_MEETING_THUMBNAILS = 4;
 
 
     //default values
