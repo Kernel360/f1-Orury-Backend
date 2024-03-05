@@ -1,18 +1,11 @@
 package org.orury.client.user.application;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.comment.application.CommentService;
 import org.orury.client.global.WithCursorResponse;
+import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
@@ -21,7 +14,6 @@ import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.post.domain.PostService;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -31,6 +23,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 @DisplayName("UserFacadeTest")
 class UserFacadeTest {
