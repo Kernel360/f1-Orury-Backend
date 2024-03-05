@@ -10,6 +10,7 @@ import org.orury.client.review.interfaces.request.ReviewCreateRequest;
 import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.review.interfaces.response.ReviewsResponse;
+import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.dto.GymDto;
@@ -28,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -136,10 +138,14 @@ class ReviewFacadeTest {
         given(reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE)))
                 .willReturn(reviewDtos);
 
+        ReviewsWithCursorResponse expectResponse = ReviewsWithCursorResponse.of(reviewsResponses, gymName);
+
         // when
-        reviewFacade.getGymReviews(gymId, userId, cursor);
+        ReviewsWithCursorResponse response = reviewFacade.getGymReviews(gymId, userId, cursor);
 
         // then
+        assertThat(response).isEqualTo(expectResponse);
+
         then(gymService).should(times(1))
                 .getGymDtoById(gymId);
         then(reviewService).should(times(1))
