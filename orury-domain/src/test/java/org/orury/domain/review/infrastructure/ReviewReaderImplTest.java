@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.common.error.code.ReviewErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.domain.ReviewReader;
@@ -23,8 +21,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
@@ -186,26 +182,6 @@ class ReviewReaderImplTest {
 
         // when
         reviewReader.findById(reviewId);
-
-        // then
-        then(reviewRepository).should(times(1))
-                .findById(reviewId);
-    }
-
-    @DisplayName("존재하지 않는 리뷰를 검색 시, NOT_FOUND exception을 발생시킨다.")
-    @Test
-    void when_NotExistReviewId_Then_ThrowNotFoundException() {
-        // given
-        Long reviewId = 1L;
-        Review review = createReview(reviewId);
-
-        given(reviewRepository.findById(reviewId))
-                .willReturn(Optional.empty());
-
-        // when
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewReader.findById(reviewId));
-        assertEquals(ReviewErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
 
         // then
         then(reviewRepository).should(times(1))

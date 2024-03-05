@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.common.error.code.ReviewErrorCode;
+import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
@@ -34,6 +36,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
@@ -117,7 +121,7 @@ class ReviewServiceImplTest {
 
         Review review = createReview(reviewId, userId, gymId);
 
-        given(reviewReader.findById(reviewId)).willReturn(review);
+        given(reviewReader.findById(reviewId)).willReturn(Optional.of(review));
         given(imageReader.getImageLinks(S3Folder.REVIEW, review.getImages())).willReturn(Collections.singletonList(urls));
 
         // when
@@ -150,6 +154,28 @@ class ReviewServiceImplTest {
                 .delete(reviewDto.toEntity());
         then(imageStore).should(times(1))
                 .oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
+    }
+
+    @DisplayName("존재하지 않는 리뷰를 검색 시, NOT_FOUND exception을 발생시킨다.")
+    @Test
+    void when_NotExistReviewId_Then_ThrowNotFoundException() {
+        // given
+        Long reviewId = 1L;
+        Long userId = 1L;
+        Long gymId = 1L;
+        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
+
+        given(reviewReader.findById(reviewId))
+                .willReturn(Optional.empty());
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> reviewService.getReviewDtoById(reviewId, userId));
+        assertEquals(ReviewErrorCode.NOT_FOUND.getStatus(), exception.getStatus());
+
+        // then
+        then(reviewReader).should(times(1))
+                .findById(reviewId);
     }
 
     @DisplayName("암장ID를 받아, 커서 값이 0인 경우 첫 페이지부터 ReviewDto들을 반환한다.")
@@ -295,7 +321,10 @@ class ReviewServiceImplTest {
         Long gymId = 1L;
         ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
         ReviewReaction reviewReaction = createReviewReaction(reactionPK, reactionTypeInput);
+        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
+
+        given(reviewReader.findById(reviewId)).willReturn(Optional.of(reviewDto.toEntity()));
 
         // when
         reviewService.processReviewReaction(reviewReactionDto);
@@ -324,7 +353,7 @@ class ReviewServiceImplTest {
 
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(updateReviewReaction);
 
-        given(reviewReader.findById(reactionPK.getReviewId())).willReturn(review);
+        given(reviewReader.findById(reactionPK.getReviewId())).willReturn(Optional.of(review));
         given(reviewReader.findById(reactionPK)).willReturn(Optional.of(originReviewReaction));
 
 
@@ -360,7 +389,7 @@ class ReviewServiceImplTest {
 
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(updateReviewReaction);
 
-        given(reviewReader.findById(anyLong())).willReturn(review);
+        given(reviewReader.findById(anyLong())).willReturn(Optional.of(review));
         given(reviewReader.findById(reactionPK)).willReturn(Optional.of(originReviewReaction));
 
         // when

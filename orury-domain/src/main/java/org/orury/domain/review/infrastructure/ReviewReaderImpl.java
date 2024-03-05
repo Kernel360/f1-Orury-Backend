@@ -2,8 +2,6 @@ package org.orury.domain.review.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.common.error.code.ReviewErrorCode;
-import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
@@ -52,9 +50,8 @@ public class ReviewReaderImpl implements ReviewReader {
     }
 
     @Override
-    public Review findById(Long id) {
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
+    public Optional<Review> findById(Long id) {
+        return reviewRepository.findById(id);
     }
 
     @Override

@@ -59,7 +59,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
-        Review review = reviewReader.findById(reviewId);
+        Review review = reviewReader.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
         isValidate(review.getId(), userId);
         var urls = imageReader.getImageLinks(S3Folder.REVIEW, review.getImages());
         return ReviewDto.from(review, urls, review.getUser().getProfileImage());
@@ -108,7 +109,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     @Override
     public void processReviewReaction(ReviewReactionDto reviewReactionDto) {
-        reviewReader.findById(reviewReactionDto.reviewReactionPK().getReviewId());
+        reviewReader.findById(reviewReactionDto.reviewReactionPK().getReviewId())
+                .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
 
         int reactionTypeInput = reviewReactionDto.reactionType();
         if (reactionTypeInput < minReactionType || reactionTypeInput > maxReactionType) {
