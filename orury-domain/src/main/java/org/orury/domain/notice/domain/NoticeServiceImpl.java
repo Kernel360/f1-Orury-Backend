@@ -18,8 +18,9 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeStore noticeStore;
 
     @Override
-    public void createNotice(AdminDto admin, NoticeDto noticeDto) {
-        noticeStore.save(noticeDto.toEntity(admin.toEntity()));
+    public void createNotice(AdminDto adminDto, NoticeDto noticeDto) {
+        var notice = noticeDto.toEntity(adminDto.toEntity());
+        noticeStore.save(notice);
     }
 
     @Override

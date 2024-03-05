@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NoticeService {
 
-    void createNotice(AdminDto admin, NoticeDto noticeDto);
+    void createNotice(AdminDto adminDto, NoticeDto noticeDto);
 
     void deleteNotice(Long noticeId);
 
