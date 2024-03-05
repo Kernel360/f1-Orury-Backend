@@ -65,7 +65,6 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public void delete(S3Folder domain, List<String> links) {
-        if (ImageUtil.imagesValidation(links)) return;
         links.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
                 .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
