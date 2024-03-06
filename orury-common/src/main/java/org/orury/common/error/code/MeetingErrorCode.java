@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum MeetingErrorCode implements ErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 일정이 존재하지 않습니다."),
+    INVALID_START_TIME(HttpStatus.BAD_REQUEST.value(), "시작 시각은 현재 시각 이후로만 설정할 수 있습니다."),
     TURNED_OVER_TIMES(HttpStatus.FORBIDDEN.value(), "시작 시각이 종료 시각보다 빨라야 합니다."),
     NOT_SAME_DAY(HttpStatus.FORBIDDEN.value(), "시작과 종료는 같은 날로 지정돼야 합니다."),
     CAPACITY_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "현재 인원이 정원을 초과할 수 없습니다."),

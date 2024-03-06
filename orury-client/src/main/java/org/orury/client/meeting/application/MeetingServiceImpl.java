@@ -146,6 +146,8 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     private void validateTimes(LocalDateTime startTime, LocalDateTime endTime) {
+        if (LocalDateTime.now().isAfter(startTime))
+            throw new BusinessException(MeetingErrorCode.INVALID_START_TIME);
         if (startTime.isAfter(endTime))
             throw new BusinessException(MeetingErrorCode.TURNED_OVER_TIMES);
         if (!Objects.equals(startTime.getDayOfYear(), endTime.getDayOfYear()))
