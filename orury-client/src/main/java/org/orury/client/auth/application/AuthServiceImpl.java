@@ -40,7 +40,9 @@ public class AuthServiceImpl implements AuthService {
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(UserErrorCode.DUPLICATED_USER);
         }
-        JwtToken jwtToken = jwtTokenService.issueJwtTokens(userDto.id(), userDto.email());
+        User user = userReader.findByEmail(userDto.email())
+                .orElseThrow(() -> new AuthException(AuthErrorCode.NOT_EXISTING_USER_ACCOUNT));
+        JwtToken jwtToken = jwtTokenService.issueJwtTokens(user.getId(), userDto.email());
         return SignUpDto.of(userDto, jwtToken);
     }
 
