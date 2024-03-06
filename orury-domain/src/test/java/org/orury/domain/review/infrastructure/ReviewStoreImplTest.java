@@ -5,12 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -187,7 +187,7 @@ class ReviewStoreImplTest {
                 "userProfileImage",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

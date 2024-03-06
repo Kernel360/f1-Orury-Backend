@@ -18,6 +18,7 @@ import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -205,7 +206,7 @@ class ReviewFacadeTest {
                 null,
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
