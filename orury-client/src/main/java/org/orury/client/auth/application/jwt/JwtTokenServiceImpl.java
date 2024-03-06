@@ -3,7 +3,6 @@ package org.orury.client.auth.application.jwt;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.AuthErrorCode;
 import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
@@ -104,18 +103,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             Claims claims,
             List<SimpleGrantedAuthority> authorities
     ) {
-        String email = claims.get("email").toString();
-        if (StringUtils.isNotBlank(email)) {
-            var userDetails = UserPrincipal.fromToken(0L, email, ROLE_USER.getMessage());
+        var email = claims.get("email");
+        if (Objects.nonNull(email)) {
+            var userDetails = UserPrincipal.fromToken(0L, email.toString(), ROLE_USER.getMessage());
             return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
         }
 
-        var userId = (Long) claims.get("id");
+        var userId = Long.parseLong(claims.get("id").toString());
         return userReader.findUserById(userId).stream()
-                .filter(it -> it.getStatus() == UserStatus.ENABLE)
+                .filter(it -> it.getStatus() != UserStatus.BAN).findFirst()
                 .map(it -> UserPrincipal.fromToken(userId, claims.getSubject(), ROLE_USER.getMessage()))
                 .map(it -> new UsernamePasswordAuthenticationToken(it, "", authorities))
-                .findFirst()
                 .orElseThrow(() -> new BusinessException(AuthErrorCode.BAN_USER));
     }
 
