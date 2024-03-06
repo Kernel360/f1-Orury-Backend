@@ -59,16 +59,16 @@ public class MeetingController {
         return ApiResponse.of(MEETING_DELETED.getMessage());
     }
 
-    @Operation(summary = "일정멤버 추가", description = "meetingId를 받아, 일정멤버를 추가한다.")
+    @Operation(summary = "일정멤버 추가", description = "meetingId를 받아, 해당 일정에 참여한다.")
     @PostMapping("/meetings/{meetingId}/members")
-    public ApiResponse addMeetingMember(@PathVariable Long meetingId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse participateMeeting(@PathVariable Long meetingId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         meetingFacade.addMeetingMember(meetingId, userPrincipal.id());
         return ApiResponse.of(MEETING_MEMBER_ADDED.getMessage());
     }
 
-    @Operation(summary = "일정멤버 제거", description = "meetingId를 받아, 일정멤버를 제거한다.")
+    @Operation(summary = "일정멤버 제거", description = "meetingId를 받아, 해당 일정에 참여를 취소한다.")
     @DeleteMapping("/meetings/{meetingId}/members")
-    public ApiResponse removeMeetingMember(@PathVariable Long meetingId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse cancelMeetingParticipation(@PathVariable Long meetingId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         meetingFacade.removeMeetingMember(meetingId, userPrincipal.id());
         return ApiResponse.of(MEETING_MEMBER_REMOVED.getMessage());
     }
