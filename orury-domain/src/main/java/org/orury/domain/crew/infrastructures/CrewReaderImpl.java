@@ -36,12 +36,13 @@ public class CrewReaderImpl implements CrewReader {
 
     @Override
     public Page<Crew> getCrewsByCrewId(List<Long> crewIds, Pageable pageable) {
-        return crewRepository.findAllByIdIn(crewIds);
+        return crewRepository.findAllByIdIn(crewIds, pageable);
     }
 
     @Override
     public List<CrewMember> getCrewMembersByUserId(Long userId) {
-        return null;
+        //  유저ID와 일치하는 CrewMember 가져오기
+        return crewMemberRepository.findByCrewMemberPK_UserId(userId);
     }
 
     @Override
