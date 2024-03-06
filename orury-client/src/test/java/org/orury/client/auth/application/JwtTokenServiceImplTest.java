@@ -13,11 +13,8 @@ import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.domain.RefreshTokenReader;
 import org.orury.domain.auth.domain.RefreshTokenStore;
 import org.orury.domain.auth.domain.dto.JwtToken;
-import org.orury.domain.global.constants.Constants;
-import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -42,7 +38,6 @@ class JwtTokenServiceImplTest {
     private String secret;
     private RefreshTokenReader refreshTokenReader;
     private RefreshTokenStore refreshTokenStore;
-    private UserReader userReader;
 
     // Jwt토큰 유저 정보
     private final Long TOKEN_USER_ID = 1L;
@@ -63,9 +58,8 @@ class JwtTokenServiceImplTest {
         secret = "=============================================JwtTokenSecretForOruryTestCode=============================================";
         refreshTokenReader = mock(RefreshTokenReader.class);
         refreshTokenStore = mock(RefreshTokenStore.class);
-        userReader = mock(UserReader.class);
 
-        jwtTokenService = new JwtTokenServiceImpl(secret, refreshTokenReader, refreshTokenStore, userReader);
+        jwtTokenService = new JwtTokenServiceImpl(secret, refreshTokenReader, refreshTokenStore);
     }
 
     @DisplayName("만료되지 않고 유효한 형식의 액세스토큰이 들어오면, 액세스토큰으로부터 생성한 인증객체를 정상적으로 반환한다.")
@@ -74,10 +68,8 @@ class JwtTokenServiceImplTest {
         // given
         String accessTokenHeader = "Bearer " + VALID_ACCESS_TOKEN;
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-        User user = createUser();
         given(mockRequest.getHeader("Authorization"))
                 .willReturn(accessTokenHeader);
-        given(userReader.findUserById(1L)).willReturn(Optional.of(user));
 
         Long userId = TOKEN_USER_ID;
         String userEmail = TOKEN_USER_EMAIL;
@@ -85,10 +77,10 @@ class JwtTokenServiceImplTest {
         UserPrincipal expectedPrincipal = UserPrincipal.fromToken(
                 userId,
                 userEmail,
-                Constants.ROLE_USER.getMessage()
+                UserStatus.ENABLE.getStatus()
         );
         String expectedCredentials = "";
-        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
 
         // when
         Authentication authentication = jwtTokenService.getAuthenticationFromRequest(mockRequest);
@@ -115,10 +107,10 @@ class JwtTokenServiceImplTest {
         UserPrincipal expectedPrincipal = UserPrincipal.fromToken(
                 0L,
                 userEmail,
-                Constants.ROLE_USER.getMessage()
+                UserStatus.ENABLE.getStatus()
         );
         String expectedCredentials = "";
-        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
 
         // when
         Authentication authentication = jwtTokenService.getAuthenticationFromRequest(mockRequest);
@@ -394,21 +386,5 @@ class JwtTokenServiceImplTest {
         assertNotNull(jwtToken.accessToken());
         assertNull(jwtToken.refreshToken());
 
-    }
-
-    private User createUser() {
-        return User.of(
-                TOKEN_USER_ID,
-                TOKEN_USER_EMAIL,
-                "nick",
-                "pw",
-                1,
-                1,
-                null,
-                null,
-                null,
-                null,
-                UserStatus.ENABLE
-        );
     }
 }
