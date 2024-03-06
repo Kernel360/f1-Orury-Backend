@@ -53,6 +53,7 @@ public class MeetingServiceImpl implements MeetingService {
     public void createMeeting(MeetingDto meetingDto) {
         validateCrewMember(meetingDto.crewDto().id(), meetingDto.userDto().id());
         validateTimes(meetingDto.startTime(), meetingDto.endTime());
+        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
         Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
         meetingMemberStore.addMember(meetingMemberDto);
@@ -94,8 +95,7 @@ public class MeetingServiceImpl implements MeetingService {
     public void updateMeeting(MeetingDto meetingDto, Long userId) {
         validateMeetingCreator(meetingDto.userDto().id(), userId);
         validateTimes(meetingDto.startTime(), meetingDto.endTime());
-        if (meetingDto.capacity() < meetingDto.memberCount())
-            throw new BusinessException(MeetingErrorCode.CAPACITY_FORBIDDEN);
+        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
         meetingStore.updateMeeting(meetingDto.toEntity());
     }
 
@@ -152,6 +152,13 @@ public class MeetingServiceImpl implements MeetingService {
             throw new BusinessException(MeetingErrorCode.TURNED_OVER_TIMES);
         if (!Objects.equals(startTime.getDayOfYear(), endTime.getDayOfYear()))
             throw new BusinessException(MeetingErrorCode.NOT_SAME_DAY);
+    }
+
+    private void validateCapacity(int capacity, int crewMemberCount, int meetingMemberCount) {
+        if (capacity < NumberConstants.MINIMUM_MEETING_CAPACITY || crewMemberCount < capacity)
+            throw new BusinessException(MeetingErrorCode.INVALID_CAPACITY);
+        if (capacity < meetingMemberCount)
+            throw new BusinessException(MeetingErrorCode.CAPACITY_FORBIDDEN);
     }
 
     private List<MeetingDto> convertMeetingsToMeetingDtos(List<Meeting> meetings, Long userId) {

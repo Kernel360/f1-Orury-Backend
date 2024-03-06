@@ -39,6 +39,8 @@ public final class NumberConstants {
     public static final int ANGRY_REACTION = 5;
     // Maximum Number of User Profile Images from Thumbnail of Meetings List
     public static final int MAXIMUM_OF_MEETING_THUMBNAILS = 10;
+    // Minimum Number of Meeting Capacity
+    public static final int MINIMUM_MEETING_CAPACITY = 2;
 
 
     //default values
