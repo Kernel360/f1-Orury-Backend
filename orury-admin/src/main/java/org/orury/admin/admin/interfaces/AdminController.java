@@ -38,12 +38,12 @@ public class AdminController {
         return adminFacade.getUsers();
     }
 
-    @Operation(summary = "유저 삭제", description = "userId에 담긴 값으로 유저를 삭제합니다.")
-    @DeleteMapping("/users/{userId}")
-    public void deleteUser(
+    @Operation(summary = "유저 제재", description = "userId에 담긴 값으로 유저를 제재합니다.")
+    @PutMapping("/users/{userId}")
+    public void banUser(
             @PathVariable Long userId
     ) {
-        adminFacade.deleteUser(userId);
+        adminFacade.banUser(userId);
     }
 
     @Operation(summary = "게시글 삭제", description = "postId에 담긴 값으로 게시글을 삭제합니다.")

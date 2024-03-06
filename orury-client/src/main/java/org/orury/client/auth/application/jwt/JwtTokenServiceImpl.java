@@ -9,6 +9,7 @@ import org.orury.domain.auth.domain.RefreshTokenReader;
 import org.orury.domain.auth.domain.RefreshTokenStore;
 import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.user.domain.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static org.orury.domain.global.constants.Constants.ROLE_USER;
-
 @Service
 @Slf4j
 public class JwtTokenServiceImpl implements JwtTokenService {
@@ -32,8 +31,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private static final String JWT_TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_HEADER_NAME = "Authorization";
 
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14L; // 14일
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
 
     // 비회원 전용 토큰
     private static final long NO_USER_ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 30L; // 30분
@@ -42,7 +41,11 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private final RefreshTokenReader refreshTokenReader;
     private final RefreshTokenStore refreshTokenStore;
 
-    public JwtTokenServiceImpl(@Value("${spring.jwt.secret}") String secret, RefreshTokenReader refreshTokenReader, RefreshTokenStore refreshTokenStore) {
+    public JwtTokenServiceImpl(
+            @Value("${spring.jwt.secret}") String secret,
+            RefreshTokenReader refreshTokenReader,
+            RefreshTokenStore refreshTokenStore
+    ) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.refreshTokenReader = refreshTokenReader;
         this.refreshTokenStore = refreshTokenStore;
@@ -68,7 +71,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     private Authentication getAuthenticationFromAccessToken(String accessToken) {
         Claims claims;
-
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
         try {
             claims = parseToken(accessToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
@@ -81,29 +84,38 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         } catch (final JwtException exception) {
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
+        return getUsernamePasswordAuthenticationToken(claims, authorities);
+    }
 
-        // 비회원은 토큰에 email 필드가 있으므로, 해당 필드로 검증 가능
-        if (Objects.nonNull(claims.get("email"))) {
-            // 임시 Authentication 세팅
-            UserPrincipal userDetails = UserPrincipal.fromToken(0L, claims.get("email").toString(), ROLE_USER.getMessage());
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER.getMessage()));
-
+    /**
+     * 1. 비회원은 토큰에 email 필드가 있으므로 해당 필드로 검증 가능,
+     * 2. 벤 당한 유저는 예외 처리
+     */
+    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(
+            Claims claims,
+            List<SimpleGrantedAuthority> authorities
+    ) {
+        var email = claims.get("email");
+        if (Objects.nonNull(email)) {
+            var userDetails = UserPrincipal.fromToken(0L, email.toString(), UserStatus.ENABLE.getStatus());
             return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
         }
 
-        UserPrincipal userDetails = UserPrincipal.fromToken((long) (int) claims.get("id"), claims.getSubject(), ROLE_USER.getMessage());
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER.getMessage()));
-
+        var userId = Long.parseLong(claims.get("id").toString());
+        var userDetails = UserPrincipal.fromToken(userId, claims.getSubject(), UserStatus.ENABLE.getStatus());
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
+    /**
+     * 토큰 추출 및 검증 메서드
+     *
+     * @return Access, Refresh 모두 재발급
+     */
     @Override
     public JwtToken reissueJwtTokens(HttpServletRequest request) {
-        // Refresh 토큰 추출
         String refreshToken = getTokenFromRequest(request, TokenErrorCode.INVALID_REFRESH_TOKEN);
-
-        // Refresh 토큰 검증
         Claims claims;
+
         try {
             claims = parseToken(refreshToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
@@ -117,7 +129,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         if (!refreshTokenReader.existsByValue(refreshToken))
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
 
-        // Access 토큰, Refresh 토큰 모두 재발급
         return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
     }
 

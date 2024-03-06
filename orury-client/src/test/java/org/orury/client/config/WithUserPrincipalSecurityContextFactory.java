@@ -1,7 +1,7 @@
 package org.orury.client.config;
 
-import org.orury.domain.global.constants.Constants;
 import org.orury.domain.user.domain.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +17,7 @@ public class WithUserPrincipalSecurityContextFactory implements WithSecurityCont
     public SecurityContext createSecurityContext(WithUserPrincipal annotation) {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
         UserPrincipal userPrincipal = new UserPrincipal(annotation.id(), annotation.email(), authorities);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, "", authorities);

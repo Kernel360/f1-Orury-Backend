@@ -18,7 +18,7 @@ public record UserInfoRequest(
                 ImageUrlConverter.splitUrlToImage(userDto.profileImage()),
                 userDto.createdAt(),
                 null,
-                userDto.isDeleted()
+                userDto.status()
         );
     }
 }

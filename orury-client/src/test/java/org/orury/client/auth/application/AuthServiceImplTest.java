@@ -18,10 +18,10 @@ import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.auth.domain.dto.LoginDto;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
@@ -294,7 +294,7 @@ class AuthServiceImplTest {
                 "test.png",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
@@ -317,7 +317,7 @@ class AuthServiceImplTest {
                 "userProfileImage",
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
@@ -333,7 +333,7 @@ class AuthServiceImplTest {
                 "userProfileImage",
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 }
