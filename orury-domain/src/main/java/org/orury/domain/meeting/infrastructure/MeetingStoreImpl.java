@@ -11,8 +11,8 @@ public class MeetingStoreImpl implements MeetingStore {
     private final MeetingRepository meetingRepository;
 
     @Override
-    public void createMeeting(Meeting meeting) {
-        meetingRepository.save(meeting);
+    public Meeting createMeeting(Meeting meeting) {
+        return meetingRepository.save(meeting);
     }
 
     @Override

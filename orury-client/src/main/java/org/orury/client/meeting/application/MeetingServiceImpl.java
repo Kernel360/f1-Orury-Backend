@@ -53,8 +53,8 @@ public class MeetingServiceImpl implements MeetingService {
     public void createMeeting(MeetingDto meetingDto) {
         validateCrewMember(meetingDto.crewDto().id(), meetingDto.userDto().id());
         validateTimes(meetingDto.startTime(), meetingDto.endTime());
-        meetingStore.createMeeting(meetingDto.toEntity());
-        MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meetingDto.id()));
+        Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
+        MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
         meetingMemberStore.addMember(meetingMemberDto);
     }
 

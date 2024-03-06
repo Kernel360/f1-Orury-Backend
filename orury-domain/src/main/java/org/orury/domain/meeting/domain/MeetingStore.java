@@ -3,7 +3,7 @@ package org.orury.domain.meeting.domain;
 import org.orury.domain.meeting.domain.entity.Meeting;
 
 public interface MeetingStore {
-    void createMeeting(Meeting meeting);
+    Meeting createMeeting(Meeting meeting);
 
     void updateMeeting(Meeting meeting);
 
