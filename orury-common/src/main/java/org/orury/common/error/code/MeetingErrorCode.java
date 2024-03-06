@@ -13,6 +13,7 @@ public enum MeetingErrorCode implements ErrorCode {
     CAPACITY_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "현재 인원이 정원을 초과할 수 없습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "일정을 수정/삭제할 권한이 없습니다."),
     ALREADY_JOINED_MEETING(HttpStatus.BAD_REQUEST.value(), "이미 참여하고 있는 일정입니다."),
+    FULL_MEETING(HttpStatus.FORBIDDEN.value(), "일정 정원을 초과할 수 없습니다."),
     NOT_JOINED_MEETING(HttpStatus.BAD_REQUEST.value(), "이미 참여하고 있지 않는 일정입니다."),
     MEETING_CREATOR(HttpStatus.FORBIDDEN.value(), "일정 생성자는 일정멤버에서 삭제될 수 없습니다.");
 

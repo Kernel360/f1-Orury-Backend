@@ -112,6 +112,8 @@ public class MeetingServiceImpl implements MeetingService {
         validateCrewMember(meetingDto.crewDto().id(), userId);
         if (meetingMemberReader.existsByMeetingIdAndUserId(meetingDto.id(), userId))
             throw new BusinessException(MeetingErrorCode.ALREADY_JOINED_MEETING);
+        if (meetingDto.memberCount() >= meetingDto.capacity())
+            throw new BusinessException(MeetingErrorCode.FULL_MEETING);
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
         meetingMemberStore.addMember(meetingMemberDto);
     }
