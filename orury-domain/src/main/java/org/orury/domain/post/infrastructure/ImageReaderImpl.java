@@ -1,9 +1,8 @@
 package org.orury.domain.post.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.image.ImageReader;
@@ -11,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -28,6 +30,12 @@ public class ImageReaderImpl implements ImageReader {
     public String getUserImageLink(String profile) {
         if (StringUtils.isBlank(profile)) return defaultImage;
         return getUrls(S3Folder.USER, List.of(profile)).get(0);
+    }
+
+    @Override
+    public String getImageLink(S3Folder domain, String image) {
+        if (StringUtils.isBlank(image)) return defaultImage; // 추후에 UserProfile이 아닌, 다른 디폴트 프로필 경로로 바꿔야함.
+        return getUrls(domain, List.of(image)).get(0);
     }
 
     @Override
