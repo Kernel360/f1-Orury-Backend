@@ -6,15 +6,12 @@ import org.orury.common.util.S3Folder;
 import org.orury.domain.crew.domain.CrewReader;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.image.ImageReader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,14 +40,7 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable) {
-        List<CrewMember> crewMembers = crewReader.getCrewMembersByUserId(userId);
-
-        List<Long> crewIds = crewMembers.stream()
-                .map(CrewMember::getCrewMemberPK)
-                .map(CrewMemberPK::getCrewId)
-                .toList();
-
-        return crewReader.getCrewsByCrewId(crewIds, pageable)
+        return crewReader.getCrewsByUserId(userId, pageable)
                 .map(this::transferCrewDto);
     }
 
