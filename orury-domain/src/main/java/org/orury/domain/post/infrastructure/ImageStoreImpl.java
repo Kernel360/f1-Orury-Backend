@@ -60,7 +60,7 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public void delete(String profile) {
-        if (StringUtils.isBlank(profile)) return;
+        if (StringUtils.isBlank(profile) || defaultImage.equals(profile)) return;
         var link = ImageUtil.splitUrlToImage(profile);
         amazonS3.deleteObject(bucket + USER.getName(), link);
     }
