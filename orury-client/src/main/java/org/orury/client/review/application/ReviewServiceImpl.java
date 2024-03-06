@@ -7,7 +7,6 @@ import org.orury.common.error.code.ReviewReactionErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.domain.ImageUtils;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
@@ -36,7 +35,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewReader reviewReader;
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
-    private final ImageUtils imageUtils;
     private final ImageReader imageReader;
     private final ImageStore imageStore;
 
@@ -56,14 +54,15 @@ public class ReviewServiceImpl implements ReviewService {
     public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> images) {
         gymStore.updateTotalScore(beforeReviewDto.id(), beforeReviewDto.score(), updateReviewDto.score());
         imageUploadAndSave(updateReviewDto, images);
-        imageUtils.oldS3ImagesDelete(S3Folder.REVIEW.getName(), beforeReviewDto.images());
+        imageStore.oldS3ImagesDelete(S3Folder.REVIEW.getName(), beforeReviewDto.images());
     }
 
     @Override
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
-        Review review = reviewReader.findById(reviewId);
-        isValidate(review.getUser().getId(), userId);
-        var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), review.getImages());
+        Review review = reviewReader.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
+        isValidate(review.getId(), userId);
+        var urls = imageReader.getImageLinks(S3Folder.REVIEW, review.getImages());
         return ReviewDto.from(review, urls, review.getUser().getProfileImage());
     }
 
@@ -72,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(ReviewDto reviewDto) {
         gymStore.decreaseReviewCountAndTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         reviewStore.delete(reviewDto.toEntity());
-        imageUtils.oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
+        imageStore.oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
     }
 
     @Override
@@ -110,7 +109,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     @Override
     public void processReviewReaction(ReviewReactionDto reviewReactionDto) {
-        reviewReader.findById(reviewReactionDto.reviewReactionPK().getReviewId());
+        reviewReader.findById(reviewReactionDto.reviewReactionPK().getReviewId())
+                .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
 
         int reactionTypeInput = reviewReactionDto.reactionType();
         if (reactionTypeInput < minReactionType || reactionTypeInput > maxReactionType) {
@@ -132,7 +132,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (files == null || files.isEmpty()) {
             reviewStore.save(reviewDto.toEntity(List.of()));
         } else {
-            List<String> images = imageUtils.upload(S3Folder.REVIEW.getName(), files);
+            List<String> images = imageStore.upload(S3Folder.REVIEW, files);
             reviewStore.save(reviewDto.toEntity(images));
         }
     }
@@ -140,8 +140,8 @@ public class ReviewServiceImpl implements ReviewService {
     private List<ReviewDto> convertReviewsToReviewDtos(List<Review> reviews) {
         return reviews.stream()
                 .map(it -> {
-                    var urls = imageUtils.getUrls(S3Folder.REVIEW.getName(), it.getImages());
-                    var profileImgUrl = imageUtils.getUserImageUrl(it.getUser().getProfileImage());
+                    var urls = imageReader.getImageLinks(S3Folder.REVIEW, it.getImages());
+                    var profileImgUrl = imageReader.getUserImageLink(it.getUser().getProfileImage());
                     return ReviewDto.from(it, urls, profileImgUrl);
                 })
                 .toList();

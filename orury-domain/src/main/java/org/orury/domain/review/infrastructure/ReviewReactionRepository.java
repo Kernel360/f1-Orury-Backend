@@ -1,4 +1,4 @@
-package org.orury.domain.review.infrastructures;
+package org.orury.domain.review.infrastructure;
 
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;

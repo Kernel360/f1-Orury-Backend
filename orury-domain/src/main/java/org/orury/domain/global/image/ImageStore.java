@@ -13,4 +13,6 @@ public interface ImageStore {
     void delete(S3Folder domain, List<String> imageLinks);
 
     void delete(String profile);
+
+    void oldS3ImagesDelete(String domain, List<String> images);
 }
