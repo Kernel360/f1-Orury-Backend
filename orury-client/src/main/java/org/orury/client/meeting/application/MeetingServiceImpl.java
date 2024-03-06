@@ -132,7 +132,8 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getUserDtosByMeeting(MeetingDto meetingDto) {
+    public List<UserDto> getUserDtosByMeeting(MeetingDto meetingDto, Long userId) {
+        validateCrewMember(meetingDto.crewDto().id(), userId);
         List<MeetingMember> meetingMembers = meetingMemberReader.getMeetingMembersByMeetingId(meetingDto.id());
         return convertMeetingMembersToUserDtos(meetingMembers);
     }
