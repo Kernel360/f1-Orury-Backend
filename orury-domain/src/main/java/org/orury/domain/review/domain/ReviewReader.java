@@ -21,7 +21,7 @@ public interface ReviewReader {
 
     List<Review> findByUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
-    Review findById(Long id);
+    Optional<Review> findById(Long id);
 
     Optional<ReviewReaction> findById(ReviewReactionPK reviewReactionPK);
 
