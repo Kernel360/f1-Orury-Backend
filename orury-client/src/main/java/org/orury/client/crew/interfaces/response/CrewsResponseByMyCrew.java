@@ -2,7 +2,6 @@ package org.orury.client.crew.interfaces.response;
 
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +12,7 @@ public record CrewsResponseByMyCrew(
         int capacity,
         String region,
         String icon,
-        UserDto userDto,
+        String headProfileImage,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
         // 운영자 포함 4명까지의 프로필 이미지
@@ -29,7 +28,7 @@ public record CrewsResponseByMyCrew(
                 crewDto.capacity(),
                 crewDto.region(),
                 crewDto.icon(),
-                crewDto.userDto(),
+                crewDto.userDto().profileImage(),
                 crewDto.createdAt(),
                 crewDto.updatedAt()
         );
