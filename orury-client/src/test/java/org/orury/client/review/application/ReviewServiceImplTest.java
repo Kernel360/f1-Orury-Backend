@@ -22,6 +22,7 @@ import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -417,7 +418,7 @@ class ReviewServiceImplTest {
                 "userProfileImage",
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

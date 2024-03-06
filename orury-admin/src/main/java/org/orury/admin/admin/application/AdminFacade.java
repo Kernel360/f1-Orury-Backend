@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.admin.post.application.PostService;
 import org.orury.admin.user.UserService;
 import org.orury.domain.admin.domain.dto.AdminDto;
+import org.orury.domain.auth.domain.RefreshTokenStore;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class AdminFacade {
     private final AdminService adminService;
     private final PostService postService;
     private final UserService userService;
+    private final RefreshTokenStore refreshTokenStore;
 
     public AdminDto getAdmin(Long adminId) {
         return adminService.getAdmin(adminId);
@@ -36,9 +38,10 @@ public class AdminFacade {
         postService.deletePost(post);
     }
 
-    public void deleteUser(Long userId) {
+    public void banUser(Long userId) {
         var user = userService.getUser(userId);
-        userService.deleteUser(user);
+        refreshTokenStore.delete(userId);
+        userService.banUser(user);
     }
 
     public PostDto getPost(Long postId) {

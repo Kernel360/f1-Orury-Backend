@@ -234,7 +234,7 @@
 //                "test.png",
 //                LocalDateTime.of(1999, 3, 1, 7, 50),
 //                LocalDateTime.of(1999, 3, 1, 7, 50),
-//                NumberConstants.IS_NOT_DELETED
+//                UserStatus.ENABLE
 //        );
 //    }
 //
@@ -250,7 +250,7 @@
 //                "userProfileImage",
 //                LocalDateTime.of(1999, 3, 1, 7, 50),
 //                LocalDateTime.of(1999, 3, 1, 7, 50),
-//                NumberConstants.IS_NOT_DELETED
+//                UserStatus.ENABLE
 //        );
 //    }
 //
@@ -389,7 +389,7 @@
 //                0,
 //                createPost(1L, user.getId()),
 //                user,
-//                NumberConstants.IS_NOT_DELETED,
+//                UserStatus.ENABLE,
 //                LocalDateTime.now(),
 //                LocalDateTime.now()
 //        );

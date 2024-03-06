@@ -3,9 +3,9 @@ package org.orury.domain.post.infrastructure;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.FileException;
 import org.orury.common.util.ImageUrlConverter;
@@ -60,7 +60,7 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public void delete(String profile) {
-        if (StringUtils.isBlank(profile)) return;
+        if (StringUtils.isBlank(profile) || defaultImage.equals(profile)) return;
         var link = ImageUtil.splitUrlToImage(profile);
         amazonS3.deleteObject(bucket + USER.getName(), link);
     }

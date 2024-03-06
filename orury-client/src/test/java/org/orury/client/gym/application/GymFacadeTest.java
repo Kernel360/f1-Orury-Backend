@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.review.application.ReviewService;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -266,7 +266,7 @@ class GymFacadeTest {
                 "userProfileImage",
                 null,
                 null,
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

@@ -12,11 +12,11 @@ import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -210,7 +210,7 @@ class UserFacadeTest {
                 "test.png",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

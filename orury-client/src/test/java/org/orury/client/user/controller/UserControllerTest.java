@@ -288,7 +288,7 @@
 //                "bio",
 //                LocalDateTime.now(),
 //                LocalDateTime.now(),
-//                NumberConstants.IS_NOT_DELETED
+//                UserStatus.ENABLE
 //        );
 //    }
 //

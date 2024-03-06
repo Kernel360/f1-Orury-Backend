@@ -12,6 +12,7 @@ import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.infrastructure.PostRepository;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -163,7 +164,7 @@ class CommentStoreImplTest {
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
