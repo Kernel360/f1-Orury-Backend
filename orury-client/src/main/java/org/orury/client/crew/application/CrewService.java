@@ -14,7 +14,5 @@ public interface CrewService {
 
     CrewDto getCrewDtoByCrewId(Long crewId);
 
-    int getNextPage(Page<CrewDto> crewDtos, int page);
-
     boolean existCrewMember(CrewMemberPK crewMemberPK);
 }
