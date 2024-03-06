@@ -3,6 +3,7 @@ package org.orury.client.auth.application.jwt;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.orury.common.error.code.AuthErrorCode;
 import org.orury.common.error.code.TokenErrorCode;
 import org.orury.common.error.exception.AuthException;
@@ -92,28 +93,42 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         } catch (final JwtException exception) {
             throw new AuthException(TokenErrorCode.EXPIRED_ACCESS_TOKEN);
         }
-
-        // 비회원은 토큰에 email 필드가 있으므로, 해당 필드로 검증 가능
-        if (Objects.nonNull(claims.get("email"))) {
-            return userReader.findByEmail(claims.get("email").toString()).stream()
-                    .filter(it -> it.getStatus() == UserStatus.ENABLE)
-                    .map(it -> UserPrincipal.fromToken(0L, it.getEmail(), ROLE_USER.getMessage()))
-                    .map(it -> new UsernamePasswordAuthenticationToken(it, "", authorities))
-                    .findFirst()
-                    .orElseThrow(() -> new BusinessException(AuthErrorCode.BAN_USER));
-        }
-
-        UserPrincipal userDetails = UserPrincipal.fromToken((long) (int) claims.get("id"), claims.getSubject(), ROLE_USER.getMessage());
-        return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+        return getUsernamePasswordAuthenticationToken(claims, authorities);
     }
 
+    /**
+     * 1. 비회원은 토큰에 email 필드가 있으므로 해당 필드로 검증 가능,
+     * 2. 벤 당한 유저는 예외 처리
+     */
+    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(
+            Claims claims,
+            List<SimpleGrantedAuthority> authorities
+    ) {
+        String email = claims.get("email").toString();
+        if (StringUtils.isNotBlank(email)) {
+            var userDetails = UserPrincipal.fromToken(0L, email, ROLE_USER.getMessage());
+            return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+        }
+
+        var userId = (Long) claims.get("id");
+        return userReader.findUserById(userId).stream()
+                .filter(it -> it.getStatus() == UserStatus.ENABLE)
+                .map(it -> UserPrincipal.fromToken(userId, claims.getSubject(), ROLE_USER.getMessage()))
+                .map(it -> new UsernamePasswordAuthenticationToken(it, "", authorities))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(AuthErrorCode.BAN_USER));
+    }
+
+    /**
+     * 토큰 추출 및 검증 메서드
+     *
+     * @return Access, Refresh 모두 재발급
+     */
     @Override
     public JwtToken reissueJwtTokens(HttpServletRequest request) {
-        // Refresh 토큰 추출
         String refreshToken = getTokenFromRequest(request, TokenErrorCode.INVALID_REFRESH_TOKEN);
-
-        // Refresh 토큰 검증
         Claims claims;
+
         try {
             claims = parseToken(refreshToken);
         } catch (final MalformedJwtException | IllegalArgumentException exception) {
@@ -127,7 +142,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         if (!refreshTokenReader.existsByValue(refreshToken))
             throw new AuthException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
 
-        // Access 토큰, Refresh 토큰 모두 재발급
         return issueJwtTokens((long) (int) claims.get("id"), claims.getSubject());
     }
 
