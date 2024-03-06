@@ -13,7 +13,7 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
     Page<Crew> findByOrderByCreatedAtDesc(Pageable pageable);
 
-    Page<Crew> findAllByIdIn(List<Long> crewIds);
+    Page<Crew> findAllByIdIn(List<Long> crewIds, Pageable pageable);
 }
 
 
