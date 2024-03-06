@@ -6,7 +6,6 @@ import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponseByMyCrew;
 import org.orury.client.crew.interfaces.response.CrewsResponseByRank;
 import org.orury.client.crew.interfaces.response.CrewsResponseByRecommend;
-import org.orury.client.global.WithPageResponse;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.springframework.data.domain.Page;
@@ -20,40 +19,22 @@ import lombok.RequiredArgsConstructor;
 public class CrewFacade {
     private final CrewService crewService;
 
-    public WithPageResponse<CrewsResponseByRank> getCrewsByRank(int page) {
+    public Page<CrewsResponseByRank> getCrewsByRank(int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByRank(pageRequest);
-        int nextPage = crewService.getNextPage(crewDtos, page);
-
-        return WithPageResponse.of(
-                crewDtos.stream()
-                        .map(CrewsResponseByRank::of)
-                        .toList(), nextPage
-        );
+        return crewDtos.map(CrewsResponseByRank::of);
     }
 
-    public WithPageResponse<CrewsResponseByRecommend> getCrewsByRecommend(int page) {
+    public Page<CrewsResponseByRecommend> getCrewsByRecommend(int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByRecommend(pageRequest);
-        int nextPage = crewService.getNextPage(crewDtos, page);
-
-        return WithPageResponse.of(
-                crewDtos.stream()
-                        .map(CrewsResponseByRecommend::of)
-                        .toList(), nextPage
-        );
+        return crewDtos.map(CrewsResponseByRecommend::of);
     }
 
-    public WithPageResponse<CrewsResponseByMyCrew> getMyCrews(Long userId, int page) {
+    public Page<CrewsResponseByMyCrew> getMyCrews(Long userId, int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByUserId(userId, pageRequest);
-        int nextPage = crewService.getNextPage(crewDtos, page);
-
-        return WithPageResponse.of(
-                crewDtos.stream()
-                        .map(CrewsResponseByMyCrew::of)
-                        .toList(), nextPage
-        );
+        return crewDtos.map(CrewsResponseByMyCrew::of);
     }
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
