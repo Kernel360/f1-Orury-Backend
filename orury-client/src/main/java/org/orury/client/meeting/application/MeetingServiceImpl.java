@@ -6,7 +6,6 @@ import org.orury.common.error.code.MeetingErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.crew.domain.CrewMemberReader;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.meeting.domain.MeetingMemberReader;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingReader;
@@ -27,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.orury.common.util.S3Folder.GYM;
-
 @Service
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService {
@@ -38,7 +35,6 @@ public class MeetingServiceImpl implements MeetingService {
     private final MeetingMemberStore meetingMemberStore;
     private final CrewMemberReader crewMemberReader;
     private final UserReader userReader;
-    private final ImageReader imageReader;
 
     @Override
     @Transactional(readOnly = true)
@@ -85,7 +81,7 @@ public class MeetingServiceImpl implements MeetingService {
         userImages.add(meetingCreator.profileImage());
         otherMembers.forEach(meetingMember -> {
             User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
-            userImages.add(imageReader.getUserImageLink(user.getProfileImage()));
+            userImages.add(user.getProfileImage());
         });
         return userImages;
     }
@@ -167,17 +163,14 @@ public class MeetingServiceImpl implements MeetingService {
     private List<MeetingDto> convertMeetingsToMeetingDtos(List<Meeting> meetings, Long userId) {
         return meetings.stream().map(meeting -> {
             boolean isParticipated = meetingMemberReader.existsByMeetingIdAndUserId(meeting.getId(), userId);
-            String userImage = imageReader.getUserImageLink(meeting.getUser().getProfileImage());
-            List<String> gymImages = imageReader.getImageLinks(GYM, meeting.getGym().getImages());
-            return MeetingDto.from(meeting, isParticipated, userImage, gymImages);
+            return MeetingDto.from(meeting, isParticipated);
         }).toList();
     }
 
     private List<UserDto> convertMeetingMembersToUserDtos(List<MeetingMember> meetingMembers) {
         return meetingMembers.stream().map(meetingMember -> {
             User user = userReader.getUserById(meetingMember.getMeetingMemberPK().getUserId());
-            String userImage = imageReader.getUserImageLink(user.getProfileImage());
-            return UserDto.from(user, userImage);
+            return UserDto.from(user);
         }).toList();
     }
 }
