@@ -2,6 +2,7 @@ package org.orury.client.crew.application;
 
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.common.util.S3Folder;
 import org.orury.domain.crew.domain.CrewReader;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
@@ -28,13 +29,13 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public Page<CrewDto> getCrewDtosByRank(Pageable pageable) {
         return crewReader.getCrewsByRank(pageable)
-                .map(CrewDto::from);
+                .map(this::transferCrewDto);
     }
 
     @Override
     public Page<CrewDto> getCrewDtosByRecommend(Pageable pageable) {
         return crewReader.getCrewsByRecommend(pageable)
-                .map(CrewDto::from);
+                .map(this::transferCrewDto);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class CrewServiceImpl implements CrewService {
                 .toList();
 
         return crewReader.getCrewsByCrewId(crewIds, pageable)
-                .map(CrewDto::from);
+                .map(this::transferCrewDto);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class CrewServiceImpl implements CrewService {
         Crew crew = crewReader.findCrewById(crewId)
                 .orElseThrow(() -> new BusinessException(CrewErrorCode.NOT_FOUND));
 
-        return CrewDto.from(crew);
+        return transferCrewDto(crew);
     }
 
     @Override
@@ -68,5 +69,17 @@ public class CrewServiceImpl implements CrewService {
         return crewReader.existCrewMember(crewMemberPK);
     }
 
+    private CrewDto transferCrewDto(Crew crew) {
+        // 크루장 프사 url
+        var crewHeadUrl = imageReader.getUserImageLink(crew.getUser().getProfileImage());
+
+        // 크루 아이콘 url
+        var crewIcon = imageReader.getImageLink(S3Folder.CREW, crew.getIcon());
+
+        // 크루원 3명까지 프사 url 이후에 추가 해야함.
+
+        return CrewDto.from(crew, crewHeadUrl, crewIcon);
+
+    }
 
 }
