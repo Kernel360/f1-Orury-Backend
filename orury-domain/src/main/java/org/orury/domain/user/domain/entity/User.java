@@ -1,22 +1,14 @@
 package org.orury.domain.user.domain.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
-import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.user.domain.dto.UserStatus;
+import org.orury.domain.user.domain.dto.UserStatusConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ToString
@@ -51,10 +43,11 @@ public class User extends AuditingField {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "is_deleted")
-    private int isDeleted;
+    @Column(name = "status")
+    @Convert(converter = UserStatusConverter.class)
+    private UserStatus status;
 
-    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, int isDeleted) {
+    private User(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -65,16 +58,16 @@ public class User extends AuditingField {
         this.profileImage = profileImage;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.isDeleted = isDeleted;
+        this.status = status;
     }
 
-    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, int isDeleted) {
-        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, isDeleted);
+    public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
+        return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status);
     }
 
     public User delete(String defaultImage) {
         this.profileImage = defaultImage;
-        this.isDeleted = NumberConstants.IS_DELETED;
+        this.status = UserStatus.LEAVE;
         return this;
     }
 }

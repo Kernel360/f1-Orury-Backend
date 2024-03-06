@@ -12,8 +12,8 @@ import org.orury.client.auth.interfaces.response.LoginResponse;
 import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -126,7 +126,7 @@ class AuthFacadeTest {
                 "test.png",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

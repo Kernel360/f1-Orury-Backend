@@ -1,14 +1,5 @@
 package org.orury.client.user.application;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.comment.domain.CommentStore;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
@@ -27,6 +17,7 @@ import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] User Test")
@@ -156,7 +154,7 @@ class UserServiceImplTest {
                 "test.png",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
@@ -172,7 +170,7 @@ class UserServiceImplTest {
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 
@@ -188,7 +186,7 @@ class UserServiceImplTest {
                 "test.png",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_DELETED
+                UserStatus.ENABLE
         );
     }
 

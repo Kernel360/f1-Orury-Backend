@@ -17,4 +17,9 @@ public class RefreshTokenStoreImpl implements RefreshTokenStore {
         RefreshToken refreshToken = RefreshToken.of(id, value, LocalDateTime.now(), LocalDateTime.now());
         refreshTokenRepository.save(refreshToken);
     }
+
+    @Override
+    public void delete(Long userId) {
+        refreshTokenRepository.deleteByUserId(userId);
+    }
 }

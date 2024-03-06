@@ -1,16 +1,11 @@
 package org.orury.domain.user.infrastructure;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.global.constants.NumberConstants;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.orury.domain.user.infrastucture.UserReaderImpl;
 import org.orury.domain.user.infrastucture.UserRepository;
@@ -19,6 +14,11 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[UserReaderImpl] User ReaderImpl 테스트")
@@ -60,7 +60,7 @@ class UserReaderImplTest {
                 "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
-                NumberConstants.IS_NOT_DELETED
+                UserStatus.ENABLE
         );
     }
 

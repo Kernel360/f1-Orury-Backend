@@ -4,6 +4,7 @@ import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.review.domain.entity.Review;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class TestRepositoryUtils {
                 "profile",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                0
+                UserStatus.ENABLE
         );
     }
 

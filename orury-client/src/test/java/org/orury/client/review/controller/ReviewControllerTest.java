@@ -444,7 +444,7 @@
 //                null,
 //                null,
 //                null,
-//                NumberConstants.IS_NOT_DELETED
+//                UserStatus.ENABLE
 //        );
 //    }
 //

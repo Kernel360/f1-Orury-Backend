@@ -13,8 +13,8 @@ import org.orury.common.error.exception.AuthException;
 import org.orury.domain.auth.domain.RefreshTokenReader;
 import org.orury.domain.auth.domain.RefreshTokenStore;
 import org.orury.domain.auth.domain.dto.JwtToken;
-import org.orury.domain.global.constants.Constants;
 import org.orury.domain.user.domain.dto.UserPrincipal;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -68,7 +68,6 @@ class JwtTokenServiceImplTest {
         // given
         String accessTokenHeader = "Bearer " + VALID_ACCESS_TOKEN;
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-
         given(mockRequest.getHeader("Authorization"))
                 .willReturn(accessTokenHeader);
 
@@ -78,10 +77,10 @@ class JwtTokenServiceImplTest {
         UserPrincipal expectedPrincipal = UserPrincipal.fromToken(
                 userId,
                 userEmail,
-                Constants.ROLE_USER.getMessage()
+                UserStatus.ENABLE.getStatus()
         );
         String expectedCredentials = "";
-        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
 
         // when
         Authentication authentication = jwtTokenService.getAuthenticationFromRequest(mockRequest);
@@ -108,10 +107,10 @@ class JwtTokenServiceImplTest {
         UserPrincipal expectedPrincipal = UserPrincipal.fromToken(
                 0L,
                 userEmail,
-                Constants.ROLE_USER.getMessage()
+                UserStatus.ENABLE.getStatus()
         );
         String expectedCredentials = "";
-        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(Constants.ROLE_USER.getMessage()));
+        List<SimpleGrantedAuthority> expectedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(UserStatus.ENABLE.getStatus()));
 
         // when
         Authentication authentication = jwtTokenService.getAuthenticationFromRequest(mockRequest);
