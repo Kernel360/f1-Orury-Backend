@@ -23,7 +23,7 @@ public record ReviewsResponse(
 
 ) {
     public static ReviewsResponse of(ReviewDto reviewDto, Long loginId, int myReaction) {
-//
+
         boolean isMine = reviewDto.userDto()
                 .id()
                 .equals(loginId);
@@ -59,25 +59,19 @@ public record ReviewsResponse(
     }
 
     private static String mapReactionType(int reaction) {
-        switch (reaction) {
-            case NumberConstants.THUMB_REACTION:
-                return "thumb";
-            case NumberConstants.INTERREST_REACTION:
-                return "interest";
-            case NumberConstants.HELP_REACTION:
-                return "help";
-            case NumberConstants.LIKE_REACTION:
-                return "like";
-            case NumberConstants.ANGRY_REACTION:
-                return "angry";
-            default:
-                return null;
-        }
+        return switch (reaction) {
+            case NumberConstants.THUMB_REACTION -> "thumb";
+            case NumberConstants.INTERREST_REACTION -> "interest";
+            case NumberConstants.HELP_REACTION -> "help";
+            case NumberConstants.LIKE_REACTION -> "like";
+            case NumberConstants.ANGRY_REACTION -> "angry";
+            default -> null;
+        };
     }
 
-    private static record ReviewReactionCount(String type, int count) {
+    private record ReviewReactionCount(String type, int count) {
     }
 
-    private static record Writer(Long id, String nickname, String profileImage) {
+    private record Writer(Long id, String nickname, String profileImage) {
     }
 }

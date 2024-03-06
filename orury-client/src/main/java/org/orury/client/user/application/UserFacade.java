@@ -52,10 +52,13 @@ public class UserFacade {
         return convertDtosToWithCursorResponse(postDtos, MyPostResponse::of, cursor);
     }
 
-    public WithCursorResponse<MyReviewResponse> getReviewsByUserId(Long id, Long cursor) {
-        List<ReviewDto> reviewDtos = reviewService.getReviewDtosByUserId(id, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
-
-        return convertDtosToWithCursorResponse(reviewDtos, MyReviewResponse::of, cursor);
+    public WithCursorResponse<MyReviewResponse> getReviewsByUserId(Long userId, Long cursor) {
+        List<ReviewDto> reviewDtos = reviewService.getReviewDtosByUserId(userId, cursor, PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE));
+        Function<ReviewDto, MyReviewResponse> function = reviewDto -> {
+            int myReaction = reviewService.getReactionType(userId, reviewDto.id());
+            return MyReviewResponse.of(reviewDto, myReaction);
+        };
+        return convertDtosToWithCursorResponse(reviewDtos, function, cursor);
     }
 
     public WithCursorResponse<MyCommentResponse> getCommentsByUserId(Long id, Long cursor) {
