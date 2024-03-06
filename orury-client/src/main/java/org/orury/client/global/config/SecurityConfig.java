@@ -1,8 +1,9 @@
 package org.orury.client.global.config;
 
 import lombok.RequiredArgsConstructor;
+import org.orury.client.auth.application.jwt.JwtTokenService;
 import org.orury.client.auth.interfaces.JwtTokenFilter;
-import org.orury.client.auth.application.jwt.JwtTokenServiceImpl;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,7 +24,7 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtTokenServiceImpl jwtTokenProvider;
+    private final JwtTokenService jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(
@@ -35,8 +36,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest()
-                        .permitAll()
+                        .anyRequest().hasAnyRole(UserStatus.ENABLE.name())
                 )
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement ->
