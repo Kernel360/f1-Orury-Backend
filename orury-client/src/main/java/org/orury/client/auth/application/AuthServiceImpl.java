@@ -17,6 +17,7 @@ import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -69,10 +70,13 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthException(AuthErrorCode.NOT_MATCHING_SOCIAL_PROVIDER);
         }
 
+        // 관리자에 의해 제재된 유저
+        if (user.getStatus() == UserStatus.BAN)
+            throw new AuthException(AuthErrorCode.BAN_USER);
+
         // 정상 회원은 토큰 발급
         JwtToken jwtToken = jwtTokenService.issueJwtTokens(user.getId(), user.getEmail());
         return LoginDto.of(UserDto.from(user), jwtToken, AuthMessage.LOGIN_SUCCESS.getMessage());
-
     }
 
     @Transactional
