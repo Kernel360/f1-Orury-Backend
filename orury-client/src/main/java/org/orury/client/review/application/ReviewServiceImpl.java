@@ -141,7 +141,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream()
                 .map(it -> {
                     var urls = imageReader.getImageLinks(S3Folder.REVIEW, it.getImages());
-                    var profileImgUrl = imageReader.getUserImageUrl(it.getUser().getProfileImage());
+                    var profileImgUrl = imageReader.getUserImageLink(it.getUser().getProfileImage());
                     return ReviewDto.from(it, urls, profileImgUrl);
                 })
                 .toList();

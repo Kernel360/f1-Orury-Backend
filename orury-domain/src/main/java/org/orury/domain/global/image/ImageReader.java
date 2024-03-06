@@ -8,6 +8,4 @@ public interface ImageReader {
     String getUserImageLink(String profile);
 
     List<String> getImageLinks(S3Folder domain, List<String> images);
-
-    String getUserImageUrl(String profileImage);
 }

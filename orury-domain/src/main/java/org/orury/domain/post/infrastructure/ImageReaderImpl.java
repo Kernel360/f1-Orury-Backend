@@ -36,11 +36,6 @@ public class ImageReaderImpl implements ImageReader {
         return getUrls(domain, images);
     }
 
-    @Override
-    public String getUserImageUrl(String image) {
-        return getUrls(S3Folder.USER, List.of(image)).get(0);
-    }
-
     private List<String> getUrls(S3Folder domain, List<String> images) {
         return images.stream()
                 .map(it -> amazonS3.getUrl(bucket + domain.getName(), it).toString())
