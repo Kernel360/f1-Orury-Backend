@@ -65,6 +65,27 @@ public record CrewDto(
         );
     }
 
+    public static CrewDto from(
+            Crew entity,
+            String crewHeadUrl,
+            String crewIcon
+    ) {
+        return CrewDto.of(
+                entity.getId(),
+                entity.getName(),
+                entity.getMemberCount(),
+                entity.getCapacity(),
+                entity.getRegion(),
+                entity.getDescription(),
+                crewIcon,
+                entity.getIsDeleted(),
+                UserDto.from(entity.getUser(), crewHeadUrl),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+
+    }
+
     public Crew toEntity() {
         return Crew.of(
                 id,
