@@ -21,11 +21,11 @@ public class MeetingReaderImpl implements MeetingReader {
 
     @Override
     public List<Meeting> getNotEndedMeetingsByCrewId(Long crewId) {
-        return meetingRepository.findByCrew_IdAndEndTimeBeforeOrderByIdDesc(crewId, LocalDateTime.now());
+        return meetingRepository.findByCrew_IdAndStartTimeBeforeOrderByIdDesc(crewId, LocalDateTime.now());
     }
 
     @Override
     public List<Meeting> getEndedMeetingsByCrewId(Long crewId) {
-        return meetingRepository.findByCrew_IdAndEndTimeAfterOrderByIdDesc(crewId, LocalDateTime.now());
+        return meetingRepository.findByCrew_IdAndStartTimeAfterOrderByIdDesc(crewId, LocalDateTime.now());
     }
 }

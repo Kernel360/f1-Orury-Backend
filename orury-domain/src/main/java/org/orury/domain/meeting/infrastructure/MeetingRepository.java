@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
-    List<Meeting> findByCrew_IdAndEndTimeBeforeOrderByIdDesc(Long crewId, LocalDateTime startTime);
+    List<Meeting> findByCrew_IdAndStartTimeBeforeOrderByIdDesc(Long crewId, LocalDateTime startTime);
 
-    List<Meeting> findByCrew_IdAndEndTimeAfterOrderByIdDesc(Long crewId, LocalDateTime startTime);
+    List<Meeting> findByCrew_IdAndStartTimeAfterOrderByIdDesc(Long crewId, LocalDateTime startTime);
 
     @Modifying
     @Query("UPDATE crew_meeting SET memberCount = memberCount + 1 WHERE id = :meetingId")
