@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.global.listener.CrewImageConverter;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class Crew extends AuditingField {
     @Column(name = "description", nullable = true)
     private String description;
 
+    @Convert(converter = CrewImageConverter.class)
     @Column(name = "icon", nullable = true)
     private String icon;
 

@@ -22,10 +22,13 @@ public class ImageReaderImpl implements ImageReader {
     @Value("${cloud.aws.s3.url}")
     private String URL;
 
+    /**
+     * 추후에 유저, 크루의 기본 이미지 변경될 수 있어 나눠둠
+     */
     @Override
     public String getImageLink(S3Folder domain, String profile) {
         if (S3Folder.USER == domain && StringUtils.isBlank(profile)) profile = DEFAULT_IMAGE;
-//        if (S3Folder.CREW==domain && StringUtils.isBlank(profile)) profile =  defaultImage;
+        if (S3Folder.CREW == domain && StringUtils.isBlank(profile)) profile = DEFAULT_IMAGE;
         return getUrls(domain, List.of(profile)).get(0);
     }
 
