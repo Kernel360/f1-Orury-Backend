@@ -53,7 +53,9 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        isValidate(review.getUser().getId(), userId);
+        if (!Objects.equals(review.getUser().getId(), userId))
+            throw new BusinessException(ReviewErrorCode.FORBIDDEN);
+
         return ReviewDto.from(review);
     }
 
