@@ -1,5 +1,7 @@
 package org.orury.client.crew.interfaces.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.crew.domain.dto.CrewDto;
 
@@ -13,7 +15,9 @@ public record CrewsResponseByMyCrew(
         String region,
         String icon,
         String headProfileImage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt
         // 운영자 포함 4명까지의 프로필 이미지
         // new 표시 -> 최근 일정 등록 여부
