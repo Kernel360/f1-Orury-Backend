@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByCategory(int category, Long cursor, Pageable pageable) {
         return postReader.findByCategoryOrderByIdDesc(category, cursor, pageable).stream()
-                .map(this::postImageConverter)
+                .map(this::postDtoConverter)
                 .toList();
     }
 
@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosBySearchWord(String searchWord, Long cursor, Pageable pageable) {
         return postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable).stream()
-                .map(this::postImageConverter)
+                .map(this::postDtoConverter)
                 .toList();
     }
 
@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<PostDto> getPostDtosByUserId(Long userId, Long cursor, Pageable pageable) {
         return postReader.findByUserIdOrderByIdDesc(userId, cursor, pageable).stream()
-                .map(this::postImageConverter)
+                .map(this::postDtoConverter)
                 .toList();
     }
 
@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService {
                 NumberConstants.HOT_POSTS_BOUNDARY,
                 LocalDateTime.now().minusMonths(1L),
                 pageable
-        ).map(this::postImageConverter);
+        ).map(this::postDtoConverter);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PostServiceImpl implements PostService {
     public PostDto getPostDtoById(Long id) {
         var post = postReader.findById(id)
                 .orElseThrow(() -> new BusinessException(PostErrorCode.NOT_FOUND));
-        return postImageConverter(post);
+        return postDtoConverter(post);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService {
         var postUser = post.getUser().getId();
         if (!postUser.equals(userId))
             throw new BusinessException(PostErrorCode.FORBIDDEN);
-        return postImageConverter(post);
+        return postDtoConverter(post);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class PostServiceImpl implements PostService {
         postStore.updateViewCount(id);
     }
 
-    private PostDto postImageConverter(Post post) {
+    private PostDto postDtoConverter(Post post) {
         var isLike = postReader.isPostLiked(post.getUser().getId(), post.getId());
         return PostDto.from(post, isLike);
     }
