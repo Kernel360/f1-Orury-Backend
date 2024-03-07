@@ -1,13 +1,15 @@
 package org.orury.client.meeting.interfaces.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 public record MeetingsResponse(
-        LocalDate date,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime startTime,
         Long gymId,
         String gymName,
         int memberCount,
@@ -18,7 +20,7 @@ public record MeetingsResponse(
         boolean isParticipated
 ) {
     public static MeetingsResponse of(
-            LocalDate date,
+            LocalDateTime startTime,
             Long gymId,
             String gymName,
             int memberCount,
@@ -29,7 +31,7 @@ public record MeetingsResponse(
             boolean isParticipated
     ) {
         return new MeetingsResponse(
-                date,
+                startTime,
                 gymId,
                 gymName,
                 memberCount,
@@ -47,7 +49,7 @@ public record MeetingsResponse(
             Long userId
     ) {
         return new MeetingsResponse(
-                meetingDto.startTime().toLocalDate(),
+                meetingDto.startTime(),
                 meetingDto.gymDto().id(),
                 meetingDto.gymDto().name(),
                 meetingDto.memberCount(),

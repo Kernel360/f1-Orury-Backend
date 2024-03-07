@@ -9,21 +9,18 @@ import java.time.LocalDateTime;
 
 public record MeetingCreateRequest(
         LocalDateTime startTime,
-        LocalDateTime endTime,
         int capacity,
         Long gymId,
         Long crewId
 ) {
     public static MeetingCreateRequest of(
             LocalDateTime startTime,
-            LocalDateTime endTime,
             int capacity,
             Long gymId,
             Long crewId
     ) {
         return new MeetingCreateRequest(
                 startTime,
-                endTime,
                 capacity,
                 gymId,
                 crewId
@@ -34,7 +31,6 @@ public record MeetingCreateRequest(
         return MeetingDto.of(
                 null,
                 startTime,
-                endTime,
                 0,
                 capacity,
                 userDto,

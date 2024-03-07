@@ -48,7 +48,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Transactional
     public void createMeeting(MeetingDto meetingDto) {
         validateCrewMember(meetingDto.crewDto().id(), meetingDto.userDto().id());
-        validateTimes(meetingDto.startTime(), meetingDto.endTime());
+        validateStartTime(meetingDto.startTime());
         validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
         Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
@@ -59,7 +59,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Transactional(readOnly = true)
     public List<MeetingDto> getPresentMeetingDtosByCrewId(Long crewId, Long userId) {
         validateCrewMember(crewId, userId);
-        List<Meeting> meetings = meetingReader.getNotEndedMeetingsByCrewId(crewId);
+        List<Meeting> meetings = meetingReader.getNotStartedMeetingsByCrewId(crewId);
         return convertMeetingsToMeetingDtos(meetings, userId);
     }
 
@@ -67,7 +67,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Transactional(readOnly = true)
     public List<MeetingDto> getPastMeetingDtosByCrewId(Long crewId, Long userId) {
         validateCrewMember(crewId, userId);
-        List<Meeting> meetings = meetingReader.getEndedMeetingsByCrewId(crewId);
+        List<Meeting> meetings = meetingReader.getStartedMeetingsByCrewId(crewId);
         return convertMeetingsToMeetingDtos(meetings, userId);
     }
 
@@ -90,7 +90,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Transactional
     public void updateMeeting(MeetingDto meetingDto, Long userId) {
         validateMeetingCreator(meetingDto.userDto().id(), userId);
-        validateTimes(meetingDto.startTime(), meetingDto.endTime());
+        validateStartTime(meetingDto.startTime());
         validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
         meetingStore.updateMeeting(meetingDto.toEntity());
     }
@@ -144,13 +144,9 @@ public class MeetingServiceImpl implements MeetingService {
             throw new BusinessException(CrewErrorCode.NOT_CREW_MEMBER);
     }
 
-    private void validateTimes(LocalDateTime startTime, LocalDateTime endTime) {
+    private void validateStartTime(LocalDateTime startTime) {
         if (LocalDateTime.now().isAfter(startTime))
             throw new BusinessException(MeetingErrorCode.INVALID_START_TIME);
-        if (startTime.isAfter(endTime))
-            throw new BusinessException(MeetingErrorCode.TURNED_OVER_TIMES);
-        if (!Objects.equals(startTime.getDayOfYear(), endTime.getDayOfYear()))
-            throw new BusinessException(MeetingErrorCode.NOT_SAME_DAY);
     }
 
     private void validateCapacity(int capacity, int crewMemberCount, int meetingMemberCount) {

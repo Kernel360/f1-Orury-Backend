@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public record MeetingUpdateRequest(
         Long meetingId,
         LocalDateTime startTime,
-        LocalDateTime endTime,
         int capacity,
         Long gymId
 ) {
@@ -16,7 +15,6 @@ public record MeetingUpdateRequest(
         return MeetingDto.of(
                 meetingDto.id(),
                 startTime,
-                endTime,
                 meetingDto.memberCount(),
                 capacity,
                 meetingDto.userDto(),

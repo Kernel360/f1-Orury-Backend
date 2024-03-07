@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public record MeetingDto(
         Long id,
         LocalDateTime startTime,
-        LocalDateTime endTime,
         int memberCount,
         int capacity,
         UserDto userDto,
@@ -26,7 +25,6 @@ public record MeetingDto(
     public static MeetingDto of(
             Long id,
             LocalDateTime startTime,
-            LocalDateTime endTime,
             int memberCount,
             int capacity,
             UserDto userDto,
@@ -39,7 +37,6 @@ public record MeetingDto(
         return new MeetingDto(
                 id,
                 startTime,
-                endTime,
                 memberCount,
                 capacity,
                 userDto,
@@ -55,7 +52,6 @@ public record MeetingDto(
         return MeetingDto.of(
                 entity.getId(),
                 entity.getStartTime(),
-                entity.getEndTime(),
                 entity.getMemberCount(),
                 entity.getCapacity(),
                 UserDto.from(entity.getUser()),
@@ -71,7 +67,6 @@ public record MeetingDto(
         return MeetingDto.of(
                 entity.getId(),
                 entity.getStartTime(),
-                entity.getEndTime(),
                 entity.getMemberCount(),
                 entity.getCapacity(),
                 UserDto.from(entity.getUser()),
@@ -87,7 +82,6 @@ public record MeetingDto(
         return Meeting.of(
                 id,
                 startTime,
-                endTime,
                 memberCount,
                 capacity,
                 userDto.toEntity(),

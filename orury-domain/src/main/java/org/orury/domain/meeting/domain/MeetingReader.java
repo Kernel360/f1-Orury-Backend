@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface MeetingReader {
     Optional<Meeting> findById(Long meetingId);
 
-    List<Meeting> getNotEndedMeetingsByCrewId(Long crewId);
+    List<Meeting> getNotStartedMeetingsByCrewId(Long crewId);
 
-    List<Meeting> getEndedMeetingsByCrewId(Long crewId);
+    List<Meeting> getStartedMeetingsByCrewId(Long crewId);
 }
