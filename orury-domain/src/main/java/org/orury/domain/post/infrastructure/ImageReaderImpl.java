@@ -4,7 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.orury.common.util.ImageUtil;
+import org.orury.common.error.code.FileExceptionCode;
+import org.orury.common.error.exception.InfraImplException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.image.ImageReader;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,20 +26,24 @@ public class ImageReaderImpl implements ImageReader {
     private String defaultImage;
 
     @Override
-    public String getUserImageLink(String profile) {
-        if (StringUtils.isBlank(profile)) return defaultImage;
-        return getUrls(S3Folder.USER, List.of(profile)).get(0);
+    public String getImageLink(S3Folder domain, String profile) {
+        if (S3Folder.USER == domain && StringUtils.isBlank(profile)) profile = defaultImage;
+//        if (S3Folder.CREW==domain && StringUtils.isBlank(profile)) profile =  defaultImage;
+        return getUrls(domain, List.of(profile)).get(0);
     }
 
     @Override
     public List<String> getImageLinks(S3Folder domain, List<String> images) {
-        if (ImageUtil.imagesValidation(images)) return List.of();
         return getUrls(domain, images);
     }
 
     private List<String> getUrls(S3Folder domain, List<String> images) {
-        return images.stream()
-                .map(it -> amazonS3.getUrl(bucket + domain.getName(), it).toString())
-                .toList();
+        try {
+            return images.stream()
+                    .map(it -> amazonS3.getUrl(bucket + domain.getName(), it).toString())
+                    .toList();
+        } catch (Exception e) {
+            throw new InfraImplException(FileExceptionCode.FILE_NOT_FOUND);
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.common.util.S3Folder;
 import org.orury.domain.comment.domain.CommentReader;
 import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.comment.domain.dto.CommentDto;
@@ -149,17 +150,15 @@ class CommentServiceImplTest {
 
         given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)))
                 .willReturn(comments);
-        given(imageReader.getUserImageLink(anyString()))
+        given(imageReader.getImageLink(any(S3Folder.class), anyString()))
                 .willReturn(profileImage);
 
         // when
         commentService.getCommentDtosByPost(postDto, cursor);
 
         // then
-        then(commentReader).should(times(1))
-                .getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(times(comments.size()))
-                .getUserImageLink(anyString());
+        then(commentReader).should(times(1)).getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
+        then(imageReader).should(times(comments.size())).getImageLink(any(S3Folder.class), anyString());
     }
 
     @Test
@@ -179,8 +178,7 @@ class CommentServiceImplTest {
         // then
         then(commentReader).should(times(1))
                 .getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(never())
-                .getUserImageLink(anyString());
+        then(imageReader).should(never()).getImageLink(any(S3Folder.class), anyString());
     }
 
     @Test
@@ -198,8 +196,7 @@ class CommentServiceImplTest {
 
         given(commentReader.getCommentsByUserIdAndCursor(userId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)))
                 .willReturn(comments);
-        given(imageReader.getUserImageLink(anyString()))
-                .willReturn(profileImage);
+        given(imageReader.getImageLink(any(S3Folder.class), anyString())).willReturn(profileImage);
 
         // when
         commentService.getCommentDtosByUserId(userId, cursor);
@@ -208,7 +205,7 @@ class CommentServiceImplTest {
         then(commentReader).should(times(1))
                 .getCommentsByUserIdAndCursor(anyLong(), anyLong(), any());
         then(imageReader).should(times(comments.size()))
-                .getUserImageLink(anyString());
+                .getImageLink(any(S3Folder.class), anyString());
     }
 
     @Test
@@ -228,7 +225,7 @@ class CommentServiceImplTest {
         then(commentReader).should(times(1))
                 .getCommentsByUserIdAndCursor(anyLong(), anyLong(), any());
         then(imageReader).should(never())
-                .getUserImageLink(anyString());
+                .getImageLink(any(S3Folder.class), anyString());
     }
 
     @Test

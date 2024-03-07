@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static org.orury.common.util.S3Folder.USER;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -117,7 +119,7 @@ public class CommentServiceImpl implements CommentService {
     private List<CommentDto> convertCommentsToCommentDtos(List<Comment> comments) {
         return comments.stream()
                 .map(comment -> {
-                    var commentUserImage = imageReader.getUserImageLink(comment.getUser().getProfileImage());
+                    var commentUserImage = imageReader.getImageLink(USER, comment.getUser().getProfileImage());
                     return CommentDto.from(comment, commentUserImage);
                 })
                 .toList();

@@ -22,8 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static org.orury.common.util.S3Folder.USER;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -39,11 +37,9 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public List<String> upload(S3Folder domain, List<MultipartFile> multipartFiles) {
-        if (ImageUtil.filesValidation(multipartFiles)) return List.of();
+        if (ImageUtil.filesValidation(multipartFiles)) return null;
         // 파일들을 임시로 저장합니다.
-        List<File> files = multipartFiles.stream()
-                .map(this::convert)
-                .toList();
+        List<File> files = multipartFiles.stream().map(this::convert).toList();
         // S3에 파일들을 업로드
         var fileNames = putS3(domain, files);
         // 임시 파일들을 삭제합니다.
@@ -53,29 +49,30 @@ public class ImageStoreImpl implements ImageStore {
     }
 
     @Override
-    public String upload(MultipartFile profile) {
-        if (ImageUtil.fileValidation(profile)) return defaultImage;
-        return upload(USER, List.of(profile)).get(0);
+    public String upload(S3Folder domain, MultipartFile profile) {
+        if (ImageUtil.fileValidation(profile)) return null;
+        return upload(domain, List.of(profile)).get(0);
     }
 
     @Override
-    public void delete(String profile) {
-        if (StringUtils.isBlank(profile)) return;
-        var link = ImageUtil.splitUrlToImage(profile);
-        amazonS3.deleteObject(bucket + USER.getName(), link);
+    public void delete(S3Folder domain, String profile) {
+        var image = ImageUtil.splitUrlToImage(profile);
+        if (StringUtils.equals(image, defaultImage)) return;
+        amazonS3.deleteObject(bucket + domain.getName(), image);
+    }
+
+    @Override
+    public void delete(S3Folder domain, List<String> links) {
+        if (ImageUtil.imagesValidation(links)) return;
+        links.stream()
+                .map(ImageUrlConverter::splitUrlToImage)
+                .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
     }
 
     @Override
     public void oldS3ImagesDelete(String domain, List<String> images) {
         if (images == null || images.isEmpty()) return;
         s3Repository.delete(domain, images);
-    }
-
-    @Override
-    public void delete(S3Folder domain, List<String> links) {
-        links.stream()
-                .map(ImageUrlConverter::splitUrlToImage)
-                .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
     }
 
     private File convert(MultipartFile multipartFile) {
