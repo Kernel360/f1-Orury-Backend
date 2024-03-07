@@ -138,12 +138,14 @@ class UserFacadeTest {
         for (int i = 10; i >= 1; i--) {
             reviewDtos.add(createReviewDto((long) i));
         }
+        int myReaction = 1;
 
         WithCursorResponse<MyReviewResponse> response = WithCursorResponse.of(reviewDtos.stream()
-                .map(MyReviewResponse::of)
+                .map(reviewDto -> MyReviewResponse.of(reviewDto, myReaction))
                 .toList(), cursor);
 
         given(reviewService.getReviewDtosByUserId(anyLong(), anyLong(), any())).willReturn(reviewDtos);
+        given(reviewService.getReactionType(anyLong(), anyLong())).willReturn(myReaction);
 
         //when
         WithCursorResponse<MyReviewResponse> actualResponse = userFacade.getReviewsByUserId(userId, cursor);
@@ -151,6 +153,7 @@ class UserFacadeTest {
         //then
         assertThat(actualResponse).isEqualTo(response);
         then(reviewService).should(times(1)).getReviewDtosByUserId(anyLong(), anyLong(), any());
+        then(reviewService).should(times(reviewDtos.size())).getReactionType(anyLong(), anyLong());
     }
 
     @Test
