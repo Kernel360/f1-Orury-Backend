@@ -1,6 +1,5 @@
 package org.orury.domain.post.infrastructure;
 
-import com.amazonaws.services.s3.AmazonS3;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,17 +16,15 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ImageReaderImpl implements ImageReader {
-    private final AmazonS3 amazonS3;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
     @Value("${cloud.aws.s3.default-image}")
-    private String defaultImage;
+    private String DEFAULT_IMAGE;
+
+    @Value("${cloud.aws.s3.url}")
+    private String URL;
 
     @Override
     public String getImageLink(S3Folder domain, String profile) {
-        if (S3Folder.USER == domain && StringUtils.isBlank(profile)) profile = defaultImage;
+        if (S3Folder.USER == domain && StringUtils.isBlank(profile)) profile = DEFAULT_IMAGE;
 //        if (S3Folder.CREW==domain && StringUtils.isBlank(profile)) profile =  defaultImage;
         return getUrls(domain, List.of(profile)).get(0);
     }
@@ -40,7 +37,7 @@ public class ImageReaderImpl implements ImageReader {
     private List<String> getUrls(S3Folder domain, List<String> images) {
         try {
             return images.stream()
-                    .map(it -> amazonS3.getUrl(bucket + domain.getName(), it).toString())
+                    .map(it -> URL + domain.getName() + "/" + it)
                     .toList();
         } catch (Exception e) {
             throw new InfraImplException(FileExceptionCode.FILE_NOT_FOUND);
