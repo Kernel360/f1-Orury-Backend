@@ -269,6 +269,43 @@ class AuthServiceImplTest {
     }
 
     @Test
+    @DisplayName("BAN(제재)된 회원의 경우, BanUser 예외를 반환한다.")
+    void when_BannedUser_Then_BanUserException() {
+        // given
+        int signUpType = 1;
+        LoginRequest request = createLoginRequest(signUpType);
+        OAuthService oAuthService = mock(KakaoOAuthService.class);
+        String email = "Orury@kakao.com";
+        User banUser = createBanUser(email, signUpType);
+
+        given(oAuthServiceManager.getOAuthService(signUpType))
+                .willReturn(oAuthService);
+        given(oAuthService.getEmailFromOAuthCode(request.code()))
+                .willReturn(email);
+        given(userReader.findByEmail(email))
+                .willReturn(Optional.of(banUser));
+        given(oAuthService.getSignUpType())
+                .willReturn(signUpType);
+
+        // when & then
+        Exception exception = assertThrows(AuthException.class,
+                () -> authService.login(request));
+
+        assertEquals(AuthErrorCode.BAN_USER.getMessage(), exception.getMessage());
+
+        then(oAuthServiceManager).should(only())
+                .getOAuthService(anyInt());
+        then(oAuthService).should(times(1))
+                .getEmailFromOAuthCode(anyString());
+        then(userReader).should(only())
+                .findByEmail(anyString());
+        then(oAuthService).should(times(1))
+                .getSignUpType();
+        then(jwtTokenService).should(never())
+                .issueJwtTokens(anyLong(), anyString());
+    }
+
+    @Test
     @DisplayName("HttpServletRequest를 받아 JwtToken을 재발급하여 반환한다.")
     void when_HttpServletRequest_Then_ReissueAndRetrieveJwtToken() {
         // given
@@ -334,6 +371,22 @@ class AuthServiceImplTest {
                 null,
                 null,
                 UserStatus.ENABLE
+        );
+    }
+
+    private User createBanUser(String email, int signUpType) {
+        return User.of(
+                1L,
+                email,
+                "userNickname",
+                "userPassword",
+                signUpType,
+                1,
+                null,
+                "userProfileImage",
+                null,
+                null,
+                UserStatus.BAN
         );
     }
 }

@@ -1,7 +1,6 @@
 package org.orury.client.crew.application;
 
-import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
-
+import lombok.RequiredArgsConstructor;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponseByMyCrew;
 import org.orury.client.crew.interfaces.response.CrewsResponseByRank;
@@ -12,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class CrewFacade {
     }
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
-        CrewDto crewDto = crewService.getCrewDtoByCrewId(crewId);
+        CrewDto crewDto = crewService.getCrewDtoById(crewId);
         CrewMemberPK crewMemberPK = CrewMemberPK.of(userId, crewId);
 
         boolean isApply = crewService.existCrewMember(crewMemberPK);

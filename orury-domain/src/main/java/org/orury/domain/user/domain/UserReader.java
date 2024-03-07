@@ -11,4 +11,6 @@ public interface UserReader {
     Optional<User> findByEmail(String email);
 
     List<User> findAll();
+
+    User getUserById(Long userId);
 }

@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CrewService {
+    CrewDto getCrewDtoById(Long crewId);
+
     Page<CrewDto> getCrewDtosByRank(Pageable pageable);
 
     Page<CrewDto> getCrewDtosByRecommend(Pageable pageable);
 
     Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable);
-
-    CrewDto getCrewDtoByCrewId(Long crewId);
 
     boolean existCrewMember(CrewMemberPK crewMemberPK);
 }

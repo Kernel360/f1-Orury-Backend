@@ -1,5 +1,6 @@
 package org.orury.domain.crew.infrastructures;
 
+import lombok.RequiredArgsConstructor;
 import org.orury.domain.crew.domain.CrewReader;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
@@ -11,18 +12,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.RequiredArgsConstructor;
-
 @Repository
 @RequiredArgsConstructor
 public class CrewReaderImpl implements CrewReader {
     private final CrewRepository crewRepository;
-    private final CrewMemberRepository crewMemberRepository;
 
     @Override
-    public Optional<Crew> findCrewById(Long crewId) {
+    public Optional<Crew> findById(Long crewId) {
         return crewRepository.findById(crewId);
     }
+    private final CrewMemberRepository crewMemberRepository;
 
     @Override
     public Page<Crew> getCrewsByRank(Pageable pageable) {

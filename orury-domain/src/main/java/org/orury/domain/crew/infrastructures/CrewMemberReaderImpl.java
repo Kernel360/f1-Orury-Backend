@@ -8,4 +8,9 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CrewMemberReaderImpl implements CrewMemberReader {
     private final CrewMemberRepository crewMemberRepository;
+
+    @Override
+    public boolean existByCrewIdAndUserId(Long crewId, Long userId) {
+        return crewMemberRepository.existsByCrewMemberPK_CrewIdAndCrewMemberPK_UserId(crewId, userId);
+    }
 }
