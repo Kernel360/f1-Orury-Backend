@@ -25,9 +25,6 @@ public class Meeting extends AuditingField {
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
-
     @Column(name = "member_count", nullable = false)
     private int memberCount;
 
@@ -49,7 +46,6 @@ public class Meeting extends AuditingField {
     private Meeting(
             Long id,
             LocalDateTime startTime,
-            LocalDateTime endTime,
             int memberCount,
             int capacity,
             User user,
@@ -60,7 +56,6 @@ public class Meeting extends AuditingField {
     ) {
         this.id = id;
         this.startTime = startTime;
-        this.endTime = endTime;
         this.memberCount = memberCount;
         this.capacity = capacity;
         this.user = user;
@@ -73,7 +68,6 @@ public class Meeting extends AuditingField {
     public static Meeting of(
             Long id,
             LocalDateTime startTime,
-            LocalDateTime endTime,
             int memberCount,
             int capacity,
             User user,
@@ -85,7 +79,6 @@ public class Meeting extends AuditingField {
         return new Meeting(
                 id,
                 startTime,
-                endTime,
                 memberCount,
                 capacity,
                 user,

@@ -132,8 +132,9 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream().map(ReviewDto::from).toList();
     }
 
-    private void isValidate(Long id1, Long id2) {
-        if (!Objects.equals(id1, id2)) throw new BusinessException(ReviewErrorCode.FORBIDDEN);
+    private void validateReviewCreator(Long reviewCreatorId, Long userId) {
+        if (!Objects.equals(reviewCreatorId, userId))
+            throw new BusinessException(ReviewErrorCode.FORBIDDEN);
     }
 
     private void isExist(UserDto userDto, GymDto gymDto) {

@@ -27,4 +27,9 @@ public class UserReaderImpl implements UserReader {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findUserById(userId);
+    }
 }
