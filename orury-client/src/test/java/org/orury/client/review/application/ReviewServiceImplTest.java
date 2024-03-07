@@ -111,8 +111,8 @@ class ReviewServiceImplTest {
     void when_GetReviewId_Then_ReturnReviewDto() {
         // given
         Long reviewId = 1L;
-        Long userId = 1L;
-        Long gymId = 1L;
+        Long userId = 2L;
+        Long gymId = 3L;
         var urls = "www.orury.com";
 
         Review review = createReview(reviewId, userId, gymId);

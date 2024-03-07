@@ -61,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        isValidate(review.getId(), userId);
+        validateReviewCreator(review.getUser().getId(), userId);
         var urls = imageReader.getImageLinks(S3Folder.REVIEW, review.getImages());
         return ReviewDto.from(review, urls, review.getUser().getProfileImage());
     }
@@ -147,8 +147,9 @@ public class ReviewServiceImpl implements ReviewService {
                 .toList();
     }
 
-    private void isValidate(Long id1, Long id2) {
-        if (!Objects.equals(id1, id2)) throw new BusinessException(ReviewErrorCode.FORBIDDEN);
+    private void validateReviewCreator(Long reviewCreatorId, Long userId) {
+        if (!Objects.equals(reviewCreatorId, userId))
+            throw new BusinessException(ReviewErrorCode.FORBIDDEN);
     }
 
     private void isExist(UserDto userDto, GymDto gymDto) {
