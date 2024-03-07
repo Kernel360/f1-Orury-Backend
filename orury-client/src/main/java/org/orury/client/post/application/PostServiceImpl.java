@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.common.util.ImageUtil;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostStore;
@@ -31,7 +29,6 @@ import static org.orury.common.util.S3Folder.POST;
 public class PostServiceImpl implements PostService {
     private final PostReader postReader;
     private final PostStore postStore;
-    private final ImageReader imageReader;
     private final ImageStore imageStore;
 
     @Override
@@ -89,19 +86,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void createPost(PostDto postDto, List<MultipartFile> files) {
-        // id == null -> 생성, id != null -> 수정
-        if (postDto.id() != null) {
-            var oldImages = postDto.images();
-            if (!ImageUtil.imagesValidation(oldImages)) imageStore.delete(POST, oldImages);
-        }
         var newImages = imageStore.upload(POST, files);
+        imageStore.delete(POST, postDto.images());
         postStore.save(postDto.toEntity(newImages));
     }
 
     @Override
     public void deletePost(PostDto postDto) {
-        var oldImages = postDto.images();
-        if (!ImageUtil.imagesValidation(oldImages)) imageStore.delete(POST, oldImages);
+        imageStore.delete(POST, postDto.images());
         postStore.delete(postDto.toEntity());
     }
 
@@ -128,9 +120,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDto postImageConverter(Post post) {
-        var links = imageReader.getImageLinks(POST, post.getImages());
-        var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());
         var isLike = postReader.isPostLiked(post.getUser().getId(), post.getId());
-        return PostDto.from(post, links, profileLink, isLike);
+        return PostDto.from(post, isLike);
     }
 }

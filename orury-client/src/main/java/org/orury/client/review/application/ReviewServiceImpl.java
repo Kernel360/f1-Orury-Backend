@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.code.ReviewReactionErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
@@ -28,6 +26,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.orury.common.util.S3Folder.REVIEW;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -35,7 +35,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewReader reviewReader;
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
-    private final ImageReader imageReader;
     private final ImageStore imageStore;
 
     private static final int minReactionType = 1;
@@ -43,27 +42,28 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
-    public void createReview(ReviewDto reviewDto, List<MultipartFile> images) {
+    public void createReview(ReviewDto reviewDto, List<MultipartFile> files) {
         isExist(reviewDto.userDto(), reviewDto.gymDto());
+        var images = imageStore.upload(REVIEW, files);
+        reviewStore.save(reviewDto.toEntity(images));
         gymStore.increaseReviewCountAndTotalScore(reviewDto.gymDto().id(), reviewDto.score());
-        imageUploadAndSave(reviewDto, images);
-    }
-
-    @Transactional
-    @Override
-    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> images) {
-        gymStore.updateTotalScore(beforeReviewDto.id(), beforeReviewDto.score(), updateReviewDto.score());
-        imageUploadAndSave(updateReviewDto, images);
-        imageStore.oldS3ImagesDelete(S3Folder.REVIEW.getName(), beforeReviewDto.images());
     }
 
     @Override
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.NOT_FOUND));
-        isValidate(review.getId(), userId);
-        var urls = imageReader.getImageLinks(S3Folder.REVIEW, review.getImages());
-        return ReviewDto.from(review, urls, review.getUser().getProfileImage());
+        isValidate(review.getUser().getId(), userId);
+        return ReviewDto.from(review);
+    }
+
+    @Transactional
+    @Override
+    public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> files) {
+        gymStore.updateTotalScore(beforeReviewDto.id(), beforeReviewDto.score(), updateReviewDto.score());
+        var images = imageStore.upload(REVIEW, files);
+        reviewStore.save(updateReviewDto.toEntity(images));
+        imageStore.delete(REVIEW, beforeReviewDto.images());
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(ReviewDto reviewDto) {
         gymStore.decreaseReviewCountAndTotalScore(reviewDto.gymDto().id(), reviewDto.score());
         reviewStore.delete(reviewDto.toEntity());
-        imageStore.oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
+        imageStore.delete(REVIEW, reviewDto.images());
     }
 
     @Override
@@ -128,23 +128,8 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    private void imageUploadAndSave(ReviewDto reviewDto, List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) {
-            reviewStore.save(reviewDto.toEntity(List.of()));
-        } else {
-            List<String> images = imageStore.upload(S3Folder.REVIEW, files);
-            reviewStore.save(reviewDto.toEntity(images));
-        }
-    }
-
     private List<ReviewDto> convertReviewsToReviewDtos(List<Review> reviews) {
-        return reviews.stream()
-                .map(it -> {
-                    var urls = imageReader.getImageLinks(S3Folder.REVIEW, it.getImages());
-                    var profileImgUrl = imageReader.getUserImageLink(it.getUser().getProfileImage());
-                    return ReviewDto.from(it, urls, profileImgUrl);
-                })
-                .toList();
+        return reviews.stream().map(ReviewDto::from).toList();
     }
 
     private void isValidate(Long id1, Long id2) {

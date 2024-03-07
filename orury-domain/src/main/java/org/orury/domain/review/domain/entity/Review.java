@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
-import org.orury.domain.global.listener.EntityImageConverter;
+import org.orury.domain.global.listener.ReviewImagesConverter;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,7 +32,7 @@ public class Review extends AuditingField {
     @Column(name = "content")
     private String content;
 
-    @Convert(converter = EntityImageConverter.class)
+    @Convert(converter = ReviewImagesConverter.class)
     @Column(name = "images")
     private List<String> images;
 

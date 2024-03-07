@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.orury.common.util.S3Folder.POST;
+import static org.orury.common.util.S3Folder.USER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,8 +52,8 @@ public class PostServiceImpl implements PostService {
 
     private PostDto postImageConverter(Post post) {
         var links = imageReader.getImageLinks(POST, post.getImages());
-        var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());
+        var profileLink = imageReader.getImageLink(USER, post.getUser().getProfileImage());
         var isLike = postReader.isPostLiked(post.getUser().getId(), post.getId());
-        return PostDto.from(post, links, profileLink, isLike);
+        return PostDto.from(post, isLike);
     }
 }
