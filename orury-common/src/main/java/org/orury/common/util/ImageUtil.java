@@ -1,6 +1,5 @@
 package org.orury.common.util;
 
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -31,7 +30,7 @@ public class ImageUtil {
     }
 
     public static String splitUrlToImage(String url) {
-        if (Objects.isNull(url) || url.isEmpty()) return Strings.EMPTY;
+        if (Objects.isNull(url) || url.isEmpty()) return null;
         return Arrays.stream(url.split("/"))
                 .reduce((first, second) -> second)
                 .orElse("");

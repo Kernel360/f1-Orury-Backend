@@ -10,7 +10,6 @@ import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import java.util.Objects;
 public class CommentServiceImpl implements CommentService {
     private final CommentReader commentReader;
     private final CommentStore commentStore;
-    private final ImageReader imageReader;
 
     @Override
     @Transactional
@@ -115,11 +113,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private List<CommentDto> convertCommentsToCommentDtos(List<Comment> comments) {
-        return comments.stream()
-                .map(comment -> {
-                    var commentUserImage = imageReader.getUserImageLink(comment.getUser().getProfileImage());
-                    return CommentDto.from(comment, commentUserImage);
-                })
-                .toList();
+        return comments.stream().map(CommentDto::from).toList();
     }
 }

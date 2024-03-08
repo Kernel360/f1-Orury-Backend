@@ -14,7 +14,6 @@ import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -43,15 +42,13 @@ class CommentServiceImplTest {
     private CommentService commentService;
     private CommentReader commentReader;
     private CommentStore commentStore;
-    private ImageReader imageReader;
 
     @BeforeEach
     void setUp() {
         commentReader = mock(CommentReader.class);
         commentStore = mock(CommentStore.class);
-        imageReader = mock(ImageReader.class);
 
-        commentService = new CommentServiceImpl(commentReader, commentStore, imageReader);
+        commentService = new CommentServiceImpl(commentReader, commentStore);
     }
 
     @Test
@@ -147,19 +144,12 @@ class CommentServiceImplTest {
                 createComment(3L)
         );
 
-        given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)))
-                .willReturn(comments);
-        given(imageReader.getUserImageLink(anyString()))
-                .willReturn(profileImage);
-
+        given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(comments);
         // when
         commentService.getCommentDtosByPost(postDto, cursor);
 
         // then
-        then(commentReader).should(times(1))
-                .getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(times(comments.size()))
-                .getUserImageLink(anyString());
+        then(commentReader).should(times(1)).getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -170,17 +160,13 @@ class CommentServiceImplTest {
         PostDto postDto = createPostDto(postId);
         Long cursor = 22L;
 
-        given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)))
-                .willReturn(Collections.emptyList());
+        given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(Collections.emptyList());
 
         // when
         commentService.getCommentDtosByPost(postDto, cursor);
 
         // then
-        then(commentReader).should(times(1))
-                .getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(never())
-                .getUserImageLink(anyString());
+        then(commentReader).should(times(1)).getCommentsByPostIdAndCursor(anyLong(), anyLong(), any());
     }
 
     @Test
@@ -196,10 +182,7 @@ class CommentServiceImplTest {
                 createComment(3L)
         );
 
-        given(commentReader.getCommentsByUserIdAndCursor(userId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE)))
-                .willReturn(comments);
-        given(imageReader.getUserImageLink(anyString()))
-                .willReturn(profileImage);
+        given(commentReader.getCommentsByUserIdAndCursor(userId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(comments);
 
         // when
         commentService.getCommentDtosByUserId(userId, cursor);
@@ -207,8 +190,6 @@ class CommentServiceImplTest {
         // then
         then(commentReader).should(times(1))
                 .getCommentsByUserIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(times(comments.size()))
-                .getUserImageLink(anyString());
     }
 
     @Test
@@ -227,8 +208,6 @@ class CommentServiceImplTest {
         // then
         then(commentReader).should(times(1))
                 .getCommentsByUserIdAndCursor(anyLong(), anyLong(), any());
-        then(imageReader).should(never())
-                .getUserImageLink(anyString());
     }
 
     @Test

@@ -53,7 +53,8 @@ cloud:
     s3:
       bucket: ENC(DWaoEy70NtH+lhLIr08FR4qd/T11UK+X)
       default-image: default-user-profile
-      url: https://s3.ap-northeast-2.amazonaws.com/
+      url: https://d3rzoqirccqyht.cloudfront.net/
+
     credentials:
       accessKey: ENC(yfr+1GPLxMHuTbbID6K7Jbs0Dm9iuuK9yFjrOJv8jCU=)
       secretKey: ENC(nnQ4XTkipeaA+bE6zKD6kI04Axa+E2Qjmw081EgZHpPXhPEBV/dgwqf9YeN1a0vJebMq0yceQJQ=)
