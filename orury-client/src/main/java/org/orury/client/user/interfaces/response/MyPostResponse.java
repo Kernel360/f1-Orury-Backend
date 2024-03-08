@@ -1,11 +1,11 @@
 package org.orury.client.user.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.post.domain.dto.PostDto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public record MyPostResponse(
         Long id,
@@ -29,9 +29,7 @@ public record MyPostResponse(
                 postDto.viewCount(),
                 postDto.commentCount(),
                 postDto.likeCount(),
-                (postDto.images()
-                        .isEmpty()) ? null : postDto.images()
-                        .get(0),
+                (Objects.isNull(postDto.images()) || postDto.images().isEmpty()) ? null : postDto.images().get(0),
                 postDto.category(),
                 postDto.createdAt(),
                 postDto.updatedAt()
