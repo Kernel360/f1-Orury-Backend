@@ -1,0 +1,38 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+---
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+spring:
+  sql.init: always
+  main.allow-circle-references: true
+  sql.init.mode: always
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_UPPER=FALSE;MODE=MYSQL;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: true
+    open-in-view: false
+    defer-datasource-initialization: false
+    show-sql: true
+    properties:
+      hibernate.auto_quote_keyword: true
+      hibernate.format_sql: true
+      globally_quoted_identifiers: true
+    hibernate:
+      ddl-auto: create-drop
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  flyway:
+    enabled: false
+

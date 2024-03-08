@@ -1,39 +1,5 @@
-//build.gradle 파일
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.6'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-}
-group = 'org.fastcampus'
-version = '0.0.1-SNAPSHOT'
-java {
-    sourceCompatibility = '17'
-}
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
+////build.gradle 파일
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-//    implementation 'org.flywaydb:flyway-core'
-
-    //flyway
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
-
-    //S3
-    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.268'
-
     //Jasypt
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.4'
 
@@ -43,6 +9,14 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
 
+    //slack
+    implementation("com.slack.api:bolt:1.18.0")
+    implementation("com.slack.api:bolt-servlet:1.18.0")
+    implementation("com.slack.api:bolt-jetty:1.18.0")
+    implementation 'com.slack.api:slack-api-client:1.15.0'
+
+    //p6spy
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 }
 
 tasks.named('bootJar') {

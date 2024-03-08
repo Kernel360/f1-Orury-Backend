@@ -44,6 +44,8 @@ spring:
   kakao:
     baseurl: https://dapi.kakao.com/v2/local/search/keyword.json
     key: ENC(8pDOKxCjQe2r3avazbs05VCB6ZT4DleSf+aCyiJedsl425HyfG176o5DJd10aURjcQxWyT/JKIc=)
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 cloud:
   aws:
@@ -60,12 +62,15 @@ cloud:
 jasypt:
   encryptor:
     password: ${JASYPT_PASSWORD}
+
+slack:
+  token: ENC(7Pd4U/iPDtDF5quQM5TzMXF7jsfv+QQYCDdckH+/T8vbz/QOYTOKX6iAGdqM5gRVusZ84cC93RpQE8qK1kW4f6tdoIf5GDu2)
+  channel: ENC(9i8/M3HKZDCGoJWCM1B1Lg6ECmK4eudW)
 ---
 
 spring:
   config.activate.on-profile: test
   datasource.url: jdbc:h2:mem:testdb
-
 ---
 spring:
   profiles:

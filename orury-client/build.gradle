@@ -1,35 +1,11 @@
 //build.gradle 파일
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.6'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'jacoco'
-}
-group = 'org.fastcampus'
-version = '0.0.1-SNAPSHOT'
-java {
-    sourceCompatibility = '17'
-}
-
 jacoco {
     toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
     reports {
-        xml {
-            enabled true
-            destination file("${buildDir}/jacoco/index.xml")
-        }
-        csv {
-            enabled true
-            destination file("${buildDir}/jacoco/index.csv")
-        }
-        html {
-            enabled true
-            destination file("${buildDir}/jacoco/index.html")
-        }
+        html.destination file("${buildDir}/jacoco/html")
     }
 }
 
@@ -37,29 +13,14 @@ test {
     finalizedBy 'jacocoTestReport'
 }
 
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 dependencies {
     implementation project(':orury-common')
     implementation project(':orury-domain')
 
-    //boot start
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     //Security
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
 
@@ -73,10 +34,10 @@ dependencies {
     compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
 
     //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+    compileOnly 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0'
 
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -84,33 +45,23 @@ dependencies {
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    //SSE setting
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-    //jpa,jdbc
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-
-    //web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
-//
-    //flyway
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
 
-    //lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    //Jasypt
-    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.4'
+    //SSE setting
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     //json
     implementation 'org.json:json:20231013'
 
+    // feign client
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.3"
+    }
 }
 
 tasks.named('bootJar') {
