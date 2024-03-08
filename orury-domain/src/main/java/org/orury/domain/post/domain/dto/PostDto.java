@@ -57,16 +57,12 @@ public record PostDto(
     public static PostDto from(Post entity) {
         return PostDto.from(
                 entity,
-                entity.getImages(),
-                entity.getUser().getProfileImage(),
                 false
         );
     }
 
     public static PostDto from(
             Post entity,
-            List<String> links,
-            String profileLink,
             boolean isLike
     ) {
         return new PostDto(
@@ -76,9 +72,9 @@ public record PostDto(
                 entity.getViewCount(),
                 entity.getCommentCount(),
                 entity.getLikeCount(),
-                links,
+                entity.getImages(),
                 entity.getCategory(),
-                UserDto.from(entity.getUser(), profileLink),
+                UserDto.from(entity.getUser()),
                 isLike,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

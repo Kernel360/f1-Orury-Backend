@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
-import org.orury.domain.global.listener.EntityImageConverter;
+import org.orury.domain.global.listener.GymImagesConverter;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class Gym extends AuditingField {
     @Column(name = "like_count")
     private int likeCount;
 
-    @Convert(converter = EntityImageConverter.class)
+    @Convert(converter = GymImagesConverter.class)
     @Column(name = "images")
     private List<String> images;
 

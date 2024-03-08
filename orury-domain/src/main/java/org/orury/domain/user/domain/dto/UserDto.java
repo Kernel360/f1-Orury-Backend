@@ -65,7 +65,7 @@ public record UserDto(
         );
     }
 
-    public static UserDto from(User entity, String imageUrl) {
+    public static UserDto from(User entity, String profileImage) {
         return UserDto.of(
                 entity.getId(),
                 entity.getEmail(),
@@ -74,7 +74,7 @@ public record UserDto(
                 entity.getSignUpType(),
                 entity.getGender(),
                 entity.getBirthday(),
-                imageUrl,
+                profileImage,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getStatus()
