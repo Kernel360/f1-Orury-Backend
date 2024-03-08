@@ -8,11 +8,11 @@ import java.util.List;
 public interface ImageStore {
     List<String> upload(S3Folder domain, List<MultipartFile> files);
 
-    String upload(MultipartFile profile);
+    String upload(S3Folder domain, MultipartFile image);
 
     void delete(S3Folder domain, List<String> imageLinks);
 
-    void delete(String profile);
+    void delete(S3Folder domain, String profile);
 
     void oldS3ImagesDelete(String domain, List<String> images);
 }

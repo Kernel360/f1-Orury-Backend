@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostStore;
@@ -24,7 +23,6 @@ import static org.orury.common.util.S3Folder.POST;
 public class PostServiceImpl implements PostService {
     private final PostReader postReader;
     private final PostStore postStore;
-    private final ImageReader imageReader;
     private final ImageStore imageStore;
 
     @Override
@@ -50,9 +48,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDto postImageConverter(Post post) {
-        var links = imageReader.getImageLinks(POST, post.getImages());
-        var profileLink = imageReader.getUserImageLink(post.getUser().getProfileImage());
         var isLike = postReader.isPostLiked(post.getUser().getId(), post.getId());
-        return PostDto.from(post, links, profileLink, isLike);
+        return PostDto.from(post, isLike);
     }
 }

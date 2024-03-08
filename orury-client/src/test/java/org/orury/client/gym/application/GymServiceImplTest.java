@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.gym.domain.GymReader;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
@@ -28,7 +27,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.common.util.S3Folder.GYM;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 암장 ServiceImpl 테스트")
@@ -38,15 +36,13 @@ class GymServiceImplTest {
     GymService gymService;
     GymReader gymReader;
     GymStore gymStore;
-    ImageReader imageReader;
 
     @BeforeEach
     void setUp() {
         gymReader = mock(GymReader.class);
         gymStore = mock(GymStore.class);
-        imageReader = mock(ImageReader.class);
 
-        gymService = new GymServiceImpl(gymReader, gymStore, imageReader);
+        gymService = new GymServiceImpl(gymReader, gymStore);
     }
 
     @Test
@@ -54,26 +50,19 @@ class GymServiceImplTest {
     void should_RetrieveGymDtoById() {
         // given
         Long gymId = 1L;
-        Gym gym = createGym(gymId);
-        List<String> images = List.of("image1", "image2", "image3");
+        GymDto expect = createGymDto();
+        Gym gym = expect.toEntity();
 
-        given(gymReader.findGymById(gymId))
-                .willReturn(Optional.of(gym));
-        given(imageReader.getImageLinks(GYM, gym.getImages()))
-                .willReturn(images);
-
-        GymDto expectedGymDto = GymDto.from(gym, images);
+        given(gymReader.findGymById(any())).willReturn(Optional.of(gym));
 
         // when
-        GymDto actualGymDto = gymService.getGymDtoById(gymId);
+        GymDto actual = gymService.getGymDtoById(gymId);
 
         // then
-        assertEquals(expectedGymDto, actualGymDto);
+        assertEquals(expect, actual);
 
         then(gymReader).should(times(1))
                 .findGymById(anyLong());
-        then(imageReader).should(times(1))
-                .getImageLinks(any(), any());
     }
 
     @Test
@@ -91,8 +80,6 @@ class GymServiceImplTest {
 
         then(gymReader).should(times(1))
                 .findGymById(anyLong());
-        then(imageReader).should(never())
-                .getImageLinks(any(), any());
     }
 
     @Test
@@ -526,6 +513,37 @@ class GymServiceImplTest {
                 businessHour,
                 businessHour,
                 businessHour,
+                "gymHomepageLink",
+                "gymRemark"
+        );
+    }
+
+    private GymDto createGymDto() {
+        return GymDto.of(
+                1L,
+                "더클라임 봉은사점",
+                "kakaoid",
+                "서울시 도로명주소",
+                "서울시 지번주소",
+                40.5f,
+                23,
+                12,
+                List.of(),
+                37.513709,
+                127.062144,
+                "더클라임",
+                "01012345678",
+                "gymInstagramLink.com",
+                "MONDAY",
+                null,
+                null,
+                "businessHour",
+                "businessHour",
+                "businessHour",
+                "businessHour",
+                "businessHour",
+                "businessHour",
+                "businessHour",
                 "gymHomepageLink",
                 "gymRemark"
         );

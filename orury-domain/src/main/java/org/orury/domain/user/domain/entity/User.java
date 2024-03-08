@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.global.listener.UserProfileConverter;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.dto.UserStatusConverter;
 
@@ -40,9 +41,12 @@ public class User extends AuditingField {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
+    @Setter
+    @Convert(converter = UserProfileConverter.class)
     @Column(name = "profile_image")
     private String profileImage;
 
+    @Setter
     @Column(name = "status")
     @Convert(converter = UserStatusConverter.class)
     private UserStatus status;
@@ -63,11 +67,5 @@ public class User extends AuditingField {
 
     public static User of(Long id, String email, String nickname, String password, int signUpType, int gender, LocalDate birthday, String profileImage, LocalDateTime createdAt, LocalDateTime updatedAt, UserStatus status) {
         return new User(id, email, nickname, password, signUpType, gender, birthday, profileImage, createdAt, updatedAt, status);
-    }
-
-    public User delete(String defaultImage) {
-        this.profileImage = defaultImage;
-        this.status = UserStatus.LEAVE;
-        return this;
     }
 }

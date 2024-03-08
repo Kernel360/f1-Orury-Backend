@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
-import org.orury.domain.global.listener.EntityImageConverter;
+import org.orury.domain.global.listener.PostImagesConverter;
 import org.orury.domain.user.domain.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -37,9 +38,9 @@ public class Post extends AuditingField {
     @Column(name = "like_count", nullable = false)
     private int likeCount;
 
-    @Convert(converter = EntityImageConverter.class)
+    @Convert(converter = PostImagesConverter.class)
     @Column(name = "images")
-    private List<String> images;
+    private List<String> images = new ArrayList<>();
 
     @Column(name = "category", nullable = false)
     private int category;

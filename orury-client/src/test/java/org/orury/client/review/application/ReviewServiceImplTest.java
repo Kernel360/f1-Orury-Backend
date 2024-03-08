@@ -9,7 +9,6 @@ import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
@@ -31,7 +30,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +46,6 @@ class ReviewServiceImplTest {
     private ReviewReader reviewReader;
     private ReviewStore reviewStore;
     private GymStore gymStore;
-    private ImageReader imageReader;
     private ImageStore imageStore;
 
     private ReviewService reviewService;
@@ -58,9 +55,8 @@ class ReviewServiceImplTest {
         reviewReader = mock(ReviewReader.class);
         reviewStore = mock(ReviewStore.class);
         gymStore = mock(GymStore.class);
-        imageReader = mock(ImageReader.class);
         imageStore = mock(ImageStore.class);
-        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageReader, imageStore);
+        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore);
 
     }
 
@@ -103,7 +99,7 @@ class ReviewServiceImplTest {
         then(gymStore).should(times(1))
                 .updateTotalScore(beforeReviewDto.id(), beforeReviewDto.score(), updateReviewDto.score());
         then(imageStore).should(times(1))
-                .oldS3ImagesDelete(S3Folder.REVIEW.getName(), beforeReviewDto.images());
+                .delete(S3Folder.REVIEW, beforeReviewDto.images());
     }
 
     @DisplayName("리뷰 ID를 통해 리뷰 DTO를 반환한다.")
@@ -118,7 +114,6 @@ class ReviewServiceImplTest {
         Review review = createReview(reviewId, userId, gymId);
 
         given(reviewReader.findById(reviewId)).willReturn(Optional.of(review));
-        given(imageReader.getImageLinks(S3Folder.REVIEW, review.getImages())).willReturn(Collections.singletonList(urls));
 
         // when
         reviewService.getReviewDtoById(reviewId, userId);
@@ -126,8 +121,6 @@ class ReviewServiceImplTest {
         // then
         then(reviewReader).should(times(1))
                 .findById(anyLong());
-        then(imageReader).should(times(1))
-                .getImageLinks(any(), anyList());
     }
 
     @DisplayName("리뷰 Dto를 받아 리뷰를 성공적으로 삭제한다.")
@@ -149,7 +142,7 @@ class ReviewServiceImplTest {
         then(reviewStore).should(times(1))
                 .delete(reviewDto.toEntity());
         then(imageStore).should(times(1))
-                .oldS3ImagesDelete(S3Folder.REVIEW.getName(), reviewDto.images());
+                .delete(S3Folder.REVIEW, reviewDto.images());
     }
 
     @DisplayName("존재하지 않는 리뷰를 검색 시, NOT_FOUND exception을 발생시킨다.")
