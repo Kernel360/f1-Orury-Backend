@@ -35,7 +35,9 @@ public abstract class EntityImagesConverter implements AttributeConverter<List<S
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
-        if (StringUtils.isBlank(dbData)) return null;
+        // TODO
+        // 프론트 null check 로직 추가되면 return값 null로 바꿔야함
+        if (StringUtils.isBlank(dbData)) return List.of();
         var imageReader = BeanUtils.getBean(ImageReader.class);
         try {
             List<String> images = mapper.readValue(dbData, List.class);
