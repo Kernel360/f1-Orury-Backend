@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공지 사항 페이지</title>
+
+</head>
+<body>
+<div style="border: 1px solid gold; float: left; width: 33%;">
+    <h1>공지사항들</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>아이디</th>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성자</th>
+            <th>생성일</th>
+        </tr>
+        </thead>
+        <tbody id="notices">
+        </tbody>
+    </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        getNotices('notices');
+    });
+
+    function getNotices(notices) {
+        $.ajax({
+            type: 'GET',
+            url: '/api/v1/notices',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                let tr = '';
+                for (let i = 0; i < data.length; i++) {
+                    tr += '<tr>';
+                    tr += '<td>' + data[i].id + '</td>';
+                    tr += '<td>' + data[i].title + '</td>';
+                    tr += '<td>' + data[i].content + '</td>';
+                    tr += '</tr>';
+                }
+                $('#' + notices).append(tr);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
+</body>
+</html>

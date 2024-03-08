@@ -1,5 +1,14 @@
 ////build.gradle 파일
 dependencies {
+    implementation project(':orury-common')
+
+    //S3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.268'
+
+    //flyway
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -26,4 +35,18 @@ tasks.named('jar') {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        html.destination file("${buildDir}/jacoco/html")
+    }
+}
+
+test {
+    finalizedBy 'jacocoTestReport'
 }
