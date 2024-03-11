@@ -43,8 +43,9 @@ public class Crew extends AuditingField {
     @Column(name = "icon", nullable = true)
     private String icon;
 
+    @Convert(converter = NumericBooleanConverter.class)
     @Column(name = "is_deleted", nullable = false)
-    private int isDeleted;
+    private boolean isDeleted;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -79,7 +80,7 @@ public class Crew extends AuditingField {
             String region,
             String description,
             String icon,
-            int isDeleted,
+            boolean isDeleted,
             User user,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
@@ -117,7 +118,7 @@ public class Crew extends AuditingField {
             String region,
             String description,
             String icon,
-            int isDeleted,
+            boolean isDeleted,
             User user,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
