@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.post.application.PostServiceImpl;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.PostReader;
 import org.orury.domain.post.domain.PostStore;
@@ -51,7 +50,6 @@ import static org.orury.domain.global.constants.NumberConstants.USER_ID;
 class PostServiceTest {
     private PostReader postReader;
     private PostStore postStore;
-    private ImageReader imageReader;
     private ImageStore imageStore;
     private PostServiceImpl postService;
 
@@ -59,9 +57,8 @@ class PostServiceTest {
     public void setUp() {
         postReader = mock(PostReader.class);
         postStore = mock(PostStore.class);
-        imageReader = mock(ImageReader.class);
         imageStore = mock(ImageStore.class);
-        postService = new PostServiceImpl(postReader, postStore, imageReader, imageStore);
+        postService = new PostServiceImpl(postReader, postStore, imageStore);
     }
 
     @Test
@@ -195,8 +192,6 @@ class PostServiceTest {
 
         given(postReader.findById(1L)).willReturn(Optional.of(post));
         given(postReader.isPostLiked(any(), any())).willReturn(false);
-        given(imageReader.getImageLinks(any(), any())).willReturn(post.getImages());
-        given(imageReader.getUserImageLink(any())).willReturn(userImage);
 
         // when
         var actual = postService.getPostDtoById(1L);
@@ -284,8 +279,6 @@ class PostServiceTest {
         String userImage = "test.png";
 
         when(postReader.findByCategoryOrderByIdDesc(category, cursor, pageable)).thenReturn(posts);
-        when(imageReader.getImageLinks(POST, postImages)).thenReturn(postImages);
-        when(imageReader.getUserImageLink(userImage)).thenReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByCategory(category, cursor, PageRequest.of(0, 10));
@@ -331,7 +324,6 @@ class PostServiceTest {
         List<String> postImages = List.of("post1.png", "post2.png");
 
         when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
-        when(imageReader.getImageLinks(POST, postImages)).thenReturn(postImages);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
@@ -359,14 +351,12 @@ class PostServiceTest {
         );
         List<String> postImages = List.of("post1.png", "post2.png");
 
-        given(imageReader.getImageLinks(POST, postImages)).willReturn(postImages);
         when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosBySearchWord(searchWord, cursor, PageRequest.of(0, 10));
 
         // then
-        then(imageReader).should(times(2)).getImageLinks(POST, postImages);
         verify(postReader).findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable);
         assertEquals(postDtos.size(), resultPostDtos.size());
     }
@@ -394,19 +384,16 @@ class PostServiceTest {
         List<String> postImages = List.of("post1.png", "post2.png");
         String userImage = "test.png";
         List<PostDto> expectPostDtos = posts.stream()
-                .map(post -> PostDto.from(post, postImages, userImage, false))
+                .map(post -> PostDto.from(post, false))
                 .toList();
 
         given(postReader.findByUserIdOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(posts);
-        given(imageReader.getImageLinks(any(), any())).willReturn(postImages);
-        given(imageReader.getUserImageLink(any())).willReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByUserId(USER_ID, cursor, pageable);
 
         // then
         assertEquals(resultPostDtos, expectPostDtos);
-        then(imageReader).should(times(10)).getImageLinks(any(), any());
         then(postReader).should(times(1)).findByUserIdOrderByIdDesc(anyLong(), anyLong(), any());
     }
 
@@ -431,13 +418,15 @@ class PostServiceTest {
         );
         List<String> postImages = List.of("post1.png", "post2.png");
         String userImage = "test.png";
+//        List<PostDto> expectPostDtos = posts.stream()
+//                .map(post -> PostDto.from(post, postImages, userImage, false))
+//                .toList();
+
         List<PostDto> expectPostDtos = posts.stream()
-                .map(post -> PostDto.from(post, postImages, userImage, false))
+                .map(post -> PostDto.from(post, false))
                 .toList();
 
         given(postReader.findByUserIdOrderByIdDesc(anyLong(), anyLong(), any())).willReturn(posts);
-        given(imageReader.getImageLinks(any(), any())).willReturn(postImages);
-        given(imageReader.getUserImageLink(any())).willReturn(userImage);
 
         // when
         List<PostDto> resultPostDtos = postService.getPostDtosByUserId(USER_ID, cursor, pageable);

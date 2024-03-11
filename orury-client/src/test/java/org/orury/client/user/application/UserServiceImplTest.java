@@ -8,8 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.common.util.S3Folder;
 import org.orury.domain.comment.domain.CommentStore;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.post.domain.PostStore;
@@ -39,7 +39,6 @@ import static org.mockito.Mockito.times;
 class UserServiceImplTest {
     private UserReader userReader;
     private UserStore userStore;
-    private ImageReader imageReader;
     private ImageStore imageStore;
     private PostStore postStore;
     private GymStore gymStore;
@@ -51,14 +50,13 @@ class UserServiceImplTest {
     void setUp() {
         userReader = mock(UserReader.class);
         userStore = mock(UserStore.class);
-        imageReader = mock(ImageReader.class);
         imageStore = mock(ImageStore.class);
         postStore = mock(PostStore.class);
         gymStore = mock(GymStore.class);
         commentStore = mock(CommentStore.class);
         reviewStore = mock(ReviewStore.class);
 
-        userService = new UserServiceImpl(userReader, userStore, imageReader, imageStore, postStore, commentStore, reviewStore, gymStore);
+        userService = new UserServiceImpl(userReader, userStore, imageStore, postStore, commentStore, reviewStore, gymStore);
     }
 
     @Test
@@ -68,14 +66,12 @@ class UserServiceImplTest {
         UserDto userDto = createUserDto(1L);
         Optional<User> user = createwrappingOptional(createUser(1L));
         given(userReader.findUserById(anyLong())).willReturn(user);
-        given(imageReader.getUserImageLink(anyString())).willReturn("test.png");
 
         //when
         UserDto actualUserDto = userService.getUserDtoById(anyLong());
 
         //then
         then(userReader).should(times(1)).findUserById(anyLong());
-        then(imageReader).should(times(1)).getUserImageLink(anyString());
 
         assertThat(actualUserDto).isEqualTo(userDto);
     }
@@ -106,8 +102,8 @@ class UserServiceImplTest {
         userService.updateProfileImage(userDto, image);
 
         // then
-        then(imageStore).should(times(1)).delete(any());
-        then(imageStore).should(times(1)).upload(any());
+        then(imageStore).should(times(1)).delete(any(S3Folder.class), anyString());
+        then(imageStore).should(times(1)).upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(times(1)).save(any());
     }
 
@@ -138,7 +134,7 @@ class UserServiceImplTest {
         then(commentStore).should(times(1)).deleteCommentLikesByUserId(any());
         then(postStore).should(times(1)).deletePostLikesByUserId(any());
         then(postStore).should(times(1)).deletePostsByUserId(any());
-        then(imageStore).should(times(1)).delete(any());
+        then(imageStore).should(times(1)).delete(any(S3Folder.class), anyString());
         then(userStore).should(times(1)).save(any());
     }
 
@@ -151,7 +147,7 @@ class UserServiceImplTest {
                 1,
                 1,
                 LocalDate.now(),
-                "test.png",
+                "userProfileImage",
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 LocalDateTime.of(1999, 3, 1, 7, 50),
                 UserStatus.ENABLE

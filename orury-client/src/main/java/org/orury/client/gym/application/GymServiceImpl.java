@@ -6,7 +6,6 @@ import org.orury.client.gym.interfaces.request.AreaGrid;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.BusinessHoursConverter;
-import org.orury.domain.global.image.ImageReader;
 import org.orury.domain.gym.domain.GymReader;
 import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
@@ -21,23 +20,19 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.orury.common.util.S3Folder.GYM;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class GymServiceImpl implements GymService {
     private final GymReader gymReader;
     private final GymStore gymStore;
-    private final ImageReader imageReader;
 
     @Override
     @Transactional(readOnly = true)
     public GymDto getGymDtoById(Long id) {
         Gym gym = gymReader.findGymById(id)
                 .orElseThrow(() -> new BusinessException(GymErrorCode.NOT_FOUND));
-        var urls = imageReader.getImageLinks(GYM, gym.getImages());
-        return GymDto.from(gym, urls);
+        return GymDto.from(gym);
     }
 
     @Override
@@ -94,7 +89,7 @@ public class GymServiceImpl implements GymService {
 
     private List<GymDto> sortGymsByDistanceAsc(List<Gym> gyms, float latitude, float longitude) {
         return gyms.stream()
-                .map(it -> GymDto.from(it, imageReader.getImageLinks(GYM, it.getImages())))
+                .map(GymDto::from)
                 .sorted(Comparator.comparingDouble(
                         o -> getDistance(latitude, longitude, o.latitude(), o.longitude())
                 ))

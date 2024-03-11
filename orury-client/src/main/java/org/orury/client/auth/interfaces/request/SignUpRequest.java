@@ -1,6 +1,7 @@
 package org.orury.client.auth.interfaces.request;
 
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -32,7 +33,7 @@ public record SignUpRequest(
                 profileImage,
                 null,
                 null,
-                null
+                UserStatus.ENABLE
         );
     }
 }
