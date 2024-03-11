@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -48,6 +49,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(List.of("https://orury.com", "http://localhost:3000", "https://dev.orury.com"));
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://orury.com", "https://dev.orury.com", "https://local.orury.com")); // 허용할 origin
