@@ -19,7 +19,13 @@ public record CrewDto(
         int isDeleted,
         UserDto userDto,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        int minAge,
+        int maxAge,
+        CrewGender gender,
+        boolean permissionRequired,
+        String question,
+        boolean answerRequired
 ) {
     public static CrewDto of(
             Long id,
@@ -32,7 +38,13 @@ public record CrewDto(
             int isDeleted,
             UserDto userDto,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int minAge,
+            int maxAge,
+            CrewGender gender,
+            boolean permissionRequired,
+            String question,
+            boolean answerRequired
     ) {
         return new CrewDto(
                 id,
@@ -45,7 +57,13 @@ public record CrewDto(
                 isDeleted,
                 userDto,
                 createdAt,
-                updatedAt
+                updatedAt,
+                minAge,
+                maxAge,
+                gender,
+                permissionRequired,
+                question,
+                answerRequired
         );
     }
 
@@ -61,7 +79,13 @@ public record CrewDto(
                 entity.getIsDeleted(),
                 UserDto.from(entity.getUser()),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getMinAge(),
+                entity.getMaxAge(),
+                entity.getGender(),
+                entity.isPermissionRequired(),
+                entity.getQuestion(),
+                entity.isAnswerRequired()
         );
     }
 
@@ -77,7 +101,13 @@ public record CrewDto(
                 isDeleted,
                 userDto.toEntity(),
                 createdAt,
-                updatedAt
+                updatedAt,
+                minAge,
+                maxAge,
+                gender,
+                permissionRequired,
+                question,
+                answerRequired
         );
     }
 }

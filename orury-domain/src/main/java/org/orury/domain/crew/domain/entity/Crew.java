@@ -3,7 +3,10 @@ package org.orury.domain.crew.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.NumericBooleanConverter;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.crew.domain.dto.CrewGender;
+import org.orury.domain.crew.domain.dto.CrewGenderConverter;
 import org.orury.domain.global.listener.CrewImageConverter;
 import org.orury.domain.user.domain.entity.User;
 
@@ -47,6 +50,27 @@ public class Crew extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "min_age", nullable = false)
+    private int minAge;
+
+    @Column(name = "max_age", nullable = false)
+    private int maxAge;
+
+    @Convert(converter = CrewGenderConverter.class)
+    @Column(name = "gender", nullable = false)
+    private CrewGender gender;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name = "permission_required", nullable = false)
+    private boolean permissionRequired;
+
+    @Column(name = "question", nullable = false)
+    private String question;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name = "answer_required", nullable = false)
+    private boolean answerRequired;
+
     private Crew(
             Long id,
             String name,
@@ -58,7 +82,13 @@ public class Crew extends AuditingField {
             int isDeleted,
             User user,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int minAge,
+            int maxAge,
+            CrewGender gender,
+            boolean permissionRequired,
+            String question,
+            boolean answerRequired
     ) {
         this.id = id;
         this.name = name;
@@ -71,6 +101,12 @@ public class Crew extends AuditingField {
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.gender = gender;
+        this.permissionRequired = permissionRequired;
+        this.question = question;
+        this.answerRequired = answerRequired;
     }
 
     public static Crew of(
@@ -84,7 +120,13 @@ public class Crew extends AuditingField {
             int isDeleted,
             User user,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int minAge,
+            int maxAge,
+            CrewGender gender,
+            boolean permissionRequired,
+            String question,
+            boolean answerRequired
     ) {
         return new Crew(
                 id,
@@ -97,7 +139,13 @@ public class Crew extends AuditingField {
                 isDeleted,
                 user,
                 createdAt,
-                updatedAt
+                updatedAt,
+                minAge,
+                maxAge,
+                gender,
+                permissionRequired,
+                question,
+                answerRequired
         );
     }
 }
