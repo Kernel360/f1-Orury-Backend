@@ -37,7 +37,9 @@ public class ImageStoreImpl implements ImageStore {
 
     @Override
     public List<String> upload(S3Folder domain, List<MultipartFile> multipartFiles) {
-        if (ImageUtil.filesValidation(multipartFiles)) return null;
+        // TODO
+        // 프론트 null check 로직 추가되면 return값 null로 바꿔야함
+        if (ImageUtil.filesValidation(multipartFiles)) return List.of();
         // 파일들을 임시로 저장합니다.
         List<File> files = multipartFiles.stream().map(this::convert).toList();
         // S3에 파일들을 업로드
