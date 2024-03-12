@@ -14,7 +14,7 @@ public class CrewTag {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "crew_id", nullable = false)
     private Crew crew;
 
