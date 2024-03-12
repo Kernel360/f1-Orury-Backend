@@ -1,10 +1,12 @@
 package org.orury.domain.global.domain;
 
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.orury.common.error.exception.InfraImplException;
 
 import static org.orury.common.error.code.CrewErrorCode.INVALID_REGION;
 
+@Converter
 public class RegionConverter implements AttributeConverter<Region, String> {
     @Override
     public String convertToDatabaseColumn(Region region) {
