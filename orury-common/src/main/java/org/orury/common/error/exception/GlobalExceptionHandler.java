@@ -1,12 +1,15 @@
 package org.orury.common.error.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.orury.common.error.code.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
@@ -33,6 +36,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getStatus())
                 .body(ErrorResponse.of(e.getStatus(), e.getMessage()));
+    }
+
+    // @Valid에서 유효성 검증에 실패한 예외 처리
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        FieldError error = Objects.requireNonNull(e.getBindingResult().getFieldError(), "validation exception");
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(ErrorResponse.of(e.getStatusCode().value(), error.getDefaultMessage()));
     }
 
     //그 외 모든 예외 처리 -> InternalServerError의 역할
