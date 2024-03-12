@@ -18,4 +18,6 @@ public interface CrewService {
     Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable);
 
     boolean existCrewMember(CrewMemberPK crewMemberPK);
+
+    void updateCrewImage(CrewDto crewDto, MultipartFile image, Long userId);
 }

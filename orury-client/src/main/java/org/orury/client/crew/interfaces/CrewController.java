@@ -37,6 +37,18 @@ public class CrewController {
         return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage());
     }
 
+    @Operation(summary = "크루 이미지 변경", description = "크루 이미지를 변경한다.")
+    @PatchMapping("{crewId}/image")
+    public ApiResponse updateCrewImage(
+            @PathVariable Long crewId,
+            @RequestPart MultipartFile image,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        crewFacade.updateCrewImage(crewId, image, userPrincipal.id());
+
+        return ApiResponse.of(CrewMessage.CREW_IMAGE_UPDATED.getMessage());
+    }
+
     @Operation(summary = "크루 랭킹순 조회", description = "크루를 랭킹 순으로 조회한다.")
     @GetMapping("/rank")
     public ApiResponse getCrewsByRank(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {

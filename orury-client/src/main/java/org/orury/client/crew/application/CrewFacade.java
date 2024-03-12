@@ -54,4 +54,9 @@ public class CrewFacade {
 
         return CrewResponse.of(crewDto, isApply);
     }
+
+    public void updateCrewImage(Long crewId, MultipartFile image, Long userId) {
+        CrewDto crewDto = crewService.getCrewDtoById(crewId);
+        crewService.updateCrewImage(crewDto, image, userId);
+    }
 }
