@@ -5,6 +5,7 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CrewResponse(
         Long id,
@@ -20,9 +21,10 @@ public record CrewResponse(
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
-        boolean isApply
+        List<String> tags,
+        boolean isMember
 ) {
-    public static CrewResponse of(CrewDto crewDto, boolean isApply) {
+    public static CrewResponse of(CrewDto crewDto, boolean isMember) {
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
@@ -35,7 +37,8 @@ public record CrewResponse(
                 crewDto.userDto().profileImage(),
                 crewDto.createdAt(),
                 crewDto.updatedAt(),
-                isApply
+                crewDto.tags(),
+                isMember
         );
     }
 }
