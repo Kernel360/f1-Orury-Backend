@@ -1,8 +1,8 @@
 package org.orury.client.crew.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.domain.crew.domain.dto.CrewDto;
+import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
 
@@ -11,10 +11,10 @@ public record CrewResponse(
         String name,
         int memberCount,
         int capacity,
-        String region,
+        Region region,
         String description,
         String icon,
-        int isDeleted,
+        boolean isDeleted,
         String headProfileImage,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,

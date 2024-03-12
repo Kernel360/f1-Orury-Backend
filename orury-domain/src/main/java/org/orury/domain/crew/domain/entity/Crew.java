@@ -7,6 +7,8 @@ import org.hibernate.type.NumericBooleanConverter;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewGenderConverter;
+import org.orury.domain.global.domain.Region;
+import org.orury.domain.global.domain.RegionConverter;
 import org.orury.domain.global.listener.CrewImageConverter;
 import org.orury.domain.user.domain.entity.User;
 
@@ -33,8 +35,9 @@ public class Crew extends AuditingField {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Convert(converter = RegionConverter.class)
     @Column(name = "region", nullable = false)
-    private String region;
+    private Region region;
 
     @Column(name = "description", nullable = true)
     private String description;
@@ -77,7 +80,7 @@ public class Crew extends AuditingField {
             String name,
             int memberCount,
             int capacity,
-            String region,
+            Region region,
             String description,
             String icon,
             boolean isDeleted,
@@ -115,7 +118,7 @@ public class Crew extends AuditingField {
             String name,
             int memberCount,
             int capacity,
-            String region,
+            Region region,
             String description,
             String icon,
             boolean isDeleted,

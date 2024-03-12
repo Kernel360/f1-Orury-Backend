@@ -1,9 +1,9 @@
 package org.orury.client.crew.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.client.global.IdIdentifiable;
 import org.orury.domain.crew.domain.dto.CrewDto;
+import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ public record CrewsResponseByRank(
         String name,
         int memberCount,
         int capacity,
-        String region,
+        Region region,
         String icon,
         String headProfileImage,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
