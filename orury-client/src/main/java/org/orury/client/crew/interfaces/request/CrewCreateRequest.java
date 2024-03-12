@@ -74,7 +74,7 @@ public record CrewCreateRequest(
     }
 
     public CrewDto toDto(UserDto userDto) {
-        return new CrewDto(
+        return CrewDto.of(
                 null,
                 name,
                 0,
