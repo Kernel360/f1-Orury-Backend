@@ -4,9 +4,12 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CrewService {
     CrewDto getCrewDtoById(Long crewId);
+
+    void createCrew(CrewDto crewDto, MultipartFile image);
 
     Page<CrewDto> getCrewDtosByRank(Pageable pageable);
 
