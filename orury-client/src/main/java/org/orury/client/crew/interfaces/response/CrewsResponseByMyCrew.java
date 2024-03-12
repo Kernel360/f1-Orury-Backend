@@ -6,6 +6,7 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CrewsResponseByMyCrew(
         Long id,
@@ -18,9 +19,10 @@ public record CrewsResponseByMyCrew(
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        LocalDateTime updatedAt
-        // 운영자 포함 4명까지의 프로필 이미지
-        // new 표시 -> 최근 일정 등록 여부
+        LocalDateTime updatedAt,
+        List<String> tags
+        // TODO: 운영자 포함 4명까지의 프로필 이미지
+        // TODO: new 표시 -> 최근 일정 등록 여부
 ) implements IdIdentifiable {
     public static CrewsResponseByMyCrew of(
             CrewDto crewDto
@@ -34,7 +36,8 @@ public record CrewsResponseByMyCrew(
                 crewDto.icon(),
                 crewDto.userDto().profileImage(),
                 crewDto.createdAt(),
-                crewDto.updatedAt()
+                crewDto.updatedAt(),
+                crewDto.tags()
         );
     }
 }

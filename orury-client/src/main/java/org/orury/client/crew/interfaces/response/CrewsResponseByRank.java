@@ -6,6 +6,7 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CrewsResponseByRank(
         Long id,
@@ -18,9 +19,10 @@ public record CrewsResponseByRank(
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        LocalDateTime updatedAt
-        // int rank
-        // 운영자 포함 4명까지의 프로필 이미지
+        LocalDateTime updatedAt,
+        List<String> tags
+        // TODO: int rank
+        // TODO: 운영자 포함 4명까지의 프로필 이미지
 ) implements IdIdentifiable {
     public static CrewsResponseByRank of(
             CrewDto crewDto
@@ -34,11 +36,12 @@ public record CrewsResponseByRank(
                 crewDto.icon(),
                 crewDto.userDto().profileImage(),
                 crewDto.createdAt(),
-                crewDto.updatedAt()
+                crewDto.updatedAt(),
+                crewDto.tags()
         );
     }
 }
-// 추가로 여기에 순위 달아야할 듯? -> cursor로 조회된 값 기반으로 순서대로 번호매기기?
+// TODO: 추가로 여기에 순위 달아야할 듯? -> cursor로 조회된 값 기반으로 순서대로 번호매기기?
 
 
 
