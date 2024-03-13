@@ -22,37 +22,30 @@ public class CrewApplication extends AuditingField {
     @EmbeddedId
     private CrewApplicationPK crewApplicationPK;
 
-    @Column(name = "description", nullable = true)
-    private String description;
-
-    @Column(name = "is_declined", nullable = false)
-    private int isDeclined;
+    @Column(name = "answer", nullable = true)
+    private String answer;
 
     private CrewApplication(
             CrewApplicationPK crewApplicationPK,
-            String description,
-            int isDeclined,
+            String answer,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         this.crewApplicationPK = crewApplicationPK;
-        this.description = description;
-        this.isDeclined = isDeclined;
+        this.answer = answer;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public static CrewApplication of(
             CrewApplicationPK crewApplicationPK,
-            String description,
-            int isDeclined,
+            String answer,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         return new CrewApplication(
                 crewApplicationPK,
-                description,
-                isDeclined,
+                answer,
                 createdAt,
                 updatedAt
         );

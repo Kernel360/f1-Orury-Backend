@@ -10,22 +10,19 @@ import java.time.LocalDateTime;
  */
 public record CrewApplicationDto(
         CrewApplicationPK crewApplicationPK,
-        String description,
-        int isDeclined,
+        String answer,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public static CrewApplicationDto of(
             CrewApplicationPK crewApplicationPK,
-            String description,
-            int isDeclined,
+            String answer,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
         return new CrewApplicationDto(
                 crewApplicationPK,
-                description,
-                isDeclined,
+                answer,
                 createdAt,
                 updatedAt
         );
@@ -34,8 +31,7 @@ public record CrewApplicationDto(
     public static CrewApplicationDto from(CrewApplication crewApplication) {
         return CrewApplicationDto.of(
                 crewApplication.getCrewApplicationPK(),
-                crewApplication.getDescription(),
-                crewApplication.getIsDeclined(),
+                crewApplication.getAnswer(),
                 crewApplication.getCreatedAt(),
                 crewApplication.getUpdatedAt()
         );
@@ -44,8 +40,7 @@ public record CrewApplicationDto(
     public CrewApplication toEntity() {
         return CrewApplication.of(
                 crewApplicationPK,
-                description,
-                isDeclined,
+                answer,
                 createdAt,
                 updatedAt
         );
