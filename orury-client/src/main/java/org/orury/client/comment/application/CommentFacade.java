@@ -1,10 +1,10 @@
 package org.orury.client.comment.application;
 
-import lombok.RequiredArgsConstructor;
 import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentResponse;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
+import org.orury.client.notification.application.NotificationService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.comment.domain.dto.CommentDto;
@@ -13,18 +13,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class CommentFacade {
     private final CommentService commentService;
     private final PostService postService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public void createComment(CommentCreateRequest request, Long userId) {
         var userDto = userService.getUserDtoById(userId);
         var postDto = postService.getPostDtoById(request.postId());
         var commentDto = request.toDto(userDto, postDto);
         commentService.createComment(commentDto);
+
+        // TODO : 본인이 본인글에 댓글 단 것은 알림 안 가도록 validate 검사 필요함.
+        notificationService.notify(postDto.userDto().id(), "작성한 게시글에 새로운 댓글이 달렸습니다.");
     }
 
     public CommentsWithCursorResponse getCommentsByPostId(Long postId, Long cursor, Long userId) {
