@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
@@ -47,7 +48,7 @@ class ReviewServiceImplTest {
     private ReviewStore reviewStore;
     private GymStore gymStore;
     private ImageStore imageStore;
-
+    private ImageAsyncStore imageAsyncStore;
     private ReviewService reviewService;
 
     @BeforeEach
@@ -56,7 +57,8 @@ class ReviewServiceImplTest {
         reviewStore = mock(ReviewStore.class);
         gymStore = mock(GymStore.class);
         imageStore = mock(ImageStore.class);
-        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore);
+        imageAsyncStore = mock(ImageAsyncStore.class);
+        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore, imageAsyncStore);
 
     }
 

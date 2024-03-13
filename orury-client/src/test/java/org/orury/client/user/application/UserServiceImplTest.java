@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
@@ -40,6 +41,7 @@ class UserServiceImplTest {
     private UserReader userReader;
     private UserStore userStore;
     private ImageStore imageStore;
+    private ImageAsyncStore imageAsyncStore;
     private PostStore postStore;
     private GymStore gymStore;
     private CommentStore commentStore;
@@ -51,12 +53,13 @@ class UserServiceImplTest {
         userReader = mock(UserReader.class);
         userStore = mock(UserStore.class);
         imageStore = mock(ImageStore.class);
+        imageAsyncStore = mock(ImageAsyncStore.class);
         postStore = mock(PostStore.class);
         gymStore = mock(GymStore.class);
         commentStore = mock(CommentStore.class);
         reviewStore = mock(ReviewStore.class);
 
-        userService = new UserServiceImpl(userReader, userStore, imageStore, postStore, commentStore, reviewStore, gymStore);
+        userService = new UserServiceImpl(userReader, userStore, imageStore, imageAsyncStore, postStore, commentStore, reviewStore, gymStore);
     }
 
     @Test
@@ -103,7 +106,7 @@ class UserServiceImplTest {
 
         // then
         then(imageStore).should(times(1)).delete(any(S3Folder.class), anyString());
-        then(imageStore).should(times(1)).upload(any(S3Folder.class), any(MultipartFile.class));
+        then(imageAsyncStore).should(times(1)).upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(times(1)).save(any());
     }
 
