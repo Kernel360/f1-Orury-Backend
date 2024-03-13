@@ -64,7 +64,7 @@ public class PostReaderImpl implements PostReader {
 
     @Override
     public boolean existsByPostLikePK(PostLikePK postLikePK) {
-        if (postRepository.existsById(postLikePK.getPostId()))
+        if (!postRepository.existsById(postLikePK.getPostId()))
             throw new InfraImplException(PostErrorCode.NOT_FOUND);
         return postLikeRepository.existsByPostLikePK(postLikePK);
     }
