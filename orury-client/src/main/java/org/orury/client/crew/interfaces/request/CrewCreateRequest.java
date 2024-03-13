@@ -8,6 +8,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.hibernate.validator.constraints.Length;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
+import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.validation.EnumValue;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -82,7 +83,7 @@ public record CrewCreateRequest(
                 region,
                 description,
                 Strings.EMPTY,
-                false,
+                CrewStatus.ACTIVATED,
                 userDto,
                 null,
                 null,

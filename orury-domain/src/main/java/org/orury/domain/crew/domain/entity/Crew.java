@@ -7,6 +7,8 @@ import org.hibernate.type.NumericBooleanConverter;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewGenderConverter;
+import org.orury.domain.crew.domain.dto.CrewStatus;
+import org.orury.domain.crew.domain.dto.CrewStatusConverter;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.domain.RegionConverter;
 import org.orury.domain.global.listener.CrewImageConverter;
@@ -46,9 +48,9 @@ public class Crew extends AuditingField {
     @Column(name = "icon", nullable = true)
     private String icon;
 
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @Convert(converter = CrewStatusConverter.class)
+    @Column(name = "status", nullable = false)
+    private CrewStatus status;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -83,7 +85,7 @@ public class Crew extends AuditingField {
             Region region,
             String description,
             String icon,
-            boolean isDeleted,
+            CrewStatus status,
             User user,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
@@ -101,7 +103,7 @@ public class Crew extends AuditingField {
         this.region = region;
         this.description = description;
         this.icon = icon;
-        this.isDeleted = isDeleted;
+        this.status = status;
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -121,7 +123,7 @@ public class Crew extends AuditingField {
             Region region,
             String description,
             String icon,
-            boolean isDeleted,
+            CrewStatus status,
             User user,
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
@@ -140,7 +142,7 @@ public class Crew extends AuditingField {
                 region,
                 description,
                 icon,
-                isDeleted,
+                status,
                 user,
                 createdAt,
                 updatedAt,
