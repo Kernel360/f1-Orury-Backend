@@ -1,14 +1,13 @@
 package org.orury.domain.post.infrastructure;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.global.domain.ImageUtils;
+import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
 import org.springframework.stereotype.Component;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PostStoreImpl implements PostStore {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
-    private final ImageUtils imageUtils;
+    private final ImageStore imageStore;
 
     @Override
     public void save(PostLike postLike) {
@@ -52,7 +51,7 @@ public class PostStoreImpl implements PostStore {
         postRepository.findByUserId(id)
                 .forEach(
                         post -> {
-                            imageUtils.oldS3ImagesDelete(S3Folder.POST.getName(), post.getImages());
+                            imageStore.delete(S3Folder.POST, post.getImages());
                             postRepository.delete(post);
                         }
                 );
