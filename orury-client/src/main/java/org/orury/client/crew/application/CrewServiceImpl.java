@@ -152,22 +152,29 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional
     public void applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
+        // 이미 크루원인 경우
         if (crewMemberReader.existByCrewIdAndUserId(crewDto.id(), userDto.id()))
             throw new BusinessException(CrewErrorCode.ALREADY_MEMBER);
 
+        // 크루 참여 검증 (멤버로 참여한 크루 + 신청한 크루 <= 5)
         validateCrewParticipationCount(crewDto.userDto().id());
 
+        // 지원하는 크루 연령기준에 만족하지 않는 경우
         if (!meetAgeCriteria(userDto.birthday(), crewDto))
             throw new BusinessException(CrewErrorCode.AGE_FORBIDDEN);
+        // 지원하는 크루 성별기준에 만족하지 않는 경우
         if (!meetGenderCriteria(userDto.gender(), crewDto))
             throw new BusinessException(CrewErrorCode.GENDER_FORBIDDEN);
 
+        // 지원한느 크루가 즉시 가입인 경우
         if (!crewDto.permissionRequired())
             crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
 
+        // 지원하는 크루가 답변이 필수인 경우 && 제출한 답변이 비어있는 경우
         if (crewDto.answerRequired() && Strings.isBlank(answer))
             throw new BusinessException(CrewErrorCode.EMPTY_ANSWER);
 
+        // 크루 가입신청 저장
         crewApplicationStore.save(crewDto, userDto, answer);
     }
 
@@ -274,11 +281,14 @@ public class CrewServiceImpl implements CrewService {
     }
 
     private void validatePermissionRequired(CrewDto oldCrew, CrewDto newCrew) {
+        // 크루 PermissionRequired가 변경되지 않는 경우 || PermitionRequired false -> true 로 변경되는 경우
         if (oldCrew.permissionRequired() == newCrew.permissionRequired() || newCrew.permissionRequired())
             return;
 
+        // 현재 크루에 지원정보 모두 가져옴.
         List<CrewApplication> applications = crewApplicationReader.findAllByCrewId(oldCrew.id());
 
+        // 유효한 지원정보 필터링
         List<CrewApplication> validApplications = applications.stream()
                 .filter(crewApplication -> {
                     User user = userReader.getUserById(crewApplication.getCrewApplicationPK().getUserId());
@@ -286,13 +296,16 @@ public class CrewServiceImpl implements CrewService {
                             && meetGenderCriteria(user.getGender(), newCrew);
                 }).toList();
 
+        // 변경하고자하는 정원보다 '크루멤버 수 + 유효한 지원자 수'가 더 큰 경우
         if (newCrew.capacity() < oldCrew.memberCount() + validApplications.size())
             throw new BusinessException(CrewErrorCode.APPLICATION_OVERFLOW);
 
+        // 유효한 지원자들에 대해 승인
         validApplications.stream()
                 .map(CrewApplication::getCrewApplicationPK)
                 .forEach(crewApplicationStore::approve);
 
+        // 유효하지 않은 지원자들에 대해 거절
         applications.removeAll(validApplications);
         applications.stream()
                 .map(CrewApplication::getCrewApplicationPK)
