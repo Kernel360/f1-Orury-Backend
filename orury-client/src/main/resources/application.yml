@@ -97,6 +97,6 @@ oauth-login:
     kakao:
       grant-type: authorization_code
       client-id: ENC(pgz2ivbzAfICX0Nilz7oi7v6ymwehNeaXussHnvSA2HPT9hUt/UWJpZON6xxG0ia)
-      redirect-uri: ENC(/eNjHHXCQ9OALM/3dDH3B15hSqiMzm/6ej3G44fPl8YDJSlajeVLnOzLqzVQv5gx)
+      redirect-uri: ENC(0gMRz7DqO7u0eGd0MwL+wRGuQe3/xmwWpmLf4Xa14inFSyaMdvqZnA==)
       client-secret: ENC(5WX5kqJUy9bVfT4XdBxhLqtcJqEPdgMHGaJl79j1l96IWd5rwRBJ1UlsWzvyRuSJ)
       content-type: application/x-www-form-urlencoded;charset=utf-8
