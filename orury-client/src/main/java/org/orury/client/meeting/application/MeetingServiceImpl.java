@@ -49,7 +49,7 @@ public class MeetingServiceImpl implements MeetingService {
     public void createMeeting(MeetingDto meetingDto) {
         validateCrewMember(meetingDto.crewDto().id(), meetingDto.userDto().id());
         validateStartTime(meetingDto.startTime());
-        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
+        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount());
         Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
         meetingMemberStore.addMember(meetingMemberDto);
@@ -147,6 +147,11 @@ public class MeetingServiceImpl implements MeetingService {
     private void validateStartTime(LocalDateTime startTime) {
         if (LocalDateTime.now().isAfter(startTime))
             throw new BusinessException(MeetingErrorCode.INVALID_START_TIME);
+    }
+
+    private void validateCapacity(int capacity, int crewMemberCount) {
+        if (capacity < NumberConstants.MINIMUM_MEETING_CAPACITY || crewMemberCount < capacity)
+            throw new BusinessException(MeetingErrorCode.INVALID_CAPACITY);
     }
 
     private void validateCapacity(int capacity, int crewMemberCount, int meetingMemberCount) {
