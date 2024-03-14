@@ -18,4 +18,11 @@ public class CrewMemberStoreImpl implements CrewMemberStore {
         crewMemberRepository.save(crewMember);
         crewRepository.increaseMemberCount(crewId);
     }
+
+    @Override
+    public void subtractCrewMember(Long crewId, Long userId) {
+        var crewMemberPK = CrewMemberPK.of(userId, crewId);
+        crewMemberRepository.deleteById(crewMemberPK);
+        crewRepository.decreaseMemberCount(crewId);
+    }
 }
