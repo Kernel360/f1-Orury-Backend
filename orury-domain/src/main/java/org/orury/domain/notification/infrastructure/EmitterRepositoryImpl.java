@@ -3,6 +3,7 @@ package org.orury.domain.notification.infrastructure;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -45,7 +46,14 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     // TODO : 맵에 저장된 모든 Emitter 조회하는 메소드 구현
+    public Map<String, SseEmitter> getAllEmitters() {
+        return Collections.unmodifiableMap(emitters);
+    }
+
     // TODO : 맵에 저장된 모든 EventCache 조회하는 메소드 구현
+    public Map<String, Object> getAllEvents() {
+        return Collections.unmodifiableMap(eventCache);
+    }
 
     @Override
     public void deleteEmitterById(String emitterId) {
