@@ -13,4 +13,9 @@ public class CrewMemberReaderImpl implements CrewMemberReader {
     public boolean existByCrewIdAndUserId(Long crewId, Long userId) {
         return crewMemberRepository.existsByCrewMemberPK_CrewIdAndCrewMemberPK_UserId(crewId, userId);
     }
+
+    @Override
+    public int countByUserId(Long userId) {
+        return crewMemberRepository.countByCrewMemberPK_UserId(userId);
+    }
 }

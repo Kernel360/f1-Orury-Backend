@@ -3,7 +3,14 @@ package org.orury.domain.crew.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.NumericBooleanConverter;
 import org.orury.domain.base.db.AuditingField;
+import org.orury.domain.crew.domain.dto.CrewGender;
+import org.orury.domain.crew.domain.dto.CrewGenderConverter;
+import org.orury.domain.crew.domain.dto.CrewStatus;
+import org.orury.domain.crew.domain.dto.CrewStatusConverter;
+import org.orury.domain.global.domain.Region;
+import org.orury.domain.global.domain.RegionConverter;
 import org.orury.domain.global.listener.CrewImageConverter;
 import org.orury.domain.user.domain.entity.User;
 
@@ -30,8 +37,9 @@ public class Crew extends AuditingField {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Convert(converter = RegionConverter.class)
     @Column(name = "region", nullable = false)
-    private String region;
+    private Region region;
 
     @Column(name = "description", nullable = true)
     private String description;
@@ -40,25 +48,53 @@ public class Crew extends AuditingField {
     @Column(name = "icon", nullable = true)
     private String icon;
 
-    @Column(name = "is_deleted", nullable = false)
-    private int isDeleted;
+    @Convert(converter = CrewStatusConverter.class)
+    @Column(name = "status", nullable = false)
+    private CrewStatus status;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "min_age", nullable = false)
+    private int minAge;
+
+    @Column(name = "max_age", nullable = false)
+    private int maxAge;
+
+    @Convert(converter = CrewGenderConverter.class)
+    @Column(name = "gender", nullable = false)
+    private CrewGender gender;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name = "permission_required", nullable = false)
+    private boolean permissionRequired;
+
+    @Column(name = "question", nullable = false)
+    private String question;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(name = "answer_required", nullable = false)
+    private boolean answerRequired;
 
     private Crew(
             Long id,
             String name,
             int memberCount,
             int capacity,
-            String region,
+            Region region,
             String description,
             String icon,
-            int isDeleted,
+            CrewStatus status,
             User user,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int minAge,
+            int maxAge,
+            CrewGender gender,
+            boolean permissionRequired,
+            String question,
+            boolean answerRequired
     ) {
         this.id = id;
         this.name = name;
@@ -67,10 +103,16 @@ public class Crew extends AuditingField {
         this.region = region;
         this.description = description;
         this.icon = icon;
-        this.isDeleted = isDeleted;
+        this.status = status;
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.gender = gender;
+        this.permissionRequired = permissionRequired;
+        this.question = question;
+        this.answerRequired = answerRequired;
     }
 
     public static Crew of(
@@ -78,13 +120,19 @@ public class Crew extends AuditingField {
             String name,
             int memberCount,
             int capacity,
-            String region,
+            Region region,
             String description,
             String icon,
-            int isDeleted,
+            CrewStatus status,
             User user,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            int minAge,
+            int maxAge,
+            CrewGender gender,
+            boolean permissionRequired,
+            String question,
+            boolean answerRequired
     ) {
         return new Crew(
                 id,
@@ -94,10 +142,16 @@ public class Crew extends AuditingField {
                 region,
                 description,
                 icon,
-                isDeleted,
+                status,
                 user,
                 createdAt,
-                updatedAt
+                updatedAt,
+                minAge,
+                maxAge,
+                gender,
+                permissionRequired,
+                question,
+                answerRequired
         );
     }
 }

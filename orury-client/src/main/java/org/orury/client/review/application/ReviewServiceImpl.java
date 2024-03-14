@@ -49,6 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
         gymStore.increaseReviewCountAndTotalScore(reviewDto.gymDto().id(), reviewDto.score());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ReviewDto getReviewDtoById(Long reviewId, Long userId) {
         Review review = reviewReader.findById(reviewId)
@@ -76,6 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
         imageStore.delete(REVIEW, reviewDto.images());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ReviewDto> getReviewDtosByGymId(Long gymId, Long cursor, Pageable pageable) {
         List<Review> reviews = (cursor.equals(NumberConstants.FIRST_CURSOR))
@@ -85,6 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
         return convertReviewsToReviewDtos(reviews);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ReviewDto> getReviewDtosByUserId(Long userId, Long cursor, Pageable pageable) {
         List<Review> reviews = (cursor.equals(NumberConstants.FIRST_CURSOR))

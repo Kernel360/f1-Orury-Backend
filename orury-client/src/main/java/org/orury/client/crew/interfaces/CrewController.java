@@ -1,7 +1,12 @@
 package org.orury.client.crew.interfaces;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
+import org.orury.client.crew.interfaces.request.CrewCreateRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponseByMyCrew;
 import org.orury.client.crew.interfaces.response.CrewsResponseByRank;
@@ -10,15 +15,8 @@ import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +24,30 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class CrewController {
     private final CrewFacade crewFacade;
+
+    @Operation(summary = "크루 생성", description = "크루 생성에 필요한 정보를 받아, 크루를 생성한다.")
+    @PostMapping
+    public ApiResponse createCrew(
+            @Valid @RequestPart CrewCreateRequest request,
+            @RequestPart(required = false) MultipartFile image,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        crewFacade.createCrew(request, image, userPrincipal.id());
+
+        return ApiResponse.of(CrewMessage.CREW_CREATED.getMessage());
+    }
+
+    @Operation(summary = "크루 이미지 변경", description = "크루 이미지를 변경한다.")
+    @PatchMapping("{crewId}/image")
+    public ApiResponse updateCrewImage(
+            @PathVariable Long crewId,
+            @RequestPart MultipartFile image,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        crewFacade.updateCrewImage(crewId, image, userPrincipal.id());
+
+        return ApiResponse.of(CrewMessage.CREW_IMAGE_UPDATED.getMessage());
+    }
 
     @Operation(summary = "크루 랭킹순 조회", description = "크루를 랭킹 순으로 조회한다.")
     @GetMapping("/rank")

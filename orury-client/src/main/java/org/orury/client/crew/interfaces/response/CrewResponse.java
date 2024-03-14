@@ -1,28 +1,31 @@
 package org.orury.client.crew.interfaces.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.orury.domain.crew.domain.dto.CrewDto;
+import org.orury.domain.crew.domain.dto.CrewStatus;
+import org.orury.domain.global.domain.Region;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CrewResponse(
         Long id,
         String name,
         int memberCount,
         int capacity,
-        String region,
+        Region region,
         String description,
         String icon,
-        int isDeleted,
+        CrewStatus status,
         String headProfileImage,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
-        boolean isApply
+        List<String> tags,
+        boolean isMember
 ) {
-    public static CrewResponse of(CrewDto crewDto, boolean isApply) {
+    public static CrewResponse of(CrewDto crewDto, boolean isMember) {
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
@@ -31,11 +34,12 @@ public record CrewResponse(
                 crewDto.region(),
                 crewDto.description(),
                 crewDto.icon(),
-                crewDto.isDeleted(),
+                crewDto.status(),
                 crewDto.userDto().profileImage(),
                 crewDto.createdAt(),
                 crewDto.updatedAt(),
-                isApply
+                crewDto.tags(),
+                isMember
         );
     }
 }
