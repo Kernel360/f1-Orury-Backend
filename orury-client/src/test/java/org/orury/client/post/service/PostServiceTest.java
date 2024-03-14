@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.client.post.application.PostServiceImpl;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
@@ -52,13 +53,15 @@ class PostServiceTest {
     private PostStore postStore;
     private ImageStore imageStore;
     private PostServiceImpl postService;
+    private ImageAsyncStore imageAsyncStore;
 
     @BeforeEach
     public void setUp() {
         postReader = mock(PostReader.class);
         postStore = mock(PostStore.class);
         imageStore = mock(ImageStore.class);
-        postService = new PostServiceImpl(postReader, postStore, imageStore);
+        imageAsyncStore = mock(ImageAsyncStore.class);
+        postService = new PostServiceImpl(postReader, postStore, imageStore, imageAsyncStore);
     }
 
     @Test
@@ -68,13 +71,13 @@ class PostServiceTest {
         PostDto postDto = createPostDto(null, 1L);
         List<MultipartFile> files = List.of(createImagePart());
         var images = List.of("post1.png", "post2.png");
-        given(imageStore.upload(POST, files)).willReturn(images);
+        given(imageAsyncStore.upload(POST, files)).willReturn(images);
 
         // when
         postService.createPost(postDto, files);
 
         // then
-        then(imageStore).should(times(1)).upload(POST, files);
+        then(imageAsyncStore).should(times(1)).upload(POST, files);
     }
 
     @Test
@@ -90,7 +93,7 @@ class PostServiceTest {
 
         //then
         then(imageStore).should(times(1)).delete(POST, postDto.images());
-        then(imageStore).should(times(1)).upload(POST, files);
+        then(imageAsyncStore).should(times(1)).upload(POST, files);
         then(postStore).should(times(1)).save(postDto.toEntity(images));
     }
 

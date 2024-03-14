@@ -5,6 +5,7 @@ import org.orury.domain.crew.domain.CrewMemberReader;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.user.domain.entity.User;
 import org.orury.domain.user.infrastucture.UserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,5 +33,10 @@ public class CrewMemberReaderImpl implements CrewMemberReader {
                 .map(crewMember -> crewMember.getCrewMemberPK().getUserId())
                 .map(userRepository::findUserById)
                 .toList();
+    }
+
+    @Override
+    public List<CrewMember> getOtherCrewMembersByCrewIdMaximum(Long crewId, Long crewCreatorId, int maximum) {
+        return crewMemberRepository.findByCrewMemberPK_CrewIdAndCrewMemberPK_UserIdNot(crewId, crewCreatorId, PageRequest.of(0, maximum));
     }
 }

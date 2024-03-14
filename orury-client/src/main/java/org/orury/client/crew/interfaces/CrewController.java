@@ -8,9 +8,7 @@ import org.orury.client.crew.application.CrewFacade;
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
-import org.orury.client.crew.interfaces.response.CrewsResponseByMyCrew;
-import org.orury.client.crew.interfaces.response.CrewsResponseByRank;
-import org.orury.client.crew.interfaces.response.CrewsResponseByRecommend;
+import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.domain.base.converter.ApiResponse;
 import org.orury.domain.user.domain.dto.UserPrincipal;
 import org.springframework.data.domain.Page;
@@ -39,16 +37,16 @@ public class CrewController {
 
     @Operation(summary = "크루 랭킹순 조회", description = "크루를 랭킹 순으로 조회한다.")
     @GetMapping("/rank")
-    public ApiResponse getCrewsByRank(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        Page<CrewsResponseByRank> pageResponse = crewFacade.getCrewsByRank(page);
+    public ApiResponse getCrewsByRank(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRank(page);
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
 
     @Operation(summary = "크루 추천순 조회", description = "크루를 추천 순으로 조회한다.")
     @GetMapping("/recommend")
-    public ApiResponse getCrewsByRecommendation(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        Page<CrewsResponseByRecommend> pageResponse = crewFacade.getCrewsByRecommend(page);
+    public ApiResponse getCrewsByRecommendation(@RequestParam int page) {
+        Page<CrewsResponse> pageResponse = crewFacade.getCrewsByRecommend(page);
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
@@ -56,7 +54,7 @@ public class CrewController {
     @Operation(summary = "내 크루 조회", description = "내가 가입한 크루를 조회한다.")
     @GetMapping("/mycrew")
     public ApiResponse getMyCrews(@RequestParam int page, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        Page<CrewsResponseByMyCrew> pageResponse = crewFacade.getMyCrews(userPrincipal.id(), page);
+        Page<CrewsResponse> pageResponse = crewFacade.getMyCrews(userPrincipal.id(), page);
 
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }

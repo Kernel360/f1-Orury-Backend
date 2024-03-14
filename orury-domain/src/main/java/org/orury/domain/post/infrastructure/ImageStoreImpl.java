@@ -12,14 +12,11 @@ import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.global.infrastructure.S3Repository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -27,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageStoreImpl implements ImageStore {
     private final AmazonS3 amazonS3;
-    private final S3Repository s3Repository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -35,25 +31,19 @@ public class ImageStoreImpl implements ImageStore {
     @Value("${cloud.aws.s3.default-image}")
     private String defaultImage;
 
+    /**
+     * 비동기 이미지 업로드
+     */
+    @Async
     @Override
-    public List<String> upload(S3Folder domain, List<MultipartFile> multipartFiles) {
-        // TODO
-        // 프론트 null check 로직 추가되면 return값 null로 바꿔야함
-        if (ImageUtil.filesValidation(multipartFiles)) return List.of();
-        // 파일들을 임시로 저장합니다.
-        List<File> files = multipartFiles.stream().map(this::convert).toList();
-        // S3에 파일들을 업로드
-        var fileNames = putS3(domain, files);
-        // 임시 파일들을 삭제합니다.
-        files.forEach(this::removeFile);
-
-        return fileNames;
-    }
-
-    @Override
-    public String upload(S3Folder domain, MultipartFile profile) {
-        if (ImageUtil.fileValidation(profile)) return null;
-        return upload(domain, List.of(profile)).get(0);
+    public void upload(S3Folder domain, List<File> files, List<String> fileNames) {
+        for (int idx = 0; idx < files.size(); idx++) {
+            // S3에 파일들을 업로드
+            amazonS3.putObject(new PutObjectRequest(bucket + domain.getName(), fileNames.get(idx), files.get(idx))
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            //임시 파일 삭제
+            removeFile(files.get(idx));
+        }
     }
 
     @Override
@@ -71,44 +61,9 @@ public class ImageStoreImpl implements ImageStore {
                 .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
     }
 
-    @Override
-    public void oldS3ImagesDelete(String domain, List<String> images) {
-        if (images == null || images.isEmpty()) return;
-        s3Repository.delete(domain, images);
-    }
-
-    private File convert(MultipartFile multipartFile) {
-        // MultipartFile을 File로 변환합니다.
-        File file = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
-
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(multipartFile.getBytes());
-        } catch (IOException e) {
-            throw new FileException(FileExceptionCode.FILE_NOT_FOUND);
-        }
-        return file;
-    }
-
-    private List<String> putS3(S3Folder domain, List<File> files) {
-        // S3에 파일들을 업로드
-        return files.stream()
-                .map(it -> requestPutObject(bucket + domain.getName(), it))
-                .toList();
-    }
-
     private void removeFile(File file) {
         // 임시 파일을 삭제합니다.
         if (file.delete()) return;
         throw new FileException(FileExceptionCode.FILE_DELETE_ERROR);
-    }
-
-    private String requestPutObject(String folder, File file) {
-        try {
-            String fileName = ImageUtil.createFileName();
-            amazonS3.putObject(new PutObjectRequest(folder, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
-            return fileName;
-        } catch (Exception e) {
-            throw new FileException(FileExceptionCode.FILE_UPLOAD_ERROR);
-        }
     }
 }
