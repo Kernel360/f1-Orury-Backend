@@ -43,6 +43,8 @@ public final class NumberConstants {
     public static final int MAXIMUM_CREW_PARTICIPATION = 3;
     // Maximum Number of User Profile Images from Thumbnail of Meetings List
     public static final int MAXIMUM_OF_MEETING_THUMBNAILS = 10;
+    // Maximum Number of User Profile Images from Thumbnail of Crews List
+    public static final int MAXIMUM_OF_CREW_THUMBNAILS = 4;
     // Minimum Number of Meeting Capacity
     public static final int MINIMUM_MEETING_CAPACITY = 2;
 

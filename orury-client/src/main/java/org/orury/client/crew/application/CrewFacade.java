@@ -3,9 +3,7 @@ package org.orury.client.crew.application;
 import lombok.RequiredArgsConstructor;
 import org.orury.client.crew.interfaces.request.CrewCreateRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
-import org.orury.client.crew.interfaces.response.CrewsResponseByMyCrew;
-import org.orury.client.crew.interfaces.response.CrewsResponseByRank;
-import org.orury.client.crew.interfaces.response.CrewsResponseByRecommend;
+import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
@@ -13,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
 
@@ -28,22 +28,22 @@ public class CrewFacade {
         crewService.createCrew(crewDto, image);
     }
 
-    public Page<CrewsResponseByRank> getCrewsByRank(int page) {
+    public Page<CrewsResponse> getCrewsByRank(int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByRank(pageRequest);
-        return crewDtos.map(CrewsResponseByRank::of);
+        return convertCrewDtosToCrewsResponses(crewDtos);
     }
 
-    public Page<CrewsResponseByRecommend> getCrewsByRecommend(int page) {
+    public Page<CrewsResponse> getCrewsByRecommend(int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByRecommend(pageRequest);
-        return crewDtos.map(CrewsResponseByRecommend::of);
+        return convertCrewDtosToCrewsResponses(crewDtos);
     }
 
-    public Page<CrewsResponseByMyCrew> getMyCrews(Long userId, int page) {
+    public Page<CrewsResponse> getMyCrews(Long userId, int page) {
         var pageRequest = PageRequest.of(page, CREW_PAGINATION_SIZE);
         Page<CrewDto> crewDtos = crewService.getCrewDtosByUserId(userId, pageRequest);
-        return crewDtos.map(CrewsResponseByMyCrew::of);
+        return convertCrewDtosToCrewsResponses(crewDtos);
     }
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
@@ -58,5 +58,12 @@ public class CrewFacade {
     public void updateCrewImage(Long crewId, MultipartFile image, Long userId) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         crewService.updateCrewImage(crewDto, image, userId);
+    }
+
+    private Page<CrewsResponse> convertCrewDtosToCrewsResponses(Page<CrewDto> crewDtos) {
+        return crewDtos.map(crewDto -> {
+            List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+            return CrewsResponse.of(crewDto, userImages);
+        });
     }
 }
