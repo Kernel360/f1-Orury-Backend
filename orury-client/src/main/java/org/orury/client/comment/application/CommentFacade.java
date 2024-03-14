@@ -30,7 +30,8 @@ public class CommentFacade {
         commentService.createComment(commentDto);
 
         // TODO : 본인이 본인글에 댓글 단 것은 알림 안 가도록 validate 검사 필요함.
-        notificationService.notify(postDto.userDto().id(), "작성한 게시글에 새로운 댓글이 달렸습니다.");
+        // 정상적으로 알림이 가는지 확인하기 위해 예시로 추가했습니다.
+        //notificationService.send(userDto, "작성한 게시글에 새로운 댓글이 달렸습니다.", "연결되는 url");
     }
 
     public CommentsWithCursorResponse getCommentsByPostId(Long postId, Long cursor, Long userId) {
