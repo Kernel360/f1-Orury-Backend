@@ -28,7 +28,7 @@ public record CrewCreateRequest(
         @NotEmpty(message = "크루 소개는 필수 입력사항입니다.")
         String description,
 
-        @Min(value = 7, message = "최저 연령을 7세 이상으로 설정해 주세요.")
+        @Min(value = 12, message = "최저 연령을 12세 이상으로 설정해 주세요.")
         int minAge,
 
         @Max(value = 100, message = "최고 연령을 100세 이하로 설정해 주세요.")
