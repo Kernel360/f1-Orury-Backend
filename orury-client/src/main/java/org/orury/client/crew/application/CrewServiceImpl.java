@@ -1,24 +1,17 @@
 package org.orury.client.crew.application;
 
-import static org.orury.common.util.S3Folder.CREW;
-
-import org.orury.client.global.image.ImageAsyncStore;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.crew.domain.CrewMemberReader;
-import org.orury.domain.crew.domain.CrewMemberStore;
-import org.orury.domain.crew.domain.CrewReader;
-import org.orury.domain.crew.domain.CrewStore;
-import org.orury.domain.crew.domain.CrewTagReader;
-import org.orury.domain.crew.domain.CrewTagStore;
 import org.orury.common.util.AgeUtils;
+import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewApplication;
+import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageStore;
@@ -38,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.orury.common.util.S3Folder.CREW;
+
 @Service
 @RequiredArgsConstructor
 public class CrewServiceImpl implements CrewService {
@@ -52,8 +47,8 @@ public class CrewServiceImpl implements CrewService {
     private final MeetingStore meetingStore;
     private final MeetingMemberStore meetingMemberStore;
     private final UserReader userReader;
-    private final ImageAsyncStore imageasyncStore;
     private final ImageStore imageStore;
+    private final ImageAsyncStore imageAsyncStore;
 
 
     @Override
@@ -69,7 +64,7 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void createCrew(CrewDto crewDto, MultipartFile file) {
         validateCrewParticipationCount(crewDto.userDto().id());
-        var icon = imageasyncStore.upload(CREW, file);
+        var icon = imageAsyncStore.upload(CREW, file);
         Crew crew = crewStore.save(crewDto.toEntity(icon));
         crewTagStore.addTags(crew, crewDto.tags());
         crewMemberStore.addCrewMember(crew.getId(), crew.getUser().getId());
@@ -114,7 +109,7 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(readOnly = true)
     public boolean existCrewMember(CrewMemberPK crewMemberPK) {
-        return crewReader.existCrewMember(crewMemberPK);
+        return crewMemberReader.existsByCrewMemberPK(crewMemberPK);
     }
 
     @Override
@@ -136,7 +131,7 @@ public class CrewServiceImpl implements CrewService {
     public void updateCrewImage(CrewDto crewDto, MultipartFile imageFile, Long userId) {
         validateCrewCreator(crewDto.userDto().id(), userId);
         var oldImage = crewDto.icon();
-        var newImage = imageasyncStore.upload(CREW, imageFile);
+        var newImage = imageAsyncStore.upload(CREW, imageFile);
         crewStore.save(crewDto.toEntity(newImage));
         imageStore.delete(CREW, oldImage);
     }
@@ -153,7 +148,7 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
         // 이미 크루원인 경우
-        if (crewMemberReader.existByCrewIdAndUserId(crewDto.id(), userDto.id()))
+        if (crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
             throw new BusinessException(CrewErrorCode.ALREADY_MEMBER);
 
         // 크루 참여 검증 (멤버로 참여한 크루 + 신청한 크루 <= 5)
@@ -166,9 +161,11 @@ public class CrewServiceImpl implements CrewService {
         if (!meetGenderCriteria(userDto.gender(), crewDto))
             throw new BusinessException(CrewErrorCode.GENDER_FORBIDDEN);
 
-        // 지원한느 크루가 즉시 가입인 경우
-        if (!crewDto.permissionRequired())
+        // 지원하는 크루가 즉시 가입인 경우
+        if (!crewDto.permissionRequired()) {
             crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
+            return;
+        }
 
         // 지원하는 크루가 답변이 필수인 경우 && 제출한 답변이 비어있는 경우
         if (crewDto.answerRequired() && Strings.isBlank(answer))
@@ -242,7 +239,7 @@ public class CrewServiceImpl implements CrewService {
     }
 
     private void validateCrewMember(Long crewId, Long userId) {
-        if (!crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        if (!crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
             throw new BusinessException(CrewErrorCode.NOT_CREW_MEMBER);
     }
 
@@ -252,9 +249,9 @@ public class CrewServiceImpl implements CrewService {
     }
 
     private void validateCrewParticipationCount(Long userId) {
-        int memberCount = crewMemberReader.countByUserId(userId);
-        int applicationCount = crewApplicationReader.countByUserId(userId);
-        if (NumberConstants.MAXIMUM_CREW_PARTICIPATION <= memberCount + applicationCount)
+        int participatingCrewCount = crewMemberReader.countByUserId(userId);
+        int applyingCrewCount = crewApplicationReader.countByUserId(userId);
+        if (NumberConstants.MAXIMUM_CREW_PARTICIPATION <= participatingCrewCount + applyingCrewCount)
             throw new BusinessException(CrewErrorCode.MAXIMUM_PARTICIPATION);
     }
 
