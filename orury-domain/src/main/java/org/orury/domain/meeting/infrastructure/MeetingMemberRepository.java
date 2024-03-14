@@ -7,9 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MeetingMemberRepository extends JpaRepository<MeetingMember, MeetingMemberPK> {
     boolean existsByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(Long meetingId, Long userId);
+
+    Optional<MeetingMember> findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(Long meetingId, Long userId);
 
     Page<MeetingMember> findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserIdNot(Long meetingId, Long meetingCreatorId, PageRequest pageRequest);
 
