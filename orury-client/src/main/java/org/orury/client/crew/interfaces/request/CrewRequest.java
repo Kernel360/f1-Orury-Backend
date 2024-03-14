@@ -15,7 +15,7 @@ import org.orury.domain.user.domain.dto.UserDto;
 
 import java.util.List;
 
-public record CrewCreateRequest(
+public record CrewRequest(
         @Length(min = 3, max = 15, message = "크루명은 3~15 글자수로 설정 가능합니다.")
         String name,
 
@@ -46,7 +46,7 @@ public record CrewCreateRequest(
         @Size(min = 1, max = 3, message = "태그는 최소 1개, 최대 3개까지만 추가할 수 있습니다.")
         List<@Size(min = 1, max = 5, message = "태그 길이는 1~5 글자여야 합니다.") String> tags
 ) {
-    public static CrewCreateRequest of(
+    public static CrewRequest of(
             String name,
             int capacity,
             Region region,
@@ -59,7 +59,7 @@ public record CrewCreateRequest(
             boolean answerRequired,
             List<String> tags
     ) {
-        return new CrewCreateRequest(
+        return new CrewRequest(
                 name,
                 capacity,
                 region,
@@ -86,6 +86,29 @@ public record CrewCreateRequest(
                 CrewStatus.ACTIVATED,
                 userDto,
                 null,
+                null,
+                minAge,
+                maxAge,
+                gender,
+                permissionRequired,
+                question,
+                answerRequired,
+                tags
+        );
+    }
+
+    public CrewDto toDto(CrewDto crewDto) {
+        return CrewDto.of(
+                crewDto.id(),
+                name,
+                crewDto.memberCount(),
+                capacity,
+                region,
+                description,
+                crewDto.icon(),
+                crewDto.status(),
+                crewDto.userDto(),
+                crewDto.createdAt(),
                 null,
                 minAge,
                 maxAge,
