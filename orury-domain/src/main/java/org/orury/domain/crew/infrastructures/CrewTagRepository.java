@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CrewTagRepository extends JpaRepository<CrewTag, Long> {
     List<CrewTag> findCrewTagByCrewId(Long crewId);
+
+    void deleteAllByCrewId(Long crewId);
 }
