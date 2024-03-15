@@ -4,8 +4,8 @@ public final class NumberConstants {
     private NumberConstants() {
     }
 
-    // NumberCode for Every Sex
-    public static final int ANY_SEX = 3;
+    // NumberCode for Every Gender
+    public static final int ANY_GENDER = 3;
     // NumberCode for Female
     public static final int FEMALE = 2;
     // NumberCode for Male

@@ -32,6 +32,7 @@ class MeetingMemberReaderImplTest {
         meetingMemberReader = new MeetingMemberReaderImpl(meetingMemberRepository);
     }
 
+    @DisplayName("일정id와 유저id를 받아, 일정멤버 존재 여부를 확인한다.")
     @Test
     void existsByMeetingIdAndUserId() {
         // given & when
@@ -45,6 +46,7 @@ class MeetingMemberReaderImplTest {
                 .existsByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(anyLong(), anyLong());
     }
 
+    @DisplayName("일정id, 일정생성자id, 유저id를 받아, 일정생성자를 제외한 다른 일정멤버목록을 조회한다.")
     @Test
     void getOtherMeetingMembersByMeetingIdMaximum() {
         // given & when
@@ -59,6 +61,7 @@ class MeetingMemberReaderImplTest {
                 .findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserIdNot(anyLong(), anyLong(), any(PageRequest.class));
     }
 
+    @DisplayName("일정id를 받아, 일정에 참여한 멤버목록을 조회한다.")
     @Test
     void getMeetingMembersByMeetingId() {
         // given & when
