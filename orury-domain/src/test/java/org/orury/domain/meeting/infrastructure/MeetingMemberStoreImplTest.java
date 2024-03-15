@@ -40,6 +40,7 @@ class MeetingMemberStoreImplTest {
         meetingMemberStore = new MeetingMemberStoreImpl(meetingMemberRepository, meetingRepository);
     }
 
+    @DisplayName("일정멤버를 받아, 일정멤버를 저장하고, 일정의 memberCount를 증가시킨다.")
     @Test
     void addMember() {
         // given
@@ -57,6 +58,7 @@ class MeetingMemberStoreImplTest {
                 .increaseMemberCount(anyLong());
     }
 
+    @DisplayName("일정멤버를 받아, 일정멤버를 삭제하고, 일정의 memberCount를 감소시킨다.")
     @Test
     void removeMember() {
         // given
@@ -74,6 +76,7 @@ class MeetingMemberStoreImplTest {
                 .decreaseMemberCount(anyLong());
     }
 
+    @DisplayName("유저id와 크루id를 받아, 크루에 해당 유저가 참여한 일정에서 유저를 삭제하고, 일정의 memberCount를 감소시킨다.")
     @Test
     void removeAllByUserIdAndCrewId() {
         // given & when

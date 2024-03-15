@@ -8,7 +8,7 @@ import org.orury.domain.global.constants.NumberConstants;
 @Getter
 @AllArgsConstructor
 public enum CrewGender {
-    ANY("모든 성별", NumberConstants.ANY_SEX, "A"),
+    ANY("모든 성별", NumberConstants.ANY_GENDER, "A"),
     FEMALE("여성", NumberConstants.FEMALE, "F"),
     MALE("남성", NumberConstants.MALE, "M");
 

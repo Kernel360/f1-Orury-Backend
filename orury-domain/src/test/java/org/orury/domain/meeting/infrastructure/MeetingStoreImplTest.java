@@ -31,6 +31,7 @@ class MeetingStoreImplTest {
         meetingStore = new MeetingStoreImpl(meetingRepository);
     }
 
+    @DisplayName("일정을 받아, 일정을 저장한다.")
     @Test
     void createMeeting() {
         // given && when
@@ -43,6 +44,7 @@ class MeetingStoreImplTest {
                 .save(any(Meeting.class));
     }
 
+    @DisplayName("일정을 받아, 일정을 저장한다.")
     @Test
     void updateMeeting() {
         // given && when
@@ -55,6 +57,7 @@ class MeetingStoreImplTest {
                 .save(any(Meeting.class));
     }
 
+    @DisplayName("일정id를 받아, 일정을 삭제한다.")
     @Test
     void deleteMeeting() {
         // given && when
@@ -67,6 +70,7 @@ class MeetingStoreImplTest {
                 .deleteById(anyLong());
     }
 
+    @DisplayName("유저id와 일정id를 받아, 유저가 주최한 일정을 모두 삭제한다.")
     @Test
     void deleteAllByUserIdAndCrewId() {
         // given && when

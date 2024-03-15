@@ -32,6 +32,7 @@ class MeetingReaderImplTest {
         meetingReader = new MeetingReaderImpl(meetingRepository);
     }
 
+    @DisplayName("일정id를 받아, 일정을 조회한다.")
     @Test
     void findById() {
         // given & when
@@ -44,6 +45,7 @@ class MeetingReaderImplTest {
                 .findById(anyLong());
     }
 
+    @DisplayName("일정id를 받아, 시작되지 않은 일정목록을 조회한다.")
     @Test
     void getNotStartedMeetingsByCrewId() {
         // given & when
@@ -56,6 +58,7 @@ class MeetingReaderImplTest {
                 .findByCrew_IdAndStartTimeAfterOrderByIdDesc(anyLong(), any(LocalDateTime.class));
     }
 
+    @DisplayName("일정id를 받아, 시작된 일정목록을 조회한다.")
     @Test
     void getStartedMeetingsByCrewId() {
         // given & when
