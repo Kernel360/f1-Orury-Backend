@@ -109,7 +109,7 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(readOnly = true)
     public boolean existCrewMember(CrewMemberPK crewMemberPK) {
-        return crewReader.existCrewMember(crewMemberPK);
+        return crewMemberReader.existsByCrewMemberPK(crewMemberPK);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
         // 이미 크루원인 경우
-        if (crewMemberReader.existByCrewIdAndUserId(crewDto.id(), userDto.id()))
+        if (crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
             throw new BusinessException(CrewErrorCode.ALREADY_MEMBER);
 
         // 크루 참여 검증 (멤버로 참여한 크루 + 신청한 크루 <= 5)
@@ -237,7 +237,7 @@ public class CrewServiceImpl implements CrewService {
     }
 
     private void validateCrewMember(Long crewId, Long userId) {
-        if (!crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        if (!crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
             throw new BusinessException(CrewErrorCode.NOT_CREW_MEMBER);
     }
 
@@ -247,9 +247,9 @@ public class CrewServiceImpl implements CrewService {
     }
 
     private void validateCrewParticipationCount(Long userId) {
-        int memberCount = crewMemberReader.countByUserId(userId);
-        int applicationCount = crewApplicationReader.countByUserId(userId);
-        if (NumberConstants.MAXIMUM_CREW_PARTICIPATION <= memberCount + applicationCount)
+        int participatingCrewCount = crewMemberReader.countByUserId(userId);
+        int applyingCrewCount = crewApplicationReader.countByUserId(userId);
+        if (NumberConstants.MAXIMUM_CREW_PARTICIPATION <= participatingCrewCount + applyingCrewCount)
             throw new BusinessException(CrewErrorCode.MAXIMUM_PARTICIPATION);
     }
 

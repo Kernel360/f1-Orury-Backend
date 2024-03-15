@@ -140,7 +140,7 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     private void validateCrewMember(Long crewId, Long userId) {
-        if (!crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        if (!crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
             throw new BusinessException(CrewErrorCode.NOT_CREW_MEMBER);
     }
 

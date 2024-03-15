@@ -16,12 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CrewReaderImpl implements CrewReader {
     private final CrewRepository crewRepository;
+    private final CrewMemberRepository crewMemberRepository;
 
     @Override
     public Optional<Crew> findById(Long crewId) {
         return crewRepository.findById(crewId);
     }
-    private final CrewMemberRepository crewMemberRepository;
 
     @Override
     public Page<Crew> getCrewsByRank(Pageable pageable) {
@@ -43,10 +43,5 @@ public class CrewReaderImpl implements CrewReader {
                 .toList();
 
         return crewRepository.findAllByIdIn(crewIds, pageable);
-    }
-
-    @Override
-    public boolean existCrewMember(CrewMemberPK crewMemberPK) {
-        return crewMemberRepository.existsById(crewMemberPK);
     }
 }
