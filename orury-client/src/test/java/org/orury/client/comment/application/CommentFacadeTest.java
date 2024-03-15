@@ -1,5 +1,14 @@
 package org.orury.client.comment.application;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
+import org.orury.client.notification.application.NotificationService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.comment.domain.dto.CommentDto;
@@ -24,13 +34,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 댓글 Facade 테스트")
 @ActiveProfiles("test")
@@ -39,6 +42,7 @@ class CommentFacadeTest {
     CommentService commentService;
     PostService postService;
     UserService userService;
+    NotificationService notificationService;
 
     @BeforeEach
     void setUp() {
@@ -46,7 +50,7 @@ class CommentFacadeTest {
         postService = mock(PostService.class);
         userService = mock(UserService.class);
 
-        commentFacade = new CommentFacade(commentService, postService, userService);
+        commentFacade = new CommentFacade(commentService, postService, userService, notificationService);
     }
 
     @DisplayName("댓글생성Request와 유저id를 받으면, 댓글을 생성한다.")
