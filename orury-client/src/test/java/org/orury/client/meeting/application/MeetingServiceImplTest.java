@@ -108,7 +108,7 @@ class MeetingServiceImplTest {
         int validCapacity = 3;
         MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
         Meeting meeting = createMeeting(meetingDto.id());
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingStore.createMeeting(any()))
                 .willReturn(meeting);
@@ -118,7 +118,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingStore).should(only())
                 .createMeeting(any());
         then(meetingMemberStore).should(only())
@@ -132,7 +132,7 @@ class MeetingServiceImplTest {
         LocalDateTime startTime = LocalDateTime.now().plusDays(1);
         int validCapacity = 3;
         MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
         // when & then
@@ -141,7 +141,7 @@ class MeetingServiceImplTest {
 
         assertEquals(CrewErrorCode.NOT_CREW_MEMBER.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingStore).should(never())
                 .createMeeting(any());
         then(meetingMemberStore).should(never())
@@ -155,7 +155,7 @@ class MeetingServiceImplTest {
         LocalDateTime startTime = LocalDateTime.now().minusDays(1);
         int validCapacity = 3;
         MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
         // when & then
@@ -164,7 +164,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.INVALID_START_TIME.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingStore).should(never())
                 .createMeeting(any());
         then(meetingMemberStore).should(never())
@@ -178,7 +178,7 @@ class MeetingServiceImplTest {
         LocalDateTime startTime = LocalDateTime.now().plusDays(1);
         int invalidCapacity = 1;
         MeetingDto meetingDto = createMeetingDto(startTime, invalidCapacity);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
         // when & then
@@ -187,7 +187,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.INVALID_CAPACITY.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingStore).should(never())
                 .createMeeting(any());
         then(meetingMemberStore).should(never())
@@ -201,7 +201,7 @@ class MeetingServiceImplTest {
         LocalDateTime startTime = LocalDateTime.now().plusDays(1);
         int invalidCapacity = 1000;
         MeetingDto meetingDto = createMeetingDto(startTime, invalidCapacity);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
         // when & then
@@ -210,7 +210,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.INVALID_CAPACITY.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingStore).should(never())
                 .createMeeting(any());
         then(meetingMemberStore).should(never())
@@ -224,7 +224,7 @@ class MeetingServiceImplTest {
         Long crewId = 3L;
         Long userId = 1L;
         List<Meeting> meetings = List.of(createMeeting(3L), createMeeting(2L), createMeeting(1L));
-        given(crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
         given(meetingReader.getNotStartedMeetingsByCrewId(crewId))
                 .willReturn(meetings);
@@ -236,7 +236,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingReader).should(only())
                 .getNotStartedMeetingsByCrewId(anyLong());
         then(meetingMemberReader).should(times(meetings.size()))
@@ -249,7 +249,7 @@ class MeetingServiceImplTest {
         // given
         Long crewId = 3L;
         Long userId = 1L;
-        given(crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(false);
 
         // when & then
@@ -258,7 +258,7 @@ class MeetingServiceImplTest {
 
         assertEquals(CrewErrorCode.NOT_CREW_MEMBER.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingReader).should(never())
                 .getNotStartedMeetingsByCrewId(anyLong());
         then(meetingMemberReader).should(never())
@@ -272,7 +272,7 @@ class MeetingServiceImplTest {
         Long crewId = 3L;
         Long userId = 1L;
         List<Meeting> meetings = List.of(createMeeting(3L), createMeeting(2L), createMeeting(1L));
-        given(crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
         given(meetingReader.getStartedMeetingsByCrewId(crewId))
                 .willReturn(meetings);
@@ -284,7 +284,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingReader).should(only())
                 .getStartedMeetingsByCrewId(anyLong());
         then(meetingMemberReader).should(times(meetings.size()))
@@ -297,7 +297,7 @@ class MeetingServiceImplTest {
         // given
         Long crewId = 3L;
         Long userId = 1L;
-        given(crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(false);
 
         // when & then
@@ -306,7 +306,7 @@ class MeetingServiceImplTest {
 
         assertEquals(CrewErrorCode.NOT_CREW_MEMBER.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingReader).should(never())
                 .getNotStartedMeetingsByCrewId(anyLong());
         then(meetingMemberReader).should(never())
@@ -515,7 +515,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
@@ -525,7 +525,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(only())
@@ -539,7 +539,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
         // when & then
@@ -548,7 +548,7 @@ class MeetingServiceImplTest {
 
         assertEquals(CrewErrorCode.NOT_CREW_MEMBER.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(never())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -562,7 +562,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
@@ -573,7 +573,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.ALREADY_JOINED_MEETING.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -587,7 +587,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createFullMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
@@ -598,7 +598,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.FULL_MEETING.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -612,7 +612,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
@@ -622,7 +622,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(only())
@@ -636,7 +636,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
         // when & then
@@ -645,7 +645,7 @@ class MeetingServiceImplTest {
 
         assertEquals(CrewErrorCode.NOT_CREW_MEMBER.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(never())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -657,7 +657,7 @@ class MeetingServiceImplTest {
     void when_RemovingMeetingCreator_Then_MeetingCreatorException() {
         Long userId = 26L;
         MeetingDto meetingDto = createMeetingDtoByUserId(userId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
         // when & then
@@ -666,7 +666,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.MEETING_CREATOR.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(never())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -679,7 +679,7 @@ class MeetingServiceImplTest {
         Long userId = 26L;
         Long meetingId = 5L;
         MeetingDto meetingDto = createMeetingDto(meetingId);
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
@@ -690,7 +690,7 @@ class MeetingServiceImplTest {
 
         assertEquals(MeetingErrorCode.NOT_JOINED_MEETING.getMessage(), exception.getMessage());
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .existsByMeetingIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(never())
@@ -709,7 +709,7 @@ class MeetingServiceImplTest {
                 createMeetingMember(14L, meetingId),
                 createMeetingMember(24L, meetingId)
         );
-        given(crewMemberReader.existByCrewIdAndUserId(anyLong(), anyLong()))
+        given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.getMeetingMembersByMeetingId(anyLong()))
                 .willReturn(meetingMembers);
@@ -721,7 +721,7 @@ class MeetingServiceImplTest {
 
         // then
         then(crewMemberReader).should(only())
-                .existByCrewIdAndUserId(anyLong(), anyLong());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberReader).should(only())
                 .getMeetingMembersByMeetingId(anyLong());
         then(userReader).should(times(meetingMembers.size()))
