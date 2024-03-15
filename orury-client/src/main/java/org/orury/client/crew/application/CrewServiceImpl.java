@@ -1,9 +1,16 @@
 package org.orury.client.crew.application;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.common.util.S3Folder.CREW;
+
+import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.crew.domain.*;
+import org.orury.domain.crew.domain.CrewMemberReader;
+import org.orury.domain.crew.domain.CrewMemberStore;
+import org.orury.domain.crew.domain.CrewReader;
+import org.orury.domain.crew.domain.CrewStore;
+import org.orury.domain.crew.domain.CrewTagReader;
+import org.orury.domain.crew.domain.CrewTagStore;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
@@ -23,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.orury.common.util.S3Folder.CREW;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +42,7 @@ public class CrewServiceImpl implements CrewService {
     private final CrewMemberReader crewMemberReader;
     private final CrewMemberStore crewMemberStore;
     private final UserReader userReader;
+    private final ImageAsyncStore imageasyncStore;
     private final ImageStore imageStore;
 
 
@@ -51,7 +59,7 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void createCrew(CrewDto crewDto, MultipartFile file) {
         validateCrewParticipationCount(crewDto.userDto().id());
-        var icon = imageStore.upload(CREW, file);
+        var icon = imageasyncStore.upload(CREW, file);
         Crew crew = crewStore.save(crewDto.toEntity(icon));
         crewTagStore.addTags(crew, crewDto.tags());
         crewMemberStore.addCrewMember(crew.getId(), crew.getUser().getId());
@@ -104,7 +112,7 @@ public class CrewServiceImpl implements CrewService {
     public void updateCrewImage(CrewDto crewDto, MultipartFile imageFile, Long userId) {
         validateCrewCreator(crewDto.userDto().id(), userId);
         var oldImage = crewDto.icon();
-        var newImage = imageStore.upload(CREW, imageFile);
+        var newImage = imageasyncStore.upload(CREW, imageFile);
         crewStore.save(crewDto.toEntity(newImage));
         imageStore.delete(CREW, oldImage);
     }
