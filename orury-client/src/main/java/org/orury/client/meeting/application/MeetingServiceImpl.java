@@ -52,7 +52,7 @@ public class MeetingServiceImpl implements MeetingService {
         validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount());
         Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
-        meetingMemberStore.addMember(meetingMemberDto);
+        meetingMemberStore.addMember(meetingMemberDto.toEntity());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class MeetingServiceImpl implements MeetingService {
         if (meetingDto.memberCount() >= meetingDto.capacity())
             throw new BusinessException(MeetingErrorCode.FULL_MEETING);
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.addMember(meetingMemberDto);
+        meetingMemberStore.addMember(meetingMemberDto.toEntity());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MeetingServiceImpl implements MeetingService {
         if (!meetingMemberReader.existsByMeetingIdAndUserId(meetingDto.id(), userId))
             throw new BusinessException(MeetingErrorCode.NOT_JOINED_MEETING);
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.removeMember(meetingMemberDto);
+        meetingMemberStore.removeMember(meetingMemberDto.toEntity());
     }
 
     @Override
