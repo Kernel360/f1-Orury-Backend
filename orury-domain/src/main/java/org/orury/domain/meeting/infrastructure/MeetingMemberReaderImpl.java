@@ -20,7 +20,7 @@ public class MeetingMemberReaderImpl implements MeetingMemberReader {
 
     @Override
     public List<MeetingMember> getOtherMeetingMembersByMeetingIdMaximum(Long meetingId, Long meetingCreatorId, int maximum) {
-        return meetingMemberRepository.findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserIdNot(meetingId, meetingCreatorId, PageRequest.of(0, maximum)).toList();
+        return meetingMemberRepository.findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserIdNot(meetingId, meetingCreatorId, PageRequest.of(0, maximum));
     }
 
     @Override
