@@ -162,8 +162,10 @@ public class CrewServiceImpl implements CrewService {
             throw new BusinessException(CrewErrorCode.GENDER_FORBIDDEN);
 
         // 지원하는 크루가 즉시 가입인 경우
-        if (!crewDto.permissionRequired())
+        if (!crewDto.permissionRequired()) {
             crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
+            return;
+        }
 
         // 지원하는 크루가 답변이 필수인 경우 && 제출한 답변이 비어있는 경우
         if (crewDto.answerRequired() && Strings.isBlank(answer))
