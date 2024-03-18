@@ -1,5 +1,7 @@
 package org.orury.domain.notification.infrastructure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -16,23 +18,26 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(EmitterRepositoryImpl.class);
 
     @Override
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
         emitters.put(emitterId, sseEmitter);
+        logger.info("알람테스트 : SseEmitter save, emitterId: " + emitterId);
         return sseEmitter;
     }
 
     @Override
     public void saveEventCache(String eventCacheId, Object event) {
         eventCache.put(eventCacheId, event);
+        logger.info("알람테스트 : saveEventCache save, eventCacheId: " + eventCacheId);
     }
 
     @Override
     public Map<String, SseEmitter> findAllEmitterStartWithByUserId(Long userId) {
         // 해당 회원과 관련된 모든 Emitter 조회
         return emitters.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(userId.toString()))
+                .filter(entry -> entry.getKey().startsWith(userId.toString() + "_"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -40,7 +45,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     public Map<String, Object> findAllEventCacheStartWithByUserId(Long userId) {
         // 해당 회원과 관련된 모든 EventCache 조회
         return eventCache.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(userId.toString()))
+                .filter(entry -> entry.getKey().startsWith(userId.toString() + "_"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     }
@@ -58,6 +63,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     @Override
     public void deleteEmitterById(String emitterId) {
         emitters.remove(emitterId);
+        logger.info("알람테스트 : deleteEmitterById, emitterId: " + emitterId);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
         // 해당 회원과 관련된 모든 Emitter 삭제
         emitters.forEach(
                 (key, emitter) -> {
-                    if (key.startsWith(userId.toString())) {
+                    if (key.startsWith(userId.toString() + "_")) {
                         emitters.remove(key);
                     }
                 }
@@ -78,7 +84,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
         // 회원 탈퇴 등에 사용
         eventCache.forEach(
                 (key, emitter) -> {
-                    if (key.startsWith(userId.toString())) {
+                    if (key.startsWith(userId.toString() + "_")) {
                         eventCache.remove(key);
                     }
                 }
