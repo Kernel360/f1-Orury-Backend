@@ -1,5 +1,6 @@
 package org.orury.client.notification.application;
 
+import org.apache.logging.log4j.util.Strings;
 import org.orury.client.notification.interfaces.response.NotificationResponse;
 import org.orury.domain.notification.domain.dto.NotificationDto;
 import org.orury.domain.notification.domain.entity.Notification;
@@ -88,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private boolean hasLostData(String lastEventId) {
-        return !lastEventId.isEmpty();
+        return Strings.isNotEmpty(lastEventId);
     }
 
     private void sendLostData(String lastEventId, Long userId, String emitterId, SseEmitter emitter) {
