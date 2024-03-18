@@ -6,6 +6,8 @@ import org.orury.domain.notification.domain.entity.Notification;
 import org.orury.domain.notification.infrastructure.EmitterRepository;
 import org.orury.domain.notification.infrastructure.NotificationRepository;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -22,6 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final EmitterRepository emitterRepository;
     private final NotificationRepository notifyRepository;
+    private final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
     @Override
     public SseEmitter subscribe(Long userId, String lastEventId) {
@@ -29,8 +32,14 @@ public class NotificationServiceImpl implements NotificationService {
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
 
         // emitter가 연결이 끊겼거나, 타임아웃 됐을 때 삭제될 수 있도록 함. (비동기)
-        emitter.onCompletion(() -> emitterRepository.deleteEmitterById(emitterId));
-        emitter.onTimeout(() -> emitterRepository.deleteEmitterById(emitterId));
+        emitter.onCompletion(() -> {
+            logger.info("알람테스트 : emitter.onCompletion으로 emitter 삭제됨.");
+            emitterRepository.deleteEmitterById(emitterId);
+        });
+        emitter.onTimeout(() -> {
+            logger.info("알람테스트 : emitter.onTimeout으로 emitter 삭제됨.");
+            emitterRepository.deleteEmitterById(emitterId);
+        });
 
         // 503 에러 방지 위한 더미 이벤트 전송
         String eventId = makeTimeIncludeId(userId);
@@ -40,7 +49,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (hasLostData(lastEventId)) {
             sendLostData(lastEventId, userId, emitterId, emitter);
         }
-
+        logger.info("알람테스트 : subscribe 실행되었음. ");
         return emitter;
     }
 
@@ -49,12 +58,13 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationDto notificationDto = NotificationDto.of(null, userDto, content, url, 0, null, null);
         Notification notification = notifyRepository.save(notificationDto.toEntity());
 
-        String eventId = userDto.id().toString() + "_" + System.currentTimeMillis();
+        String eventId = makeTimeIncludeId(userDto.id());
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(userDto.id());
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
                     sendNotification(emitter, eventId, key, NotificationResponse.of(notificationDto, notification.getId()));
+                    logger.info("알람테스트 :sendNotification 실행. emitter: " + emitter + " / eventId: " + eventId + " / key: " + key + " / notification: " + notification);
                 }
         );
     }
@@ -85,6 +95,9 @@ public class NotificationServiceImpl implements NotificationService {
         Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByUserId(userId);
         eventCaches.entrySet().stream()
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                .forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+                .forEach(entry -> {
+                    sendNotification(emitter, entry.getKey(), emitterId, entry.getValue());
+                    logger.info("알람테스트 : sendLostData 내의 sendNotification 실행. emitter: " + emitter + " / lasteventId: " + lastEventId);
+                });
     }
 }
