@@ -1,4 +1,8 @@
-////build.gradle 파일
+//build.gradle 파일
+plugins {
+    id 'java-test-fixtures'
+}
+
 dependencies {
     implementation project(':orury-common')
 
