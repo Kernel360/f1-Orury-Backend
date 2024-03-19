@@ -31,7 +31,7 @@ public class CommentFacade {
 
         // TODO : 본인이 본인글에 댓글 단 것은 알림 안 가도록 validate 검사 필요함.
         // 정상적으로 알림이 가는지 확인하기 위해 예시로 추가했습니다.
-        notificationService.send(postDto.userDto(), userDto.nickname(), userDto.nickname() + "님이 댓글을 달았어요.", "연결되는 url");
+        //notificationService.send(postDto.userDto(), userDto.nickname(), userDto.nickname() + "님이 댓글을 달았어요.", "연결되는 url");
     }
 
     public CommentsWithCursorResponse getCommentsByPostId(Long postId, Long cursor, Long userId) {
