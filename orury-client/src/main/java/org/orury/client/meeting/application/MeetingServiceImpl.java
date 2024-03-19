@@ -49,10 +49,10 @@ public class MeetingServiceImpl implements MeetingService {
     public void createMeeting(MeetingDto meetingDto) {
         validateCrewMember(meetingDto.crewDto().id(), meetingDto.userDto().id());
         validateStartTime(meetingDto.startTime());
-        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount(), meetingDto.memberCount());
+        validateCapacity(meetingDto.capacity(), meetingDto.crewDto().memberCount());
         Meeting meeting = meetingStore.createMeeting(meetingDto.toEntity());
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(meetingDto.userDto().id(), meeting.getId()));
-        meetingMemberStore.addMember(meetingMemberDto);
+        meetingMemberStore.addMember(meetingMemberDto.toEntity());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class MeetingServiceImpl implements MeetingService {
         if (meetingDto.memberCount() >= meetingDto.capacity())
             throw new BusinessException(MeetingErrorCode.FULL_MEETING);
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.addMember(meetingMemberDto);
+        meetingMemberStore.addMember(meetingMemberDto.toEntity());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class MeetingServiceImpl implements MeetingService {
         if (!meetingMemberReader.existsByMeetingIdAndUserId(meetingDto.id(), userId))
             throw new BusinessException(MeetingErrorCode.NOT_JOINED_MEETING);
         MeetingMemberDto meetingMemberDto = MeetingMemberDto.of(MeetingMemberPK.of(userId, meetingDto.id()));
-        meetingMemberStore.removeMember(meetingMemberDto);
+        meetingMemberStore.removeMember(meetingMemberDto.toEntity());
     }
 
     @Override
@@ -140,13 +140,18 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     private void validateCrewMember(Long crewId, Long userId) {
-        if (!crewMemberReader.existByCrewIdAndUserId(crewId, userId))
+        if (!crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
             throw new BusinessException(CrewErrorCode.NOT_CREW_MEMBER);
     }
 
     private void validateStartTime(LocalDateTime startTime) {
         if (LocalDateTime.now().isAfter(startTime))
             throw new BusinessException(MeetingErrorCode.INVALID_START_TIME);
+    }
+
+    private void validateCapacity(int capacity, int crewMemberCount) {
+        if (capacity < NumberConstants.MINIMUM_MEETING_CAPACITY || crewMemberCount < capacity)
+            throw new BusinessException(MeetingErrorCode.INVALID_CAPACITY);
     }
 
     private void validateCapacity(int capacity, int crewMemberCount, int meetingMemberCount) {

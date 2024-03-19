@@ -8,4 +8,6 @@ public interface MeetingStore {
     void updateMeeting(Meeting meeting);
 
     void deleteMeeting(Long meetingId);
+
+    void deleteAllByUserIdAndCrewId(Long userId, Long crewId);
 }

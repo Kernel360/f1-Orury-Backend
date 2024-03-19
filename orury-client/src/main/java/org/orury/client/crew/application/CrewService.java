@@ -2,6 +2,7 @@ package org.orury.client.crew.application;
 
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
+import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,5 +24,21 @@ public interface CrewService {
 
     boolean existCrewMember(CrewMemberPK crewMemberPK);
 
+    void updateCrewInfo(CrewDto oldCrew, CrewDto newCrew, Long userId);
+
     void updateCrewImage(CrewDto crewDto, MultipartFile image, Long userId);
+
+    void deleteCrew(CrewDto crewDto, Long userId);
+
+    void applyCrew(CrewDto crewDto, UserDto userDto, String answer);
+
+    void withdrawApplication(CrewDto crewDto, Long userId);
+
+    void approveApplication(CrewDto crewDto, Long applicantId, Long userId);
+
+    void disapproveApplication(CrewDto crewDto, Long applicantId, Long userId);
+
+    void leaveCrew(CrewDto crewDto, Long userId);
+
+    void expelMember(CrewDto crewDto, Long memberId, Long userId);
 }
