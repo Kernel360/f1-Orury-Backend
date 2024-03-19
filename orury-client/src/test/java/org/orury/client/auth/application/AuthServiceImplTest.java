@@ -28,25 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
-//@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] AuthServiceImpl 테스트")
-//@ActiveProfiles("test")
 class AuthServiceImplTest extends ServiceTest {
-//    private AuthService authService;
-//    private UserReader userReader;
-//    private UserStore userStore;
-//    private JwtTokenService jwtTokenService;
-//    private OAuthServiceManager oAuthServiceManager;
-//
-//    @BeforeEach
-//    void setUp() {
-//        userReader = mock(UserReader.class);
-//        userStore = mock(UserStore.class);
-//        jwtTokenService = mock(JwtTokenService.class);
-//        oAuthServiceManager = mock(OAuthServiceManager.class);
-//
-//        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
-//    }
 
     @Test
     @DisplayName("email 중복되지 않는 경우, 회원정보 저장하고 JwtToken 발급하여 반환한다.")
