@@ -4,6 +4,12 @@ public final class NumberConstants {
     private NumberConstants() {
     }
 
+    // NumberCode for Every Gender
+    public static final int ANY_GENDER = 3;
+    // NumberCode for Female
+    public static final int FEMALE = 2;
+    // NumberCode for Male
+    public static final int MALE = 1;
     // User Id Hard Coding (Before Adapting Security)
     public static final Long USER_ID = 1L;
     // First Pagination Cursor Input Value
@@ -40,7 +46,7 @@ public final class NumberConstants {
     public static final int LIKE_REACTION = 4;
     public static final int ANGRY_REACTION = 5;
     // Maximum Number of Crew Participation
-    public static final int MAXIMUM_CREW_PARTICIPATION = 3;
+    public static final int MAXIMUM_CREW_PARTICIPATION = 5;
     // Maximum Number of User Profile Images from Thumbnail of Meetings List
     public static final int MAXIMUM_OF_MEETING_THUMBNAILS = 10;
     // Maximum Number of User Profile Images from Thumbnail of Crews List

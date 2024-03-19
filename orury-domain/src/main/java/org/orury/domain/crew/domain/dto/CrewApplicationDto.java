@@ -2,6 +2,7 @@ package org.orury.domain.crew.domain.dto;
 
 import org.orury.domain.crew.domain.entity.CrewApplication;
 import org.orury.domain.crew.domain.entity.CrewApplicationPK;
+import org.orury.domain.user.domain.dto.UserDto;
 
 import java.time.LocalDateTime;
 
@@ -43,6 +44,16 @@ public record CrewApplicationDto(
                 answer,
                 createdAt,
                 updatedAt
+        );
+    }
+
+    public static CrewApplicationDto of(CrewDto crewDto, UserDto userDto, String answer) {
+        CrewApplicationPK crewApplicationPK = CrewApplicationPK.of(userDto.id(), crewDto.id());
+        return CrewApplicationDto.of(
+                crewApplicationPK,
+                answer,
+                null,
+                null
         );
     }
 }
