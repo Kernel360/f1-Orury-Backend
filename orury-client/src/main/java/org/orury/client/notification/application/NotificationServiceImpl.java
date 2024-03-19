@@ -9,7 +9,10 @@ import org.orury.domain.notification.infrastructure.NotificationRepository;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -24,7 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
     private final EmitterRepository emitterRepository;
-    private final NotificationRepository notifyRepository;
+    private final NotificationRepository notificationRepository;
     private final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
     @Override
@@ -55,16 +58,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void send(UserDto userDto, String content, String url) {
-        NotificationDto notificationDto = NotificationDto.of(null, userDto, content, url, 0, null, null);
-        Notification notification = notifyRepository.save(notificationDto.toEntity());
+    public void send(UserDto userDto, String title, String content, String url) {
+        NotificationDto notificationDto = NotificationDto.of(null, userDto, title, content, url, 0, null, null);
+        Notification notification = notificationRepository.save(notificationDto.toEntity());
 
         String eventId = makeTimeIncludeId(userDto.id());
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(userDto.id());
         emitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
-                    sendNotification(emitter, eventId, key, NotificationResponse.of(notificationDto, notification.getId()));
+                    sendNotification(emitter, eventId, key, NotificationResponse.of(notificationDto));
                     logger.info("알람테스트 :sendNotification 실행. emitter: " + emitter + " / eventId: " + eventId + " / key: " + key + " / notification: " + notification);
                 }
         );
@@ -83,7 +86,6 @@ public class NotificationServiceImpl implements NotificationService {
                     .data(data)
             );
         } catch (IOException exception) {
-            // TODO: 후에 CustomException 으로 변경
             emitterRepository.deleteEmitterById(emitterId);
         }
     }
@@ -100,5 +102,13 @@ public class NotificationServiceImpl implements NotificationService {
                     sendNotification(emitter, entry.getKey(), emitterId, entry.getValue());
                     logger.info("알람테스트 : sendLostData 내의 sendNotification 실행. emitter: " + emitter + " / lasteventId: " + lastEventId);
                 });
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NotificationDto> getNofification(Pageable pageable, Long userId) {
+        return notificationRepository.findByUserIdOrderByIdDesc(userId, pageable)
+                .map(NotificationDto::from);
     }
 }
