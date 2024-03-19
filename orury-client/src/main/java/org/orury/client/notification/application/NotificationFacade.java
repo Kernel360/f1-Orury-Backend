@@ -17,11 +17,17 @@ public class NotificationFacade {
     private final NotificationService notificationService;
     private final UserService userService;
 
-    public Page<NotificationResponse> getAllNotification(Long userId, int page) {
+    public Page<NotificationResponse> getNotifications(Long userId, int page) {
         var pageRequest = PageRequest.of(page, NOTIFICATION_PAGINATION_SIZE);
-        Page<NotificationDto> notificationDtos = notificationService.getNofification(pageRequest, userId);
+        Page<NotificationDto> notificationDtos = notificationService.getNofifications(pageRequest, userId);
         return convertNotificationDtosToNotificationResponse(notificationDtos);
     }
+
+    public void changeNotificationRead(Long userId, Long notificationId) {
+        NotificationDto notificationDto = notificationService.getNotification(notificationId);
+        notificationService.changeNotificationRead(userId, notificationDto);
+    }
+
 
     private Page<NotificationResponse> convertNotificationDtosToNotificationResponse(Page<NotificationDto> notificationDtos) {
         return notificationDtos.map(NotificationResponse::of);

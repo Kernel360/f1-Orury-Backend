@@ -12,5 +12,9 @@ public interface NotificationService {
 
     void send(UserDto userDto, String title, String content, String url);
 
-    Page<NotificationDto> getNofification(Pageable pageable, Long id);
+    Page<NotificationDto> getNofifications(Pageable pageable, Long id);
+
+    void changeNotificationRead(Long userId, NotificationDto notificationDto);
+
+    NotificationDto getNotification(Long notificationId);
 }

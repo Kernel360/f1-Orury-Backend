@@ -2,6 +2,8 @@ package org.orury.client.notification.application;
 
 import org.apache.logging.log4j.util.Strings;
 import org.orury.client.notification.interfaces.response.NotificationResponse;
+import org.orury.common.error.code.NotificationErrorCode;
+import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.notification.domain.dto.NotificationDto;
 import org.orury.domain.notification.domain.entity.Notification;
 import org.orury.domain.notification.infrastructure.EmitterRepository;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 
@@ -107,8 +110,30 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<NotificationDto> getNofification(Pageable pageable, Long userId) {
+    public Page<NotificationDto> getNofifications(Pageable pageable, Long userId) {
         return notificationRepository.findByUserIdOrderByIdDesc(userId, pageable)
                 .map(NotificationDto::from);
+    }
+
+    @Override
+    public void changeNotificationRead(Long userId, NotificationDto originNotificationDto) {
+        validateSameId(userId, originNotificationDto.userDto().id());
+        NotificationDto newNotificationDto = NotificationDto.of(originNotificationDto);
+        notificationRepository.save(newNotificationDto.toEntity());
+    }
+
+    @Override
+    public NotificationDto getNotification(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> {
+            throw new BusinessException(NotificationErrorCode.NOT_FOUND);
+        });
+
+        return NotificationDto.from(notification);
+    }
+
+    private void validateSameId(Long userId, Long notificationUserId) {
+        if (!Objects.equals(userId, notificationUserId))
+            throw new BusinessException(NotificationErrorCode.FORBIDDEN);
+
     }
 }

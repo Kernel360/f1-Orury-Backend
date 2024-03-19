@@ -40,6 +40,21 @@ public record NotificationDto(
         );
     }
 
+    public static NotificationDto of(
+            NotificationDto originDto
+    ) {
+        return new NotificationDto(
+                originDto.id(),
+                originDto.userDto(),
+                originDto.title(),
+                originDto.content(),
+                originDto.url(),
+                1,
+                originDto.createdAt(),
+                null
+        );
+    }
+
     public static NotificationDto from(Notification entity) {
         return NotificationDto.of(
                 entity.getId(),
