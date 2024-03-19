@@ -36,6 +36,9 @@ public class Notification extends AuditingField {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @Column(name = "content", nullable = false)
     private String content;
 
@@ -48,6 +51,7 @@ public class Notification extends AuditingField {
     private Notification(
             Long id,
             User user,
+            String title,
             String content,
             String url,
             int isRead,
@@ -56,6 +60,7 @@ public class Notification extends AuditingField {
     ) {
         this.id = id;
         this.user = user;
+        this.title = title;
         this.content = content;
         this.url = url;
         this.isRead = isRead;
@@ -66,6 +71,7 @@ public class Notification extends AuditingField {
     public static Notification of(
             Long id,
             User user,
+            String title,
             String content,
             String url,
             int isRead,
@@ -75,6 +81,7 @@ public class Notification extends AuditingField {
         return new Notification(
                 id,
                 user,
+                title,
                 content,
                 url,
                 isRead,
