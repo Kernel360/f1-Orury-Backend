@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public record NotificationDto(
         Long id,
         UserDto userDto,
+        String title,
         String content,
         String url,
         int isRead,
@@ -20,6 +21,7 @@ public record NotificationDto(
     public static NotificationDto of(
             Long id,
             UserDto userDto,
+            String title,
             String content,
             String url,
             int isRead,
@@ -29,6 +31,7 @@ public record NotificationDto(
         return new NotificationDto(
                 id,
                 userDto,
+                title,
                 content,
                 url,
                 isRead,
@@ -41,6 +44,7 @@ public record NotificationDto(
         return NotificationDto.of(
                 entity.getId(),
                 UserDto.from(entity.getUser()),
+                entity.getTitle(),
                 entity.getContent(),
                 entity.getUrl(),
                 entity.getIsRead(),
@@ -53,6 +57,7 @@ public record NotificationDto(
         return Notification.of(
                 id,
                 userDto.toEntity(),
+                title,
                 content,
                 url,
                 isRead,
