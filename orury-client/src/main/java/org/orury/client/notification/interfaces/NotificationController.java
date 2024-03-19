@@ -45,7 +45,7 @@ public class NotificationController {
     public SseEmitter subscribe(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                 @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "")
                                 String lastEventId) {
-        return notificationService.subscribe(userPrincipal.id(), lastEventId);
+        return notificationFacade.subscribe(userPrincipal.id(), lastEventId);
     }
 
     @Operation(summary = "알림함 조회", description = "알림함을 조회한다.")

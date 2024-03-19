@@ -8,6 +8,7 @@ import org.orury.domain.notification.domain.dto.NotificationDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,10 @@ public class NotificationFacade {
     public void changeNotificationRead(Long userId, Long notificationId) {
         NotificationDto notificationDto = notificationService.getNotification(notificationId);
         notificationService.changeNotificationRead(userId, notificationDto);
+    }
+
+    public SseEmitter subscribe(Long userId, String lastEventId) {
+        return notificationService.subscribe(userId, lastEventId);
     }
 
 
