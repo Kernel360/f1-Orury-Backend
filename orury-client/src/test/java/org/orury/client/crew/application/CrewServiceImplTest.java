@@ -1,15 +1,11 @@
 package org.orury.client.crew.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.global.image.ImageAsyncStore;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
@@ -17,16 +13,11 @@ import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.domain.Region;
-import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.meeting.domain.MeetingMemberStore;
-import org.orury.domain.meeting.domain.MeetingStore;
-import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -39,43 +30,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")
-@ActiveProfiles("test")
-class CrewServiceImplTest {
-    private CrewServiceImpl crewService;
-    private CrewReader crewReader;
-    private CrewStore crewStore;
-    private CrewTagReader crewTagReader;
-    private CrewTagStore crewTagStore;
-    private CrewMemberReader crewMemberReader;
-    private CrewMemberStore crewMemberStore;
-    private CrewApplicationReader crewApplicationReader;
-    private CrewApplicationStore crewApplicationStore;
-    private MeetingStore meetingStore;
-    private MeetingMemberStore meetingMemberStore;
-    private UserReader userReader;
-    private ImageStore imageStore;
-    private ImageAsyncStore imageAsyncStore;
-
-    @BeforeEach
-    void setUp() {
-        crewReader = mock(CrewReader.class);
-        crewStore = mock(CrewStore.class);
-        crewTagReader = mock(CrewTagReader.class);
-        crewTagStore = mock(CrewTagStore.class);
-        crewMemberReader = mock(CrewMemberReader.class);
-        crewMemberStore = mock(CrewMemberStore.class);
-        crewApplicationReader = mock(CrewApplicationReader.class);
-        crewApplicationStore = mock(CrewApplicationStore.class);
-        meetingStore = mock(MeetingStore.class);
-        meetingMemberStore = mock(MeetingMemberStore.class);
-        userReader = mock(UserReader.class);
-        imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
-
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore);
-    }
+class CrewServiceImplTest extends ServiceTest {
 
     @DisplayName("[getCrewDtoById] 크루 아이디로 크루 정보를 가져온다.")
     @Test

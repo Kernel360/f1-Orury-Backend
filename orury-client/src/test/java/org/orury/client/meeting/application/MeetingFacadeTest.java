@@ -1,15 +1,12 @@
 package org.orury.client.meeting.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.crew.application.CrewService;
-import org.orury.client.gym.application.GymService;
+import org.orury.client.config.FacadeTest;
 import org.orury.client.meeting.interfaces.request.MeetingCreateRequest;
 import org.orury.client.meeting.interfaces.request.MeetingUpdateRequest;
-import org.orury.client.user.application.UserService;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
@@ -28,27 +25,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 일정 Facade 테스트")
 @ActiveProfiles("test")
-class MeetingFacadeTest {
-    private MeetingFacade meetingFacade;
-    private MeetingService meetingService;
-    private CrewService crewService;
-    private UserService userService;
-    private GymService gymService;
-
-    @BeforeEach
-    void setUp() {
-        meetingService = mock(MeetingService.class);
-        crewService = mock(CrewService.class);
-        userService = mock(UserService.class);
-        gymService = mock(GymService.class);
-
-        meetingFacade = new MeetingFacade(meetingService, crewService, userService, gymService);
-    }
+class MeetingFacadeTest extends FacadeTest {
 
     @DisplayName("일정생성Request와 유저id를 받으면, 일정을 생성한다.")
     @Test

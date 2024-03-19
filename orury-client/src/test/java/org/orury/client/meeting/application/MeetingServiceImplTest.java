@@ -1,14 +1,11 @@
 package org.orury.client.meeting.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.code.MeetingErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.crew.domain.CrewMemberReader;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
@@ -16,19 +13,13 @@ import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.meeting.domain.MeetingMemberReader;
-import org.orury.domain.meeting.domain.MeetingMemberStore;
-import org.orury.domain.meeting.domain.MeetingReader;
-import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
 import org.orury.domain.meeting.domain.entity.MeetingMemberPK;
-import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,29 +34,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 일정 ServiceImpl 테스트")
-@ActiveProfiles("test")
-class MeetingServiceImplTest {
-    private MeetingService meetingService;
-    private MeetingReader meetingReader;
-    private MeetingStore meetingStore;
-    private MeetingMemberReader meetingMemberReader;
-    private MeetingMemberStore meetingMemberStore;
-    private CrewMemberReader crewMemberReader;
-    private UserReader userReader;
-
-    @BeforeEach
-    void setUp() {
-        meetingReader = mock(MeetingReader.class);
-        meetingStore = mock(MeetingStore.class);
-        meetingMemberReader = mock(MeetingMemberReader.class);
-        meetingMemberStore = mock(MeetingMemberStore.class);
-        crewMemberReader = mock(CrewMemberReader.class);
-        userReader = mock(UserReader.class);
-
-        meetingService = new MeetingServiceImpl(meetingReader, meetingStore, meetingMemberReader, meetingMemberStore, crewMemberReader, userReader);
-    }
+class MeetingServiceImplTest extends ServiceTest {
 
     @DisplayName("[getMeetingDtoById] 존재하는 일정id를 받으면, 일정Dto를 반환한다.")
     @Test
