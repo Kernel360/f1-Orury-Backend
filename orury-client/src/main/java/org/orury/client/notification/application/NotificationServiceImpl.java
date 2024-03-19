@@ -111,8 +111,10 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional(readOnly = true)
     public Page<NotificationDto> getNofifications(Pageable pageable, Long userId) {
-        return notificationRepository.findByUserIdOrderByIdDesc(userId, pageable)
-                .map(NotificationDto::from);
+        Page<Notification> notifications = notificationRepository.findByUserIdOrderByIdDesc(userId, pageable);
+        if (notifications.isEmpty()) throw new BusinessException(NotificationErrorCode.NOT_FOUND);
+
+        return notifications.map(NotificationDto::from);
     }
 
     @Override
