@@ -14,4 +14,9 @@ public class CrewStoreImpl implements CrewStore {
     public Crew save(Crew crew) {
         return crewRepository.save(crew);
     }
+
+    @Override
+    public void delete(Crew crew) {
+        crewRepository.delete(crew);
+    }
 }

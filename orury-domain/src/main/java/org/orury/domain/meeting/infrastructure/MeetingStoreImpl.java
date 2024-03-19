@@ -24,4 +24,9 @@ public class MeetingStoreImpl implements MeetingStore {
     public void deleteMeeting(Long meetingId) {
         meetingRepository.deleteById(meetingId);
     }
+
+    @Override
+    public void deleteAllByUserIdAndCrewId(Long userId, Long crewId) {
+        meetingRepository.deleteAllByUser_IdAndCrew_Id(userId, crewId);
+    }
 }
