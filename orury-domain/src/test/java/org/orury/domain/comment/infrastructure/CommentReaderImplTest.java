@@ -1,19 +1,15 @@
 package org.orury.domain.comment.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.comment.domain.CommentReader;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,23 +22,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Reader] 댓글 ReaderImpl 테스트")
-@ActiveProfiles("test")
-class CommentReaderImplTest {
-    private CommentReader commentReader;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
-
-    @BeforeEach
-    void setUp() {
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
-
-        commentReader = new CommentReaderImpl(commentRepository, commentLikeRepository);
-    }
+class CommentReaderImplTest extends InfrastructureTest {
 
     @Test
     @DisplayName("존재하는 댓글id가 들어오면, 정상적으로 Comment Entity를 반환한다.")

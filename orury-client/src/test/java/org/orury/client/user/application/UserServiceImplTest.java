@@ -1,26 +1,15 @@
 package org.orury.client.user.application;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.global.image.ImageAsyncStore;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.comment.domain.CommentStore;
-import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.gym.domain.GymStore;
-import org.orury.domain.post.domain.PostStore;
-import org.orury.domain.review.domain.ReviewStore;
-import org.orury.domain.user.domain.UserReader;
-import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -34,33 +23,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] User Test")
-@ActiveProfiles("test")
-class UserServiceImplTest {
-    private UserReader userReader;
-    private UserStore userStore;
-    private ImageStore imageStore;
-    private ImageAsyncStore imageAsyncStore;
-    private PostStore postStore;
-    private GymStore gymStore;
-    private CommentStore commentStore;
-    private ReviewStore reviewStore;
-    private UserService userService;
-
-    @BeforeEach
-    void setUp() {
-        userReader = mock(UserReader.class);
-        userStore = mock(UserStore.class);
-        imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
-        postStore = mock(PostStore.class);
-        gymStore = mock(GymStore.class);
-        commentStore = mock(CommentStore.class);
-        reviewStore = mock(ReviewStore.class);
-
-        userService = new UserServiceImpl(userReader, userStore, imageStore, imageAsyncStore, postStore, commentStore, reviewStore, gymStore);
-    }
+class UserServiceImplTest extends ServiceTest {
 
     @Test
     @DisplayName("getUserDtoById(Long id) Test : userId 받아 UserDto 반환 [성공]")

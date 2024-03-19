@@ -1,17 +1,10 @@
 package org.orury.client.post.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.global.image.ImageAsyncStore;
-import org.orury.client.post.application.PostServiceImpl;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.post.domain.PostReader;
-import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
@@ -25,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -45,24 +37,8 @@ import static org.orury.common.util.S3Folder.POST;
 import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 import static org.orury.domain.global.constants.NumberConstants.USER_ID;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 게시글 테스트")
-@ActiveProfiles("test")
-class PostServiceTest {
-    private PostReader postReader;
-    private PostStore postStore;
-    private ImageStore imageStore;
-    private PostServiceImpl postService;
-    private ImageAsyncStore imageAsyncStore;
-
-    @BeforeEach
-    public void setUp() {
-        postReader = mock(PostReader.class);
-        postStore = mock(PostStore.class);
-        imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
-        postService = new PostServiceImpl(postReader, postStore, imageStore, imageAsyncStore);
-    }
+class PostServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("게시글이 성공적으로 생성되어야 한다.")

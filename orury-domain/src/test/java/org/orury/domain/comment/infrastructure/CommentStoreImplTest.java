@@ -1,20 +1,15 @@
 package org.orury.domain.comment.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLike;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.post.infrastructure.PostRepository;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,26 +19,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Store] 댓글 StoreImpl 테스트")
-@ActiveProfiles("test")
-class CommentStoreImplTest {
-    private CommentStore commentStore;
-    private CommentRepository commentRepository;
-    private CommentLikeRepository commentLikeRepository;
-    private PostRepository postRepository;
-
-    @BeforeEach
-    void setUp() {
-        commentRepository = mock(CommentRepository.class);
-        commentLikeRepository = mock(CommentLikeRepository.class);
-        postRepository = mock(PostRepository.class);
-
-        commentStore = new CommentStoreImpl(commentRepository, commentLikeRepository, postRepository);
-    }
+class CommentStoreImplTest extends InfrastructureTest {
 
     @Test
     @DisplayName("댓글 생성 시, 댓글을 저장하고 게시글의 댓글 수를 증가시켜야 한다.")

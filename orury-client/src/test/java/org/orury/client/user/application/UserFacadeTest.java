@@ -1,12 +1,9 @@
 package org.orury.client.user.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.orury.client.comment.application.CommentService;
+import org.orury.client.config.FacadeTest;
 import org.orury.client.global.WithCursorResponse;
-import org.orury.client.post.application.PostService;
-import org.orury.client.review.application.ReviewService;
 import org.orury.client.user.interfaces.request.UserInfoRequest;
 import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
@@ -33,22 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @DisplayName("UserFacadeTest")
-class UserFacadeTest {
-    private UserService userService;
-    private PostService postService;
-    private ReviewService reviewService;
-    private CommentService commentService;
-    private UserFacade userFacade;
-
-    @BeforeEach
-    void setUp() {
-        userService = mock(UserService.class);
-        postService = mock(PostService.class);
-        reviewService = mock(ReviewService.class);
-        commentService = mock(CommentService.class);
-
-        userFacade = new UserFacade(userService, postService, reviewService, commentService);
-    }
+class UserFacadeTest extends FacadeTest {
 
     @Test
     @DisplayName("readMypage(Long id) test: UserId를 받아서 UserDto를 반환한다. [성공]")

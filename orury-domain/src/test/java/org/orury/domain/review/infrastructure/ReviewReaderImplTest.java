@@ -1,13 +1,10 @@
 package org.orury.domain.review.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.review.domain.ReviewReader;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
@@ -15,7 +12,6 @@ import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,23 +19,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")
-@ActiveProfiles("test")
-class ReviewReaderImplTest {
-    private ReviewRepository reviewRepository;
-    private ReviewReactionRepository reviewReactionRepository;
-
-    private ReviewReader reviewReader;
-
-    @BeforeEach
-    void setUp() {
-        reviewRepository = mock(ReviewRepository.class);
-        reviewReactionRepository = mock(ReviewReactionRepository.class);
-        reviewReader = new ReviewReaderImpl(reviewRepository, reviewReactionRepository);
-    }
+class ReviewReaderImplTest extends InfrastructureTest {
 
     @DisplayName("암장 ID를 전달받으면 성공적으로 Review 리스트를 전달해준다.")
     @Test

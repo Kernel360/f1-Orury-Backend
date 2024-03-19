@@ -1,21 +1,18 @@
 package org.orury.client.auth.application;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.auth.interfaces.message.AuthMessage;
 import org.orury.client.auth.interfaces.request.LoginRequest;
 import org.orury.client.auth.interfaces.response.LoginResponse;
+import org.orury.client.config.FacadeTest;
 import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,22 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] AuthFacade 테스트")
-@ActiveProfiles("test")
-class AuthFacadeTest {
-    private AuthFacade authFacade;
-    private AuthService authService;
-
-    @BeforeEach
-    void setUp() {
-        authService = mock(AuthService.class);
-
-        authFacade = new AuthFacade(authService);
-    }
+class AuthFacadeTest extends FacadeTest {
 
     @DisplayName("UserDto를 받아, 회원가입하고 SignUpResponse를 반환한다.")
     @Test

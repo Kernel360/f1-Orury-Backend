@@ -1,30 +1,23 @@
 package org.orury.client.auth.application;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.auth.application.jwt.JwtTokenService;
 import org.orury.client.auth.application.oauth.AppleOAuthService;
 import org.orury.client.auth.application.oauth.KakaoOAuthService;
 import org.orury.client.auth.application.oauth.OAuthService;
-import org.orury.client.auth.application.oauth.OAuthServiceManager;
 import org.orury.client.auth.interfaces.message.AuthMessage;
 import org.orury.client.auth.interfaces.request.LoginRequest;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.AuthErrorCode;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.AuthException;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.auth.domain.dto.LoginDto;
-import org.orury.domain.user.domain.UserReader;
-import org.orury.domain.user.domain.UserStore;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,25 +28,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] AuthServiceImpl 테스트")
-@ActiveProfiles("test")
-class AuthServiceImplTest {
-    private AuthService authService;
-    private UserReader userReader;
-    private UserStore userStore;
-    private JwtTokenService jwtTokenService;
-    private OAuthServiceManager oAuthServiceManager;
-
-    @BeforeEach
-    void setUp() {
-        userReader = mock(UserReader.class);
-        userStore = mock(UserStore.class);
-        jwtTokenService = mock(JwtTokenService.class);
-        oAuthServiceManager = mock(OAuthServiceManager.class);
-
-        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
-    }
+//@ActiveProfiles("test")
+class AuthServiceImplTest extends ServiceTest {
+//    private AuthService authService;
+//    private UserReader userReader;
+//    private UserStore userStore;
+//    private JwtTokenService jwtTokenService;
+//    private OAuthServiceManager oAuthServiceManager;
+//
+//    @BeforeEach
+//    void setUp() {
+//        userReader = mock(UserReader.class);
+//        userStore = mock(UserStore.class);
+//        jwtTokenService = mock(JwtTokenService.class);
+//        oAuthServiceManager = mock(OAuthServiceManager.class);
+//
+//        authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
+//    }
 
     @Test
     @DisplayName("email 중복되지 않는 경우, 회원정보 저장하고 JwtToken 발급하여 반환한다.")

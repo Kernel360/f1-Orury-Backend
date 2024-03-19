@@ -1,19 +1,12 @@
 package org.orury.client.auth.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.auth.application.oauth.KakaoOAuthService;
-import org.orury.client.auth.application.oauth.OAuthService;
-import org.orury.client.auth.application.oauth.kakaofeign.KakaoAuthClient;
-import org.orury.client.auth.application.oauth.kakaofeign.KakaoKapiClient;
+import org.orury.client.config.ServiceTest;
 import org.orury.domain.auth.domain.dto.kakao.KakaoAccount;
 import org.orury.domain.auth.domain.dto.kakao.KakaoAccountDto;
 import org.orury.domain.auth.domain.dto.kakao.KakaoOAuthTokenDto;
 import org.orury.domain.auth.domain.dto.kakao.Profile;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
@@ -21,33 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] KakaoOAuthService 테스트")
-@ActiveProfiles("test")
-class KakaoOAuthServiceTest {
-
-    private OAuthService oAuthService;
-    private KakaoAuthClient kakaoAuthClient;
-    private KakaoKapiClient kakaoKapiClient;
-    private static final int KAKAO_SIGN_UP_TYPE = 1;
-
-    @BeforeEach
-    void setUp() {
-        kakaoAuthClient = mock(KakaoAuthClient.class);
-        kakaoKapiClient = mock(KakaoKapiClient.class);
-
-        oAuthService = new KakaoOAuthService(kakaoAuthClient, kakaoKapiClient);
-    }
+class KakaoOAuthServiceTest extends ServiceTest {
 
     @Test
     void getKakaoSignUpType() {
-        assertEquals(
-                KAKAO_SIGN_UP_TYPE,
-                oAuthService.getSignUpType()
-        );
+        assertEquals(KAKAO_SIGN_UP_TYPE, oAuthService.getSignUpType());
     }
 
     @DisplayName("OAuth인증코드를 받으면, Kakao OAuth 인증 서버에 요청을 보낸 후 응답에서 이메일 찾아 반환한다.")

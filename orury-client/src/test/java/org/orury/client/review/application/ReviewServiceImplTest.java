@@ -1,21 +1,14 @@
 package org.orury.client.review.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.global.image.ImageAsyncStore;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.review.domain.ReviewReader;
-import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.Review;
@@ -27,7 +20,6 @@ import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,29 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[ServiceImpl] 리뷰 ServiceImpl 테스트")
-@ActiveProfiles("test")
-class ReviewServiceImplTest {
-    private ReviewReader reviewReader;
-    private ReviewStore reviewStore;
-    private GymStore gymStore;
-    private ImageStore imageStore;
-    private ImageAsyncStore imageAsyncStore;
-    private ReviewService reviewService;
-
-    @BeforeEach
-    void setUp() {
-        reviewReader = mock(ReviewReader.class);
-        reviewStore = mock(ReviewStore.class);
-        gymStore = mock(GymStore.class);
-        imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
-        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore, imageAsyncStore);
-
-    }
+class ReviewServiceImplTest extends ServiceTest {
 
     @DisplayName("리뷰Dto와 이미지가 전달되면, 성공적으로 리뷰를 저장한다.")
     @Test

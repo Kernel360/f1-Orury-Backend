@@ -1,12 +1,11 @@
 package org.orury.domain.review.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.review.domain.ReviewStore;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
@@ -19,23 +18,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")
 @ActiveProfiles("test")
-class ReviewStoreImplTest {
-    private ReviewRepository reviewRepository;
-    private ReviewReactionRepository reviewReactionRepository;
-
-    private ReviewStore reviewStore;
-
-    @BeforeEach
-    void setUp() {
-        reviewRepository = mock(ReviewRepository.class);
-        reviewReactionRepository = mock(ReviewReactionRepository.class);
-        reviewStore = new ReviewStoreImpl(reviewRepository, reviewReactionRepository);
-    }
+class ReviewStoreImplTest extends InfrastructureTest {
 
     @DisplayName("리뷰에 대한 반응의 수를 증가시킨다.")
     @Test

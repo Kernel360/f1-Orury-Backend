@@ -1,36 +1,20 @@
 package org.orury.domain.user.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-import org.orury.domain.user.infrastucture.UserRepository;
-import org.orury.domain.user.infrastucture.UserStoreImpl;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[UserStoreImpl] User StoreImpl 테스트")
-@ActiveProfiles("test")
-class UserStoreImplTest {
-    private UserRepository userRepository;
-    private UserStoreImpl userStoreImpl;
-
-    @BeforeEach
-    void setUp() {
-        userRepository = mock(UserRepository.class);
-        userStoreImpl = new UserStoreImpl(userRepository);
-    }
+class UserStoreImplTest extends InfrastructureTest {
 
     @Test
     @DisplayName("save(Long id) Test: User Entity가 들어오면 해당하는 엔티티를 저장한다. [성공]")
@@ -39,7 +23,7 @@ class UserStoreImplTest {
         User user = createUser(1L);
 
         //when
-        userStoreImpl.save(user);
+        userStore.save(user);
 
         //then
         then(userRepository).should(times(1)).save(any());

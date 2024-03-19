@@ -1,11 +1,8 @@
 package org.orury.client.gym.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.review.application.ReviewService;
+import org.orury.client.config.FacadeTest;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.GymLikePK;
@@ -13,7 +10,6 @@ import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -22,24 +18,10 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 암장 Facade 테스트")
-@ActiveProfiles("test")
-class GymFacadeTest {
-    GymFacade gymFacade;
-    GymService gymService;
-    ReviewService reviewService;
-
-    @BeforeEach
-    void setUp() {
-        gymService = mock(GymService.class);
-        reviewService = mock(ReviewService.class);
-
-        gymFacade = new GymFacade(gymService, reviewService);
-    }
+class GymFacadeTest extends FacadeTest {
 
     @DisplayName("성공적으로 (암장 영업중 유무, 유저의 암장좋아요 유무, 암장리뷰 통계를 포함한) GymReponse를 반환한다.")
     @Test

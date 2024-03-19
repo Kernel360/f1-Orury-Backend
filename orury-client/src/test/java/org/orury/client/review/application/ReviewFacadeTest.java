@@ -1,17 +1,13 @@
 package org.orury.client.review.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.gym.application.GymService;
+import org.orury.client.config.FacadeTest;
 import org.orury.client.review.interfaces.request.ReviewCreateRequest;
 import org.orury.client.review.interfaces.request.ReviewReactionRequest;
 import org.orury.client.review.interfaces.request.ReviewUpdateRequest;
 import org.orury.client.review.interfaces.response.ReviewsResponse;
 import org.orury.client.review.interfaces.response.ReviewsWithCursorResponse;
-import org.orury.client.user.application.UserService;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
@@ -21,7 +17,6 @@ import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,26 +30,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 리뷰 Facade 테스트")
-@ActiveProfiles("test")
-class ReviewFacadeTest {
-    private ReviewService reviewService;
-    private UserService userService;
-    private GymService gymService;
-    private ReviewFacade reviewFacade;
-
-    @BeforeEach
-    void setUp() {
-        reviewService = mock(ReviewService.class);
-        userService = mock(UserService.class);
-        gymService = mock(GymService.class);
-        reviewFacade = new ReviewFacade(reviewService, userService, gymService);
-    }
-
+class ReviewFacadeTest extends FacadeTest {
+    
     @DisplayName("리뷰 생성 요청이 들어왔을 때, 리뷰를 성공적으로 저장한다.")
     @Test
     void should_SaveReviewSuccessfully() {
