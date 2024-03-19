@@ -9,6 +9,7 @@ import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
+import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
@@ -16,6 +17,7 @@ import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
+import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -352,7 +355,234 @@ class CrewServiceImplTest {
 
     @DisplayName("[applyCrew] 크루에 가입신청을 한다.")
     @Test
-    void should_ApplyCrew() {
+    void should_ApplyCrew() throws NoSuchFieldException, IllegalAccessException {
+        // given
+        CrewDto crewDto = createCrewDto(List.of(
+                "id", 23L,
+                "minAge", 15,
+                "maxAge", 30,
+                "gender", CrewGender.ANY,
+                "permissionRequired", true,
+                "answerRequired", true
+        ));
+        UserDto userDto = createUserDto(List.of(
+                "gender", NumberConstants.MALE,
+                "birthday", LocalDate.now().minusYears(20)
+        ));
+
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).should(only())
+                .save(any(), any(), anyString());
+    }
+
+    @DisplayName("[applyCrew] 크루원이 이미 존재하는 경우, AlreadyMember 예외를 발생시킨다.")
+    @Test
+    void when_AlreadyMember_Then_AlreadyMemberException() {
+        // given
+        CrewDto crewDto = createCrewDto();
+        UserDto userDto = createUserDto();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(true);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.ALREADY_MEMBER.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(only())
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(never())
+                .countByUserId(anyLong());
+        then(crewApplicationReader).shouldHaveNoInteractions();
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루 참여/신청 횟수가 5 이상이면, MaximumParticipation 예외를 발생시킨다.")
+    @Test
+    void when_OverMaximumParticipation_Then_MaximumParticipationException1() {
+        // given
+        CrewDto crewDto = createCrewDto();
+        UserDto userDto = createUserDto();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(3);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.MAXIMUM_PARTICIPATION.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(only())
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 지원자의 연령이 크루 연령기준에 부합하지 않으면, AgeForbidden 예외를 발생시킨다.")
+    @Test
+    void when_AgeForbidden_Then_AgeForbiddenException() {
+        // given
+        CrewDto crewDto = createCrewDto(List.of(
+                "id", 23L,
+                "minAge", 15,
+                "maxAge", 30
+        ));
+        UserDto userDto = createUserDto(List.of(
+                "birthday", LocalDate.now().minusYears(14)
+        ));
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.AGE_FORBIDDEN.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루원의 성별이 크루 성별기준에 부합하지 않으면, GenderForbidden 예외를 발생시킨다.")
+    @Test
+    void when_GenderForbidden_Then_GenderForbiddenException() {
+        // given
+        CrewDto crewDto = createCrewDto(List.of(
+                "gender", CrewGender.FEMALE
+        ));
+        UserDto userDto = createUserDto(List.of(
+                "gender", NumberConstants.MALE
+        ));
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.GENDER_FORBIDDEN.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 지원하는 크루가 즉시 가입이고 신청자가 가입조건을 만족하는 경우, 신청자를 바로 가입시킨다.")
+    @Test
+    void when_PermissionNotRequiredCrew_Then_ImmediateJoin() {
+        // given
+        CrewDto crewDto = createCrewDto(List.of(
+                "minAge", 25,
+                "maxAge", 30,
+                "gender", CrewGender.FEMALE,
+                "permissionRequired", false,
+                "answerRequired", false
+        ));
+        UserDto userDto = createUserDto(List.of(
+                "birthday", LocalDate.now().minusYears(26),
+                "gender", NumberConstants.FEMALE
+        ));
+
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).should(times(1))
+                .addCrewMember(anyLong(), anyLong());
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루원의 가입신청 답변이 필수한데 답변이 없는 경우, EmptyAnswer 예외를 발생시킨다.")
+    @Test
+    void when_AnswerRequiredButNoAnswer_Then_AnswerRequiredException() {
+        // given
+        CrewDto crewDto = createCrewDto(List.of(
+                "permissionRequired", true,
+                "answerRequired", true
+        ));
+        UserDto userDto = createUserDto();
+        String answer = "";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.EMPTY_ANSWER.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(only())
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
     }
 
     @DisplayName("[withdrawApplication] 크루 가입신청을 취소한다.")
@@ -708,42 +938,19 @@ class CrewServiceImplTest {
         );
     }
 
+    private UserDto createUserDto(List<Object> objects) {
+        return DomainFixtureFactory.createUserDto(objects);
+    }
+
     private UserDto createUserDto() {
-        return UserDto.of(
-                111L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
+        return createUserDto(Collections.emptyList());
+    }
+
+    private CrewDto createCrewDto(List<Object> objects) {
+        return DomainFixtureFactory.createCrewDto(objects);
     }
 
     private CrewDto createCrewDto() {
-        return CrewDto.of(
-                333L,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUserDto(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
+        return createCrewDto(Collections.emptyList());
     }
 }
