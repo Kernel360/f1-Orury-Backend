@@ -203,7 +203,9 @@ class ReviewStoreImplTest extends InfrastructureTest {
                 "16:00-23:66",
                 "17:00-23:77",
                 "gymHomepageLink",
-                "gymRemark"
+                "gymRemark",
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
     }
 

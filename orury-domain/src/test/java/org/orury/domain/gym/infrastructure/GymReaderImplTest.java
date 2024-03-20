@@ -6,6 +6,7 @@ import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -194,7 +195,9 @@ class GymReaderImplTest extends InfrastructureTest {
                 "16:00-23:66",
                 "17:00-23:77",
                 "gymHomepageLink",
-                "gymRemark"
+                "gymRemark",
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
     }
 

@@ -88,7 +88,9 @@ public class TestRepositoryUtils {
                 "11:66-23:66",
                 "11:77-23:77",
                 "gymHomepageLink",
-                "gymRemark"
+                "gymRemark",
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
     }
 
