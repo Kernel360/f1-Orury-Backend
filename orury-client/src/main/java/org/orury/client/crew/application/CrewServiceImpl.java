@@ -152,7 +152,7 @@ public class CrewServiceImpl implements CrewService {
             throw new BusinessException(CrewErrorCode.ALREADY_MEMBER);
 
         // 크루 참여 검증 (멤버로 참여한 크루 + 신청한 크루 <= 5)
-        validateCrewParticipationCount(crewDto.userDto().id());
+        validateCrewParticipationCount(userDto.id());
 
         // 지원하는 크루 연령기준에 만족하지 않는 경우
         if (!meetAgeCriteria(userDto.birthday(), crewDto))
