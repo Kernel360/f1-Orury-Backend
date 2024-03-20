@@ -153,7 +153,7 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional
     public void withdrawApplication(CrewDto crewDto, Long userId) {
-
+        crewApplicationPolicy.validateApplication(crewDto.id(), userId);
         crewApplicationStore.delete(crewDto.id(), userId);
     }
 
