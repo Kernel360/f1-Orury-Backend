@@ -1,6 +1,7 @@
 package org.orury.client.crew.application;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
+
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
