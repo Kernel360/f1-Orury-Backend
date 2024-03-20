@@ -1,14 +1,10 @@
 package org.orury.client.comment.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.comment.domain.CommentReader;
-import org.orury.domain.comment.domain.CommentStore;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
@@ -20,7 +16,6 @@ import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,23 +28,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 댓글 ServiceImpl 테스트")
-@ActiveProfiles("test")
-class CommentServiceImplTest {
-    private CommentService commentService;
-    private CommentReader commentReader;
-    private CommentStore commentStore;
-
-    @BeforeEach
-    void setUp() {
-        commentReader = mock(CommentReader.class);
-        commentStore = mock(CommentStore.class);
-
-        commentService = new CommentServiceImpl(commentReader, commentStore);
-    }
+class CommentServiceImplTest extends ServiceTest {
 
     @Test
     @DisplayName("부모댓글id로 0을 가진 댓글Dto가 들어오면, 댓글이 생성되고 게시글의 댓글수가 증가되어야 한다.")

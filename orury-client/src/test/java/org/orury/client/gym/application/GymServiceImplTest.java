@@ -1,20 +1,15 @@
 package org.orury.client.gym.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.gym.domain.GymReader;
-import org.orury.domain.gym.domain.GymStore;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,24 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 암장 ServiceImpl 테스트")
-@ActiveProfiles("test")
-class GymServiceImplTest {
-
-    GymService gymService;
-    GymReader gymReader;
-    GymStore gymStore;
-
-    @BeforeEach
-    void setUp() {
-        gymReader = mock(GymReader.class);
-        gymStore = mock(GymStore.class);
-
-        gymService = new GymServiceImpl(gymReader, gymStore);
-    }
+class GymServiceImplTest extends ServiceTest {
 
     @Test
     @DisplayName("존재하는 암장id가 들어오면, 정상적으로 GymDto를 반환한다.")

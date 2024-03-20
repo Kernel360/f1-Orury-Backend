@@ -1,12 +1,9 @@
 package org.orury.client.crew.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.config.FacadeTest;
 import org.orury.client.crew.interfaces.request.CrewRequest;
-import org.orury.client.user.application.UserService;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
@@ -17,7 +14,6 @@ import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -29,21 +25,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.only;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 크루 Facade 테스트")
-@ActiveProfiles("test")
-class CrewFacadeTest {
-    private CrewService crewService;
-    private UserService userService;
-    private CrewFacade crewFacade;
-
-    @BeforeEach
-    void setUp() {
-        crewService = mock(CrewService.class);
-        userService = mock(UserService.class);
-
-        crewFacade = new CrewFacade(crewService, userService);
-    }
+class CrewFacadeTest extends FacadeTest {
 
     @DisplayName("크루생성Request, 크루image 유저id를 받으면, 크루를 생성한다.")
     @Test

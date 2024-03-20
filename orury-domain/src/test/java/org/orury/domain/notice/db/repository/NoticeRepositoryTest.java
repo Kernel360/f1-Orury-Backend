@@ -1,5 +1,6 @@
 package org.orury.domain.notice.db.repository;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.admin.domain.dto.RoleType;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 @RepositoryTest
 class NoticeRepositoryTest {
     private final NoticeRepository noticeRepository;

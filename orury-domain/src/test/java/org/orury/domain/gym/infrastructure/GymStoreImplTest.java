@@ -1,38 +1,20 @@
 package org.orury.domain.gym.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.gym.domain.GymStore;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Store] 암장 StoreImpl 테스트")
-@ActiveProfiles("test")
-class GymStoreImplTest {
-    private GymStore gymStore;
-    private GymRepository gymRepository;
-    private GymLikeRepository gymLikeRepository;
-
-    @BeforeEach
-    void setUp() {
-        gymRepository = mock(GymRepository.class);
-        gymLikeRepository = mock(GymLikeRepository.class);
-
-        gymStore = new GymStoreImpl(gymRepository, gymLikeRepository);
-    }
+class GymStoreImplTest extends InfrastructureTest {
 
     @Test
     @DisplayName("성공적으로 Gym의 reviewCount를 1만큼 늘리고, totalScore를 reviewScore만큼 더해야 한다.")

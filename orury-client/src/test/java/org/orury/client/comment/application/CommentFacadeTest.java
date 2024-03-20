@@ -1,25 +1,11 @@
 package org.orury.client.comment.application;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.client.comment.interfaces.request.CommentCreateRequest;
 import org.orury.client.comment.interfaces.request.CommentUpdateRequest;
 import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
-import org.orury.client.notification.application.NotificationService;
-import org.orury.client.post.application.PostService;
-import org.orury.client.user.application.UserService;
+import org.orury.client.config.FacadeTest;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
@@ -27,31 +13,22 @@ import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
 @DisplayName("[Facade] 댓글 Facade 테스트")
-@ActiveProfiles("test")
-class CommentFacadeTest {
-    CommentFacade commentFacade;
-    CommentService commentService;
-    PostService postService;
-    UserService userService;
-    NotificationService notificationService;
-
-    @BeforeEach
-    void setUp() {
-        commentService = mock(CommentService.class);
-        postService = mock(PostService.class);
-        userService = mock(UserService.class);
-
-        commentFacade = new CommentFacade(commentService, postService, userService, notificationService);
-    }
+class CommentFacadeTest extends FacadeTest {
 
     @DisplayName("댓글생성Request와 유저id를 받으면, 댓글을 생성한다.")
     @Test

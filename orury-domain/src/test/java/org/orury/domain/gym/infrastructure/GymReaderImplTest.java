@@ -1,14 +1,10 @@
 package org.orury.domain.gym.infrastructure;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.domain.gym.domain.GymReader;
+import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLikePK;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,24 +16,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("[Reader] 암장 ReaderImpl 테스트")
-@ActiveProfiles("test")
-class GymReaderImplTest {
-    private GymReader gymReader;
-    private GymRepository gymRepository;
-    private GymLikeRepository gymLikeRepository;
-
-    @BeforeEach
-    void setUp() {
-        gymRepository = mock(GymRepository.class);
-        gymLikeRepository = mock(GymLikeRepository.class);
-
-        gymReader = new GymReaderImpl(gymRepository, gymLikeRepository);
-    }
+class GymReaderImplTest extends InfrastructureTest {
 
     @Test
     @DisplayName("존재하는 암장id가 들어오면, 정상적으로 Gym Entity를 반환한다.")
