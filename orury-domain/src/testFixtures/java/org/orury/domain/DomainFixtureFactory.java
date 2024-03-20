@@ -12,6 +12,10 @@ import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.Region;
+import org.orury.domain.post.domain.dto.PostDto;
+import org.orury.domain.post.domain.entity.Post;
+import org.orury.domain.post.domain.entity.PostLike;
+import org.orury.domain.post.domain.entity.PostLikePK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
@@ -28,6 +32,7 @@ public class DomainFixtureFactory {
     }
 
     private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
 
     @Getter
     @Builder
@@ -178,5 +183,74 @@ public class DomainFixtureFactory {
         }
     }
 
+    @Getter
+    @Builder
+    public static class TestPost {
+        private @Builder.Default Long id = 847912L;
+        private @Builder.Default String title = "postTitle";
+        private @Builder.Default String content = "postContent";
+        private @Builder.Default int viewCount = 0;
+        private @Builder.Default int commentCount = 0;
+        private @Builder.Default int likeCount = 0;
+        private @Builder.Default List<String> images = List.of();
+        private @Builder.Default int category = 1;
+        private @Builder.Default User user = TestUser.createUser(51241L).build().get();
+        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
+        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
 
+        public static TestPost.TestPostBuilder createPost() {
+            return TestPost.builder();
+        }
+
+        public static TestPost.TestPostBuilder createPost(Long postId) {
+            return TestPost.builder().id(postId);
+        }
+
+        public Post get() {
+            return mapper.convertValue(this, Post.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestPostDto {
+        private @Builder.Default Long id = 123456L;
+        private @Builder.Default String title = "postTitle";
+        private @Builder.Default String content = "postContent";
+        private @Builder.Default int viewCount = 0;
+        private @Builder.Default int commentCount = 0;
+        private @Builder.Default int likeCount = 0;
+        private @Builder.Default List<String> images = List.of();
+        private @Builder.Default int category = 1;
+        private @Builder.Default UserDto userDto = TestUserDto.createUserDto().build().get();
+        private @Builder.Default Boolean isLike = false;
+        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
+        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
+
+        public static TestPostDto.TestPostDtoBuilder createPostDto() {
+            return TestPostDto.builder();
+        }
+
+        public PostDto get() {
+            return mapper.convertValue(this, PostDto.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestPostLike {
+        private @Builder.Default PostLikePK postLikePK = PostLikePK.of(123456L, 87654321L);
+
+        public static PostLike createPostLike() {
+            var postLike = TestPostLike.builder().build();
+            return mapper.convertValue(postLike, PostLike.class);
+        }
+
+        public static PostLike createPostLike(Long id) {
+            var postLike = TestPostLike.builder()
+                    .postLikePK(PostLikePK.of(123456L, id))
+                    .build();
+            return mapper.convertValue(postLike, PostLike.class);
+        }
+    }
 }
