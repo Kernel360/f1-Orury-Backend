@@ -6,13 +6,8 @@ import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +19,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.DomainFixtureFactory.TestComment.*;
+import static org.orury.domain.DomainFixtureFactory.TestCommentLikePK.createCommentLikePK;
 
 @DisplayName("[Reader] 댓글 ReaderImpl 테스트")
 class CommentReaderImplTest extends InfrastructureTest {
@@ -33,7 +30,7 @@ class CommentReaderImplTest extends InfrastructureTest {
     void should_RetrieveCommentById() {
         // given
         Long commentId = 3L;
-        Comment comment = createComment(commentId);
+        Comment comment = createComment(commentId).build().get();
 
         given(commentRepository.findById(commentId))
                 .willReturn(Optional.of(comment));
@@ -91,7 +88,7 @@ class CommentReaderImplTest extends InfrastructureTest {
     @DisplayName("존재하는 댓글좋아요PK가 들어오면, true를 반환한다.")
     void when_ExistingCommentLikePK_Then_ReturnTrue() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
 
         given(commentLikeRepository.existsById(commentLikePK))
                 .willReturn(true);
@@ -104,7 +101,7 @@ class CommentReaderImplTest extends InfrastructureTest {
     @DisplayName("존재하지 않는 댓글좋아요PK가 들어오면, false를 반환한다.")
     void when_NotExistingCommentLikePK_Then_ReturnFalse() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
 
         given(commentLikeRepository.existsById(commentLikePK))
                 .willReturn(false);
@@ -149,15 +146,15 @@ class CommentReaderImplTest extends InfrastructureTest {
         Long cursor = 465L;
         PageRequest pageRequest = PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE);
 
-        Comment comment1 = createComment(1L, NumberConstants.PARENT_COMMENT);
-        Comment comment2 = createComment(2L, NumberConstants.PARENT_COMMENT);
-        Comment comment3 = createComment(3L, NumberConstants.PARENT_COMMENT);
-        Comment comment1_1 = createComment(4L, 1L);
-        Comment comment1_2 = createComment(5L, 1L);
-        Comment comment3_1 = createComment(6L, 3L);
-        Comment comment3_2 = createComment(7L, 3L);
-        Comment comment3_3 = createComment(8L, 3L);
-        Comment comment1_3 = createComment(9L, 1L);
+        Comment comment1 = createParentComment().id(1L).build().get();
+        Comment comment2 = createParentComment().id(2L).build().get();
+        Comment comment3 = createParentComment().id(3L).build().get();
+        Comment comment1_1 = createChildComment().id(4L).parentId(1L).build().get();
+        Comment comment1_2 = createChildComment().id(5L).parentId(1L).build().get();
+        Comment comment3_1 = createChildComment().id(6L).parentId(3L).build().get();
+        Comment comment3_2 = createChildComment().id(7L).parentId(3L).build().get();
+        Comment comment3_3 = createChildComment().id(8L).parentId(3L).build().get();
+        Comment comment1_3 = createChildComment().id(9L).parentId(1L).build().get();
 
         List<Comment> parentComments = List.of(
                 comment1,
@@ -252,69 +249,5 @@ class CommentReaderImplTest extends InfrastructureTest {
                 .findByUserIdOrderByIdDesc(anyLong(), any());
         then(commentRepository).should(times(1))
                 .findByUserIdAndIdLessThanOrderByIdDesc(anyLong(), anyLong(), any());
-    }
-
-    private User createUser() {
-        return User.of(
-                1L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private Post createPost() {
-        return Post.of(
-                1L,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUser(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment(Long commentId) {
-        return Comment.of(
-                commentId,
-                "commentContent",
-                NumberConstants.PARENT_COMMENT,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment(Long commentId, Long parentCommentId) {
-        return Comment.of(
-                commentId,
-                "commentContent",
-                parentCommentId,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private CommentLikePK createCommentLikePK() {
-        return CommentLikePK.of(1L, 1L);
     }
 }

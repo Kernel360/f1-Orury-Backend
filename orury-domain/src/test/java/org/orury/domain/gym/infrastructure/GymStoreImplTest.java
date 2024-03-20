@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.gym.domain.entity.GymLike;
-import org.orury.domain.gym.domain.entity.GymLikePK;
 
 import java.util.List;
 
@@ -12,6 +11,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.DomainFixtureFactory.TestGymLike.createGymLike;
 
 @DisplayName("[Store] 암장 StoreImpl 테스트")
 class GymStoreImplTest extends InfrastructureTest {
@@ -70,8 +70,7 @@ class GymStoreImplTest extends InfrastructureTest {
     @DisplayName("성공적으로 GymLike를 생성하고 Gym의 likeCount를 1만큼 늘려야 한다.")
     void should_CreateGymLikeAndIncreaseGymLIkeCount() {
         // given
-        Long gymId = 1L;
-        GymLike gymLike = createGymLike(gymId);
+        GymLike gymLike = createGymLike().build().get();
 
         // when
         gymStore.createGymLike(gymLike);
@@ -87,8 +86,7 @@ class GymStoreImplTest extends InfrastructureTest {
     @DisplayName("성공적으로 GymLike를 삭제하고 Gym의 likeCount를 1만큼 줄여야 한다.")
     void should_DeleteGymLikeAndDecreaseGymLIkeCount() {
         // given
-        Long gymId = 1L;
-        GymLike gymLike = createGymLike(gymId);
+        GymLike gymLike = createGymLike().build().get();
 
         // when
         gymStore.deleteGymLike(gymLike);
@@ -106,10 +104,10 @@ class GymStoreImplTest extends InfrastructureTest {
         // given
         Long userId = 5L;
         List<GymLike> gymLikes = List.of(
-                createGymLike(1L),
-                createGymLike(2L),
-                createGymLike(3L),
-                createGymLike(4L));
+                createGymLike(1L, userId).build().get(),
+                createGymLike(2L, userId).build().get(),
+                createGymLike(3L, userId).build().get(),
+                createGymLike(4L, userId).build().get());
 
         given(gymLikeRepository.findByGymLikePK_UserId(userId))
                 .willReturn(gymLikes);
@@ -124,9 +122,5 @@ class GymStoreImplTest extends InfrastructureTest {
                 .decreaseLikeCount(anyLong());
         then(gymLikeRepository).should(times(gymLikes.size()))
                 .delete(any());
-    }
-
-    private GymLike createGymLike(Long gymId) {
-        return GymLike.of(GymLikePK.of(1L, gymId));
     }
 }

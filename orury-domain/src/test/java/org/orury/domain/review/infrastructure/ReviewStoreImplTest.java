@@ -5,19 +5,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.domain.config.InfrastructureTest;
-import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")
@@ -75,7 +73,7 @@ class ReviewStoreImplTest extends InfrastructureTest {
     void should_SaveReviewSuccessfully() {
         // given
         Long reviewId = 1L;
-        Review review = createReview(reviewId);
+        Review review = createReview(reviewId).build().get();
 
         // when
         reviewStore.save(review);
@@ -91,9 +89,8 @@ class ReviewStoreImplTest extends InfrastructureTest {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        Review review = createReview(reviewId);
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        ReviewReaction reviewReaction = createReviewReaction(reactionPK, 1);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        ReviewReaction reviewReaction = createReviewReaction().reviewReactionPK(reactionPK).reactionType(1).build().get();
 
         // when
         reviewStore.save(reviewReaction);
@@ -108,7 +105,7 @@ class ReviewStoreImplTest extends InfrastructureTest {
     void should_DeleteReviewSuccessfully() {
         // given
         Long reviewId = 1L;
-        Review review = createReview(reviewId);
+        Review review = createReview(reviewId).build().get();
 
         // when
         reviewStore.delete(review);
@@ -124,9 +121,8 @@ class ReviewStoreImplTest extends InfrastructureTest {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        Review review = createReview(reviewId);
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        ReviewReaction reviewReaction = createReviewReaction(reactionPK, 1);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        ReviewReaction reviewReaction = createReviewReaction().reviewReactionPK(reactionPK).reactionType(1).build().get();
 
         // when
         reviewStore.delete(reviewReaction);
@@ -142,11 +138,11 @@ class ReviewStoreImplTest extends InfrastructureTest {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
         List<ReviewReaction> reactions = List.of(
-                createReviewReaction(reactionPK, 1),
-                createReviewReaction(reactionPK, 2),
-                createReviewReaction(reactionPK, 3)
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(1).build().get(),
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(2).build().get(),
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(3).build().get()
         );
 
         given(reviewReactionRepository.findByReviewReactionPK_UserId(userId)).willReturn(reactions);
@@ -159,92 +155,5 @@ class ReviewStoreImplTest extends InfrastructureTest {
                 .decreaseReactionCount(anyLong(), anyInt());
         then(reviewReactionRepository).should(times(reactions.size()))
                 .delete(any());
-    }
-
-
-    private static User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                UserStatus.ENABLE
-        );
-    }
-
-    private static Gym createGym(Long id) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                123.456,
-                123.456,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private static Review createReview(Long id) {
-        return Review.of(
-                id,
-                "reviewContent",
-                List.of(),
-                4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                createUser(id),
-                createGym(id),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private static ReviewReactionPK createReviewReactionPK(
-            Long userId,
-            Long reviewId
-
-    ) {
-        return ReviewReactionPK.of(
-                userId,
-                reviewId
-        );
-    }
-
-    private static ReviewReaction createReviewReaction(
-            ReviewReactionPK reactionPK,
-            int reactionType
-    ) {
-        return ReviewReaction.of(
-                reactionPK,
-                reactionType
-        );
     }
 }

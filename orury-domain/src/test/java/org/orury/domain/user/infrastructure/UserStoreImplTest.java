@@ -3,14 +3,11 @@ package org.orury.domain.user.infrastructure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.config.InfrastructureTest;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @DisplayName("[UserStoreImpl] User StoreImpl 테스트")
@@ -20,28 +17,12 @@ class UserStoreImplTest extends InfrastructureTest {
     @DisplayName("save(Long id) Test: User Entity가 들어오면 해당하는 엔티티를 저장한다. [성공]")
     void should_saveUserEntity() {
         //given
-        User user = createUser(1L);
+        User user = mock(User.class);
 
         //when
         userStore.save(user);
 
         //then
         then(userRepository).should(times(1)).save(any());
-    }
-
-    private User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
     }
 }

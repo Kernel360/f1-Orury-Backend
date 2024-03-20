@@ -4,21 +4,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
 
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")
 class ReviewReaderImplTest extends InfrastructureTest {
@@ -29,9 +27,9 @@ class ReviewReaderImplTest extends InfrastructureTest {
         // given
         Long gymId = 1L;
         List<Review> reviews = List.of(
-                createReview(1L),
-                createReview(2L),
-                createReview(3L)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewRepository.findByGymId(gymId)).willReturn(reviews);
@@ -66,9 +64,9 @@ class ReviewReaderImplTest extends InfrastructureTest {
         Long gymId = 1L;
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L),
-                createReview(2L),
-                createReview(3L)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewRepository.findByGymIdOrderByIdDesc(gymId, pageable)).willReturn(reviews);
@@ -89,9 +87,9 @@ class ReviewReaderImplTest extends InfrastructureTest {
         Long cursor = NumberConstants.FIRST_CURSOR;
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L),
-                createReview(2L),
-                createReview(3L)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewRepository.findByGymIdAndIdLessThanOrderByIdDesc(gymId, cursor, pageable))
@@ -113,9 +111,9 @@ class ReviewReaderImplTest extends InfrastructureTest {
         Long cursor = NumberConstants.FIRST_CURSOR;
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L),
-                createReview(2L),
-                createReview(3L)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewRepository.findByUserIdOrderByIdDesc(userId, pageable))
@@ -137,9 +135,9 @@ class ReviewReaderImplTest extends InfrastructureTest {
         Long cursor = NumberConstants.FIRST_CURSOR;
         Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L),
-                createReview(2L),
-                createReview(3L)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewRepository.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable))
@@ -158,7 +156,7 @@ class ReviewReaderImplTest extends InfrastructureTest {
     void should_ReturnReviewSuccessfully() {
         // given
         Long reviewId = 1L;
-        Review review = createReview(reviewId);
+        Review review = createReview(reviewId).build().get();
 
         given(reviewRepository.findById(reviewId))
                 .willReturn(Optional.of(review));
@@ -177,8 +175,10 @@ class ReviewReaderImplTest extends InfrastructureTest {
         // given
         Long userId = 1L;
         Long reviewId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        ReviewReaction reviewreaction = createReviewReaction(reactionPK, 1);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        ReviewReaction reviewreaction = createReviewReaction()
+                .reviewReactionPK(reactionPK)
+                .reactionType(1).build().get();
 
         given(reviewReactionRepository.findById(reactionPK))
                 .willReturn(Optional.of(reviewreaction));
@@ -197,11 +197,11 @@ class ReviewReaderImplTest extends InfrastructureTest {
         // given
         Long userId = 1L;
         Long reviewId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
         List<ReviewReaction> reactions = List.of(
-                createReviewReaction(reactionPK, 1),
-                createReviewReaction(reactionPK, 2),
-                createReviewReaction(reactionPK, 3)
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(1).build().get(),
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(2).build().get(),
+                createReviewReaction().reviewReactionPK(reactionPK).reactionType(3).build().get()
         );
 
         given(reviewReactionRepository.findByReviewReactionPK_UserId(userId))
@@ -214,92 +214,4 @@ class ReviewReaderImplTest extends InfrastructureTest {
         then(reviewReactionRepository).should(times(1))
                 .findByReviewReactionPK_UserId(userId);
     }
-
-
-    private static User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                UserStatus.ENABLE
-        );
-    }
-
-    private static Gym createGym(Long id) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                123.456,
-                123.456,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private static Review createReview(Long id) {
-        return Review.of(
-                id,
-                "reviewContent",
-                List.of(),
-                4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                createUser(id),
-                createGym(id),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private static ReviewReactionPK createReviewReactionPK(
-            Long userId,
-            Long reviewId
-
-    ) {
-        return ReviewReactionPK.of(
-                userId,
-                reviewId
-        );
-    }
-
-    private static ReviewReaction createReviewReaction(
-            ReviewReactionPK reactionPK,
-            int reactionType
-    ) {
-        return ReviewReaction.of(
-                reactionPK,
-                reactionType
-        );
-    }
-
 }

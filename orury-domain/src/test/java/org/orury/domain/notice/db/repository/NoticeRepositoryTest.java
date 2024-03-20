@@ -3,7 +3,6 @@ package org.orury.domain.notice.db.repository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.orury.domain.admin.domain.dto.RoleType;
 import org.orury.domain.admin.domain.entity.Admin;
 import org.orury.domain.admin.infrastructure.AdminRepository;
 import org.orury.domain.config.RepositoryTest;
@@ -11,9 +10,8 @@ import org.orury.domain.notice.domain.entity.Notice;
 import org.orury.domain.notice.infrastructure.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.orury.domain.DomainFixtureFactory.TestAdmin.createAdmin;
 
 @Disabled
 @RepositoryTest
@@ -33,7 +31,7 @@ class NoticeRepositoryTest {
     @DisplayName("")
     @Test
     void test() {
-        Admin admin = adminRepository.save(createAdmin());
+        Admin admin = adminRepository.save(createAdmin().build().get());
         Notice notice = noticeRepository.save(Notice.of(
                 "title",
                 "content",
@@ -47,16 +45,5 @@ class NoticeRepositoryTest {
                 .hasFieldOrPropertyWithValue("name", "name")
                 .hasFieldOrPropertyWithValue("email", "email")
                 .hasFieldOrPropertyWithValue("password", "pw");
-    }
-
-    private Admin createAdmin() {
-        return Admin.of(
-                1L,
-                "name",
-                "email",
-                "pw",
-                Set.of(RoleType.ADMIN)
-        );
-
     }
 }
