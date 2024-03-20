@@ -22,7 +22,6 @@ import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,7 +37,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
 import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestCrewMemberPK.createCrewMemberPK;
+import static org.orury.domain.DomainFixtureFactory.TestCrewMember.createCrewMember;
+import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
 import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -237,14 +237,18 @@ class CrewServiceImplTest {
         // given
         CrewDto crewDto = createCrewDto().build().get();
         List<CrewMember> otherMembers = List.of(
-                createCrewMember(crewDto.id(), 1L),
-                createCrewMember(crewDto.id(), 2L),
-                createCrewMember(crewDto.id(), 3L)
+                createCrewMember(crewDto.id(), 1L).build().get(),
+                createCrewMember(crewDto.id(), 2L).build().get(),
+                createCrewMember(crewDto.id(), 3L).build().get()
         );
         given(crewMemberReader.getOtherCrewMembersByCrewIdMaximum(anyLong(), anyLong(), anyInt()))
                 .willReturn(otherMembers);
         given(userReader.getUserById(anyLong()))
-                .willReturn(createUser(1L), createUser(2L), createUser(3L));
+                .willReturn(
+                        createUser(1L).build().get(),
+                        createUser(2L).build().get(),
+                        createUser(3L).build().get()
+                );
 
         // when
         List<String> userImages = crewService.getUserImagesByCrew(crewDto);
@@ -868,18 +872,5 @@ class CrewServiceImplTest {
         then(meetingMemberStore).shouldHaveNoInteractions();
         then(meetingStore).shouldHaveNoInteractions();
         then(crewMemberStore).shouldHaveNoInteractions();
-    }
-
-    private CrewMember createCrewMember(Long crewId, Long userId) {
-        CrewMemberPK crewMemberPK = createCrewMemberPK()
-                .crewId(crewId)
-                .userId(userId).build().get();
-        return DomainFixtureFactory.TestCrewMember.createCrewMember()
-                .crewMemberPK(crewMemberPK).build().get();
-    }
-
-    private User createUser(Long userId) {
-        return DomainFixtureFactory.TestUser.createUser()
-                .id(userId).build().get();
     }
 }

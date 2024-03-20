@@ -48,6 +48,10 @@ public class DomainFixtureFactory {
             return TestUser.builder();
         }
 
+        public static TestUser.TestUserBuilder createUser(Long userId) {
+            return TestUser.builder().id(userId);
+        }
+
         public User get() {
             return mapper.convertValue(this, User.class);
         }
@@ -162,6 +166,11 @@ public class DomainFixtureFactory {
 
         public static TestCrewMember.TestCrewMemberBuilder createCrewMember() {
             return TestCrewMember.builder();
+        }
+
+        public static TestCrewMember.TestCrewMemberBuilder createCrewMember(Long crewId, Long userId) {
+            return TestCrewMember.builder()
+                    .crewMemberPK(TestCrewMemberPK.createCrewMemberPK().crewId(crewId).userId(userId).build().get());
         }
 
         public CrewMember get() {
