@@ -26,6 +26,12 @@ dependencies {
 
     testRuntimeOnly('com.mysql:mysql-connector-j')
 
+    //test fixtures
+    testFixturesAnnotationProcessor 'org.projectlombok:lombok'
+    testFixturesImplementation 'org.projectlombok:lombok'
+    testFixturesImplementation 'com.fasterxml.jackson.core:jackson-databind'
+    testFixturesImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
 }
 tasks.register("prepareKotlinBuildScriptModel") {}
 
