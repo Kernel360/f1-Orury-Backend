@@ -13,6 +13,7 @@ import org.orury.client.gym.application.GymFacade;
 import org.orury.client.gym.application.GymService;
 import org.orury.client.meeting.application.MeetingFacade;
 import org.orury.client.meeting.application.MeetingService;
+import org.orury.client.notification.application.NotificationService;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewFacade;
 import org.orury.client.review.application.ReviewService;
@@ -40,6 +41,7 @@ public abstract class FacadeTest {
     protected UserFacade userFacade;
     protected MeetingService meetingService;
     protected MeetingFacade meetingFacade;
+    protected NotificationService notificationService;
 
     @BeforeEach
     void setUp() {
@@ -53,10 +55,11 @@ public abstract class FacadeTest {
         userService = mock(UserService.class);
         gymService = mock(GymService.class);
         meetingService = mock(MeetingService.class);
+        notificationService = mock(NotificationService.class);
 
         userFacade = new UserFacade(userService, postService, reviewService, commentService);
         gymFacade = new GymFacade(gymService, reviewService);
-        commentFacade = new CommentFacade(commentService, postService, userService);
+        commentFacade = new CommentFacade(commentService, postService, userService, notificationService);
         crewFacade = new CrewFacade(crewService, userService);
         authFacade = new AuthFacade(authService);
         reviewFacade = new ReviewFacade(reviewService, userService, gymService);
