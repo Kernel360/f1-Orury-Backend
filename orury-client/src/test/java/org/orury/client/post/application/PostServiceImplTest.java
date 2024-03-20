@@ -1,18 +1,15 @@
-package org.orury.client.post.service;
+package org.orury.client.post.application;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
-import org.orury.domain.post.domain.entity.PostLikePK;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +30,13 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.orury.common.error.code.PostErrorCode.FORBIDDEN;
 import static org.orury.common.error.code.PostErrorCode.NOT_FOUND;
 import static org.orury.common.util.S3Folder.POST;
+import static org.orury.domain.DomainFixtureFactory.TestPostLikeDto.createPostLikeDto;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 import static org.orury.domain.global.constants.NumberConstants.USER_ID;
 
 @DisplayName("[Service] 게시글 테스트")
-class PostServiceTest extends ServiceTest {
+class PostServiceImplTest extends ServiceTest {
 
     @Test
     @DisplayName("게시글이 성공적으로 생성되어야 한다.")
@@ -254,8 +252,6 @@ class PostServiceTest extends ServiceTest {
                 createPost(1L, 1L),
                 createPost(2L, 1L)
         );
-        List<String> postImages = List.of("post1.png", "post2.png");
-        String userImage = "test.png";
 
         when(postReader.findByCategoryOrderByIdDesc(category, cursor, pageable)).thenReturn(posts);
 
@@ -300,7 +296,6 @@ class PostServiceTest extends ServiceTest {
                 createPost(9L, 5L),
                 createPost(10L, 2L)
         );
-        List<String> postImages = List.of("post1.png", "post2.png");
 
         when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
 
@@ -328,7 +323,6 @@ class PostServiceTest extends ServiceTest {
                 createPost(1L, 1L),
                 createPost(2L, 1L)
         );
-        List<String> postImages = List.of("post1.png", "post2.png");
 
         when(postReader.findByTitleContainingOrContentContainingOrderByIdDesc(searchWord, cursor, pageable)).thenReturn(posts);
 
@@ -360,8 +354,6 @@ class PostServiceTest extends ServiceTest {
                 createPost(2L, USER_ID),
                 createPost(1L, USER_ID)
         );
-        List<String> postImages = List.of("post1.png", "post2.png");
-        String userImage = "test.png";
         List<PostDto> expectPostDtos = posts.stream()
                 .map(post -> PostDto.from(post, false))
                 .toList();
@@ -395,11 +387,6 @@ class PostServiceTest extends ServiceTest {
                 createPost(11L, USER_ID),
                 createPost(10L, USER_ID)
         );
-        List<String> postImages = List.of("post1.png", "post2.png");
-        String userImage = "test.png";
-//        List<PostDto> expectPostDtos = posts.stream()
-//                .map(post -> PostDto.from(post, postImages, userImage, false))
-//                .toList();
 
         List<PostDto> expectPostDtos = posts.stream()
                 .map(post -> PostDto.from(post, false))
@@ -419,7 +406,7 @@ class PostServiceTest extends ServiceTest {
     @DisplayName("유저가 게시글에 좋아요를 누르면 좋아요 테이블에 데이터가 생성")
     void when_UserPostLike_Then_CreatePostLikeSuccessFully() {
         // given
-        PostLikeDto postLikeDto = createPostLike();
+        PostLikeDto postLikeDto = createPostLikeDto().build().get();
         PostLike postLike = postLikeDto.toEntity();
         given(postReader.existsByPostLikePK(any())).willReturn(false);
 
@@ -434,7 +421,7 @@ class PostServiceTest extends ServiceTest {
     @DisplayName("유저가 게시글에 좋아요를 누르면 좋아요 테이블에 데이터가 삭제")
     void when_UserPostLike_Then_DeletePostLikeSuccessFully() {
         // given
-        PostLikeDto postLikeDto = createPostLike();
+        PostLikeDto postLikeDto = createPostLikeDto().build().get();
         PostLike postLike = postLikeDto.toEntity();
         given(postReader.existsByPostLikePK(any())).willReturn(true);
 
@@ -443,10 +430,6 @@ class PostServiceTest extends ServiceTest {
 
         // then
         verify(postStore, times(1)).delete(postLike);
-    }
-
-    private PostLikeDto createPostLike() {
-        return PostLikeDto.of(PostLikePK.of(1L, 1L));
     }
 
     private MockMultipartFile createImagePart() {
@@ -475,50 +458,10 @@ class PostServiceTest extends ServiceTest {
     }
 
     private static PostDto createPostDto(Long postId, Long userId) {
-        return PostDto.of(
-                1L,
-                "title",
-                "content",
-                0,
-                0,
-                0,
-                List.of("post1.png", "post2.png"),
-                1,
-                createUserDto(userId),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private static UserDto createUserDto(Long id) {
-        return UserDto.of(
-                id,
-                "test@test.com",
-                "test",
-                "password",
-                1,
-                1,
-                LocalDate.now(),
-                "test.png",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                UserStatus.ENABLE
-        );
-    }
-
-    private static User createUser() {
-        return User.of(
-                1L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
+        return DomainFixtureFactory.TestPostDto.createPostDto()
+                .id(postId)
+                .userDto(createUserDto()
+                        .id(userId).build().get())
+                .build().get();
     }
 }

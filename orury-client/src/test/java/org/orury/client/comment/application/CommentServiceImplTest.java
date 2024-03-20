@@ -5,20 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
-import org.orury.domain.post.domain.entity.Post;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +25,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.DomainFixtureFactory.TestComment.*;
+import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createChildCommentDto;
+import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createParentCommentDto;
+import static org.orury.domain.DomainFixtureFactory.TestCommentLikeDto.createCommentLikeDto;
+import static org.orury.domain.DomainFixtureFactory.TestCommentLikePK.createCommentLikePK;
+import static org.orury.domain.DomainFixtureFactory.TestPostDto.createPostDto;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @DisplayName("[Service] 댓글 ServiceImpl 테스트")
 class CommentServiceImplTest extends ServiceTest {
@@ -38,8 +40,7 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("부모댓글id로 0을 가진 댓글Dto가 들어오면, 댓글이 생성되고 게시글의 댓글수가 증가되어야 한다.")
     void when_CommentIdOfCommentDtoEqualsToZero_Then_createComment() {
         // given
-        Long parentCommentId = NumberConstants.PARENT_COMMENT;
-        CommentDto commentDto = createCommentDto(parentCommentId);
+        CommentDto commentDto = createParentCommentDto().build().get();
 
         // when
         commentService.createComment(commentDto);
@@ -56,8 +57,8 @@ class CommentServiceImplTest extends ServiceTest {
     void when_CommentDtoWithValidParentCommentId_Then_createComment() {
         // given
         Long parentCommentId = 11L;
-        Comment parentComment = createParentComment();
-        CommentDto commentDto = createCommentDto(parentCommentId);
+        Comment parentComment = createParentComment().build().get();
+        CommentDto commentDto = createChildCommentDto(parentCommentId).build().get();
 
         given(commentReader.findCommentById(parentCommentId))
                 .willReturn(Optional.of(parentComment));
@@ -77,7 +78,7 @@ class CommentServiceImplTest extends ServiceTest {
     void when_NotExistingParentCommentIdOfCommentDto_Then_NotFoundException() {
         // given
         Long parentCommentId = 12L;
-        CommentDto commentDto = createCommentDto(parentCommentId);
+        CommentDto commentDto = createChildCommentDto(parentCommentId).build().get();
 
         given(commentReader.findCommentById(parentCommentId))
                 .willReturn(Optional.empty());
@@ -97,8 +98,8 @@ class CommentServiceImplTest extends ServiceTest {
     void when_ParentCommentIdOfCommentDtoIsIdOfChildComment_Then_BadRequestException() {
         // given
         Long parentCommentId = 11L;
-        Comment childComment = createChildComment();
-        CommentDto commentDto = createCommentDto(parentCommentId);
+        Comment childComment = createChildComment().build().get();
+        CommentDto commentDto = createChildCommentDto(parentCommentId).build().get();
 
         given(commentReader.findCommentById(parentCommentId))
                 .willReturn(Optional.of(childComment));
@@ -118,13 +119,12 @@ class CommentServiceImplTest extends ServiceTest {
     void when_PostDtoAndCursor_Then_RetrieveCommentDtos() {
         // given
         Long postId = 154L;
-        PostDto postDto = createPostDto(postId);
+        PostDto postDto = createPostDto(postId).build().get();
         Long cursor = 22L;
-        String profileImage = "profile.png";
         List<Comment> comments = List.of(
-                createComment(1L),
-                createComment(2L),
-                createComment(3L)
+                createComment(1L).build().get(),
+                createComment(2L).build().get(),
+                createComment(3L).build().get()
         );
 
         given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(comments);
@@ -140,7 +140,7 @@ class CommentServiceImplTest extends ServiceTest {
     void when_EmptyCommentsForPostDtoAndCursor_Then_RetrieveEmptyList() {
         // given
         Long postId = 154L;
-        PostDto postDto = createPostDto(postId);
+        PostDto postDto = createPostDto(postId).build().get();
         Long cursor = 22L;
 
         given(commentReader.getCommentsByPostIdAndCursor(postId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(Collections.emptyList());
@@ -158,11 +158,10 @@ class CommentServiceImplTest extends ServiceTest {
         // given
         Long userId = 154L;
         Long cursor = 22L;
-        String profileImage = "profile.png";
         List<Comment> comments = List.of(
-                createComment(1L),
-                createComment(2L),
-                createComment(3L)
+                createComment(1L).build().get(),
+                createComment(2L).build().get(),
+                createComment(3L).build().get()
         );
 
         given(commentReader.getCommentsByUserIdAndCursor(userId, cursor, PageRequest.of(0, NumberConstants.COMMENT_PAGINATION_SIZE))).willReturn(comments);
@@ -260,7 +259,7 @@ class CommentServiceImplTest extends ServiceTest {
     void should_RetrieveCommentDtoById() {
         // given
         Long commentId = 1L;
-        Comment comment = createComment(commentId);
+        Comment comment = createComment(commentId).build().get();
 
         given(commentReader.findCommentById(commentId))
                 .willReturn(Optional.of(comment));
@@ -298,9 +297,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("댓글에 대한 유저의 댓글좋아요가 기존에 없다면, 정상적으로 댓글 좋아요를 생성한다.")
     void should_CreateCommentLike() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment comment = createComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment comment = createComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(comment));
@@ -323,9 +322,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("댓글에 대한 유저의 댓글좋아요가 기존에 있다면, 생성하지 않고 return한다.")
     void when_AlreadyExistingCommentLike_Then_ReturnWithoutSave() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment comment = createComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment comment = createComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(comment));
@@ -348,8 +347,8 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("존재하지 않는 댓글에 대한 댓글좋아요 생성 요청이 들어온다면, NotFound 예외를 반환한다.")
     void when_AttemptToCreateCommentLikeForNotExistingComment_Then_NotFoundException() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.empty());
@@ -372,9 +371,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("존재하지만 삭제처리된 댓글에 대한 댓글좋아요 생성 요청이 들어온다면, Forbidden 예외를 반환한다.")
     void when_AttemptToCreateCommentLikeForDeletedComment_Then_ForbiddenException() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment deletedComment = createDeletedComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment deletedComment = createDeletedComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(deletedComment));
@@ -397,9 +396,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("댓글에 대한 유저의 댓글좋아요가 기존에 있다면, 정상적으로 댓글 좋아요를 삭제한다.")
     void should_DeleteCommentLike() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment comment = createComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment comment = createComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(comment));
@@ -422,9 +421,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("댓글에 대한 유저의 댓글좋아요가 기존에 없다면, 삭제하지 않고 return한다.")
     void when_AlreadyNotExistingCommentLike_Then_ReturnWithoutDelete() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment comment = createComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment comment = createComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(comment));
@@ -447,8 +446,8 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("존재하지 않는 댓글에 대한 댓글좋아요 삭제 요청이 들어온다면, NotFound 예외를 반환한다.")
     void when_AttemptToDeleteCommentLikeForNotExistingComment_Then_NotFoundException() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.empty());
@@ -471,9 +470,9 @@ class CommentServiceImplTest extends ServiceTest {
     @DisplayName("존재하지만 삭제처리된 댓글에 대한 댓글좋아요 삭제 요청이 들어온다면, Forbidden 예외를 반환한다.")
     void when_AttemptToDeleteCommentLikeForDeletedComment_Then_ForbiddenException() {
         // given
-        CommentLikePK commentLikePK = createCommentLikePK();
-        Comment deletedComment = createDeletedComment();
-        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK);
+        CommentLikePK commentLikePK = createCommentLikePK().build().get();
+        Comment deletedComment = createDeletedComment().build().get();
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentLikePK).build().get();
 
         given(commentReader.findCommentById(anyLong()))
                 .willReturn(Optional.of(deletedComment));
@@ -526,205 +525,8 @@ class CommentServiceImplTest extends ServiceTest {
                 .existsCommentLikeByUserIdAndCommentId(anyLong(), anyLong());
     }
 
-    private UserDto createUserDto() {
-        return UserDto.of(
-                2L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private UserDto createUserDto(Long userId) {
-        return UserDto.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private PostDto createPostDto() {
-        return PostDto.of(
-                1L,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUserDto(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private PostDto createPostDto(Long postId) {
-        return PostDto.of(
-                postId,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUserDto(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private CommentDto createCommentDto(Long parentId) {
-        return CommentDto.of(
-                1L,
-                "commentContent",
-                parentId,
-                0,
-                createPostDto(),
-                createUserDto(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.of(2024, 1, 1, 11, 50),
-                LocalDateTime.of(2024, 1, 1, 11, 50)
-        );
-    }
-
     private CommentDto createCommentDtoWithUserId(Long userId) {
-        return CommentDto.of(
-                1L,
-                "commentContent",
-                12L,
-                0,
-                createPostDto(),
-                createUserDto(userId),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.of(2024, 1, 1, 11, 50),
-                LocalDateTime.of(2024, 1, 1, 11, 50)
-        );
-    }
-
-    private User createUser() {
-        return User.of(
-                1L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private Post createPost() {
-        return Post.of(
-                1L,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUser(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment() {
-        return Comment.of(
-                1L,
-                "commentContent",
-                12L,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createDeletedComment() {
-        return Comment.of(
-                1L,
-                "commentContent",
-                12L,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createComment(Long commentId) {
-        return Comment.of(
-                commentId,
-                "commentContent",
-                12L,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createParentComment() {
-        return Comment.of(
-                1L,
-                "commentContent",
-                NumberConstants.PARENT_COMMENT,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Comment createChildComment() {
-        return Comment.of(
-                1L,
-                "commentContent",
-                67L,
-                0,
-                createPost(),
-                createUser(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private CommentLikePK createCommentLikePK() {
-        return CommentLikePK.of(2L, 1L);
-    }
-
-    private CommentLikeDto createCommentLikeDto(CommentLikePK commentLikePK) {
-        return CommentLikeDto.of(commentLikePK);
+        return DomainFixtureFactory.TestCommentDto.createCommentDto()
+                .userDto(createUserDto(userId).build().get()).build().get();
     }
 }

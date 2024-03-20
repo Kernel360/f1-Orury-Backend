@@ -7,22 +7,15 @@ import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.Review;
 import org.orury.domain.review.domain.entity.ReviewReaction;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
+import static org.orury.domain.DomainFixtureFactory.TestReviewDto.createReviewDto;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
 
 @DisplayName("[ServiceImpl] 리뷰 ServiceImpl 테스트")
 class ReviewServiceImplTest extends ServiceTest {
@@ -38,12 +35,8 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void should_ReviewSaveSuccessfully() {
         // given
-        Long reviewId = 1L;
-        Long userId = 1L;
-        Long gymId = 1L;
-
-        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
-        List<MultipartFile> images = createMultiFiles();
+        ReviewDto reviewDto = createReviewDto().build().get();
+        List<MultipartFile> images = List.of(mock(MultipartFile.class), mock(MultipartFile.class));
 
         // when
         reviewService.createReview(reviewDto, images);
@@ -57,14 +50,12 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void when_GetReviewUpdateInfo_Then_UpdateReviewAndScore() {
         // given
-        Long reviewId = 1L;
-        Long userId = 1L;
-        Long gymId = 1L;
+        ReviewDto beforeReviewDto = createReviewDto()
+                .content("수정 전").build().get();
+        ReviewDto updateReviewDto = createReviewDto()
+                .content("수정 후").build().get();
 
-        ReviewDto beforeReviewDto = createReviewDto(reviewId, userId, gymId);
-        ReviewDto updateReviewDto = createReviewDto(reviewId, userId, gymId);
-
-        List<MultipartFile> images = createMultiFiles();
+        List<MultipartFile> images = List.of(mock(MultipartFile.class), mock(MultipartFile.class));
 
         // when
         reviewService.updateReview(beforeReviewDto, updateReviewDto, images);
@@ -80,17 +71,13 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void when_GetReviewId_Then_ReturnReviewDto() {
         // given
-        Long reviewId = 1L;
-        Long userId = 2L;
-        Long gymId = 3L;
-        var urls = "www.orury.com";
-
-        Review review = createReview(reviewId, userId, gymId);
+        Long reviewId = 4141L;
+        Review review = createReview(reviewId).build().get();
 
         given(reviewReader.findById(reviewId)).willReturn(Optional.of(review));
 
         // when
-        reviewService.getReviewDtoById(reviewId, userId);
+        reviewService.getReviewDtoById(reviewId, review.getUser().getId());
 
         // then
         then(reviewReader).should(times(1))
@@ -101,11 +88,7 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void should_DeleteReviewSuccessfully() {
         // given
-        Long reviewId = 1L;
-        Long userId = 1L;
-        Long gymId = 1L;
-
-        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
+        ReviewDto reviewDto = createReviewDto().build().get();
 
         // when
         reviewService.deleteReview(reviewDto);
@@ -147,9 +130,9 @@ class ReviewServiceImplTest extends ServiceTest {
         Long cursor = NumberConstants.FIRST_CURSOR;
         Pageable pageable = PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L, 1L, gymId),
-                createReview(2L, 2L, gymId),
-                createReview(3L, 3L, gymId)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewReader.findByGymIdOrderByIdDesc(gymId, pageable)).willReturn(reviews);
@@ -170,9 +153,9 @@ class ReviewServiceImplTest extends ServiceTest {
         Long cursor = 3L;
         Pageable pageable = PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L, 1L, gymId),
-                createReview(2L, 2L, gymId),
-                createReview(3L, 3L, gymId)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewReader.findByGymIdAndIdLessThanOrderByIdDesc(gymId, cursor, pageable)).willReturn(reviews);
@@ -193,9 +176,9 @@ class ReviewServiceImplTest extends ServiceTest {
         Long cursor = NumberConstants.FIRST_CURSOR;
         Pageable pageable = PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L, 1L, userId),
-                createReview(2L, 2L, userId),
-                createReview(3L, 3L, userId)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewReader.findByUserIdOrderByIdDesc(userId, pageable)).willReturn(reviews);
@@ -216,9 +199,9 @@ class ReviewServiceImplTest extends ServiceTest {
         Long cursor = 3L;
         Pageable pageable = PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE);
         List<Review> reviews = List.of(
-                createReview(1L, 1L, userId),
-                createReview(2L, 2L, userId),
-                createReview(3L, 3L, userId)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewReader.findByUserIdAndIdLessThanOrderByIdDesc(userId, cursor, pageable)).willReturn(reviews);
@@ -237,9 +220,9 @@ class ReviewServiceImplTest extends ServiceTest {
         // given
         Long gymId = 1L;
         List<Review> reviews = List.of(
-                createReview(1L, 1L, gymId),
-                createReview(2L, 2L, gymId),
-                createReview(3L, 3L, gymId)
+                createReview(1L).build().get(),
+                createReview(2L).build().get(),
+                createReview(3L).build().get()
         );
 
         given(reviewReader.findByGymId(gymId)).willReturn(reviews);
@@ -258,8 +241,10 @@ class ReviewServiceImplTest extends ServiceTest {
         // given
         Long userId = 1L;
         Long reviewId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        ReviewReaction reviewReaction = createReviewReaction(reactionPK, 3);
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        ReviewReaction reviewReaction = createReviewReaction()
+                .reviewReactionPK(reactionPK)
+                .reactionType(3).build().get();
 
         given(reviewReader.findById(reactionPK)).willReturn(Optional.of(reviewReaction));
 
@@ -277,12 +262,13 @@ class ReviewServiceImplTest extends ServiceTest {
     void when_GetReviewDto_Then_CreateReviewReactionSuccessfully() {
         // given
         int reactionTypeInput = 3;
-        Long userId = 1L;
-        Long reviewId = 1L;
-        Long gymId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        ReviewReaction reviewReaction = createReviewReaction(reactionPK, reactionTypeInput);
-        ReviewDto reviewDto = createReviewDto(reviewId, userId, gymId);
+        Long userId = 5121L;
+        Long reviewId = 1213L;
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        ReviewReaction reviewReaction = createReviewReaction()
+                .reviewReactionPK(reactionPK)
+                .reactionType(reactionTypeInput).build().get();
+        ReviewDto reviewDto = createReviewDto(reviewId).build().get();
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(reviewReaction);
 
         given(reviewReader.findById(reviewId)).willReturn(Optional.of(reviewDto.toEntity()));
@@ -303,14 +289,15 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void when_GetReviewDto_Then_UpdateReviewReactionSuccessfully() {
         // given
-        Long userId = 1L;
-        Long reviewId = 1L;
-        Long gymId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        Review review = createReview(reviewId, userId, gymId);
+        Long userId = 1241L;
+        Long reviewId = 126L;
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        Review review = createReview(reviewId).build().get();
 
-        ReviewReaction originReviewReaction = createReviewReaction(reactionPK, 2);
-        ReviewReaction updateReviewReaction = createReviewReaction(reactionPK, 3);
+        ReviewReaction originReviewReaction = createReviewReaction().reviewReactionPK(reactionPK)
+                .reactionType(2).build().get();
+        ReviewReaction updateReviewReaction = createReviewReaction().reviewReactionPK(reactionPK)
+                .reactionType(3).build().get();
 
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(updateReviewReaction);
 
@@ -339,14 +326,15 @@ class ReviewServiceImplTest extends ServiceTest {
     @Test
     void when_GetSameReviewDto_Then_DeleteReviewReactionSuccessfully() {
         // given
-        Long userId = 1L;
-        Long reviewId = 1L;
-        Long gymId = 1L;
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
-        Review review = createReview(reviewId, userId, gymId);
+        Long userId = 26531L;
+        Long reviewId = 1412L;
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
+        Review review = createReview(reviewId).build().get();
 
-        ReviewReaction originReviewReaction = createReviewReaction(reactionPK, 3);
-        ReviewReaction updateReviewReaction = createReviewReaction(reactionPK, 3);
+        ReviewReaction originReviewReaction = createReviewReaction().reviewReactionPK(reactionPK)
+                .reactionType(3).build().get();
+        ReviewReaction updateReviewReaction = createReviewReaction().reviewReactionPK(reactionPK)
+                .reactionType(3).build().get();
 
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.from(updateReviewReaction);
 
@@ -370,124 +358,5 @@ class ReviewServiceImplTest extends ServiceTest {
                 .increaseReactionCount(anyLong(), anyInt());
         then(reviewStore).should(never())
                 .save(updateReviewReaction);
-    }
-
-
-    private static User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                null,
-                "userProfileImage",
-                null,
-                null,
-                UserStatus.ENABLE
-        );
-    }
-
-    private static Gym createGym(Long id) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                123.456,
-                123.456,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private static Review createReview(Long reviewId, Long userId, Long gymId) {
-        return Review.of(
-                reviewId,
-                "reviewContent",
-                List.of(),
-                4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                createUser(userId),
-                createGym(gymId),
-                null,
-                null
-        );
-    }
-
-    private static ReviewDto createReviewDto(Long reviewId, Long userId, Long gymId) {
-        return ReviewDto.of(
-                reviewId,
-                "reviewContent",
-                List.of(),
-                4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                UserDto.from(createUser(userId)),
-                GymDto.from(createGym(gymId)),
-                null,
-                null
-        );
-    }
-
-    private static ReviewReactionPK createReviewReactionPK(
-            Long userId,
-            Long reviewId
-
-    ) {
-        return ReviewReactionPK.of(
-                userId,
-                reviewId
-        );
-    }
-
-    private static ReviewReaction createReviewReaction(
-            ReviewReactionPK reactionPK,
-            int reactionType
-    ) {
-        return ReviewReaction.of(
-                reactionPK,
-                reactionType
-        );
-    }
-
-    public static List<MultipartFile> createMultiFiles() {
-        try {
-            // 여러 개의 MultipartFile을 생성하여 배열에 담아 반환
-            return List.of(
-                    createMockMultipartFile("key1", "image.png"),
-                    createMockMultipartFile("key2", "image2.png")
-            );
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create MultipartFile.", e);
-        }
-    }
-
-    private static MultipartFile createMockMultipartFile(String image, String imageFile) throws IOException {
-        return new MockMultipartFile(image, imageFile, "text/plain", imageFile.getBytes());
     }
 }

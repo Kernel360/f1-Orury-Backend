@@ -5,25 +5,22 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.dto.CrewGender;
-import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
-import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.only;
+import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
+import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 크루 Facade 테스트")
 class CrewFacadeTest extends FacadeTest {
@@ -32,10 +29,10 @@ class CrewFacadeTest extends FacadeTest {
     @Test
     void should_CreateCrew() {
         // given
-        CrewRequest request = createCrewRequest();
+        CrewRequest request = createCrewRequest().build().get();
         MultipartFile image = mock(MultipartFile.class);
         Long userId = 1L;
-        UserDto userDto = createUserDto(userId);
+        UserDto userDto = createUserDto(userId).build().get();
         given(userService.getUserDtoById(anyLong()))
                 .willReturn(userDto);
 
@@ -54,7 +51,7 @@ class CrewFacadeTest extends FacadeTest {
     void should_GetCrewsByRank() {
         // given
         int page = 2;
-        List<CrewDto> crewDtos = List.of(createCrewDto(3L), createCrewDto(4L));
+        List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByRank(any()))
                 .willReturn(crewDtoPage);
@@ -76,7 +73,7 @@ class CrewFacadeTest extends FacadeTest {
     void should_GetCrewsByRecommend() {
         // given
         int page = 2;
-        List<CrewDto> crewDtos = List.of(createCrewDto(3L), createCrewDto(4L));
+        List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByRecommend(any()))
                 .willReturn(crewDtoPage);
@@ -99,7 +96,7 @@ class CrewFacadeTest extends FacadeTest {
         // given
         Long userId = 23L;
         int page = 2;
-        List<CrewDto> crewDtos = List.of(createCrewDto(3L), createCrewDto(4L));
+        List<CrewDto> crewDtos = List.of(createCrewDto(3L).build().get(), createCrewDto(4L).build().get());
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByUserId(anyLong(), any()))
                 .willReturn(crewDtoPage);
@@ -123,7 +120,7 @@ class CrewFacadeTest extends FacadeTest {
         Long userId = 23L;
         Long crewId = 3L;
         given(crewService.getCrewDtoById(anyLong()))
-                .willReturn(createCrewDto(crewId));
+                .willReturn(createCrewDto(crewId).build().get());
         given(crewService.existCrewMember(any(CrewMemberPK.class)))
                 .willReturn(anyBoolean());
 
@@ -143,8 +140,8 @@ class CrewFacadeTest extends FacadeTest {
         // given
         Long crewId = 3L;
         Long userId = 23L;
-        CrewRequest request = createCrewRequest();
-        CrewDto oldCrewDto = createCrewDto(crewId);
+        CrewRequest request = createCrewRequest().build().get();
+        CrewDto oldCrewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(oldCrewDto);
 
@@ -165,7 +162,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         Long userId = 23L;
         MultipartFile image = mock(MultipartFile.class);
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -185,7 +182,7 @@ class CrewFacadeTest extends FacadeTest {
         // given
         Long crewId = 3L;
         Long userId = 23L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -206,8 +203,8 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         Long userId = 23L;
         String answer = "답변";
-        CrewDto crewDto = createCrewDto(crewId);
-        UserDto userDto = createUserDto(userId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
+        UserDto userDto = createUserDto(userId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
         given(userService.getUserDtoById(anyLong()))
@@ -231,7 +228,7 @@ class CrewFacadeTest extends FacadeTest {
         // given
         Long crewId = 3L;
         Long userId = 23L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -252,7 +249,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         Long applicantId = 23L;
         Long userId = 24L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -273,7 +270,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         Long applicantId = 23L;
         Long userId = 24L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -293,7 +290,7 @@ class CrewFacadeTest extends FacadeTest {
         // given
         Long crewId = 3L;
         Long userId = 23L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -314,7 +311,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         Long memberId = 23L;
         Long userId = 24L;
-        CrewDto crewDto = createCrewDto(crewId);
+        CrewDto crewDto = createCrewDto(crewId).build().get();
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(crewDto);
 
@@ -326,60 +323,5 @@ class CrewFacadeTest extends FacadeTest {
                 .getCrewDtoById(anyLong());
         then(crewService).should(times(1))
                 .expelMember(any(), anyLong(), anyLong());
-    }
-
-    private UserDto createUserDto(Long userId) {
-        return UserDto.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private CrewRequest createCrewRequest() {
-        return CrewRequest.of(
-                "테스트크루",
-                12,
-                Region.강남구,
-                "크루 설명",
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
-    }
-
-    private CrewDto createCrewDto(Long crewId) {
-        return CrewDto.of(
-                crewId,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUserDto(23L),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
     }
 }

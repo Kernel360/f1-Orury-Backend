@@ -6,22 +6,11 @@ import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.code.MeetingErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.dto.CrewGender;
-import org.orury.domain.crew.domain.dto.CrewStatus;
-import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.global.domain.Region;
-import org.orury.domain.gym.domain.dto.GymDto;
-import org.orury.domain.gym.domain.entity.Gym;
+import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
-import org.orury.domain.meeting.domain.entity.MeetingMemberPK;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +22,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestMeeting.createMeeting;
+import static org.orury.domain.DomainFixtureFactory.TestMeetingDto.createMeetingDto;
+import static org.orury.domain.DomainFixtureFactory.TestMeetingMember.createMeetingMember;
+import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @DisplayName("[Service] 일정 ServiceImpl 테스트")
 class MeetingServiceImplTest extends ServiceTest {
@@ -42,7 +36,7 @@ class MeetingServiceImplTest extends ServiceTest {
     void when_ExistingMeetingId_Then_RetreiveMeetingDto() {
         // given
         Long meetingId = 12L;
-        Meeting meeting = createMeeting(meetingId);
+        Meeting meeting = createMeeting(meetingId).build().get();
         given(meetingReader.findById(meetingId))
                 .willReturn(Optional.of(meeting));
 
@@ -74,10 +68,10 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_validMeetingDto_Then_CreateMeetingAndAddMeetingMember() {
         // given
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int validCapacity = 3;
-        MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
-        Meeting meeting = createMeeting(meetingDto.id());
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(3).build().get();
+        Meeting meeting = createMeeting(meetingDto.id()).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingStore.createMeeting(any()))
@@ -99,9 +93,9 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_NotCrewMember_Then_NotCrewMemberException() {
         // given
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int validCapacity = 3;
-        MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(3).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
@@ -122,9 +116,9 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_StartTimeIsPast_Then_InvalidStartException() {
         // given
-        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
-        int validCapacity = 3;
-        MeetingDto meetingDto = createMeetingDto(startTime, validCapacity);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().minusDays(1))
+                .capacity(3).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
@@ -145,9 +139,9 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_LessThanMinimum_Then_InvalidCapacityException() {
         // given
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int invalidCapacity = 1;
-        MeetingDto meetingDto = createMeetingDto(startTime, invalidCapacity);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(1).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
@@ -168,9 +162,9 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_MoreThanCrewMemberCount_Then_InvalidCapacityException() {
         // given
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int invalidCapacity = 1000;
-        MeetingDto meetingDto = createMeetingDto(startTime, invalidCapacity);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(1000).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
@@ -193,7 +187,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long crewId = 3L;
         Long userId = 1L;
-        List<Meeting> meetings = List.of(createMeeting(3L), createMeeting(2L), createMeeting(1L));
+        List<Meeting> meetings = List.of(createMeeting(3L).build().get(), createMeeting(2L).build().get(), createMeeting(1L).build().get());
         given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
         given(meetingReader.getNotStartedMeetingsByCrewId(crewId))
@@ -241,7 +235,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long crewId = 3L;
         Long userId = 1L;
-        List<Meeting> meetings = List.of(createMeeting(3L), createMeeting(2L), createMeeting(1L));
+        List<Meeting> meetings = List.of(createMeeting(3L).build().get(), createMeeting(2L).build().get(), createMeeting(1L).build().get());
         given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
         given(meetingReader.getStartedMeetingsByCrewId(crewId))
@@ -288,16 +282,16 @@ class MeetingServiceImplTest extends ServiceTest {
     void when_MeetingDto_Then_RetrieveUserImages() {
         // given
         Long meetingId = 8L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         List<MeetingMember> otherMembers = List.of(
-                createMeetingMember(12L, meetingId),
-                createMeetingMember(34L, meetingId),
-                createMeetingMember(56L, meetingId)
+                createMeetingMember(meetingId, 12L).build().get(),
+                createMeetingMember(meetingId, 34L).build().get(),
+                createMeetingMember(meetingId, 56L).build().get()
         );
         given(meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(anyLong(), anyLong(), anyInt()))
                 .willReturn(otherMembers);
         given(userReader.getUserById(anyLong()))
-                .willReturn(createUser(12L), createUser(34L), createUser(56L));
+                .willReturn(createUser(12L).build().get(), createUser(34L).build().get(), createUser(56L).build().get());
 
         // when
         List<String> userImages = meetingService.getUserImagesByMeeting(meetingDto);
@@ -316,7 +310,7 @@ class MeetingServiceImplTest extends ServiceTest {
     void when_OnlyOneMemberInMeeting_Then_RetrieveUserImage() {
         // given
         Long meetingId = 8L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(meetingMemberReader.getOtherMeetingMembersByMeetingIdMaximum(anyLong(), anyLong(), anyInt()))
                 .willReturn(Collections.emptyList());
 
@@ -336,14 +330,13 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_MeetingDtoAndUserId_Then_UpdateMeeting() {
         // given
-        Long userId = 24L;
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int validCapacity = 5;
-        int memberCount = 3;
-        MeetingDto meetingDto = createMeetingDto(userId, startTime, validCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(5)
+                .memberCount(3).build().get();
 
         // when
-        meetingService.updateMeeting(meetingDto, userId);
+        meetingService.updateMeeting(meetingDto, meetingDto.userDto().id());
 
         // then
         then(meetingStore).should(only())
@@ -354,16 +347,15 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_NotMeetingCreator_Then_ForbiddenException() {
         // given
-        Long userId = 24L;
         Long otherUserId = 422L;
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int validCapacity = 5;
-        int memberCount = 3;
-        MeetingDto meetingDto = createMeetingDto(otherUserId, startTime, validCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(5)
+                .memberCount(3).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> meetingService.updateMeeting(meetingDto, userId));
+                () -> meetingService.updateMeeting(meetingDto, otherUserId));
 
         assertEquals(MeetingErrorCode.FORBIDDEN.getMessage(), exception.getMessage());
         then(meetingStore).should(never())
@@ -374,15 +366,14 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_UpdatingStartTimeIsPast_Then_InvalidStartException() {
         // given
-        Long userId = 24L;
-        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
-        int validCapacity = 5;
-        int memberCount = 3;
-        MeetingDto meetingDto = createMeetingDto(userId, startTime, validCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().minusDays(1))
+                .capacity(5)
+                .memberCount(3).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> meetingService.updateMeeting(meetingDto, userId));
+                () -> meetingService.updateMeeting(meetingDto, meetingDto.userDto().id()));
 
         assertEquals(MeetingErrorCode.INVALID_START_TIME.getMessage(), exception.getMessage());
         then(meetingStore).should(never())
@@ -393,15 +384,14 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_UpdatingCapacityIsLessThanMinimum_Then_InvalidCapacityException() {
         // given
-        Long userId = 24L;
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int invalidCapacity = 1;
-        int memberCount = 1;
-        MeetingDto meetingDto = createMeetingDto(userId, startTime, invalidCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(1)
+                .memberCount(1).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> meetingService.updateMeeting(meetingDto, userId));
+                () -> meetingService.updateMeeting(meetingDto, meetingDto.userDto().id()));
 
         assertEquals(MeetingErrorCode.INVALID_CAPACITY.getMessage(), exception.getMessage());
         then(meetingStore).should(never())
@@ -412,15 +402,14 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_UpdatingCapacityIsMoreThanCrewMemberCount_Then_InvalidCapacityException() {
         // given
-        Long userId = 24L;
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int invalidCapacity = 500;
-        int memberCount = 3;
-        MeetingDto meetingDto = createMeetingDto(userId, startTime, invalidCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(500)
+                .memberCount(3).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> meetingService.updateMeeting(meetingDto, userId));
+                () -> meetingService.updateMeeting(meetingDto, meetingDto.userDto().id()));
 
         assertEquals(MeetingErrorCode.INVALID_CAPACITY.getMessage(), exception.getMessage());
         then(meetingStore).should(never())
@@ -431,15 +420,14 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_updatingCapacityIsLessThanMeetingMemberCount_Then_CapacityForbidden() {
         // given
-        Long userId = 24L;
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1);
-        int invalidCapacity = 2;
-        int memberCount = 3;
-        MeetingDto meetingDto = createMeetingDto(userId, startTime, invalidCapacity, memberCount);
+        MeetingDto meetingDto = createMeetingDto()
+                .startTime(LocalDateTime.now().plusDays(1))
+                .capacity(2)
+                .memberCount(3).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
-                () -> meetingService.updateMeeting(meetingDto, userId));
+                () -> meetingService.updateMeeting(meetingDto, meetingDto.userDto().id()));
 
         assertEquals(MeetingErrorCode.CAPACITY_FORBIDDEN.getMessage(), exception.getMessage());
         then(meetingStore).should(never())
@@ -451,7 +439,7 @@ class MeetingServiceImplTest extends ServiceTest {
     void when_MeetingDtoAndUserId_Then_DeleteMeeting() {
         // given
         Long userId = 6L;
-        MeetingDto meetingDto = createMeetingDtoByUserId(userId);
+        MeetingDto meetingDto = createMeetingDtoByUserId(userId).build().get();
 
         // when
         meetingService.deleteMeeting(meetingDto, userId);
@@ -467,7 +455,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 6L;
         Long otherUserId = 215L;
-        MeetingDto meetingDto = createMeetingDtoByUserId(otherUserId);
+        MeetingDto meetingDto = createMeetingDtoByUserId(otherUserId).build().get();
 
         // when & then
         Exception exception = assertThrows(BusinessException.class,
@@ -484,7 +472,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
@@ -508,7 +496,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
@@ -531,7 +519,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
@@ -556,7 +544,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createFullMeetingDto(meetingId);
+        MeetingDto meetingDto = createFullMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
@@ -581,7 +569,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
@@ -605,7 +593,7 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(false);
 
@@ -626,7 +614,7 @@ class MeetingServiceImplTest extends ServiceTest {
     @Test
     void when_RemovingMeetingCreator_Then_MeetingCreatorException() {
         Long userId = 26L;
-        MeetingDto meetingDto = createMeetingDtoByUserId(userId);
+        MeetingDto meetingDto = createMeetingDtoByUserId(userId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
 
@@ -648,7 +636,7 @@ class MeetingServiceImplTest extends ServiceTest {
     void when_NotExistingMeetingMember_Then_NotJoinedMeetingException() {
         Long userId = 26L;
         Long meetingId = 5L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.existsByMeetingIdAndUserId(anyLong(), anyLong()))
@@ -673,18 +661,18 @@ class MeetingServiceImplTest extends ServiceTest {
         // given
         Long userId = 1248L;
         Long meetingId = 54L;
-        MeetingDto meetingDto = createMeetingDto(meetingId);
+        MeetingDto meetingDto = createMeetingDto(meetingId).build().get();
         List<MeetingMember> meetingMembers = List.of(
-                createMeetingMember(4L, meetingId),
-                createMeetingMember(14L, meetingId),
-                createMeetingMember(24L, meetingId)
+                createMeetingMember(meetingId, 4L).build().get(),
+                createMeetingMember(meetingId, 14L).build().get(),
+                createMeetingMember(meetingId, 24L).build().get()
         );
         given(crewMemberReader.existsByCrewIdAndUserId(anyLong(), anyLong()))
                 .willReturn(true);
         given(meetingMemberReader.getMeetingMembersByMeetingId(anyLong()))
                 .willReturn(meetingMembers);
         given(userReader.getUserById(anyLong()))
-                .willReturn(createUser(4L), createUser(14L), createUser(24L));
+                .willReturn(createUser(4L).build().get(), createUser(14L).build().get(), createUser(24L).build().get());
 
         // when
         meetingService.getUserDtosByMeeting(meetingDto, userId);
@@ -698,267 +686,15 @@ class MeetingServiceImplTest extends ServiceTest {
                 .getUserById(anyLong());
     }
 
-
-    private User createUser() {
-        return User.of(
-                1L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
+    private DomainFixtureFactory.TestMeetingDto.TestMeetingDtoBuilder createFullMeetingDto(Long meetingId) {
+        return createMeetingDto(meetingId)
+                .memberCount(10)
+                .capacity(10);
     }
 
-    private User createUser(Long userId) {
-        return User.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
+    private DomainFixtureFactory.TestMeetingDto.TestMeetingDtoBuilder createMeetingDtoByUserId(Long userId) {
+        return createMeetingDto().userDto(
+                createUserDto(userId).build().get()
         );
-    }
-
-    private Gym createGym() {
-        return Gym.of(
-                60L,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                123.456,
-                123.456,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private Crew createCrew() {
-        return Crew.of(
-                14L,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUser(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false
-        );
-    }
-
-    private Meeting createMeeting(Long meetingId) {
-        return Meeting.of(
-                meetingId,
-                LocalDateTime.of(2222, 3, 14, 18, 32),
-                1,
-                5,
-                createUser(),
-                createGym(),
-                createCrew(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                111L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private UserDto createUserDto(Long userId) {
-        return UserDto.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private GymDto createGymDto() {
-        return GymDto.of(
-                222L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                4.5f,
-                12,
-                11,
-                List.of("image1"),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                "11:11-23:11",
-                "11:22-23:22",
-                "11:33-23:33",
-                "11:44-23:44",
-                "11:55-23:55",
-                "11:66-23:66",
-                "11:77-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private CrewDto createCrewDto() {
-        return CrewDto.of(
-                333L,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUserDto(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
-    }
-
-    private MeetingDto createMeetingDto(Long meetingId) {
-        return MeetingDto.of(
-                meetingId,
-                LocalDateTime.of(2024, 12, 9, 7, 30),
-                1,
-                5,
-                createUserDto(),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingDto createFullMeetingDto(Long meetingId) {
-        return MeetingDto.of(
-                meetingId,
-                LocalDateTime.of(2024, 12, 9, 7, 30),
-                10,
-                10,
-                createUserDto(),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingDto createMeetingDtoByUserId(Long userId) {
-        return MeetingDto.of(
-                42632L,
-                LocalDateTime.of(2024, 12, 9, 7, 30),
-                1,
-                5,
-                createUserDto(userId),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingDto createMeetingDto(LocalDateTime startTime, int capacity) {
-        return MeetingDto.of(
-                444L,
-                startTime,
-                1,
-                capacity,
-                createUserDto(),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingDto createMeetingDto(Long userId, LocalDateTime startTime, int capacity, int memberCount) {
-        return MeetingDto.of(
-                444L,
-                startTime,
-                memberCount,
-                capacity,
-                createUserDto(userId),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingMember createMeetingMember(Long userId, Long meetingId) {
-        MeetingMemberPK meetingMemberPK = MeetingMemberPK.of(userId, meetingId);
-        return MeetingMember.of(meetingMemberPK);
     }
 }

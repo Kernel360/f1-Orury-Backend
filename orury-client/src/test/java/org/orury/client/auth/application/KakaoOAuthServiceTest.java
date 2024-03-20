@@ -3,18 +3,16 @@ package org.orury.client.auth.application;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
-import org.orury.domain.auth.domain.dto.kakao.KakaoAccount;
 import org.orury.domain.auth.domain.dto.kakao.KakaoAccountDto;
 import org.orury.domain.auth.domain.dto.kakao.KakaoOAuthTokenDto;
-import org.orury.domain.auth.domain.dto.kakao.Profile;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.DomainFixtureFactory.TestKakaoAccountDto.createKakaoAccountDto;
+import static org.orury.domain.DomainFixtureFactory.TestKakaoOAuthTokenDto.createKakaoOAuthTokenDto;
 
 @DisplayName("[Service] KakaoOAuthService 테스트")
 class KakaoOAuthServiceTest extends ServiceTest {
@@ -29,8 +27,8 @@ class KakaoOAuthServiceTest extends ServiceTest {
     void when_OAuthAuthenticationCode_Then_AuthenticateToKaKaoOAuthServerAndRetrieveEmail() {
         // given
         String code = "Kakao_OAuth_Authentication_Code";
-        KakaoOAuthTokenDto kakaoOAuthTokenDto = createKakaoOAuthTokenDto();
-        KakaoAccountDto kakaoAccountDto = createKakaoAccountDto();
+        KakaoOAuthTokenDto kakaoOAuthTokenDto = createKakaoOAuthTokenDto().build().get();
+        KakaoAccountDto kakaoAccountDto = createKakaoAccountDto().build().get();
 
         given(kakaoAuthClient.getIdToken(any(), any(), any(), any(), any()))
                 .willReturn(kakaoOAuthTokenDto);
@@ -45,27 +43,5 @@ class KakaoOAuthServiceTest extends ServiceTest {
                 .getIdToken(any(), any(), any(), any(), any());
         then(kakaoKapiClient).should(times(1))
                 .getInfo(any(), any());
-    }
-
-    private static KakaoOAuthTokenDto createKakaoOAuthTokenDto() {
-        return new KakaoOAuthTokenDto(
-                "testAccessToken",
-                "testTokenType",
-                "testRefreshToken",
-                "testIdToken",
-                100,
-                200,
-                "email"
-        );
-    }
-
-    private static KakaoAccountDto createKakaoAccountDto() {
-        return new KakaoAccountDto(
-                1L,
-                true,
-                LocalDateTime.of(2024, 2, 8, 22, 00),
-                LocalDateTime.of(2024, 2, 8, 22, 00),
-                new KakaoAccount(new Profile("testNickname"), "test@orury.com")
-        );
     }
 }

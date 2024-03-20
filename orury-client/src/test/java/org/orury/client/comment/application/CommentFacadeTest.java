@@ -8,14 +8,9 @@ import org.orury.client.comment.interfaces.response.CommentsWithCursorResponse;
 import org.orury.client.config.FacadeTest;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
-import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +21,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestCommentCreateRequest.createCommentCreateRequest;
+import static org.orury.client.ClientFixtureFactory.TestCommentUpdateRequest.createCommentUpdateRequest;
+import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createCommentDto;
+import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createDeletedCommentDto;
+import static org.orury.domain.DomainFixtureFactory.TestCommentLikeDto.createCommentLikeDto;
+import static org.orury.domain.DomainFixtureFactory.TestPostDto.createPostDto;
 
 @DisplayName("[Facade] 댓글 Facade 테스트")
 class CommentFacadeTest extends FacadeTest {
@@ -34,7 +35,7 @@ class CommentFacadeTest extends FacadeTest {
     @Test
     void should_CreateComment() {
         // given
-        CommentCreateRequest commentCreateRequest = createCommentCreateRequest();
+        CommentCreateRequest commentCreateRequest = createCommentCreateRequest().build().get();
         Long userId = 1L;
 
         // when
@@ -56,11 +57,11 @@ class CommentFacadeTest extends FacadeTest {
         Long postId = 2L;
         Long cursor = 33L;
         Long userId = 1L;
-        PostDto postDto = createPostDto();
+        PostDto postDto = createPostDto().build().get();
         List<CommentDto> commentDtos = List.of(
-                createCommentDto(24L),
-                createDeletedCommentDto(29L),
-                createCommentDto(31L)
+                createCommentDto(24L).build().get(),
+                createDeletedCommentDto().id(29L).build().get(),
+                createCommentDto(31L).build().get()
         );
 
         given(postService.getPostDtoById(postId))
@@ -89,7 +90,7 @@ class CommentFacadeTest extends FacadeTest {
         Long postId = 2L;
         Long cursor = 33L;
         Long userId = 1L;
-        PostDto postDto = createPostDto();
+        PostDto postDto = createPostDto().build().get();
 
         given(postService.getPostDtoById(postId))
                 .willReturn(postDto);
@@ -116,8 +117,9 @@ class CommentFacadeTest extends FacadeTest {
     void should_UpdateComment() {
         // given
         Long commentId = 2L;
-        CommentDto commentDto = createCommentDto(commentId);
-        CommentUpdateRequest commentUpdateRequest = createCommentUpdateRequest(commentId);
+        CommentDto commentDto = createCommentDto(commentId).build().get();
+        CommentUpdateRequest commentUpdateRequest = createCommentUpdateRequest()
+                .id(commentId).build().get();
         Long userId = 3L;
 
         given(commentService.getCommentDtoById(commentId))
@@ -139,7 +141,7 @@ class CommentFacadeTest extends FacadeTest {
     void should_DeleteComment() {
         // given
         Long commentId = 2L;
-        CommentDto commentDto = createCommentDto(commentId);
+        CommentDto commentDto = createCommentDto(commentId).build().get();
         Long userId = 3L;
 
         given(commentService.getCommentDtoById(commentId))
@@ -161,7 +163,7 @@ class CommentFacadeTest extends FacadeTest {
         // given
         Long userId = 3L;
         Long commentId = 4L;
-        CommentLikeDto commentLikeDto = createCommentLikeDto(userId, commentId);
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentId, userId).build().get();
 
         // when
         commentFacade.createCommentLike(commentLikeDto);
@@ -177,7 +179,7 @@ class CommentFacadeTest extends FacadeTest {
         // given
         Long userId = 3L;
         Long commentId = 4L;
-        CommentLikeDto commentLikeDto = createCommentLikeDto(userId, commentId);
+        CommentLikeDto commentLikeDto = createCommentLikeDto(commentId, userId).build().get();
 
         // when
         commentFacade.deleteCommentLike(commentLikeDto);
@@ -185,84 +187,5 @@ class CommentFacadeTest extends FacadeTest {
         // then
         then(commentService).should(times(1))
                 .deleteCommentLike(any());
-    }
-
-    private CommentCreateRequest createCommentCreateRequest() {
-        return CommentCreateRequest.of(
-                "content",
-                null,
-                11L
-        );
-    }
-
-    private CommentUpdateRequest createCommentUpdateRequest(Long commentId) {
-        return CommentUpdateRequest.of(
-                commentId,
-                "content"
-        );
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                2L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private PostDto createPostDto() {
-        return PostDto.of(
-                1L,
-                "postTitle",
-                "postContent",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUserDto(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private CommentDto createCommentDto(Long commentId) {
-        return CommentDto.of(
-                commentId,
-                "commentContent",
-                23L,
-                0,
-                createPostDto(),
-                createUserDto(),
-                NumberConstants.IS_NOT_DELETED,
-                LocalDateTime.of(2024, 1, 1, 11, 50),
-                LocalDateTime.of(2024, 1, 1, 11, 50)
-        );
-    }
-
-    private CommentDto createDeletedCommentDto(Long commentId) {
-        return CommentDto.of(
-                commentId,
-                "commentContent",
-                NumberConstants.PARENT_COMMENT,
-                0,
-                createPostDto(),
-                createUserDto(),
-                NumberConstants.IS_DELETED,
-                LocalDateTime.of(2024, 1, 1, 11, 50),
-                LocalDateTime.of(2024, 1, 1, 11, 50)
-        );
-    }
-
-    private CommentLikeDto createCommentLikeDto(Long userId, Long commentId) {
-        return CommentLikeDto.of(CommentLikePK.of(userId, commentId));
     }
 }
