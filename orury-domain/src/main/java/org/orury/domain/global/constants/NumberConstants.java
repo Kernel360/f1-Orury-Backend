@@ -4,6 +4,12 @@ public final class NumberConstants {
     private NumberConstants() {
     }
 
+    // NumberCode for Every Gender
+    public static final int ANY_GENDER = 3;
+    // NumberCode for Female
+    public static final int FEMALE = 2;
+    // NumberCode for Male
+    public static final int MALE = 1;
     // User Id Hard Coding (Before Adapting Security)
     public static final Long USER_ID = 1L;
     // First Pagination Cursor Input Value
@@ -22,6 +28,8 @@ public final class NumberConstants {
     public static final int GYM_PAGINATION_SIZE = 15;
     // Crew pagination Size
     public static final int CREW_PAGINATION_SIZE = 10;
+    // notification pagination Size
+    public static final int NOTIFICATION_PAGINATION_SIZE = 10;
     // int Value of Not Deleted Object`s Status
     public static final int IS_NOT_DELETED = 0;
     // int Value of Deleted Object`s Status
@@ -40,7 +48,7 @@ public final class NumberConstants {
     public static final int LIKE_REACTION = 4;
     public static final int ANGRY_REACTION = 5;
     // Maximum Number of Crew Participation
-    public static final int MAXIMUM_CREW_PARTICIPATION = 3;
+    public static final int MAXIMUM_CREW_PARTICIPATION = 5;
     // Maximum Number of User Profile Images from Thumbnail of Meetings List
     public static final int MAXIMUM_OF_MEETING_THUMBNAILS = 10;
     // Maximum Number of User Profile Images from Thumbnail of Crews List

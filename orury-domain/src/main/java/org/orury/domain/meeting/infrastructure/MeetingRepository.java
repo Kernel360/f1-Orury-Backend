@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
+    List<Meeting> findAllByCrew_Id(Long crewId);
+
     List<Meeting> findByCrew_IdAndStartTimeBeforeOrderByIdDesc(Long crewId, LocalDateTime startTime);
 
     List<Meeting> findByCrew_IdAndStartTimeAfterOrderByIdDesc(Long crewId, LocalDateTime startTime);
@@ -20,4 +22,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     @Modifying
     @Query("UPDATE crew_meeting SET memberCount = memberCount - 1 WHERE id = :meetingId")
     void decreaseMemberCount(Long meetingId);
+
+    void deleteAllByUser_IdAndCrew_Id(Long userId, Long crewId);
 }
