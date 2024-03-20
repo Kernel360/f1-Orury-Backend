@@ -5,6 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.orury.client.crew.application.policy.CrewApplicationPolicy;
+import org.orury.client.crew.application.policy.CrewCreatePolicy;
+import org.orury.client.crew.application.policy.CrewPolicy;
+import org.orury.client.crew.application.policy.CrewUpdatePolicy;
 import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
@@ -59,6 +63,10 @@ class CrewServiceImplTest {
     private UserReader userReader;
     private ImageStore imageStore;
     private ImageAsyncStore imageAsyncStore;
+    private CrewPolicy crewPolicy;
+    private CrewCreatePolicy crewCreatePolicy;
+    private CrewUpdatePolicy crewUpdatePolicy;
+    private CrewApplicationPolicy crewApplicationPolicy;
 
     @BeforeEach
     void setUp() {
@@ -75,8 +83,13 @@ class CrewServiceImplTest {
         userReader = mock(UserReader.class);
         imageStore = mock(ImageStore.class);
         imageAsyncStore = mock(ImageAsyncStore.class);
+        crewPolicy = mock(CrewPolicy.class);
+        crewCreatePolicy = mock(CrewCreatePolicy.class);
+        crewUpdatePolicy = mock(CrewUpdatePolicy.class);
+        crewApplicationPolicy = mock(CrewApplicationPolicy.class);
 
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore);
+
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
     }
 
     @DisplayName("[getCrewDtoById] 크루 아이디로 크루 정보를 가져온다.")
@@ -126,12 +139,6 @@ class CrewServiceImplTest {
         // given
         CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
-        int participatingCrewCount = 2;
-        int applyingCrewCount = 1;
-        given(crewMemberReader.countByUserId(anyLong()))
-                .willReturn(participatingCrewCount);
-        given(crewApplicationReader.countByUserId(anyLong()))
-                .willReturn(applyingCrewCount);
         String icon = "크루아이콘";
         given(imageAsyncStore.upload(S3Folder.CREW, file))
                 .willReturn(icon);
@@ -144,6 +151,8 @@ class CrewServiceImplTest {
         crewService.createCrew(crewDto, file);
 
         // then
+        then(crewCreatePolicy).should(times(1))
+                .validate(crewDto);
         then(imageAsyncStore).should(only())
                 .upload(any(S3Folder.class), any(MultipartFile.class));
         then(crewStore).should(only())
@@ -798,13 +807,13 @@ class CrewServiceImplTest {
         // given
         CrewDto crewDto = createCrewDto().build().get();
         Long memberId = 11L;
-        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
-                .willReturn(true);
 
         // when
         crewService.expelMember(crewDto, memberId, crewDto.userDto().id());
 
         // then
+        then(crewPolicy).should(only())
+                .validateCrewCreator(anyLong(), anyLong());
         then(crewMemberReader).should(only())
                 .existsByCrewIdAndUserId(anyLong(), anyLong());
         then(meetingMemberStore).should(only())
@@ -828,6 +837,8 @@ class CrewServiceImplTest {
                 () -> crewService.expelMember(crewDto, memberId, invalidUserId));
 
         assertEquals(CrewErrorCode.FORBIDDEN.getMessage(), exception.getMessage());
+        then(crewPolicy).should(only())
+                .validateCrewCreator(anyLong(), anyLong());
         then(crewMemberReader).shouldHaveNoInteractions();
         then(meetingMemberStore).shouldHaveNoInteractions();
         then(meetingStore).shouldHaveNoInteractions();
