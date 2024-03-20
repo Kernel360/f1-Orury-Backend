@@ -29,7 +29,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +38,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
 import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
+import static org.orury.domain.DomainFixtureFactory.TestCrewMemberPK.createCrewMemberPK;
 import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -871,11 +871,11 @@ class CrewServiceImplTest {
     }
 
     private CrewMember createCrewMember(Long crewId, Long userId) {
-        return CrewMember.of(
-                CrewMemberPK.of(userId, crewId),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        CrewMemberPK crewMemberPK = createCrewMemberPK()
+                .crewId(crewId)
+                .userId(userId).build().get();
+        return DomainFixtureFactory.TestCrewMember.createCrewMember()
+                .crewMemberPK(crewMemberPK).build().get();
     }
 
     private User createUser(Long userId) {

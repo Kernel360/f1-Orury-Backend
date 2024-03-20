@@ -8,6 +8,8 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.Crew;
+import org.orury.domain.crew.domain.entity.CrewMember;
+import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -133,6 +135,37 @@ public class DomainFixtureFactory {
 
         public CrewDto get() {
             return mapper.convertValue(this, CrewDto.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestCrewMemberPK {
+        private @Builder.Default Long crewId = 5L;
+        private @Builder.Default Long userId = 6L;
+
+        public static TestCrewMemberPK.TestCrewMemberPKBuilder createCrewMemberPK() {
+            return TestCrewMemberPK.builder();
+        }
+
+        public CrewMemberPK get() {
+            return mapper.convertValue(this, CrewMemberPK.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestCrewMember {
+        private @Builder.Default CrewMemberPK crewMemberPK = TestCrewMemberPK.createCrewMemberPK().build().get();
+        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
+        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
+
+        public static TestCrewMember.TestCrewMemberBuilder createCrewMember() {
+            return TestCrewMember.builder();
+        }
+
+        public CrewMember get() {
+            return mapper.convertValue(this, CrewMember.class);
         }
     }
 
