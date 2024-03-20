@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.GymImagesConverter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -114,7 +115,9 @@ public class Gym extends AuditingField {
             String serviceSat,
             String serviceSun,
             String homepageLink,
-            String remark
+            String remark,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
         this.id = id;
         this.name = name;
@@ -140,6 +143,8 @@ public class Gym extends AuditingField {
         this.serviceSun = serviceSun;
         this.homepageLink = homepageLink;
         this.remark = remark;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static Gym of(
@@ -166,7 +171,9 @@ public class Gym extends AuditingField {
             String serviceSat,
             String serviceSun,
             String homepageLink,
-            String remark
+            String remark,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
         return new Gym(
                 id,
@@ -192,7 +199,9 @@ public class Gym extends AuditingField {
                 serviceSat,
                 serviceSun,
                 homepageLink,
-                remark
+                remark,
+                createdAt,
+                updatedAt
         );
     }
 }
