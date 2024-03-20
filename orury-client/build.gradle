@@ -1,24 +1,7 @@
 //build.gradle 파일
-jacoco {
-    toolVersion = "0.8.7"
-}
-
-jacocoTestReport {
-    reports {
-        html.destination file("${buildDir}/jacoco/html")
-    }
-}
-
-test {
-    finalizedBy 'jacocoTestReport'
-}
-
 dependencies {
     implementation project(':orury-common')
     implementation project(':orury-domain')
-
-    //test fixtures
-    testImplementation(testFixtures(project(':orury-domain')))
 
     //devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -45,9 +28,6 @@ dependencies {
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -59,6 +39,10 @@ dependencies {
 
     // feign client
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+
+    //test fixtures
+    testImplementation testFixtures(project(':orury-domain'))
+
 }
 
 dependencyManagement {
@@ -77,4 +61,18 @@ tasks.named('jar') {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        html.destination file("${buildDir}/jacoco/html")
+    }
+}
+
+test {
+    finalizedBy 'jacocoTestReport'
 }
