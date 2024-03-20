@@ -19,9 +19,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestLoginRequest.createLoginRequest;
-import static org.orury.domain.DomainFixtureFactory.TestLoginDto.createLoginDto;
-import static org.orury.domain.DomainFixtureFactory.TestSignUpDto.createSignUpDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.AuthDomainFixture.TestLoginDto.createLoginDto;
+import static org.orury.domain.AuthDomainFixture.TestSignUpDto.createSignUpDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] AuthFacade 테스트")
 class AuthFacadeTest extends FacadeTest {

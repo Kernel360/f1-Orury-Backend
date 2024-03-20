@@ -17,8 +17,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestGym.createGym;
-import static org.orury.domain.DomainFixtureFactory.TestGymLikePK.createGymLikePK;
+import static org.orury.domain.GymDomainFixture.TestGym.createGym;
+import static org.orury.domain.GymDomainFixture.TestGymLikePK.createGymLikePK;
 
 @DisplayName("[Reader] 암장 ReaderImpl 테스트")
 class GymReaderImplTest extends InfrastructureTest {

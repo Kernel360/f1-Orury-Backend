@@ -11,7 +11,7 @@ import org.orury.domain.notice.infrastructure.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.orury.domain.DomainFixtureFactory.TestAdmin.createAdmin;
+import static org.orury.domain.AdminDomainFixture.TestAdmin.createAdmin;
 
 @Disabled
 @RepositoryTest

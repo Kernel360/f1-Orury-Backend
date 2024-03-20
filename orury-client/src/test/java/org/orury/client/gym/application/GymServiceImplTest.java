@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.GymDomainFixture;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.Gym;
@@ -24,9 +24,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestGym.createGym;
-import static org.orury.domain.DomainFixtureFactory.TestGymDto.createGymDto;
-import static org.orury.domain.DomainFixtureFactory.TestGymLikeDto.createGymLikeDto;
+import static org.orury.domain.GymDomainFixture.TestGym.createGym;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.GymDomainFixture.TestGymLikeDto.createGymLikeDto;
 
 @DisplayName("[Service] 암장 ServiceImpl 테스트")
 class GymServiceImplTest extends ServiceTest {
@@ -379,7 +379,7 @@ class GymServiceImplTest extends ServiceTest {
         assertFalse(doingBusiness);
     }
 
-    private DomainFixtureFactory.TestGymDto.TestGymDtoBuilder createGymDtoWithOpenCloseTime(LocalTime openTime, LocalTime closeTime) {
+    private GymDomainFixture.TestGymDto.TestGymDtoBuilder createGymDtoWithOpenCloseTime(LocalTime openTime, LocalTime closeTime) {
         EnumMap<DayOfWeek, String> businessHours = new EnumMap<>(DayOfWeek.class);
         businessHours.put(DayOfWeek.MONDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
         businessHours.put(DayOfWeek.TUESDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
@@ -388,11 +388,11 @@ class GymServiceImplTest extends ServiceTest {
         businessHours.put(DayOfWeek.FRIDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
         businessHours.put(DayOfWeek.SATURDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
         businessHours.put(DayOfWeek.SUNDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
-        return DomainFixtureFactory.TestGymDto.createGymDto()
+        return GymDomainFixture.TestGymDto.createGymDto()
                 .businessHours(businessHours);
     }
 
-    private DomainFixtureFactory.TestGymDto.TestGymDtoBuilder createGymDtoWithInvalidTime(String businessHour) {
+    private GymDomainFixture.TestGymDto.TestGymDtoBuilder createGymDtoWithInvalidTime(String businessHour) {
         EnumMap<DayOfWeek, String> businessHours = new EnumMap<>(DayOfWeek.class);
         businessHours.put(DayOfWeek.MONDAY, businessHour);
         businessHours.put(DayOfWeek.TUESDAY, businessHour);
@@ -401,7 +401,7 @@ class GymServiceImplTest extends ServiceTest {
         businessHours.put(DayOfWeek.FRIDAY, businessHour);
         businessHours.put(DayOfWeek.SATURDAY, businessHour);
         businessHours.put(DayOfWeek.SUNDAY, businessHour);
-        return DomainFixtureFactory.TestGymDto.createGymDto()
+        return GymDomainFixture.TestGymDto.createGymDto()
                 .businessHours(businessHours);
     }
 }

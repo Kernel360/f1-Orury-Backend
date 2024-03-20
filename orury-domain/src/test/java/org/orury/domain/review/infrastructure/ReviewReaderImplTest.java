@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
+import static org.orury.domain.ReviewDomainFixture.TestReview.createReview;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReactionPK.createReviewReactionPK;
 
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")
 class ReviewReaderImplTest extends InfrastructureTest {

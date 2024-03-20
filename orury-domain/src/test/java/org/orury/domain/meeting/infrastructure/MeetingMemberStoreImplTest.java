@@ -21,8 +21,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestMeeting.createMeeting;
-import static org.orury.domain.DomainFixtureFactory.TestMeetingMember.createMeetingMember;
+import static org.orury.domain.MeetingDomainFixture.TestMeeting.createMeeting;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingMember.createMeetingMember;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Store] 일정멤버 StoreImpl 테스트")

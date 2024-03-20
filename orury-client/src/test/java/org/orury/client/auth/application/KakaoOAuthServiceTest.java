@@ -11,8 +11,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestKakaoAccountDto.createKakaoAccountDto;
-import static org.orury.domain.DomainFixtureFactory.TestKakaoOAuthTokenDto.createKakaoOAuthTokenDto;
+import static org.orury.domain.AuthDomainFixture.TestKakaoAccountDto.createKakaoAccountDto;
+import static org.orury.domain.AuthDomainFixture.TestKakaoOAuthTokenDto.createKakaoOAuthTokenDto;
 
 @DisplayName("[Service] KakaoOAuthService 테스트")
 class KakaoOAuthServiceTest extends ServiceTest {

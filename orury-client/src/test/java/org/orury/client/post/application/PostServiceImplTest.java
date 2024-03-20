@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.PostDomainFixture;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.post.domain.dto.PostLikeDto;
@@ -30,8 +30,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.orury.common.error.code.PostErrorCode.FORBIDDEN;
 import static org.orury.common.error.code.PostErrorCode.NOT_FOUND;
 import static org.orury.common.util.S3Folder.POST;
-import static org.orury.domain.DomainFixtureFactory.TestPostLikeDto.createPostLikeDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.PostDomainFixture.TestPostLikeDto.createPostLikeDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 import static org.orury.domain.global.constants.NumberConstants.POST_PAGINATION_SIZE;
 import static org.orury.domain.global.constants.NumberConstants.USER_ID;
 
@@ -458,7 +458,7 @@ class PostServiceImplTest extends ServiceTest {
     }
 
     private static PostDto createPostDto(Long postId, Long userId) {
-        return DomainFixtureFactory.TestPostDto.createPostDto()
+        return PostDomainFixture.TestPostDto.createPostDto()
                 .id(postId)
                 .userDto(createUserDto()
                         .id(userId).build().get())

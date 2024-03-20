@@ -19,8 +19,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Service] User Test")
 class UserServiceImplTest extends ServiceTest {

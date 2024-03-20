@@ -23,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
-import static org.orury.domain.DomainFixtureFactory.TestReviewDto.createReviewDto;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
+import static org.orury.domain.ReviewDomainFixture.TestReview.createReview;
+import static org.orury.domain.ReviewDomainFixture.TestReviewDto.createReviewDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReactionPK.createReviewReactionPK;
 
 @DisplayName("[ServiceImpl] 리뷰 ServiceImpl 테스트")
 class ReviewServiceImplTest extends ServiceTest {

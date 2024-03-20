@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestCommentLike.createCommentLike;
+import static org.orury.domain.CommentDomainFixture.TestCommentLike.createCommentLike;
 
 @DisplayName("[Store] 댓글 StoreImpl 테스트")
 class CommentStoreImplTest extends InfrastructureTest {

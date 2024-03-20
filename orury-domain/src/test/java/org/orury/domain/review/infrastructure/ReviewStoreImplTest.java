@@ -13,9 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestReview.createReview;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReaction.createReviewReaction;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
+import static org.orury.domain.ReviewDomainFixture.TestReview.createReview;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReaction.createReviewReaction;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReactionPK.createReviewReactionPK;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[ReaderImpl] 리뷰 ReaderImpl 테스트")

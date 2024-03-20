@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestGymLike.createGymLike;
+import static org.orury.domain.GymDomainFixture.TestGymLike.createGymLike;
 
 @DisplayName("[Store] 암장 StoreImpl 테스트")
 class GymStoreImplTest extends InfrastructureTest {

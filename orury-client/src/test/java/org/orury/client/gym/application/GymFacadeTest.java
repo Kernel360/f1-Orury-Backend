@@ -3,7 +3,7 @@ package org.orury.client.gym.application;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.ReviewDomainFixture;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
@@ -15,9 +15,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestGymDto.createGymDto;
-import static org.orury.domain.DomainFixtureFactory.TestGymLikeDto.createGymLikeDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.GymDomainFixture.TestGymLikeDto.createGymLikeDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 암장 Facade 테스트")
 class GymFacadeTest extends FacadeTest {
@@ -157,8 +157,8 @@ class GymFacadeTest extends FacadeTest {
     }
 
 
-    private DomainFixtureFactory.TestReviewDto.TestReviewDtoBuilder createReviewDto(Long id, GymDto gymDto, Long userId) {
-        return DomainFixtureFactory.TestReviewDto.createReviewDto()
+    private ReviewDomainFixture.TestReviewDto.TestReviewDtoBuilder createReviewDto(Long id, GymDto gymDto, Long userId) {
+        return ReviewDomainFixture.TestReviewDto.createReviewDto()
                 .id(id)
                 .gymDto(gymDto)
                 .userDto(createUserDto(userId).build().get());

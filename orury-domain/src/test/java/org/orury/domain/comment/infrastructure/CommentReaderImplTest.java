@@ -19,8 +19,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestComment.*;
-import static org.orury.domain.DomainFixtureFactory.TestCommentLikePK.createCommentLikePK;
+import static org.orury.domain.CommentDomainFixture.TestComment.*;
+import static org.orury.domain.CommentDomainFixture.TestCommentLikePK.createCommentLikePK;
 
 @DisplayName("[Reader] 댓글 ReaderImpl 테스트")
 class CommentReaderImplTest extends InfrastructureTest {

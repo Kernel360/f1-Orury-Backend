@@ -25,10 +25,10 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestUserInfoRequest.createUserInfoRequest;
-import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createCommentDto;
-import static org.orury.domain.DomainFixtureFactory.TestPostDto.createPostDto;
-import static org.orury.domain.DomainFixtureFactory.TestReviewDto.createReviewDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
+import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewDto.createReviewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("UserFacadeTest")
 class UserFacadeTest extends FacadeTest {

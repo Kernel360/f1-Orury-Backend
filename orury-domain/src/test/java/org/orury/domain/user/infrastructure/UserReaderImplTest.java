@@ -10,7 +10,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
 
 @DisplayName("[UserReaderImpl] User ReaderImpl 테스트")
 class UserReaderImplTest extends InfrastructureTest {

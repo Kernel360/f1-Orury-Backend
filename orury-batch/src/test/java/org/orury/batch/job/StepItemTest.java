@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.orury.batch.BatchFixtureFactory.TestGymResponse.createGymResponse;
-import static org.orury.domain.DomainFixtureFactory.TestGym.createGym;
+import static org.orury.domain.GymDomainFixture.TestGym.createGym;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Step 아이템 관련 테스트")

@@ -6,7 +6,7 @@ import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.code.MeetingErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.MeetingDomainFixture;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
@@ -22,11 +22,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestMeeting.createMeeting;
-import static org.orury.domain.DomainFixtureFactory.TestMeetingDto.createMeetingDto;
-import static org.orury.domain.DomainFixtureFactory.TestMeetingMember.createMeetingMember;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.MeetingDomainFixture.TestMeeting.createMeeting;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingDto.createMeetingDto;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingMember.createMeetingMember;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Service] 일정 ServiceImpl 테스트")
 class MeetingServiceImplTest extends ServiceTest {
@@ -686,13 +686,13 @@ class MeetingServiceImplTest extends ServiceTest {
                 .getUserById(anyLong());
     }
 
-    private DomainFixtureFactory.TestMeetingDto.TestMeetingDtoBuilder createFullMeetingDto(Long meetingId) {
+    private MeetingDomainFixture.TestMeetingDto.TestMeetingDtoBuilder createFullMeetingDto(Long meetingId) {
         return createMeetingDto(meetingId)
                 .memberCount(10)
                 .capacity(10);
     }
 
-    private DomainFixtureFactory.TestMeetingDto.TestMeetingDtoBuilder createMeetingDtoByUserId(Long userId) {
+    private MeetingDomainFixture.TestMeetingDto.TestMeetingDtoBuilder createMeetingDtoByUserId(Long userId) {
         return createMeetingDto().userDto(
                 createUserDto(userId).build().get()
         );

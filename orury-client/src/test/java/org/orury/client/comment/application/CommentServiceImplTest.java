@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CommentErrorCode;
 import org.orury.common.error.exception.BusinessException;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.CommentDomainFixture;
 import org.orury.domain.comment.domain.dto.CommentDto;
 import org.orury.domain.comment.domain.dto.CommentLikeDto;
 import org.orury.domain.comment.domain.entity.Comment;
@@ -25,13 +25,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.orury.domain.DomainFixtureFactory.TestComment.*;
-import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createChildCommentDto;
-import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createParentCommentDto;
-import static org.orury.domain.DomainFixtureFactory.TestCommentLikeDto.createCommentLikeDto;
-import static org.orury.domain.DomainFixtureFactory.TestCommentLikePK.createCommentLikePK;
-import static org.orury.domain.DomainFixtureFactory.TestPostDto.createPostDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CommentDomainFixture.TestComment.*;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createChildCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createParentCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentLikeDto.createCommentLikeDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentLikePK.createCommentLikePK;
+import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Service] 댓글 ServiceImpl 테스트")
 class CommentServiceImplTest extends ServiceTest {
@@ -526,7 +526,7 @@ class CommentServiceImplTest extends ServiceTest {
     }
 
     private CommentDto createCommentDtoWithUserId(Long userId) {
-        return DomainFixtureFactory.TestCommentDto.createCommentDto()
+        return CommentDomainFixture.TestCommentDto.createCommentDto()
                 .userDto(createUserDto(userId).build().get()).build().get();
     }
 }

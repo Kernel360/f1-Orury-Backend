@@ -23,10 +23,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestCommentCreateRequest.createCommentCreateRequest;
 import static org.orury.client.ClientFixtureFactory.TestCommentUpdateRequest.createCommentUpdateRequest;
-import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createCommentDto;
-import static org.orury.domain.DomainFixtureFactory.TestCommentDto.createDeletedCommentDto;
-import static org.orury.domain.DomainFixtureFactory.TestCommentLikeDto.createCommentLikeDto;
-import static org.orury.domain.DomainFixtureFactory.TestPostDto.createPostDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createDeletedCommentDto;
+import static org.orury.domain.CommentDomainFixture.TestCommentLikeDto.createCommentLikeDto;
+import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
 
 @DisplayName("[Facade] 댓글 Facade 테스트")
 class CommentFacadeTest extends FacadeTest {

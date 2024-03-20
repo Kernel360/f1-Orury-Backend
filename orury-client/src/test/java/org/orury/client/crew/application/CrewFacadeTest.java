@@ -19,8 +19,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.only;
 import static org.orury.client.ClientFixtureFactory.TestCrewRequest.createCrewRequest;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 크루 Facade 테스트")
 class CrewFacadeTest extends FacadeTest {

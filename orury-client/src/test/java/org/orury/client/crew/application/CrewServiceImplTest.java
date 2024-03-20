@@ -9,7 +9,6 @@ import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
@@ -35,11 +34,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestCrewMember.createCrewMember;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CrewDomainFixture.TestCrew.createCrew;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewMember.createCrewMember;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")
@@ -857,7 +856,6 @@ class CrewServiceImplTest {
     void when_NotExistingCrewMember_Then_NotFoundCrewMemberException2() {
         // given
         CrewDto crewDto = createCrewDto().build().get();
-        CrewDto temp = DomainFixtureFactory.TestCrewDto.builder().build().get();
         Long memberId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
                 .willReturn(false);

@@ -26,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.orury.client.ClientFixtureFactory.TestLoginRequest.createLoginRequest;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Service] AuthServiceImpl 테스트")
 class AuthServiceImplTest extends ServiceTest {

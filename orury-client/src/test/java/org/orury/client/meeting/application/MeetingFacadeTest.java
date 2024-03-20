@@ -23,10 +23,10 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestMeetingCreateRequest.createMeetingCreateRequest;
 import static org.orury.client.ClientFixtureFactory.TestMeetingUpdateRequest.createMeetingUpdateRequest;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestGymDto.createGymDto;
-import static org.orury.domain.DomainFixtureFactory.TestMeetingDto.createMeetingDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingDto.createMeetingDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 일정 Facade 테스트")

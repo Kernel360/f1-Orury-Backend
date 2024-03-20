@@ -29,10 +29,10 @@ import static org.mockito.Mockito.times;
 import static org.orury.client.ClientFixtureFactory.TestReviewCreateRequest.createReviewCreateRequest;
 import static org.orury.client.ClientFixtureFactory.TestReviewReactionRequest.createReviewReactionRequest;
 import static org.orury.client.ClientFixtureFactory.TestReviewUpdateRequest.createReviewUpdateRequest;
-import static org.orury.domain.DomainFixtureFactory.TestGymDto.createGymDto;
-import static org.orury.domain.DomainFixtureFactory.TestReviewDto.createReviewDto;
-import static org.orury.domain.DomainFixtureFactory.TestReviewReactionPK.createReviewReactionPK;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewDto.createReviewDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReactionPK.createReviewReactionPK;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 리뷰 Facade 테스트")
 class ReviewFacadeTest extends FacadeTest {
