@@ -28,7 +28,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.orury.common.error.code.PostErrorCode.FORBIDDEN;
@@ -114,8 +115,6 @@ class PostServiceTest extends ServiceTest {
         // 시간 값에 대해 엄격히 테스트하지 않겠다는 것을 명시하는 문법. lenient()
         lenient()
                 .when(postReader.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(
-                        anyInt(),
-                        any(LocalDateTime.class),
                         any(Pageable.class)))
                 .thenReturn(mockPostPage);
 
@@ -124,7 +123,7 @@ class PostServiceTest extends ServiceTest {
 
         // then
         then(postReader).should(times(1))
-                .findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(anyInt(), any(LocalDateTime.class), any(Pageable.class));
+                .findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(any(Pageable.class));
     }
 
     @Test

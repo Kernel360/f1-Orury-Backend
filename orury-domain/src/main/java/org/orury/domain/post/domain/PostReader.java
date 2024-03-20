@@ -5,7 +5,6 @@ import org.orury.domain.post.domain.entity.PostLikePK;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +15,7 @@ public interface PostReader {
 
     List<Post> findByUserIdOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
-    Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(
-            int likeCount,
-            LocalDateTime localDateTime,
-            Pageable pageable
-    );
+    Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(Pageable pageable);
 
     Optional<Post> findById(Long id);
 
