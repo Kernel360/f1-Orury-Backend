@@ -13,18 +13,15 @@ import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
-import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.domain.Region;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +37,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
+import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")
@@ -85,7 +84,8 @@ class CrewServiceImplTest {
     void should_GetCrewDtoById() {
         // given
         Long crewId = 1L;
-        Crew crew = createCrew(crewId);
+        Crew crew = createCrew()
+                .id(crewId).build().get();
         List<String> tags = List.of("태그1", "태그2", "태그3");
         given(crewReader.findById(crewId))
                 .willReturn(Optional.of(crew));
@@ -124,7 +124,7 @@ class CrewServiceImplTest {
     @Test
     void should_CreateCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         int participatingCrewCount = 2;
         int applyingCrewCount = 1;
@@ -135,7 +135,8 @@ class CrewServiceImplTest {
         String icon = "크루아이콘";
         given(imageAsyncStore.upload(S3Folder.CREW, file))
                 .willReturn(icon);
-        Crew crew = createCrew(crewDto.id());
+        Crew crew = createCrew()
+                .id(crewDto.id()).build().get();
         given(crewStore.save(any()))
                 .willReturn(crew);
 
@@ -157,7 +158,7 @@ class CrewServiceImplTest {
     @Test
     void when_OverMaximumParticipation_Then_MaximumParticipationException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         int participatingCrewCount = 2;
         int applyingCrewCount = 3;
@@ -234,7 +235,7 @@ class CrewServiceImplTest {
     @Test
     void should_GetUserImagesByCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         List<CrewMember> otherMembers = List.of(
                 createCrewMember(crewDto.id(), 1L),
                 createCrewMember(crewDto.id(), 2L),
@@ -283,7 +284,7 @@ class CrewServiceImplTest {
     @Test
     void should_UpdateCrewImage() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         Long userId = crewDto.userDto().id();
         String newImage = "크루아이콘";
@@ -306,7 +307,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException1() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         Long userId = 2134L;
 
@@ -324,7 +325,7 @@ class CrewServiceImplTest {
     @Test
     void should_DeleteCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when
@@ -341,7 +342,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 284L;
 
         // when & then
@@ -355,20 +356,18 @@ class CrewServiceImplTest {
 
     @DisplayName("[applyCrew] 크루에 가입신청을 한다.")
     @Test
-    void should_ApplyCrew() throws NoSuchFieldException, IllegalAccessException {
+    void should_ApplyCrew() {
         // given
-        CrewDto crewDto = createCrewDto(List.of(
-                "id", 23L,
-                "minAge", 15,
-                "maxAge", 30,
-                "gender", CrewGender.ANY,
-                "permissionRequired", true,
-                "answerRequired", true
-        ));
-        UserDto userDto = createUserDto(List.of(
-                "gender", NumberConstants.MALE,
-                "birthday", LocalDate.now().minusYears(20)
-        ));
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30)
+                .gender(CrewGender.ANY)
+                .permissionRequired(true)
+                .answerRequired(true).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE)
+                .birthday(LocalDate.now().minusYears(20)).build().get();
 
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
@@ -397,8 +396,8 @@ class CrewServiceImplTest {
     @Test
     void when_AlreadyMember_Then_AlreadyMemberException() {
         // given
-        CrewDto crewDto = createCrewDto();
-        UserDto userDto = createUserDto();
+        CrewDto crewDto = createCrewDto().build().get();
+        UserDto userDto = createUserDto().build().get();
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
                 .willReturn(true);
@@ -421,8 +420,8 @@ class CrewServiceImplTest {
     @Test
     void when_OverMaximumParticipation_Then_MaximumParticipationException1() {
         // given
-        CrewDto crewDto = createCrewDto();
-        UserDto userDto = createUserDto();
+        CrewDto crewDto = createCrewDto().build().get();
+        UserDto userDto = createUserDto().build().get();
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
                 .willReturn(false);
@@ -450,14 +449,12 @@ class CrewServiceImplTest {
     @Test
     void when_AgeForbidden_Then_AgeForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto(List.of(
-                "id", 23L,
-                "minAge", 15,
-                "maxAge", 30
-        ));
-        UserDto userDto = createUserDto(List.of(
-                "birthday", LocalDate.now().minusYears(14)
-        ));
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30).build().get();
+        UserDto userDto = createUserDto()
+                .birthday(LocalDate.now().minusYears(14)).build().get();
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
                 .willReturn(false);
@@ -485,12 +482,10 @@ class CrewServiceImplTest {
     @Test
     void when_GenderForbidden_Then_GenderForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto(List.of(
-                "gender", CrewGender.FEMALE
-        ));
-        UserDto userDto = createUserDto(List.of(
-                "gender", NumberConstants.MALE
-        ));
+        CrewDto crewDto = createCrewDto()
+                .gender(CrewGender.FEMALE).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE).build().get();
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
                 .willReturn(false);
@@ -518,17 +513,15 @@ class CrewServiceImplTest {
     @Test
     void when_PermissionNotRequiredCrew_Then_ImmediateJoin() {
         // given
-        CrewDto crewDto = createCrewDto(List.of(
-                "minAge", 25,
-                "maxAge", 30,
-                "gender", CrewGender.FEMALE,
-                "permissionRequired", false,
-                "answerRequired", false
-        ));
-        UserDto userDto = createUserDto(List.of(
-                "birthday", LocalDate.now().minusYears(26),
-                "gender", NumberConstants.FEMALE
-        ));
+        CrewDto crewDto = createCrewDto()
+                .minAge(25)
+                .maxAge(30)
+                .gender(CrewGender.FEMALE)
+                .permissionRequired(false)
+                .answerRequired(false).build().get();
+        UserDto userDto = createUserDto()
+                .birthday(LocalDate.now().minusYears(26))
+                .gender(NumberConstants.FEMALE).build().get();
 
         String answer = "가입신청 답변";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
@@ -557,11 +550,11 @@ class CrewServiceImplTest {
     @Test
     void when_AnswerRequiredButNoAnswer_Then_AnswerRequiredException() {
         // given
-        CrewDto crewDto = createCrewDto(List.of(
-                "permissionRequired", true,
-                "answerRequired", true
-        ));
-        UserDto userDto = createUserDto();
+        CrewDto crewDto = createCrewDto()
+                .gender(CrewGender.ANY)
+                .permissionRequired(true)
+                .answerRequired(true).build().get();
+        UserDto userDto = createUserDto().build().get();
         String answer = "";
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
                 .willReturn(false);
@@ -590,7 +583,7 @@ class CrewServiceImplTest {
     void should_WithdrawApplication() {
         // given
         Long userId = 1L;
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(true);
 
@@ -609,7 +602,7 @@ class CrewServiceImplTest {
     void when_NotExistingApplication_Then_NotFoundApplicationException1() {
         // given
         Long userId = 1L;
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(false);
 
@@ -627,7 +620,7 @@ class CrewServiceImplTest {
     @Test
     void should_ApproveApplication() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(true);
@@ -646,7 +639,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException3() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         Long invalidUserId = 3L;
 
@@ -663,7 +656,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingApplication_Then_NotFoundApplicationException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(false);
@@ -682,7 +675,7 @@ class CrewServiceImplTest {
     @Test
     void should_DisapproveApplication() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(true);
@@ -701,7 +694,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException4() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         Long invalidUserId = 3L;
 
@@ -718,7 +711,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingApplication_Then_NotFoundApplicationException3() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(false);
@@ -737,7 +730,7 @@ class CrewServiceImplTest {
     @Test
     void should_LeaveCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(true);
@@ -760,7 +753,7 @@ class CrewServiceImplTest {
     @Test
     void when_CrewCreator_Then_CreatorDeleteForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when & then
@@ -778,7 +771,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingCrewMember_Then_NotFoundCrewMemberException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(false);
@@ -799,7 +792,7 @@ class CrewServiceImplTest {
     @Test
     void should_ExpelMember() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long memberId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
                 .willReturn(true);
@@ -822,7 +815,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException5() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long memberId = 11L;
         Long invalidUserId = 12L;
 
@@ -841,7 +834,7 @@ class CrewServiceImplTest {
     @Test
     void when_CrewCreator_Then_CreatorExpelForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when & then
@@ -859,7 +852,8 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingCrewMember_Then_NotFoundCrewMemberException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
+        CrewDto temp = DomainFixtureFactory.TestCrewDto.builder().build().get();
         Long memberId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
                 .willReturn(false);
@@ -876,38 +870,6 @@ class CrewServiceImplTest {
         then(crewMemberStore).shouldHaveNoInteractions();
     }
 
-    private User createUser() {
-        return User.of(
-                1525L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private User createUser(Long userId) {
-        return User.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
     private CrewMember createCrewMember(Long crewId, Long userId) {
         return CrewMember.of(
                 CrewMemberPK.of(userId, crewId),
@@ -916,41 +878,8 @@ class CrewServiceImplTest {
         );
     }
 
-    private Crew createCrew(Long crewId) {
-        return Crew.of(
-                crewId,
-                "크루 이름",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "크루 이미지",
-                CrewStatus.ACTIVATED,
-                createUser(),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                17,
-                45,
-                CrewGender.ANY,
-                true,
-                null,
-                false
-        );
-    }
-
-    private UserDto createUserDto(List<Object> objects) {
-        return DomainFixtureFactory.createUserDto(objects);
-    }
-
-    private UserDto createUserDto() {
-        return createUserDto(Collections.emptyList());
-    }
-
-    private CrewDto createCrewDto(List<Object> objects) {
-        return DomainFixtureFactory.createCrewDto(objects);
-    }
-
-    private CrewDto createCrewDto() {
-        return createCrewDto(Collections.emptyList());
+    private User createUser(Long userId) {
+        return DomainFixtureFactory.TestUser.createUser()
+                .id(userId).build().get();
     }
 }
