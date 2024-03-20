@@ -17,6 +17,9 @@ dependencies {
     implementation project(':orury-common')
     implementation project(':orury-domain')
 
+    //test fixtures
+    testImplementation(testFixtures(project(':orury-domain')))
+
     //devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

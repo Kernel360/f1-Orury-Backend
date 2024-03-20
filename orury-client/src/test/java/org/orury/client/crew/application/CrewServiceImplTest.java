@@ -9,28 +9,25 @@ import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
+import org.orury.domain.DomainFixtureFactory;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
-import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
-import org.orury.domain.global.domain.Region;
+import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.image.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +35,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
+import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
+import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
+import static org.orury.domain.DomainFixtureFactory.TestCrewMember.createCrewMember;
+import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
+import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")
@@ -82,7 +84,8 @@ class CrewServiceImplTest {
     void should_GetCrewDtoById() {
         // given
         Long crewId = 1L;
-        Crew crew = createCrew(crewId);
+        Crew crew = createCrew()
+                .id(crewId).build().get();
         List<String> tags = List.of("태그1", "태그2", "태그3");
         given(crewReader.findById(crewId))
                 .willReturn(Optional.of(crew));
@@ -121,7 +124,7 @@ class CrewServiceImplTest {
     @Test
     void should_CreateCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         int participatingCrewCount = 2;
         int applyingCrewCount = 1;
@@ -132,7 +135,8 @@ class CrewServiceImplTest {
         String icon = "크루아이콘";
         given(imageAsyncStore.upload(S3Folder.CREW, file))
                 .willReturn(icon);
-        Crew crew = createCrew(crewDto.id());
+        Crew crew = createCrew()
+                .id(crewDto.id()).build().get();
         given(crewStore.save(any()))
                 .willReturn(crew);
 
@@ -154,7 +158,7 @@ class CrewServiceImplTest {
     @Test
     void when_OverMaximumParticipation_Then_MaximumParticipationException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         int participatingCrewCount = 2;
         int applyingCrewCount = 3;
@@ -231,16 +235,20 @@ class CrewServiceImplTest {
     @Test
     void should_GetUserImagesByCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         List<CrewMember> otherMembers = List.of(
-                createCrewMember(crewDto.id(), 1L),
-                createCrewMember(crewDto.id(), 2L),
-                createCrewMember(crewDto.id(), 3L)
+                createCrewMember(crewDto.id(), 1L).build().get(),
+                createCrewMember(crewDto.id(), 2L).build().get(),
+                createCrewMember(crewDto.id(), 3L).build().get()
         );
         given(crewMemberReader.getOtherCrewMembersByCrewIdMaximum(anyLong(), anyLong(), anyInt()))
                 .willReturn(otherMembers);
         given(userReader.getUserById(anyLong()))
-                .willReturn(createUser(1L), createUser(2L), createUser(3L));
+                .willReturn(
+                        createUser(1L).build().get(),
+                        createUser(2L).build().get(),
+                        createUser(3L).build().get()
+                );
 
         // when
         List<String> userImages = crewService.getUserImagesByCrew(crewDto);
@@ -280,7 +288,7 @@ class CrewServiceImplTest {
     @Test
     void should_UpdateCrewImage() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         Long userId = crewDto.userDto().id();
         String newImage = "크루아이콘";
@@ -303,7 +311,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException1() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         Long userId = 2134L;
 
@@ -321,7 +329,7 @@ class CrewServiceImplTest {
     @Test
     void should_DeleteCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when
@@ -338,7 +346,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 284L;
 
         // when & then
@@ -353,6 +361,225 @@ class CrewServiceImplTest {
     @DisplayName("[applyCrew] 크루에 가입신청을 한다.")
     @Test
     void should_ApplyCrew() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30)
+                .gender(CrewGender.ANY)
+                .permissionRequired(true)
+                .answerRequired(true).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE)
+                .birthday(LocalDate.now().minusYears(20)).build().get();
+
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).should(only())
+                .save(any(), any(), anyString());
+    }
+
+    @DisplayName("[applyCrew] 크루원이 이미 존재하는 경우, AlreadyMember 예외를 발생시킨다.")
+    @Test
+    void when_AlreadyMember_Then_AlreadyMemberException() {
+        // given
+        CrewDto crewDto = createCrewDto().build().get();
+        UserDto userDto = createUserDto().build().get();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(true);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.ALREADY_MEMBER.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(only())
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(never())
+                .countByUserId(anyLong());
+        then(crewApplicationReader).shouldHaveNoInteractions();
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루 참여/신청 횟수가 5 이상이면, MaximumParticipation 예외를 발생시킨다.")
+    @Test
+    void when_OverMaximumParticipation_Then_MaximumParticipationException1() {
+        // given
+        CrewDto crewDto = createCrewDto().build().get();
+        UserDto userDto = createUserDto().build().get();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(3);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.MAXIMUM_PARTICIPATION.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(only())
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 지원자의 연령이 크루 연령기준에 부합하지 않으면, AgeForbidden 예외를 발생시킨다.")
+    @Test
+    void when_AgeForbidden_Then_AgeForbiddenException() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30).build().get();
+        UserDto userDto = createUserDto()
+                .birthday(LocalDate.now().minusYears(14)).build().get();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.AGE_FORBIDDEN.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루원의 성별이 크루 성별기준에 부합하지 않으면, GenderForbidden 예외를 발생시킨다.")
+    @Test
+    void when_GenderForbidden_Then_GenderForbiddenException() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .gender(CrewGender.FEMALE).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE).build().get();
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.GENDER_FORBIDDEN.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 지원하는 크루가 즉시 가입이고 신청자가 가입조건을 만족하는 경우, 신청자를 바로 가입시킨다.")
+    @Test
+    void when_PermissionNotRequiredCrew_Then_ImmediateJoin() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .minAge(25)
+                .maxAge(30)
+                .gender(CrewGender.FEMALE)
+                .permissionRequired(false)
+                .answerRequired(false).build().get();
+        UserDto userDto = createUserDto()
+                .birthday(LocalDate.now().minusYears(26))
+                .gender(NumberConstants.FEMALE).build().get();
+
+        String answer = "가입신청 답변";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewMemberStore).should(times(1))
+                .addCrewMember(anyLong(), anyLong());
+        then(crewApplicationStore).shouldHaveNoInteractions();
+    }
+
+    @DisplayName("[applyCrew] 크루원의 가입신청 답변이 필수한데 답변이 없는 경우, EmptyAnswer 예외를 발생시킨다.")
+    @Test
+    void when_AnswerRequiredButNoAnswer_Then_AnswerRequiredException() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .gender(CrewGender.ANY)
+                .permissionRequired(true)
+                .answerRequired(true).build().get();
+        UserDto userDto = createUserDto().build().get();
+        String answer = "";
+        given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userDto.id()))
+                .willReturn(false);
+        given(crewMemberReader.countByUserId(userDto.id()))
+                .willReturn(2);
+        given(crewApplicationReader.countByUserId(userDto.id()))
+                .willReturn(2);
+
+        // when & then
+        Exception exception = assertThrows(BusinessException.class,
+                () -> crewService.applyCrew(crewDto, userDto, answer));
+
+        assertEquals(CrewErrorCode.EMPTY_ANSWER.getMessage(), exception.getMessage());
+        then(crewMemberReader).should(times(1))
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
+        then(crewMemberReader).should(times(1))
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(only())
+                .countByUserId(anyLong());
+        then(crewMemberStore).shouldHaveNoInteractions();
+        then(crewApplicationStore).shouldHaveNoInteractions();
     }
 
     @DisplayName("[withdrawApplication] 크루 가입신청을 취소한다.")
@@ -360,7 +587,7 @@ class CrewServiceImplTest {
     void should_WithdrawApplication() {
         // given
         Long userId = 1L;
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(true);
 
@@ -379,7 +606,7 @@ class CrewServiceImplTest {
     void when_NotExistingApplication_Then_NotFoundApplicationException1() {
         // given
         Long userId = 1L;
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(false);
 
@@ -397,7 +624,7 @@ class CrewServiceImplTest {
     @Test
     void should_ApproveApplication() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(true);
@@ -416,7 +643,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException3() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         Long invalidUserId = 3L;
 
@@ -433,7 +660,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingApplication_Then_NotFoundApplicationException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(false);
@@ -452,7 +679,7 @@ class CrewServiceImplTest {
     @Test
     void should_DisapproveApplication() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(true);
@@ -471,7 +698,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException4() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         Long invalidUserId = 3L;
 
@@ -488,7 +715,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingApplication_Then_NotFoundApplicationException3() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long applicantId = 2L;
         given(crewApplicationReader.existsByCrewIdAndUserId(crewDto.id(), applicantId))
                 .willReturn(false);
@@ -507,7 +734,7 @@ class CrewServiceImplTest {
     @Test
     void should_LeaveCrew() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(true);
@@ -530,7 +757,7 @@ class CrewServiceImplTest {
     @Test
     void when_CrewCreator_Then_CreatorDeleteForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when & then
@@ -548,7 +775,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingCrewMember_Then_NotFoundCrewMemberException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), userId))
                 .willReturn(false);
@@ -569,7 +796,7 @@ class CrewServiceImplTest {
     @Test
     void should_ExpelMember() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long memberId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
                 .willReturn(true);
@@ -592,7 +819,7 @@ class CrewServiceImplTest {
     @Test
     void when_NotCrewCreator_Then_ForbiddenException5() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long memberId = 11L;
         Long invalidUserId = 12L;
 
@@ -611,7 +838,7 @@ class CrewServiceImplTest {
     @Test
     void when_CrewCreator_Then_CreatorExpelForbiddenException() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
         Long userId = crewDto.userDto().id();
 
         // when & then
@@ -629,7 +856,8 @@ class CrewServiceImplTest {
     @Test
     void when_NotExistingCrewMember_Then_NotFoundCrewMemberException2() {
         // given
-        CrewDto crewDto = createCrewDto();
+        CrewDto crewDto = createCrewDto().build().get();
+        CrewDto temp = DomainFixtureFactory.TestCrewDto.builder().build().get();
         Long memberId = 11L;
         given(crewMemberReader.existsByCrewIdAndUserId(crewDto.id(), memberId))
                 .willReturn(false);
@@ -644,106 +872,5 @@ class CrewServiceImplTest {
         then(meetingMemberStore).shouldHaveNoInteractions();
         then(meetingStore).shouldHaveNoInteractions();
         then(crewMemberStore).shouldHaveNoInteractions();
-    }
-
-    private User createUser() {
-        return User.of(
-                1525L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private User createUser(Long userId) {
-        return User.of(
-                userId,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private CrewMember createCrewMember(Long crewId, Long userId) {
-        return CrewMember.of(
-                CrewMemberPK.of(userId, crewId),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private Crew createCrew(Long crewId) {
-        return Crew.of(
-                crewId,
-                "크루 이름",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "크루 이미지",
-                CrewStatus.ACTIVATED,
-                createUser(),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                17,
-                45,
-                CrewGender.ANY,
-                true,
-                null,
-                false
-        );
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                111L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private CrewDto createCrewDto() {
-        return CrewDto.of(
-                333L,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUserDto(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
     }
 }
