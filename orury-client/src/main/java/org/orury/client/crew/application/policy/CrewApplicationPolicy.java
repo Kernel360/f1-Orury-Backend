@@ -7,19 +7,16 @@ import org.orury.domain.crew.domain.CrewApplicationReader;
 import org.orury.domain.crew.domain.CrewMemberReader;
 import org.orury.domain.crew.domain.CrewMemberStore;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CrewApplicationPolicy extends CrewPolicy {
-    private final CrewApplicationReader crewApplicationReader;
     private final CrewMemberReader crewMemberReader;
     private final CrewMemberStore crewMemberStore;
 
     public CrewApplicationPolicy(CrewApplicationReader crewApplicationReader, CrewMemberReader crewMemberReader, CrewMemberStore crewMemberStore) {
-        super(crewMemberReader);
-        this.crewApplicationReader = crewApplicationReader;
+        super(crewMemberReader, crewApplicationReader);
         this.crewMemberReader = crewMemberReader;
         this.crewMemberStore = crewMemberStore;
     }
@@ -53,13 +50,5 @@ public class CrewApplicationPolicy extends CrewPolicy {
     public void validateApplication(Long crewId, Long applicantId) {
         if (!crewApplicationReader.existsByCrewIdAndUserId(crewId, applicantId))
             throw new BusinessException(CrewErrorCode.NOT_FOUND_APPLICATION);
-    }
-
-    // 크루 참여 검증 (멤버로 참여한 크루 + 신청한 크루 <= 5)
-    private void validateCrewParticipationCount(Long userId) {
-        int participatingCrewCount = crewMemberReader.countByUserId(userId);
-        int applyingCrewCount = crewApplicationReader.countByUserId(userId);
-        if (NumberConstants.MAXIMUM_CREW_PARTICIPATION <= participatingCrewCount + applyingCrewCount)
-            throw new BusinessException(CrewErrorCode.MAXIMUM_PARTICIPATION);
     }
 }

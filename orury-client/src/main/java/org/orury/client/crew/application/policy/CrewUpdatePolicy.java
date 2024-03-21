@@ -19,14 +19,12 @@ import java.util.List;
 @Primary
 public class CrewUpdatePolicy extends CrewPolicy {
     private final CrewMemberReader crewMemberReader;
-    private final CrewApplicationReader crewApplicationReader;
     private final UserReader userReader;
     private final CrewApplicationStore crewApplicationStore;
 
     public CrewUpdatePolicy(CrewMemberReader crewMemberReader, CrewApplicationReader crewApplicationReader, UserReader userReader, CrewApplicationStore crewApplicationStore) {
-        super(crewMemberReader);
+        super(crewMemberReader, crewApplicationReader);
         this.crewMemberReader = crewMemberReader;
-        this.crewApplicationReader = crewApplicationReader;
         this.userReader = userReader;
         this.crewApplicationStore = crewApplicationStore;
     }
