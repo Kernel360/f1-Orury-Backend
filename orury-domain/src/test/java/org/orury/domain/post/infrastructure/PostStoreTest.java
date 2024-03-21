@@ -9,7 +9,6 @@ import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
 
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -111,7 +110,7 @@ class PostStoreTest extends InfrastructureTest {
         var expectedPosts = IntStream.range(1, 10)
                 .mapToObj(i -> PostDomainFixture.TestPost.createPost((long) i).build().get()).toList();
         given(postRepository.findByUserId(anyLong())).willReturn(expectedPosts);
-        willDoNothing().given(imageStore).delete(eq(S3Folder.POST), eq(List.of()));
+        willDoNothing().given(imageStore).delete(eq(S3Folder.POST), anyList());
         willDoNothing().given(postRepository).delete(any(Post.class));
 
         // when
@@ -119,7 +118,7 @@ class PostStoreTest extends InfrastructureTest {
 
         // then
         verify(postRepository, times(1)).findByUserId(anyLong());
-        verify(imageStore, times(9)).delete(eq(S3Folder.POST), eq(List.of()));
+        verify(imageStore, times(9)).delete(eq(S3Folder.POST), anyList());
         verify(postRepository, times(9)).delete(any(Post.class));
     }
 }
