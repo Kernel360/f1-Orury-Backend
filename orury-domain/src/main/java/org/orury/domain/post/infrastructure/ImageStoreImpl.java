@@ -50,7 +50,6 @@ public class ImageStoreImpl implements ImageStore {
             upload(domain, tempFiles, fileNames);
         });
 
-        // 이미지 imageStore.upload()를 기다리지 않고 fileNames 반환
         return fileNames;
     }
 
