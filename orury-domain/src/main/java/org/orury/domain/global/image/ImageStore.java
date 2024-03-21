@@ -1,12 +1,14 @@
 package org.orury.domain.global.image;
 
 import org.orury.common.util.S3Folder;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 
 public interface ImageStore {
-    void upload(S3Folder domain, List<File> files, List<String> filesName);
+    List<String> upload(S3Folder domain, List<MultipartFile> files);
+
+    String upload(S3Folder domain, MultipartFile file);
 
     void delete(S3Folder domain, List<String> imageLinks);
 
