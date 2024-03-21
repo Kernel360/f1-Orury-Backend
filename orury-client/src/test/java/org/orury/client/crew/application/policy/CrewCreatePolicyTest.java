@@ -37,6 +37,24 @@ class CrewCreatePolicyTest {
         crewCreatePolicy = new CrewCreatePolicy(crewMemberReader, crewApplicationReader);
     }
 
+    @DisplayName("[createCrew] 크루 참여/신청 횟수가 5 미만이면, 정상적으로 생성된다.")
+    @Test
+    void when_UnderMaximumParticipation_Then_Success() {
+        // given
+        CrewDto crewDto = createCrewDto().build().get();
+        given(crewMemberReader.countByUserId(anyLong())).willReturn(2);
+        given(crewApplicationReader.countByUserId(anyLong())).willReturn(2);
+
+        // when
+        crewCreatePolicy.validate(crewDto);
+
+        // then
+        then(crewMemberReader).should(only())
+                .countByUserId(anyLong());
+        then(crewApplicationReader).should(only())
+                .countByUserId(anyLong());
+    }
+
     @DisplayName("[createCrew] 크루 참여/신청 횟수가 5 이상이면, MaximumParticipation 예외를 발생시킨다.")
     @Test
     void when_OverMaximumParticipation_Then_MaximumParticipationException() {
