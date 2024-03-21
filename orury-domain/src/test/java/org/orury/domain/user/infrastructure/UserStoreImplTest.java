@@ -25,4 +25,32 @@ class UserStoreImplTest extends InfrastructureTest {
         //then
         then(userRepository).should(times(1)).save(any());
     }
+
+    @Test
+    @DisplayName("delete(Long id) Test: User Entity가 들어오면 해당하는 엔티티를 삭제한다. [성공]")
+    void should_deleteUserEntity() {
+        //given
+        Long userId = 1L;
+
+        //when
+        userStore.delete(userId);
+
+        //then
+        then(userRepository).should(times(1))
+                .deleteById(userId);
+    }
+
+    @Test
+    @DisplayName("saveAndFlush(Long id) Test: User Entity가 들어오면 해당하는 엔티티를 저장하고 flush한다. [성공]")
+    void should_saveAndFlushUserEntity() {
+        //given
+        User user = mock(User.class);
+
+        //when
+        userStore.saveAndFlush(user);
+
+        //then
+        then(userRepository).should(times(1))
+                .saveAndFlush(any());
+    }
 }
