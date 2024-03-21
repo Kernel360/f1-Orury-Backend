@@ -91,9 +91,8 @@ public class CrewUpdatePolicy extends CrewPolicy {
                 .map(CrewApplication::getCrewApplicationPK)
                 .forEach(crewApplicationStore::approve);
 
-        // 유효하지 않은 지원자들에 대해 거절
-        applications.removeAll(validApplications);
         applications.stream()
+                .filter(crewApplication -> !validApplications.contains(crewApplication))
                 .map(CrewApplication::getCrewApplicationPK)
                 .forEach(crewApplicationStore::delete);
     }
