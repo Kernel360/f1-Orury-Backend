@@ -7,10 +7,7 @@ import lombok.Getter;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
-import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.crew.domain.entity.CrewApplicationPK;
-import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
+import org.orury.domain.crew.domain.entity.*;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
@@ -177,6 +174,22 @@ public class CrewDomainFixture {
         public static TestCrewApplicationDto.TestCrewApplicationDtoBuilder createCrewApplicationDto(Long crewId, Long userId) {
             return TestCrewApplicationDto.builder()
                     .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestCrewTag {
+        private @Builder.Default Long id = 751814L;
+        private @Builder.Default Crew crew = TestCrew.createCrew(1489L).build().get();
+        private @Builder.Default String tag = "testTag";
+
+        public static TestCrewTag.TestCrewTagBuilder createCrewTag() {
+            return TestCrewTag.builder();
+        }
+
+        public CrewTag get() {
+            return mapper.convertValue(this, CrewTag.class);
         }
     }
 }
