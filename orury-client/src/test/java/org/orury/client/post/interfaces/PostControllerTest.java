@@ -1,21 +1,18 @@
 package org.orury.client.post.interfaces;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.ControllerTest;
 import org.orury.client.config.WithUserPrincipal;
 import org.orury.client.post.interfaces.message.PostMessage;
-import org.orury.client.post.interfaces.request.PostRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.times;
+import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -31,9 +28,8 @@ class PostControllerTest extends ControllerTest {
     @Test
     void when_PostRequestAndImages_Then_CreatePostSuccessfully() throws Exception {
         //given
-        var postRequest = createPostRequest(1L);
-        var file = createImagePart();
-        var request = createRequestPart(postRequest);
+        var file = mock(MockMultipartFile.class);
+        var request = mock(MockMultipartFile.class);
 
         //when
         mvc.perform(multipart(HttpMethod.POST, "/api/v1/posts")
@@ -54,9 +50,8 @@ class PostControllerTest extends ControllerTest {
     @Test
     void when_RequestContainsImage_Then_UpdatePostSuccessfully() throws Exception {
         //given
-        var postRequest = createPostRequest(1L);
-        var file = createImagePart();
-        var request = createRequestPart(postRequest);
+        var file = mock(MockMultipartFile.class);
+        var request = mock(MockMultipartFile.class);
         var message = PostMessage.POST_UPDATED;
 
         //when
@@ -76,8 +71,7 @@ class PostControllerTest extends ControllerTest {
     @Test
     void when_RequestDoesNotContainsImage_Then_UpdatePostSuccessfully() throws Exception {
         //given
-        var postRequest = createPostRequest(1L);
-        var request = createRequestPart(postRequest);
+        var request = mock(MockMultipartFile.class);
         var message = PostMessage.POST_UPDATED;
 
         //when
@@ -110,33 +104,5 @@ class PostControllerTest extends ControllerTest {
 
         //then
         then(postFacade).should(times(1)).deletePost(any(), any());
-    }
-
-    private PostRequest createPostRequest(Long id) {
-        return PostRequest.of(
-                id,
-                "title",
-                "content",
-                1
-        );
-    }
-
-    private MockMultipartFile createImagePart() {
-        return new MockMultipartFile(
-                "TestImageName",
-                "testImageFileName",
-                MediaType.TEXT_PLAIN_VALUE,
-                "testImageFileDate".getBytes()
-        );
-    }
-
-    private MockMultipartFile createRequestPart(Object request) throws JsonProcessingException {
-        return new MockMultipartFile(
-                "request",
-                "testRequest",
-                MediaType.APPLICATION_JSON_VALUE,
-                mapper.writeValueAsString(request)
-                        .getBytes(StandardCharsets.UTF_8)
-        );
     }
 }

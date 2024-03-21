@@ -1,5 +1,6 @@
 package org.orury.domain.post.infrastructure;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.DomainFixtureFactory;
@@ -23,12 +24,18 @@ import static org.mockito.Mockito.verify;
 
 @DisplayName("[Reader] PostReader 테스트")
 class PostReaderTest extends InfrastructureTest {
+    private Pageable pageable;
+    private Post expectedPost;
+    private List<Post> expectedPosts;
 
-    private final Pageable pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
-    private final Post expectedPost = DomainFixtureFactory.TestPost.builder().id(1L).build().get();
-    private final List<Post> expectedPosts = IntStream.rangeClosed(1, 10)
-            .mapToObj(idx -> DomainFixtureFactory.TestPost.builder().id((long) idx).build().get())
-            .toList();
+    @BeforeEach
+    void setUps() {
+        pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
+        expectedPost = DomainFixtureFactory.TestPost.builder().id(1L).build().get();
+        expectedPosts = IntStream.rangeClosed(1, 10)
+                .mapToObj(idx -> DomainFixtureFactory.TestPost.builder().id((long) idx).build().get())
+                .toList();
+    }
 
     @DisplayName("카테고리로 첫 번째 커서로 게시글 목록 조회 - 성공")
     @Test
@@ -138,7 +145,7 @@ class PostReaderTest extends InfrastructureTest {
                 anyInt(), any(), any())).willReturn(expectedPage);
 
         // when
-        var resultPage = postReader.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(pageable);
+        var resultPage = postReader.findByLikeCountGreaterDescAndCreatedAtDesc(pageable);
 
         // then
         assertNotNull(resultPage);

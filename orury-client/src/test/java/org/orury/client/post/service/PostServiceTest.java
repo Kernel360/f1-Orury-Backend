@@ -114,7 +114,7 @@ class PostServiceTest extends ServiceTest {
 
         // 시간 값에 대해 엄격히 테스트하지 않겠다는 것을 명시하는 문법. lenient()
         lenient()
-                .when(postReader.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(
+                .when(postReader.findByLikeCountGreaterDescAndCreatedAtDesc(
                         any(Pageable.class)))
                 .thenReturn(mockPostPage);
 
@@ -123,7 +123,7 @@ class PostServiceTest extends ServiceTest {
 
         // then
         then(postReader).should(times(1))
-                .findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(any(Pageable.class));
+                .findByLikeCountGreaterDescAndCreatedAtDesc(any(Pageable.class));
     }
 
     @Test

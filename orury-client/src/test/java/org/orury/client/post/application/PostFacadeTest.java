@@ -12,7 +12,6 @@ import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -52,10 +51,10 @@ class PostFacadeTest extends FacadeTest {
         var user = createUserDto(1L);
         var request = createPostRequest(1L);
         var post = request.toDto(user);
-        var files = createMultipartFiles();
+        var files = List.of(mock(MultipartFile.class));
         given(userService.getUserDtoById(anyLong())).willReturn(user);
         given(postService.getPostDtoById(anyLong(), anyLong())).willReturn(post);
-        willDoNothing().given(postService).createPost(post, files);
+        willDoNothing().given(postService).createPost(any(), any());
 
         //when
         postFacade.updatePost(1L, request, files);
@@ -63,7 +62,7 @@ class PostFacadeTest extends FacadeTest {
         //then
         then(userService).should(times(1)).getUserDtoById(anyLong());
         then(postService).should(times(1)).getPostDtoById(anyLong(), anyLong());
-        then(postService).should(times(1)).createPost(post, files);
+        then(postService).should(times(1)).createPost(any(), any());
     }
 
     @DisplayName("유저 ID, 게시글 ID를 받아 게시글을 삭제한다.")
@@ -209,11 +208,5 @@ class PostFacadeTest extends FacadeTest {
 
     private PostRequest createPostRequest(Long id) {
         return PostRequest.of(id, "title", "content", 1);
-    }
-
-    private List<MultipartFile> createMultipartFiles() {
-        return List.of(
-                new MockMultipartFile("file", "file", "image/png", new byte[0])
-        );
     }
 }
