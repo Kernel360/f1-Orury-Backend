@@ -9,15 +9,11 @@ import org.orury.client.user.interfaces.response.MyCommentResponse;
 import org.orury.client.user.interfaces.response.MyPostResponse;
 import org.orury.client.user.interfaces.response.MyReviewResponse;
 import org.orury.domain.comment.domain.dto.CommentDto;
-import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +24,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestUserInfoRequest.createUserInfoRequest;
+import static org.orury.domain.CommentDomainFixture.TestCommentDto.createCommentDto;
+import static org.orury.domain.PostDomainFixture.TestPostDto.createPostDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewDto.createReviewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("UserFacadeTest")
 class UserFacadeTest extends FacadeTest {
@@ -37,7 +38,7 @@ class UserFacadeTest extends FacadeTest {
     void should_returnUserDto() {
         //given
         Long userId = 1L;
-        UserDto userDto = createUserDto(userId);
+        UserDto userDto = createUserDto(userId).build().get();
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
 
@@ -55,7 +56,7 @@ class UserFacadeTest extends FacadeTest {
         //given
         Long userId = 1L;
         MultipartFile image = mock(MultipartFile.class);
-        UserDto userDto = createUserDto(userId);
+        UserDto userDto = createUserDto(userId).build().get();
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
 
         //when
@@ -71,8 +72,8 @@ class UserFacadeTest extends FacadeTest {
     void should_updateUserInfo() {
         //given
         Long userId = 1L;
-        UserInfoRequest userInfoRequest = createUserInfoRequest();
-        UserDto userDto = createUserDto(userId);
+        UserInfoRequest userInfoRequest = createUserInfoRequest().build().get();
+        UserDto userDto = createUserDto(userId).build().get();
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
 
         //when
@@ -92,7 +93,7 @@ class UserFacadeTest extends FacadeTest {
 
         List<PostDto> postDtos = new ArrayList<>();
         for (int i = 10; i >= 1; i--) {
-            postDtos.add(createPostDto((long) i));
+            postDtos.add(createPostDto((long) i).build().get());
         }
 
         WithCursorResponse<MyPostResponse> response = WithCursorResponse.of(postDtos.stream()
@@ -118,7 +119,7 @@ class UserFacadeTest extends FacadeTest {
 
         List<ReviewDto> reviewDtos = new ArrayList<>();
         for (int i = 10; i >= 1; i--) {
-            reviewDtos.add(createReviewDto((long) i));
+            reviewDtos.add(createReviewDto((long) i).build().get());
         }
         int myReaction = 1;
 
@@ -147,7 +148,7 @@ class UserFacadeTest extends FacadeTest {
 
         List<CommentDto> commentDtos = new ArrayList<>();
         for (int i = 10; i >= 1; i--) {
-            commentDtos.add(createCommentDto((long) i));
+            commentDtos.add(createCommentDto((long) i).build().get());
         }
 
         WithCursorResponse<MyCommentResponse> response = WithCursorResponse.of(commentDtos.stream()
@@ -169,7 +170,7 @@ class UserFacadeTest extends FacadeTest {
     void should_deleteUser() {
         //given
         Long userId = 1L;
-        UserDto userDto = createUserDto(userId);
+        UserDto userDto = createUserDto(userId).build().get();
 
         given(userService.getUserDtoById(anyLong())).willReturn(userDto);
 
@@ -178,106 +179,5 @@ class UserFacadeTest extends FacadeTest {
 
         //then
         then(userService).should(times(1)).getUserDtoById(anyLong());
-    }
-
-    private UserDto createUserDto(Long id) {
-        return UserDto.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "test.png",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private PostDto createPostDto(Long id) {
-        return PostDto.of(
-                id,
-                "title",
-                "content",
-                0,
-                0,
-                0,
-                List.of(),
-                1,
-                createUserDto(id),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private GymDto createGymDto() {
-        return GymDto.of(
-                1L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                25.3f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "instalink.com",
-                "MONDAY",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private ReviewDto createReviewDto(Long id) {
-        return ReviewDto.of(
-                id,
-                "test content",
-                List.of(),
-                4.5f,
-                1,
-                2,
-                3,
-                4,
-                5,
-                createUserDto(1L),
-                createGymDto(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private CommentDto createCommentDto(Long id) {
-        return CommentDto.of(
-                id,
-                "content",
-                1L,
-                0,
-                createPostDto(id),
-                createUserDto(1L),
-                0,
-                null,
-                null
-        );
-    }
-
-    private UserInfoRequest createUserInfoRequest() {
-        return new UserInfoRequest(
-                "nickname"
-        );
     }
 }

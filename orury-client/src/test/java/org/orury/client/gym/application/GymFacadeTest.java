@@ -3,15 +3,11 @@ package org.orury.client.gym.application;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
+import org.orury.domain.ReviewDomainFixture;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
-import org.orury.domain.gym.domain.entity.GymLikePK;
 import org.orury.domain.review.domain.dto.ReviewDto;
-import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
-import org.orury.domain.user.domain.entity.User;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +15,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.GymDomainFixture.TestGymLikeDto.createGymLikeDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 암장 Facade 테스트")
 class GymFacadeTest extends FacadeTest {
@@ -29,11 +28,11 @@ class GymFacadeTest extends FacadeTest {
         // given
         Long gymId = 1L;
         Long userId = 2L;
-        GymDto gymDto = createGymDto(gymId);
+        GymDto gymDto = createGymDto(gymId).build().get();
         List<ReviewDto> reviewDtos = List.of(
-                createReviewDto(1L, gymDto, userId),
-                createReviewDto(2L, gymDto, userId),
-                createReviewDto(3L, gymDto, userId)
+                createReviewDto(1L, gymDto, userId).build().get(),
+                createReviewDto(2L, gymDto, userId).build().get(),
+                createReviewDto(3L, gymDto, userId).build().get()
         );
 
         given(gymService.getGymDtoById(gymId))
@@ -65,7 +64,8 @@ class GymFacadeTest extends FacadeTest {
         // given
         Long gymId = 1L;
         Long userId = 2L;
-        GymDto gymDto = createGymDtoWithNoReview(gymId);
+        GymDto gymDto = createGymDto(gymId)
+                .reviewCount(0).build().get();
         List<ReviewDto> emptyReviewDtos = Collections.emptyList();
 
         given(gymService.getGymDtoById(gymId))
@@ -100,9 +100,9 @@ class GymFacadeTest extends FacadeTest {
         float longitude = 126.231323f;
         Long userId = 2L;
         List<GymDto> gymDtos = List.of(
-                createGymDto(1L),
-                createGymDtoWithNoReview(2L),
-                createGymDto(3L)
+                createGymDto(1L).build().get(),
+                createGymDto(2L).reviewCount(0).build().get(),
+                createGymDto(3L).build().get()
         );
 
         given(gymService.getGymDtosBySearchWordOrderByDistanceAsc(searchWord, latitude, longitude))
@@ -130,7 +130,7 @@ class GymFacadeTest extends FacadeTest {
         // given
         Long userId = 3L;
         Long gymId = 4L;
-        GymLikeDto gymLikeDto = createGymLikeDto(userId, gymId);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymId, userId).build().get();
 
         // when
         gymFacade.createGymLike(gymLikeDto);
@@ -146,7 +146,7 @@ class GymFacadeTest extends FacadeTest {
         // given
         Long userId = 3L;
         Long gymId = 4L;
-        GymLikeDto gymLikeDto = createGymLikeDto(userId, gymId);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymId, userId).build().get();
 
         // when
         gymFacade.deleteGymLike(gymLikeDto);
@@ -156,103 +156,11 @@ class GymFacadeTest extends FacadeTest {
                 .deleteGymLike(any());
     }
 
-    private GymDto createGymDto(Long gymId) {
-        return GymDto.of(
-                gymId,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                4.5f,
-                12,
-                11,
-                List.of("image1"),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                "11:11-23:11",
-                "11:22-23:22",
-                "11:33-23:33",
-                "11:44-23:44",
-                "11:55-23:55",
-                "11:66-23:66",
-                "11:77-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
 
-    private GymDto createGymDtoWithNoReview(Long gymId) {
-        return GymDto.of(
-                gymId,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                4.5f,
-                0,
-                11,
-                Collections.emptyList(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                "11:11-23:11",
-                "11:22-23:22",
-                "11:33-23:33",
-                "11:44-23:44",
-                "11:55-23:55",
-                "11:66-23:66",
-                "11:77-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private ReviewDto createReviewDto(Long id, GymDto gymDto, Long userId) {
-        return ReviewDto.of(
-                id,
-                "reviewContent",
-                List.of(),
-                4.5f,
-                0,
-                1,
-                2,
-                3,
-                4,
-                UserDto.from(createUser(userId)),
-                gymDto,
-                LocalDateTime.of(2024, 1, 1, 14, 23),
-                LocalDateTime.of(2024, 1, 25, 4, 56)
-        );
-    }
-
-    private User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                null,
-                "userProfileImage",
-                null,
-                null,
-                UserStatus.ENABLE
-        );
-    }
-
-    private GymLikeDto createGymLikeDto(Long userId, Long gymId) {
-        return GymLikeDto.of(GymLikePK.of(userId, gymId));
+    private ReviewDomainFixture.TestReviewDto.TestReviewDtoBuilder createReviewDto(Long id, GymDto gymDto, Long userId) {
+        return ReviewDomainFixture.TestReviewDto.createReviewDto()
+                .id(id)
+                .gymDto(gymDto)
+                .userDto(createUserDto(userId).build().get());
     }
 }

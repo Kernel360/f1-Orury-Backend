@@ -15,6 +15,9 @@ dependencies {
 
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //test fixtures
+    testImplementation testFixtures(project(':orury-domain'))
 }
 
 tasks.named('bootJar') {

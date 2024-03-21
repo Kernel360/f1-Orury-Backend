@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.entity.Meeting;
 import org.orury.domain.meeting.domain.entity.MeetingMember;
@@ -14,7 +13,6 @@ import org.orury.domain.meeting.domain.entity.MeetingMemberPK;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +21,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
+import static org.orury.domain.MeetingDomainFixture.TestMeeting.createMeeting;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingMember.createMeetingMember;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Store] 일정멤버 StoreImpl 테스트")
@@ -80,14 +80,15 @@ class MeetingMemberStoreImplTest {
     @Test
     void removeAllByUserIdAndCrewId() {
         // given & when
-        List<Meeting> meetings = List.of(createMeeting(1L), createMeeting(2L), createMeeting(3L));
+        Long userId = 235L;
+        List<Meeting> meetings = List.of(createMeeting(1L).build().get(), createMeeting(2L).build().get(), createMeeting(3L).build().get());
         given(meetingRepository.findAllByCrew_Id(anyLong()))
                 .willReturn(meetings);
         given(meetingMemberRepository.findByMeetingMemberPK_MeetingIdAndMeetingMemberPK_UserId(anyLong(), anyLong()))
                 .willReturn(
-                        Optional.of(createMeetingMember(1L)),
+                        Optional.of(createMeetingMember(1L, userId).build().get()),
                         Optional.empty(),
-                        Optional.of(createMeetingMember(3L))
+                        Optional.of(createMeetingMember(3L, userId).build().get())
                 );
 
         meetingMemberStore.removeAllByUserIdAndCrewId(
@@ -102,24 +103,5 @@ class MeetingMemberStoreImplTest {
                 .delete(any(MeetingMember.class));
         then(meetingRepository).should(times(2))
                 .decreaseMemberCount(anyLong());
-    }
-
-    private Meeting createMeeting(Long meetingId) {
-        return Meeting.of(
-                meetingId,
-                LocalDateTime.of(2222, 3, 14, 18, 32),
-                1,
-                5,
-                mock(User.class),
-                mock(Gym.class),
-                mock(Crew.class),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingMember createMeetingMember(Long userId) {
-        MeetingMemberPK meetingMemberPK = MeetingMemberPK.of(userId, 2424L);
-        return MeetingMember.of(meetingMemberPK);
     }
 }

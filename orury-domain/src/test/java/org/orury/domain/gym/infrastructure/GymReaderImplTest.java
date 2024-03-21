@@ -17,6 +17,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.GymDomainFixture.TestGym.createGym;
+import static org.orury.domain.GymDomainFixture.TestGymLikePK.createGymLikePK;
 
 @DisplayName("[Reader] 암장 ReaderImpl 테스트")
 class GymReaderImplTest extends InfrastructureTest {
@@ -26,7 +28,7 @@ class GymReaderImplTest extends InfrastructureTest {
     void should_RetrieveGymById() {
         // given
         Long gymId = 3L;
-        Gym gym = createGym(gymId);
+        Gym gym = createGym(gymId).build().get();
 
         given(gymRepository.findById(gymId))
                 .willReturn(Optional.of(gym));
@@ -85,7 +87,7 @@ class GymReaderImplTest extends InfrastructureTest {
     void when_AnyGymContainsSearchWordInTitle_Then_ReturnGymList() {
         // given
         String searchWord = "더클라임";
-        List<Gym> gyms = List.of(createGym(1L), createGym(2L));
+        List<Gym> gyms = List.of(createGym(1L).build().get(), createGym(2L).build().get());
 
         given(gymRepository.findByNameContainingOrAddressContainingOrRoadAddressContaining(searchWord, searchWord, searchWord))
                 .willReturn(gyms);
@@ -120,7 +122,7 @@ class GymReaderImplTest extends InfrastructureTest {
     @DisplayName("존재하는 (userId와 gymId로 구성된) 암장좋아요PK가 들어오면, true를 반환한다.")
     void when_ExistingGymLikePK_Then_ReturnTrue() {
         // given
-        GymLikePK gymLikePK = createGymLikePK();
+        GymLikePK gymLikePK = createGymLikePK().build().get();
 
         given(gymLikeRepository.existsById(gymLikePK))
                 .willReturn(true);
@@ -133,7 +135,7 @@ class GymReaderImplTest extends InfrastructureTest {
     @DisplayName("존재하지 않는 (userId와 gymId로 구성된) 암장좋아요PK가 들어오면, false를 반환한다.")
     void when_NotExistingGymLikePK_Then_ReturnFalse() {
         // given
-        GymLikePK gymLikePK = createGymLikePK();
+        GymLikePK gymLikePK = createGymLikePK().build().get();
 
         given(gymLikeRepository.existsById(gymLikePK))
                 .willReturn(false);
@@ -167,38 +169,5 @@ class GymReaderImplTest extends InfrastructureTest {
 
         // when & then
         assertFalse(gymReader.existsGymLikeByUserIdAndGymId(userId, gymId));
-    }
-
-    private Gym createGym(Long id) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                123.456,
-                123.456,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private GymLikePK createGymLikePK() {
-        return GymLikePK.of(1L, 1L);
     }
 }

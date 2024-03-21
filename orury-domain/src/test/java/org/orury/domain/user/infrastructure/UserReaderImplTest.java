@@ -3,16 +3,14 @@ package org.orury.domain.user.infrastructure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.config.InfrastructureTest;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
 
 @DisplayName("[UserReaderImpl] User ReaderImpl 테스트")
 class UserReaderImplTest extends InfrastructureTest {
@@ -22,7 +20,7 @@ class UserReaderImplTest extends InfrastructureTest {
     void should_ReturnOptional() {
         //given
         Long userId = 1L;
-        Optional<User> user = createwrappingOptional(createUser(1L));
+        Optional<User> user = Optional.of(createUser(userId).build().get());
         given(userRepository.findById(anyLong())).willReturn(user);
 
         //when
@@ -31,30 +29,4 @@ class UserReaderImplTest extends InfrastructureTest {
         //then
         assertThat(actualUser).isEqualTo(user);
     }
-
-    private User createUser(Long id) {
-        return User.of(
-                id,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    public Optional<User> createwrappingOptional(User user) {
-        return Optional.ofNullable(user);
-    }
-
-    public Optional<User> createEmptyOptional() {
-        return Optional.empty();
-    }
-
-
 }

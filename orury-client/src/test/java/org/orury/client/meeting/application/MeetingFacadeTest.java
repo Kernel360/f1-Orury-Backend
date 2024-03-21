@@ -8,17 +8,11 @@ import org.orury.client.config.FacadeTest;
 import org.orury.client.meeting.interfaces.request.MeetingCreateRequest;
 import org.orury.client.meeting.interfaces.request.MeetingUpdateRequest;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.dto.CrewGender;
-import org.orury.domain.crew.domain.dto.CrewStatus;
-import org.orury.domain.global.domain.Region;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.meeting.domain.dto.MeetingDto;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +21,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestMeetingCreateRequest.createMeetingCreateRequest;
+import static org.orury.client.ClientFixtureFactory.TestMeetingUpdateRequest.createMeetingUpdateRequest;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.MeetingDomainFixture.TestMeetingDto.createMeetingDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Facade] 일정 Facade 테스트")
@@ -38,10 +38,10 @@ class MeetingFacadeTest extends FacadeTest {
     void should_CreateMeeting() {
         // given
         Long userId = 31L;
-        MeetingCreateRequest request = createMeetingCreateRequest();
-        UserDto userDto = createUserDto();
-        GymDto gymDto = createGymDto();
-        CrewDto crewDto = createCrewDto();
+        MeetingCreateRequest request = createMeetingCreateRequest().build().get();
+        UserDto userDto = createUserDto().build().get();
+        GymDto gymDto = createGymDto().build().get();
+        CrewDto crewDto = createCrewDto().build().get();
         given(userService.getUserDtoById(userId))
                 .willReturn(userDto);
         given(gymService.getGymDtoById(anyLong()))
@@ -69,7 +69,7 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long crewId = 321L;
         Long userId = 123L;
-        List<MeetingDto> meetingDtos = List.of(createMeetingDto(), createMeetingDto(), createMeetingDto());
+        List<MeetingDto> meetingDtos = List.of(createMeetingDto().build().get(), createMeetingDto().build().get(), createMeetingDto().build().get());
         List<String> userImages = List.of("image1", "image2", "image3", "image4");
         given(meetingService.getPresentMeetingDtosByCrewId(crewId, userId))
                 .willReturn(meetingDtos);
@@ -92,7 +92,7 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long crewId = 321L;
         Long userId = 123L;
-        List<MeetingDto> meetingDtos = List.of(createMeetingDto(), createMeetingDto(), createMeetingDto());
+        List<MeetingDto> meetingDtos = List.of(createMeetingDto().build().get(), createMeetingDto().build().get(), createMeetingDto().build().get());
         List<String> userImages = List.of("image1", "image2", "image3", "image4");
         given(meetingService.getPastMeetingDtosByCrewId(crewId, userId))
                 .willReturn(meetingDtos);
@@ -114,9 +114,9 @@ class MeetingFacadeTest extends FacadeTest {
     void should_UpdateMeeting() {
         // given
         Long userId = 456L;
-        MeetingUpdateRequest request = createMeetingUpdateRequest();
-        MeetingDto meetingDto = createMeetingDto();
-        GymDto gymDto = createGymDto();
+        MeetingUpdateRequest request = createMeetingUpdateRequest().build().get();
+        MeetingDto meetingDto = createMeetingDto().build().get();
+        GymDto gymDto = createGymDto().build().get();
         given(meetingService.getMeetingDtoById(anyLong()))
                 .willReturn(meetingDto);
         given(gymService.getGymDtoById(anyLong()))
@@ -140,7 +140,7 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long meetingId = 645L;
         Long userId = 90L;
-        MeetingDto meetingDto = createMeetingDto();
+        MeetingDto meetingDto = createMeetingDto().build().get();
         given(meetingService.getMeetingDtoById(meetingId))
                 .willReturn(meetingDto);
 
@@ -160,7 +160,7 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long meetingId = 77L;
         Long userId = 10L;
-        MeetingDto meetingDto = createMeetingDto();
+        MeetingDto meetingDto = createMeetingDto().build().get();
         given(meetingService.getMeetingDtoById(meetingId))
                 .willReturn(meetingDto);
 
@@ -180,7 +180,7 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long meetingId = 77L;
         Long userId = 10L;
-        MeetingDto meetingDto = createMeetingDto();
+        MeetingDto meetingDto = createMeetingDto().build().get();
         given(meetingService.getMeetingDtoById(meetingId))
                 .willReturn(meetingDto);
 
@@ -200,8 +200,8 @@ class MeetingFacadeTest extends FacadeTest {
         // given
         Long meetingId = 77L;
         Long userId = 10L;
-        MeetingDto meetingDto = createMeetingDto();
-        List<UserDto> userDtos = List.of(createUserDto(), createUserDto(), createUserDto());
+        MeetingDto meetingDto = createMeetingDto().build().get();
+        List<UserDto> userDtos = List.of(createUserDto().build().get(), createUserDto().build().get(), createUserDto().build().get());
         given(meetingService.getMeetingDtoById(meetingId))
                 .willReturn(meetingDto);
         given(meetingService.getUserDtosByMeeting(meetingDto, userId))
@@ -215,108 +215,5 @@ class MeetingFacadeTest extends FacadeTest {
                 .getMeetingDtoById(anyLong());
         then(meetingService).should(times(1))
                 .getUserDtosByMeeting(any(), anyLong());
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                111L,
-                "userEmail",
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                LocalDate.now(),
-                "userProfileImage",
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                LocalDateTime.of(1999, 3, 1, 7, 50),
-                UserStatus.ENABLE
-        );
-    }
-
-    private GymDto createGymDto() {
-        return GymDto.of(
-                222L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                4.5f,
-                12,
-                11,
-                List.of("image1"),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                "11:11-23:11",
-                "11:22-23:22",
-                "11:33-23:33",
-                "11:44-23:44",
-                "11:55-23:55",
-                "11:66-23:66",
-                "11:77-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private CrewDto createCrewDto() {
-        return CrewDto.of(
-                333L,
-                "테스트크루",
-                12,
-                30,
-                Region.강남구,
-                "크루 설명",
-                "orury/crew/crew_icon",
-                CrewStatus.ACTIVATED,
-                createUserDto(),
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32),
-                15,
-                35,
-                CrewGender.ANY,
-                false,
-                null,
-                false,
-                List.of("크루태그1", "크루태그2")
-        );
-    }
-
-    private MeetingDto createMeetingDto() {
-        return MeetingDto.of(
-                444L,
-                LocalDateTime.of(2222, 3, 14, 18, 32),
-                1,
-                5,
-                createUserDto(),
-                createGymDto(),
-                createCrewDto(),
-                true,
-                LocalDateTime.of(2023, 12, 9, 7, 30),
-                LocalDateTime.of(2024, 3, 14, 18, 32)
-        );
-    }
-
-    private MeetingCreateRequest createMeetingCreateRequest() {
-        return MeetingCreateRequest.of(
-                LocalDateTime.of(2222, 3, 14, 18, 32),
-                5,
-                222L,
-                333L
-        );
-    }
-
-    private MeetingUpdateRequest createMeetingUpdateRequest() {
-        return new MeetingUpdateRequest(
-                444L,
-                LocalDateTime.of(2222, 3, 14, 18, 32),
-                10,
-                333L
-        );
     }
 }
