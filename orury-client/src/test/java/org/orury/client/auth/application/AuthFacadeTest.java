@@ -7,15 +7,10 @@ import org.orury.client.auth.interfaces.message.AuthMessage;
 import org.orury.client.auth.interfaces.request.LoginRequest;
 import org.orury.client.auth.interfaces.response.LoginResponse;
 import org.orury.client.config.FacadeTest;
-import org.orury.domain.auth.domain.dto.JwtToken;
 import org.orury.domain.auth.domain.dto.LoginDto;
 import org.orury.domain.auth.domain.dto.SignUpDto;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +18,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestLoginRequest.createLoginRequest;
+import static org.orury.domain.AuthDomainFixture.TestLoginDto.createLoginDto;
+import static org.orury.domain.AuthDomainFixture.TestSignUpDto.createSignUpDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] AuthFacade 테스트")
 class AuthFacadeTest extends FacadeTest {
@@ -31,8 +30,8 @@ class AuthFacadeTest extends FacadeTest {
     @Test
     void when_UserDto_Then_SignUpAndRetrieveSignUpResponse() {
         // given
-        UserDto userDto = createUserDto();
-        SignUpDto signUpDto = createSignUpDto();
+        UserDto userDto = createUserDto().build().get();
+        SignUpDto signUpDto = createSignUpDto().build().get();
 
         given(authService.signUp(userDto))
                 .willReturn(signUpDto);
@@ -49,8 +48,9 @@ class AuthFacadeTest extends FacadeTest {
     @Test
     void when_NormalUser_ThenLoginAndRetrieveLoginResponse() {
         // given
-        LoginRequest loginRequest = createLoginRequest();
-        LoginDto loginDto = createLoginDto(AuthMessage.LOGIN_SUCCESS);
+        LoginRequest loginRequest = createLoginRequest().build().get();
+        LoginDto loginDto = createLoginDto()
+                .flag(AuthMessage.LOGIN_SUCCESS.getMessage()).build().get();
 
         given(authService.login(loginRequest))
                 .willReturn(loginDto);
@@ -69,8 +69,9 @@ class AuthFacadeTest extends FacadeTest {
     @Test
     void when_NoUser_ThenLoginAndRetrieveNoUserLoginResponse() {
         // given
-        LoginRequest loginRequest = createLoginRequest();
-        LoginDto loginDto = createLoginDto(AuthMessage.NOT_EXISTING_USER_ACCOUNT);
+        LoginRequest loginRequest = createLoginRequest().build().get();
+        LoginDto loginDto = createLoginDto()
+                .flag(AuthMessage.NOT_EXISTING_USER_ACCOUNT.getMessage()).build().get();
 
         given(authService.login(loginRequest))
                 .willReturn(loginDto);
@@ -97,40 +98,5 @@ class AuthFacadeTest extends FacadeTest {
         // then
         then(authService).should(times(1))
                 .reissueJwtTokens(any());
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                1L,
-                "test@test.com",
-                "test",
-                "password",
-                1,
-                1,
-                LocalDate.now(),
-                "test.png",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                UserStatus.ENABLE
-        );
-    }
-
-    private SignUpDto createSignUpDto() {
-        return SignUpDto.of(
-                createUserDto(),
-                JwtToken.of("access", "refresh")
-        );
-    }
-
-    private LoginRequest createLoginRequest() {
-        return LoginRequest.of("code", 1);
-    }
-
-    private LoginDto createLoginDto(AuthMessage authMessage) {
-        return LoginDto.of(
-                createUserDto(),
-                JwtToken.of("access", "refresh"),
-                authMessage.getMessage()
-        );
     }
 }

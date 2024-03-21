@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.BusinessException;
+import org.orury.domain.GymDomainFixture;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
 import org.orury.domain.gym.domain.entity.Gym;
-import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
 
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.GymDomainFixture.TestGym.createGym;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.GymDomainFixture.TestGymLikeDto.createGymLikeDto;
 
 @DisplayName("[Service] 암장 ServiceImpl 테스트")
 class GymServiceImplTest extends ServiceTest {
@@ -32,16 +36,16 @@ class GymServiceImplTest extends ServiceTest {
     void should_RetrieveGymDtoById() {
         // given
         Long gymId = 1L;
-        GymDto expect = createGymDto();
-        Gym gym = expect.toEntity();
+        Gym expectedGym = createGym().build().get();
+        GymDto expectedGymDto = GymDto.from(expectedGym);
 
-        given(gymReader.findGymById(any())).willReturn(Optional.of(gym));
+        given(gymReader.findGymById(any())).willReturn(Optional.of(expectedGym));
 
         // when
         GymDto actual = gymService.getGymDtoById(gymId);
 
         // then
-        assertEquals(expect, actual);
+        assertEquals(expectedGymDto, actual);
 
         then(gymReader).should(times(1))
                 .findGymById(anyLong());
@@ -71,21 +75,18 @@ class GymServiceImplTest extends ServiceTest {
         String searchWord = "anything";
         float currentLatitude = 10.111111f;
         float currentLongitude = 10.111111f;
-        Gym middleGym = createGym(
-                1L,
-                20.000001,
-                50.543210
-        );
-        Gym mostFarGym = createGym(
-                2L,
-                50.123456,
-                137.654321
-        );
-        Gym mostNearGym = createGym(
-                3L,
-                11.110111,
-                12.222222
-        );
+        Gym middleGym = createGym()
+                .id(1L)
+                .latitude(20.000001)
+                .longitude(50.543210).build().get();
+        Gym mostFarGym = createGym()
+                .id(2L)
+                .latitude(50.123456)
+                .longitude(137.654321).build().get();
+        Gym mostNearGym = createGym()
+                .id(3L)
+                .latitude(10.111111)
+                .longitude(10.111111).build().get();
         List<Gym> searchedGyms = List.of(middleGym, mostFarGym, mostNearGym);
 
         given(gymReader.findGymsBySearchWord(searchWord))
@@ -129,7 +130,7 @@ class GymServiceImplTest extends ServiceTest {
     void should_CreateGymLike() {
         // given
         GymLikePK gymLikePK = GymLikePK.of(2L, 1L);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(anyLong()))
                 .willReturn(true);
@@ -153,7 +154,7 @@ class GymServiceImplTest extends ServiceTest {
     void when_AlreadyExistingGymLike_Then_ReturnWithoutSave() {
         // given
         GymLikePK gymLikePK = GymLikePK.of(1L, 2L);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(anyLong()))
                 .willReturn(true);
@@ -178,7 +179,7 @@ class GymServiceImplTest extends ServiceTest {
         // given
         Long gymId = 4L;
         GymLikePK gymLikePK = GymLikePK.of(3L, gymId);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(gymId))
                 .willReturn(false);
@@ -203,7 +204,7 @@ class GymServiceImplTest extends ServiceTest {
         // given
         Long gymId = 6L;
         GymLikePK gymLikePK = GymLikePK.of(77L, gymId);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(gymId))
                 .willReturn(false);
@@ -227,7 +228,7 @@ class GymServiceImplTest extends ServiceTest {
     void should_DeleteGymLike() {
         // given
         GymLikePK gymLikePK = GymLikePK.of(4L, 3L);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(anyLong()))
                 .willReturn(true);
@@ -251,7 +252,7 @@ class GymServiceImplTest extends ServiceTest {
     void when_NotExistingGymLike_Then_ReturnWithoutDelete() {
         // given
         GymLikePK gymLikePK = GymLikePK.of(3L, 4L);
-        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK);
+        GymLikeDto gymLikeDto = createGymLikeDto(gymLikePK).build().get();
 
         given(gymReader.existsGymById(anyLong()))
                 .willReturn(true);
@@ -308,10 +309,10 @@ class GymServiceImplTest extends ServiceTest {
     @DisplayName("현재 시간이 GymDto의 영업시간 사이에 있다면, true를 반환한다.")
     void when_CurrentTimeIsBetweenBusinessHours_Then_ReturnTrue() {
         // given
-        GymDto gymDto = createGymDto(
+        GymDto gymDto = createGymDtoWithOpenCloseTime(
                 LocalTime.now().minusMinutes(1L),
                 LocalTime.now().plusMinutes(1L)
-        );
+        ).build().get();
 
         // when
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -324,12 +325,10 @@ class GymServiceImplTest extends ServiceTest {
     @DisplayName("현재 시간이 GymDto의 영업시간 전이라면, false를 반환한다.")
     void when_CurrentTimeIsBeforeBusinessHours_Then_ReturnFalse() {
         // given
-        GymDto gymDto = createGymDto(
-                LocalTime.now()
-                        .plusMinutes(1L),
-                LocalTime.now()
-                        .plusMinutes(2L)
-        );
+        GymDto gymDto = createGymDtoWithOpenCloseTime(
+                LocalTime.now().plusMinutes(1L),
+                LocalTime.now().plusMinutes(2L)
+        ).build().get();
 
         // when
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -342,10 +341,10 @@ class GymServiceImplTest extends ServiceTest {
     @DisplayName("현재 시간이 GymDto의 영업시간 후이라면, false를 반환한다.")
     void when_CurrentTimeIsAfterBusinessHours_Then_ReturnFalse() {
         // given
-        GymDto gymDto = createGymDto(
+        GymDto gymDto = createGymDtoWithOpenCloseTime(
                 LocalTime.now().minusMinutes(2L),
                 LocalTime.now().minusMinutes(1L)
-        );
+        ).build().get();
 
         // when
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -358,7 +357,7 @@ class GymServiceImplTest extends ServiceTest {
     @DisplayName("GymDto의 현재 요일 영업시간이 비어있다면(null이라면), false를 반환한다.")
     void when_BusinessHoursIsNull_Then_ReturnFalse() {
         // given
-        GymDto gymDto = createGymDto(null);
+        GymDto gymDto = createGymDto(null).build().get();
 
         // when
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -371,7 +370,7 @@ class GymServiceImplTest extends ServiceTest {
     @DisplayName("GymDto의 현재 요일 영업시간이 올바르지 않은 형식으로 돼있어도, false를 반환한다.")
     void when_InvalidTypeOfBusinessHours_Then_ReturnFalse() {
         // given
-        GymDto gymDto = createGymDto("12시30분~23시");
+        GymDto gymDto = createGymDtoWithInvalidTime("12시30분~23시").build().get();
 
         // when
         boolean doingBusiness = gymService.checkDoingBusiness(gymDto);
@@ -380,158 +379,29 @@ class GymServiceImplTest extends ServiceTest {
         assertFalse(doingBusiness);
     }
 
-    private Gym createGym(Long id) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                33.6514212,
-                126.2312121,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
+    private GymDomainFixture.TestGymDto.TestGymDtoBuilder createGymDtoWithOpenCloseTime(LocalTime openTime, LocalTime closeTime) {
+        EnumMap<DayOfWeek, String> businessHours = new EnumMap<>(DayOfWeek.class);
+        businessHours.put(DayOfWeek.MONDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.TUESDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.WEDNESDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.THURSDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.FRIDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.SATURDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        businessHours.put(DayOfWeek.SUNDAY, openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute());
+        return GymDomainFixture.TestGymDto.createGymDto()
+                .businessHours(businessHours);
     }
 
-    private Gym createGym(Long id, double latitude, double longitude) {
-        return Gym.of(
-                id,
-                "gymName",
-                "gymKakaoId",
-                "gymRoadAddress",
-                "gymAddress",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                latitude,
-                longitude,
-                "gymBrand",
-                "010-1234-5678",
-                "gymInstaLink",
-                "MONDAY",
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private GymDto createGymDto(LocalTime openTime, LocalTime closeTime) {
-        return GymDto.of(
-                1L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                openTime.getHour() + ":" + openTime.getMinute() + "-" + closeTime.getHour() + ":" + closeTime.getMinute(),
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private GymDto createGymDto(String businessHour) {
-        return GymDto.of(
-                1L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                LocalDateTime.of(1999, 3, 1, 7, 30),
-                LocalDateTime.of(2024, 1, 23, 18, 32),
-                businessHour,
-                businessHour,
-                businessHour,
-                businessHour,
-                businessHour,
-                businessHour,
-                businessHour,
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private GymDto createGymDto() {
-        return GymDto.of(
-                1L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                40.5f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "gymInstagramLink.com",
-                "MONDAY",
-                null,
-                null,
-                "businessHour",
-                "businessHour",
-                "businessHour",
-                "businessHour",
-                "businessHour",
-                "businessHour",
-                "businessHour",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private GymLikeDto createGymLikeDto(GymLikePK gymLikePK) {
-        return GymLikeDto.from(GymLike.of(gymLikePK));
+    private GymDomainFixture.TestGymDto.TestGymDtoBuilder createGymDtoWithInvalidTime(String businessHour) {
+        EnumMap<DayOfWeek, String> businessHours = new EnumMap<>(DayOfWeek.class);
+        businessHours.put(DayOfWeek.MONDAY, businessHour);
+        businessHours.put(DayOfWeek.TUESDAY, businessHour);
+        businessHours.put(DayOfWeek.WEDNESDAY, businessHour);
+        businessHours.put(DayOfWeek.THURSDAY, businessHour);
+        businessHours.put(DayOfWeek.FRIDAY, businessHour);
+        businessHours.put(DayOfWeek.SATURDAY, businessHour);
+        businessHours.put(DayOfWeek.SUNDAY, businessHour);
+        return GymDomainFixture.TestGymDto.createGymDto()
+                .businessHours(businessHours);
     }
 }

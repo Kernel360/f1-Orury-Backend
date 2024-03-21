@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.domain.comment.domain.entity.Comment;
 import org.orury.domain.comment.domain.entity.CommentLike;
-import org.orury.domain.comment.domain.entity.CommentLikePK;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.entity.Post;
@@ -20,6 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.orury.domain.CommentDomainFixture.TestCommentLike.createCommentLike;
 
 @DisplayName("[Store] 댓글 StoreImpl 테스트")
 class CommentStoreImplTest extends InfrastructureTest {
@@ -77,7 +77,7 @@ class CommentStoreImplTest extends InfrastructureTest {
     @DisplayName("성공적으로 CommentLike를 생성하고 Comment의 likeCount를 늘려야 한다.")
     void should_CreateCommentLikeAndIncreaseCommentLIkeCount() {
         // given
-        CommentLike commentLike = createCommentLike();
+        CommentLike commentLike = createCommentLike().build().get();
 
         // when
         commentStore.createCommentLike(commentLike);
@@ -93,7 +93,7 @@ class CommentStoreImplTest extends InfrastructureTest {
     @DisplayName("성공적으로 CommentLike를 삭제하고 Comment의 likeCount를 줄여야 한다.")
     void should_DeleteCommentLikeAndDecreaseCommentLIkeCount() {
         // given
-        CommentLike commentLike = createCommentLike();
+        CommentLike commentLike = createCommentLike().build().get();
 
         // when
         commentStore.deleteCommentLike(commentLike);
@@ -111,9 +111,9 @@ class CommentStoreImplTest extends InfrastructureTest {
         // given
         Long userId = 4L;
         List<CommentLike> commentLikes = List.of(
-                createCommentLike(userId, 1L),
-                createCommentLike(userId, 2L),
-                createCommentLike(userId, 3L)
+                createCommentLike(1L, userId).build().get(),
+                createCommentLike(2L, userId).build().get(),
+                createCommentLike(3L, userId).build().get()
         );
 
         given(commentLikeRepository.findByCommentLikePK_UserId(userId))
@@ -189,14 +189,6 @@ class CommentStoreImplTest extends InfrastructureTest {
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
-    }
-
-    private CommentLike createCommentLike() {
-        return CommentLike.of(CommentLikePK.of(1L, 2L));
-    }
-
-    private CommentLike createCommentLike(Long userId, Long commentId) {
-        return CommentLike.of(CommentLikePK.of(userId, commentId));
     }
 }
 

@@ -19,14 +19,15 @@ import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.orury.client.ClientFixtureFactory.TestLoginRequest.createLoginRequest;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Service] AuthServiceImpl 테스트")
 class AuthServiceImplTest extends ServiceTest {
@@ -36,9 +37,12 @@ class AuthServiceImplTest extends ServiceTest {
     void when_NotDuplicatedEmail_Then_SaveUserAndRetrieveJwtToken() {
         // given
         String email = "orury@orury.com";
-        UserDto userDto = createUserDto(email);
+        UserDto userDto = createUserDto()
+                .email(email).build().get();
         Long userId = 1L;
-        User user = createUser(userId, email);
+        User user = createUser()
+                .id(userId)
+                .email(email).build().get();
 
         given(userReader.findByEmail(email))
                 .willReturn(Optional.of(user));
@@ -60,7 +64,8 @@ class AuthServiceImplTest extends ServiceTest {
     void when_DuplicatedEmail_Then_DuplicatedUserException() {
         // given
         String email = "orury@orury.com";
-        UserDto userDto = createUserDto(email);
+        UserDto userDto = createUserDto()
+                .email(email).build().get();
 
         given(userStore.saveAndFlush(any()))
                 .willThrow(DataIntegrityViolationException.class);
@@ -84,7 +89,8 @@ class AuthServiceImplTest extends ServiceTest {
     void when_UserWithSignUpEmailDoesNotExist_Then_NotExistingUserAccountException() {
         // given
         String email = "orury@orury.com";
-        UserDto userDto = createUserDto(email);
+        UserDto userDto = createUserDto()
+                .email(email).build().get();
 
         given(userReader.findByEmail(email))
                 .willReturn(Optional.empty());
@@ -108,10 +114,13 @@ class AuthServiceImplTest extends ServiceTest {
     void when_NormalUser_Then_IssueAndRetrieveJwtToken() {
         // given
         int signUpType = 1;
-        LoginRequest request = createLoginRequest(signUpType);
+        LoginRequest request = createLoginRequest()
+                .signUpType(signUpType).build().get();
         OAuthService oAuthService = mock(KakaoOAuthService.class);
         String email = "Orury@kakao.com";
-        User user = createUser(email, signUpType);
+        User user = createUser()
+                .email(email)
+                .signUpType(signUpType).build().get();
 
         given(oAuthServiceManager.getOAuthService(signUpType))
                 .willReturn(oAuthService);
@@ -145,9 +154,9 @@ class AuthServiceImplTest extends ServiceTest {
     void when_AuthenticatedEmailIsNull_Then_NoEmailException() {
         // given
         int signUpType = 2;
-        LoginRequest request = createLoginRequest(signUpType);
+        LoginRequest request = createLoginRequest()
+                .signUpType(signUpType).build().get();
         OAuthService oAuthService = mock(AppleOAuthService.class);
-        String email = "Orury@apple.com";
 
         given(oAuthServiceManager.getOAuthService(signUpType))
                 .willReturn(oAuthService);
@@ -177,7 +186,8 @@ class AuthServiceImplTest extends ServiceTest {
     void when_NoUser_CreateNoUserTokenAndRetrieveFlagWithNoUserMessage() {
         // given
         int signUpType = 1;
-        LoginRequest request = createLoginRequest(signUpType);
+        LoginRequest request = createLoginRequest()
+                .signUpType(signUpType).build().get();
         OAuthService oAuthService = mock(KakaoOAuthService.class);
         String email = "Orury@kakao.com";
 
@@ -212,10 +222,13 @@ class AuthServiceImplTest extends ServiceTest {
         // given
         int signUpType = 2;
         int anotherSignUpType = 1;
-        LoginRequest request = createLoginRequest(signUpType);
+        LoginRequest request = createLoginRequest()
+                .signUpType(signUpType).build().get();
         OAuthService oAuthService = mock(AppleOAuthService.class);
         String email = "Orury@apple.com";
-        User user = createUser(email, signUpType);
+        User user = createUser()
+                .email(email)
+                .signUpType(signUpType).build().get();
 
         given(oAuthServiceManager.getOAuthService(signUpType))
                 .willReturn(oAuthService);
@@ -249,10 +262,14 @@ class AuthServiceImplTest extends ServiceTest {
     void when_BannedUser_Then_BanUserException() {
         // given
         int signUpType = 1;
-        LoginRequest request = createLoginRequest(signUpType);
+        LoginRequest request = createLoginRequest()
+                .signUpType(signUpType).build().get();
         OAuthService oAuthService = mock(KakaoOAuthService.class);
         String email = "Orury@kakao.com";
-        User banUser = createBanUser(email, signUpType);
+        User banUser = createUser()
+                .email(email)
+                .signUpType(signUpType)
+                .status(UserStatus.BAN).build().get();
 
         given(oAuthServiceManager.getOAuthService(signUpType))
                 .willReturn(oAuthService);
@@ -293,76 +310,5 @@ class AuthServiceImplTest extends ServiceTest {
         // then
         then(jwtTokenService).should(times(1))
                 .reissueJwtTokens(any());
-    }
-
-    private UserDto createUserDto(String email) {
-        return UserDto.of(
-                1L,
-                email,
-                "test",
-                "password",
-                1,
-                1,
-                LocalDate.now(),
-                "test.png",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                UserStatus.ENABLE
-        );
-    }
-
-    private LoginRequest createLoginRequest(int signUpType) {
-        return LoginRequest.of(
-                "OAuth_Authentication_Code",
-                signUpType
-        );
-    }
-
-    private User createUser(Long userId, String email) {
-        return User.of(
-                userId,
-                email,
-                "userNickname",
-                "userPassword",
-                1,
-                1,
-                null,
-                "userProfileImage",
-                null,
-                null,
-                UserStatus.ENABLE
-        );
-    }
-
-    private User createUser(String email, int signUpType) {
-        return User.of(
-                1L,
-                email,
-                "userNickname",
-                "userPassword",
-                signUpType,
-                1,
-                null,
-                "userProfileImage",
-                null,
-                null,
-                UserStatus.ENABLE
-        );
-    }
-
-    private User createBanUser(String email, int signUpType) {
-        return User.of(
-                1L,
-                email,
-                "userNickname",
-                "userPassword",
-                signUpType,
-                1,
-                null,
-                "userProfileImage",
-                null,
-                null,
-                UserStatus.BAN
-        );
     }
 }

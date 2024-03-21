@@ -8,22 +8,19 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
 import org.orury.domain.crew.domain.entity.Crew;
+import org.orury.domain.crew.domain.entity.CrewApplicationPK;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.orury.domain.user.domain.entity.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+public class CrewDomainFixture {
 
-public class DomainFixtureFactory {
-
-    private DomainFixtureFactory() {
+    private CrewDomainFixture() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -31,60 +28,8 @@ public class DomainFixtureFactory {
 
     @Getter
     @Builder
-    public static class TestUser {
-        private @Builder.Default Long id = 1L;
-        private @Builder.Default String email = "테스트이메일";
-        private @Builder.Default String nickname = "테스트닉네임";
-        private @Builder.Default String password = "테스트비밀번호";
-        private @Builder.Default int signUpType = 1;
-        private @Builder.Default int gender = NumberConstants.MALE;
-        private @Builder.Default LocalDate birthday = LocalDate.now().minusYears(25);
-        private @Builder.Default String profileImage = "프로필이미지";
-        private @Builder.Default UserStatus status = UserStatus.ENABLE;
-        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
-        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
-
-        public static TestUser.TestUserBuilder createUser() {
-            return TestUser.builder();
-        }
-
-        public static TestUser.TestUserBuilder createUser(Long userId) {
-            return TestUser.builder().id(userId);
-        }
-
-        public User get() {
-            return mapper.convertValue(this, User.class);
-        }
-    }
-
-    @Getter
-    @Builder
-    public static class TestUserDto {
-        private @Builder.Default Long id = 2L;
-        private @Builder.Default String email = "testEamil";
-        private @Builder.Default String nickname = "testNickname";
-        private @Builder.Default String password = "testPassword";
-        private @Builder.Default int signUpType = 2;
-        private @Builder.Default int gender = NumberConstants.FEMALE;
-        private @Builder.Default LocalDate birthday = LocalDate.now().minusYears(24);
-        private @Builder.Default String profileImage = "testProfileImage";
-        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
-        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
-        private @Builder.Default UserStatus status = UserStatus.ENABLE;
-
-        public static TestUserDto.TestUserDtoBuilder createUserDto() {
-            return TestUserDto.builder();
-        }
-
-        public UserDto get() {
-            return mapper.convertValue(this, UserDto.class);
-        }
-    }
-
-    @Getter
-    @Builder
     public static class TestCrew {
-        private @Builder.Default Long id = 3L;
+        private @Builder.Default Long id = 304254L;
         private @Builder.Default String name = "테스트크루";
         private @Builder.Default int memberCount = 12;
         private @Builder.Default int capacity = 20;
@@ -92,7 +37,7 @@ public class DomainFixtureFactory {
         private @Builder.Default String description = "크루 설명";
         private @Builder.Default String icon = "orury/crew/crew_icon";
         private @Builder.Default CrewStatus status = CrewStatus.ACTIVATED;
-        private @Builder.Default User user = TestUser.createUser().build().get();
+        private @Builder.Default User user = UserDomainFixture.TestUser.createUser(1830L).build().get();
         private @Builder.Default int minAge = 15;
         private @Builder.Default int maxAge = 30;
         private @Builder.Default CrewGender gender = CrewGender.ANY;
@@ -106,6 +51,10 @@ public class DomainFixtureFactory {
             return TestCrew.builder();
         }
 
+        public static TestCrew.TestCrewBuilder createCrew(Long crewId) {
+            return TestCrew.builder().id(crewId);
+        }
+
         public Crew get() {
             return mapper.convertValue(this, Crew.class);
         }
@@ -114,7 +63,7 @@ public class DomainFixtureFactory {
     @Getter
     @Builder
     public static class TestCrewDto {
-        private @Builder.Default Long id = 4L;
+        private @Builder.Default Long id = 462623L;
         private @Builder.Default String name = "testCrewDto";
         private @Builder.Default int memberCount = 11;
         private @Builder.Default int capacity = 21;
@@ -122,7 +71,7 @@ public class DomainFixtureFactory {
         private @Builder.Default String description = "testCrewDescription";
         private @Builder.Default String icon = "testIcon";
         private @Builder.Default CrewStatus status = CrewStatus.ACTIVATED;
-        private @Builder.Default UserDto userDto = TestUserDto.createUserDto().build().get();
+        private @Builder.Default UserDto userDto = UserDomainFixture.TestUserDto.createUserDto(7324L).build().get();
         private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
         private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
         private @Builder.Default int minAge = 14;
@@ -137,6 +86,10 @@ public class DomainFixtureFactory {
             return TestCrewDto.builder();
         }
 
+        public static TestCrewDto.TestCrewDtoBuilder createCrewDto(Long crewId) {
+            return TestCrewDto.builder().id(crewId);
+        }
+
         public CrewDto get() {
             return mapper.convertValue(this, CrewDto.class);
         }
@@ -145,8 +98,8 @@ public class DomainFixtureFactory {
     @Getter
     @Builder
     public static class TestCrewMemberPK {
-        private @Builder.Default Long crewId = 5L;
-        private @Builder.Default Long userId = 6L;
+        private @Builder.Default Long crewId = 3525L;
+        private @Builder.Default Long userId = 6336L;
 
         public static TestCrewMemberPK.TestCrewMemberPKBuilder createCrewMemberPK() {
             return TestCrewMemberPK.builder();
@@ -178,5 +131,52 @@ public class DomainFixtureFactory {
         }
     }
 
+    @Getter
+    @Builder
+    public static class TestCrewApplicationPK {
+        private @Builder.Default Long crewId = 41819L;
+        private @Builder.Default Long userId = 25190L;
 
+        public static TestCrewApplicationPK.TestCrewApplicationPKBuilder createCrewApplicationPK() {
+            return TestCrewApplicationPK.builder();
+        }
+
+        public CrewApplicationPK get() {
+            return mapper.convertValue(this, CrewApplicationPK.class);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestCrewApplication {
+        private @Builder.Default CrewApplicationPK crewApplicationPK = TestCrewApplicationPK.createCrewApplicationPK().build().get();
+        private @Builder.Default String answer = "크루 신청 답변";
+
+        public static TestCrewApplication.TestCrewApplicationBuilder createCrewApplication() {
+            return TestCrewApplication.builder();
+        }
+
+        public static TestCrewApplication.TestCrewApplicationBuilder createCrewApplication(Long crewId, Long userId) {
+            return TestCrewApplication.builder()
+                    .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class TestCrewApplicationDto {
+        private @Builder.Default CrewApplicationPK crewApplicationPK = TestCrewApplicationPK.createCrewApplicationPK().build().get();
+        private @Builder.Default String answer = "crewApplicationAnswer";
+        private @Builder.Default LocalDateTime createdAt = LocalDateTime.now();
+        private @Builder.Default LocalDateTime updatedAt = LocalDateTime.now();
+
+        public static TestCrewApplicationDto.TestCrewApplicationDtoBuilder createCrewApplicationDto() {
+            return TestCrewApplicationDto.builder();
+        }
+
+        public static TestCrewApplicationDto.TestCrewApplicationDtoBuilder createCrewApplicationDto(Long crewId, Long userId) {
+            return TestCrewApplicationDto.builder()
+                    .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
+        }
+    }
 }

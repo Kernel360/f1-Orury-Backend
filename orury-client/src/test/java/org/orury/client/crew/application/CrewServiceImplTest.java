@@ -38,11 +38,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestCrew.createCrew;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestCrewMember.createCrewMember;
-import static org.orury.domain.DomainFixtureFactory.TestUser.createUser;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CrewDomainFixture.TestCrew.createCrew;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewMember.createCrewMember;
+import static org.orury.domain.UserDomainFixture.TestUser.createUser;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")

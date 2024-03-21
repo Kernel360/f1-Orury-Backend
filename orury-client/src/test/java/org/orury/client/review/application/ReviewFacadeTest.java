@@ -14,15 +14,9 @@ import org.orury.domain.review.domain.dto.ReviewDto;
 import org.orury.domain.review.domain.dto.ReviewReactionDto;
 import org.orury.domain.review.domain.entity.ReviewReactionPK;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.dto.UserStatus;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,20 +24,28 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.orury.client.ClientFixtureFactory.TestReviewCreateRequest.createReviewCreateRequest;
+import static org.orury.client.ClientFixtureFactory.TestReviewReactionRequest.createReviewReactionRequest;
+import static org.orury.client.ClientFixtureFactory.TestReviewUpdateRequest.createReviewUpdateRequest;
+import static org.orury.domain.GymDomainFixture.TestGymDto.createGymDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewDto.createReviewDto;
+import static org.orury.domain.ReviewDomainFixture.TestReviewReactionPK.createReviewReactionPK;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @DisplayName("[Facade] 리뷰 Facade 테스트")
 class ReviewFacadeTest extends FacadeTest {
-    
+
     @DisplayName("리뷰 생성 요청이 들어왔을 때, 리뷰를 성공적으로 저장한다.")
     @Test
     void should_SaveReviewSuccessfully() {
         // given
         Long userId = 1L;
-        UserDto userDto = createUserDto();
-        GymDto gymDto = createGymDto();
-        ReviewCreateRequest request = createReviewCreateRequest();
-        List<MultipartFile> images = createMultiFiles();
+        UserDto userDto = createUserDto().build().get();
+        GymDto gymDto = createGymDto().build().get();
+        ReviewCreateRequest request = createReviewCreateRequest().build().get();
+        List<MultipartFile> images = List.of(mock(MultipartFile.class), mock(MultipartFile.class));
 
         given(userService.getUserDtoById(userId)).willReturn(userDto);
         given(gymService.getGymDtoById(userId)).willReturn(gymDto);
@@ -61,11 +63,11 @@ class ReviewFacadeTest extends FacadeTest {
     @Test
     void should_UpdateReviewSuccessfully() {
         // given
-        ReviewUpdateRequest request = createReviewUpdateRequest();
+        ReviewUpdateRequest request = createReviewUpdateRequest().build().get();
         Long reviewId = 1L;
         Long userId = 1L;
-        List<MultipartFile> images = createMultiFiles();
-        ReviewDto beforeReviewDto = createReviewDto(reviewId);
+        List<MultipartFile> images = List.of(mock(MultipartFile.class), mock(MultipartFile.class));
+        ReviewDto beforeReviewDto = createReviewDto(reviewId).build().get();
         given(reviewService.getReviewDtoById(reviewId, userId)).willReturn(beforeReviewDto);
         ReviewDto updatedReviewDto = request.toDto(beforeReviewDto);
 
@@ -83,7 +85,7 @@ class ReviewFacadeTest extends FacadeTest {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        ReviewDto reviewDto = createReviewDto(reviewId);
+        ReviewDto reviewDto = createReviewDto(reviewId).build().get();
         given(reviewService.getReviewDtoById(reviewId, userId)).willReturn(reviewDto);
 
         // when
@@ -98,15 +100,14 @@ class ReviewFacadeTest extends FacadeTest {
     @Test
     void when_GetGymIdAndUserIdAndCursor_Then_RetrieveReviews() {
         // given
-        String gymName = "더클라임 봉은사점";
         Long gymId = 1L;
         Long userId = 1L;
         Long cursor = 1L;
-        GymDto gymDto = createGymDto(gymName);
+        GymDto gymDto = createGymDto().build().get();
         List<ReviewDto> reviewDtos = List.of(
-                createReviewDto(1L),
-                createReviewDto(2L),
-                createReviewDto(3L)
+                createReviewDto(1L).build().get(),
+                createReviewDto(2L).build().get(),
+                createReviewDto(3L).build().get()
         );
         List<ReviewsResponse> reviewsResponses = reviewDtos.stream()
                 .map(reviewDto -> {
@@ -120,7 +121,7 @@ class ReviewFacadeTest extends FacadeTest {
         given(reviewService.getReviewDtosByGymId(gymId, cursor, PageRequest.of(0, NumberConstants.REVIEW_PAGINATION_SIZE)))
                 .willReturn(reviewDtos);
 
-        ReviewsWithCursorResponse expectResponse = ReviewsWithCursorResponse.of(reviewsResponses, gymName);
+        ReviewsWithCursorResponse expectResponse = ReviewsWithCursorResponse.of(reviewsResponses, gymDto.name());
 
         // when
         ReviewsWithCursorResponse response = reviewFacade.getGymReviews(gymId, userId, cursor);
@@ -138,12 +139,12 @@ class ReviewFacadeTest extends FacadeTest {
 
     @DisplayName("리뷰 반응 업데이트 요청이 들어오면, 이를 생성/수정/삭제한다.")
     @Test
-    void should_ProcessRevicewReaction_Successfully() {
+    void should_ProcessReviewReaction_Successfully() {
         // given
         Long reviewId = 1L;
         Long userId = 1L;
-        ReviewReactionRequest request = createReviewReactionRequest();
-        ReviewReactionPK reactionPK = createReviewReactionPK(userId, reviewId);
+        ReviewReactionRequest request = createReviewReactionRequest().build().get();
+        ReviewReactionPK reactionPK = createReviewReactionPK(reviewId, userId).build().get();
         ReviewReactionDto reviewReactionDto = ReviewReactionDto.of(reactionPK, request.reactionType());
 
         // when
@@ -153,157 +154,4 @@ class ReviewFacadeTest extends FacadeTest {
         then(reviewService).should(times(1))
                 .processReviewReaction(reviewReactionDto);
     }
-
-    private List<ReviewDto> createReviewDtos() {
-        List<ReviewDto> reviewDtos = new ArrayList<>();
-        for (int i = 1; i <= NumberConstants.POST_PAGINATION_SIZE; i++) {
-            reviewDtos.add(createReviewDto((long) i));
-        }
-        return reviewDtos;
-    }
-
-    public List<MultipartFile> createMultiFiles() {
-        try {
-            // 여러 개의 MultipartFile을 생성하여 배열에 담아 반환
-            return List.of(
-                    createMockMultipartFile("key1", "image.png"),
-                    createMockMultipartFile("key2", "image2.png")
-            );
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create MultipartFile.", e);
-        }
-    }
-
-    private UserDto createUserDto() {
-        return UserDto.of(
-                1L,
-                "mail@mail",
-                "name",
-                "pw",
-                1,
-                1,
-                LocalDate.now(),
-                null,
-                null,
-                null,
-                UserStatus.ENABLE
-        );
-    }
-
-    private GymDto createGymDto(String gymName) {
-        return GymDto.of(
-                1L,
-                gymName,
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                25.3f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "instalink.com",
-                "MONDAY",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private ReviewDto createReviewDto(Long id) {
-        return ReviewDto.of(
-                id,
-                "review 내용",
-                List.of(),
-                4.5f,
-                1,
-                2,
-                3,
-                4,
-                5,
-                createUserDto(),
-                createGymDto(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-    }
-
-    private GymDto createGymDto() {
-        return GymDto.of(
-                1L,
-                "더클라임 봉은사점",
-                "kakaoid",
-                "서울시 도로명주소",
-                "서울시 지번주소",
-                25.3f,
-                23,
-                12,
-                List.of(),
-                37.513709,
-                127.062144,
-                "더클라임",
-                "01012345678",
-                "instalink.com",
-                "MONDAY",
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                "11:00-23:11",
-                "12:00-23:22",
-                "13:00-23:33",
-                "14:00-23:44",
-                "15:00-23:55",
-                "16:00-23:66",
-                "17:00-23:77",
-                "gymHomepageLink",
-                "gymRemark"
-        );
-    }
-
-    private ReviewCreateRequest createReviewCreateRequest() {
-        return ReviewCreateRequest.of(
-                "여기 암장 좀 괜찮네요",
-                5.0f,
-                1L
-        );
-    }
-
-    private ReviewReactionRequest createReviewReactionRequest() {
-        return ReviewReactionRequest.of(
-                1
-        );
-    }
-
-    private ReviewUpdateRequest createReviewUpdateRequest() {
-        return ReviewUpdateRequest.of(
-                "update review content",
-                4.0f
-        );
-    }
-
-    private static ReviewReactionPK createReviewReactionPK(
-            Long userId,
-            Long reviewId
-
-    ) {
-        return ReviewReactionPK.of(
-                userId,
-                reviewId
-        );
-    }
-
-    private MultipartFile createMockMultipartFile(String image, String imageFile) throws IOException {
-        return new MockMultipartFile(image, imageFile, "text/plain", imageFile.getBytes());
-    }
-
 }

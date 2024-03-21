@@ -110,7 +110,9 @@ public record GymDto(
                 this.businessHours.get(DayOfWeek.SATURDAY),
                 this.businessHours.get(DayOfWeek.SUNDAY),
                 this.homepageLink,
-                this.remark
+                this.remark,
+                this.createdAt,
+                this.updatedAt
         );
     }
 
