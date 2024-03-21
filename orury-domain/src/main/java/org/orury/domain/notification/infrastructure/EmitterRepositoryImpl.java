@@ -1,5 +1,6 @@
 package org.orury.domain.notification.infrastructure;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -9,8 +10,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -51,11 +50,13 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     // TODO : 맵에 저장된 모든 Emitter 조회하는 메소드 구현
+    @Override
     public Map<String, SseEmitter> getAllEmitters() {
         return Collections.unmodifiableMap(emitters);
     }
 
     // TODO : 맵에 저장된 모든 EventCache 조회하는 메소드 구현
+    @Override
     public Map<String, Object> getAllEvents() {
         return Collections.unmodifiableMap(eventCache);
     }

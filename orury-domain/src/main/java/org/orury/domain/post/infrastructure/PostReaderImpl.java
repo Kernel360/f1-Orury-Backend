@@ -46,10 +46,11 @@ public class PostReaderImpl implements PostReader {
     }
 
     @Override
-    public Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(int likeCount, LocalDateTime localDateTime, Pageable pageable) {
+    public Page<Post> findByLikeCountGreaterDescAndCreatedAtDesc(Pageable pageable) {
         return postRepository.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc
-                (NumberConstants.HOT_POSTS_BOUNDARY, LocalDateTime.now()
-                        .minusMonths(1L), pageable);
+                (NumberConstants.HOT_POSTS_BOUNDARY,
+                        LocalDateTime.now().minusMonths(1L),
+                        pageable);
     }
 
     @Override

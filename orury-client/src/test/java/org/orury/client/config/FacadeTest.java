@@ -14,6 +14,7 @@ import org.orury.client.gym.application.GymService;
 import org.orury.client.meeting.application.MeetingFacade;
 import org.orury.client.meeting.application.MeetingService;
 import org.orury.client.notification.application.NotificationService;
+import org.orury.client.post.application.PostFacade;
 import org.orury.client.post.application.PostService;
 import org.orury.client.review.application.ReviewFacade;
 import org.orury.client.review.application.ReviewService;
@@ -42,6 +43,7 @@ public abstract class FacadeTest {
     protected MeetingService meetingService;
     protected MeetingFacade meetingFacade;
     protected NotificationService notificationService;
+    protected PostFacade postFacade;
 
     @BeforeEach
     void setUp() {
@@ -64,5 +66,6 @@ public abstract class FacadeTest {
         authFacade = new AuthFacade(authService);
         reviewFacade = new ReviewFacade(reviewService, userService, gymService);
         meetingFacade = new MeetingFacade(meetingService, crewService, userService, gymService);
+        postFacade = new PostFacade(postService, userService);
     }
 }
