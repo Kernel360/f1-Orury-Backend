@@ -81,11 +81,17 @@ public class ImageStoreImpl implements ImageStore {
         }
     }
 
+    private void removeFile(File file) {
+        // 임시 파일을 삭제합니다.
+        if (file.delete()) return;
+        throw new FileException(FileExceptionCode.FILE_DELETE_ERROR);
+    }
+
     @Override
     public void delete(S3Folder domain, String profile) {
         var image = ImageUtil.splitUrlToImage(profile);
         if (StringUtils.equals(image, defaultImage)) return;
-        amazonS3.deleteObject(bucket + domain.getName(), image);
+        asyncTaskExecutor.submit(() -> deleteS3Image(domain, image));
     }
 
     @Override
@@ -93,12 +99,12 @@ public class ImageStoreImpl implements ImageStore {
         if (ImageUtil.imagesValidation(links)) return;
         links.stream()
                 .map(ImageUrlConverter::splitUrlToImage)
-                .forEach(it -> amazonS3.deleteObject(bucket + domain.getName(), it));
+                .forEach(image -> asyncTaskExecutor.submit(
+                        () -> deleteS3Image(domain, image)
+                ));
     }
 
-    private void removeFile(File file) {
-        // 임시 파일을 삭제합니다.
-        if (file.delete()) return;
-        throw new FileException(FileExceptionCode.FILE_DELETE_ERROR);
+    private void deleteS3Image(S3Folder domain, String image) {
+        amazonS3.deleteObject(bucket + domain.getName(), image);
     }
 }
