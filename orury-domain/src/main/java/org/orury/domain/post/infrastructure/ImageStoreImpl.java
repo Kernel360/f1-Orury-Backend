@@ -45,7 +45,7 @@ public class ImageStoreImpl implements ImageStore {
         /**
          * 비동기 처리 : 파일 변환 & 이미지 업로드
          */
-        asyncTaskExecutor.execute(() -> {
+        asyncTaskExecutor.submit(() -> {
             var tempFiles = files.stream().map(this::convert).toList();
             upload(domain, tempFiles, fileNames);
         });
