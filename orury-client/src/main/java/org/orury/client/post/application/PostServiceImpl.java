@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
-        return postReader.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(pageable)
+        return postReader.findByLikeCountGreaterDescAndCreatedAtDesc(pageable)
                 .map(this::postDtoConverter);
     }
 

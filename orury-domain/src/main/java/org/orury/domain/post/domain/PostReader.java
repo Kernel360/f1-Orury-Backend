@@ -15,7 +15,7 @@ public interface PostReader {
 
     List<Post> findByUserIdOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
-    Page<Post> findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(Pageable pageable);
+    Page<Post> findByLikeCountGreaterDescAndCreatedAtDesc(Pageable pageable);
 
     Optional<Post> findById(Long id);
 
