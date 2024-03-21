@@ -3,7 +3,7 @@ package org.orury.domain.post.infrastructure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.PostDomainFixture;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.post.domain.entity.Post;
@@ -31,9 +31,9 @@ class PostReaderTest extends InfrastructureTest {
     @BeforeEach
     void setUps() {
         pageable = PageRequest.of(0, NumberConstants.POST_PAGINATION_SIZE);
-        expectedPost = DomainFixtureFactory.TestPost.builder().id(1L).build().get();
+        expectedPost = PostDomainFixture.TestPost.builder().id(1L).build().get();
         expectedPosts = IntStream.rangeClosed(1, 10)
-                .mapToObj(idx -> DomainFixtureFactory.TestPost.builder().id((long) idx).build().get())
+                .mapToObj(idx -> PostDomainFixture.TestPost.builder().id((long) idx).build().get())
                 .toList();
     }
 

@@ -1,9 +1,10 @@
 package org.orury.domain.post.infrastructure;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.PostDomainFixture;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;
@@ -19,8 +20,14 @@ import static org.mockito.Mockito.verify;
 
 @DisplayName("[Store] PostStore 테스트")
 class PostStoreTest extends InfrastructureTest {
-    private final Post expectedPost = DomainFixtureFactory.TestPost.createPost().build().get();
-    private final PostLike expectedPostLike = DomainFixtureFactory.TestPostLike.createPostLike();
+    private Post expectedPost;
+    private PostLike expectedPostLike;
+
+    @BeforeEach
+    void setUps() {
+        expectedPost = PostDomainFixture.TestPost.createPost().build().get();
+        expectedPostLike = PostDomainFixture.TestPostLike.createPostLike().build().get();
+    }
 
     @DisplayName("게시글 생성 - 성공")
     @Test
@@ -85,7 +92,7 @@ class PostStoreTest extends InfrastructureTest {
     void should_DeletePostLikesByUserId_Success() {
         // given
         var expectedPostLikes = IntStream.range(1, 10)
-                .mapToObj(i -> DomainFixtureFactory.TestPostLike.createPostLike((long) i)).toList();
+                .mapToObj(i -> PostDomainFixture.TestPostLike.createPostLike((long) i, 1L).build().get()).toList();
         given(postLikeRepository.findByPostLikePK_UserId(expectedPostLike.getPostLikePK().getUserId()))
                 .willReturn(expectedPostLikes);
         // when
@@ -102,7 +109,7 @@ class PostStoreTest extends InfrastructureTest {
     void should_DeletePostsByUserId_Success() {
         // given
         var expectedPosts = IntStream.range(1, 10)
-                .mapToObj(i -> DomainFixtureFactory.TestPost.createPost((long) i).build().get()).toList();
+                .mapToObj(i -> PostDomainFixture.TestPost.createPost((long) i).build().get()).toList();
         given(postRepository.findByUserId(anyLong())).willReturn(expectedPosts);
         willDoNothing().given(imageStore).delete(eq(S3Folder.POST), eq(List.of()));
         willDoNothing().given(postRepository).delete(any(Post.class));

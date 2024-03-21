@@ -7,7 +7,8 @@ import org.orury.client.post.interfaces.request.PostRequest;
 import org.orury.client.post.interfaces.response.PostResponse;
 import org.orury.client.post.interfaces.response.PostsResponse;
 import org.orury.client.post.interfaces.response.PostsWithPageResponse;
-import org.orury.domain.DomainFixtureFactory;
+import org.orury.domain.PostDomainFixture;
+import org.orury.domain.UserDomainFixture;
 import org.orury.domain.post.domain.dto.PostDto;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
@@ -199,11 +200,11 @@ class PostFacadeTest extends FacadeTest {
     }
 
     private UserDto createUserDto(Long id) {
-        return DomainFixtureFactory.TestUserDto.createUserDto().id(id).build().get();
+        return UserDomainFixture.TestUserDto.createUserDto().id(id).build().get();
     }
 
     private PostDto createPostDto(Long id) {
-        return DomainFixtureFactory.TestPostDto.createPostDto().id(id).build().get();
+        return PostDomainFixture.TestPostDto.createPostDto().id(id).build().get();
     }
 
     private PostRequest createPostRequest(Long id) {
