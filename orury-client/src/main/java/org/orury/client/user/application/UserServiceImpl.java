@@ -2,7 +2,6 @@ package org.orury.client.user.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.UserErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.comment.domain.CommentStore;
@@ -28,7 +27,6 @@ public class UserServiceImpl implements UserService {
     private final UserReader userReader;
     private final UserStore userStore;
     private final ImageStore imageStore;
-    private final ImageAsyncStore imageAsyncStore;
     private final PostStore postStore;
     private final CommentStore commentStore;
     private final ReviewStore reviewStore;
@@ -75,7 +73,7 @@ public class UserServiceImpl implements UserService {
      * 빈 파일이 들어왔는지에 대해서는 upload 메소드에서 유효성 검사해줌.
      */
     private void imageUploadAndSave(UserDto userDto, MultipartFile file) {
-        String image = imageAsyncStore.upload(USER, file);
+        String image = imageStore.upload(USER, file);
         var user = userDto.toEntity();
         user.setProfileImage(image);
         userStore.save(user);

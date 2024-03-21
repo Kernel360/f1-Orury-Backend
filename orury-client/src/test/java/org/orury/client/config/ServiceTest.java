@@ -15,7 +15,6 @@ import org.orury.client.comment.application.CommentService;
 import org.orury.client.comment.application.CommentServiceImpl;
 import org.orury.client.crew.application.CrewService;
 import org.orury.client.crew.application.CrewServiceImpl;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.application.GymServiceImpl;
 import org.orury.client.meeting.application.MeetingService;
@@ -56,7 +55,6 @@ import static org.mockito.Mockito.mock;
 public abstract class ServiceTest {
     protected ImageReader imageReader;
     protected ImageStore imageStore;
-    protected ImageAsyncStore imageAsyncStore;
     protected PostReader postReader;
     protected PostStore postStore;
     protected PostLikeRepository postLikeRepository;
@@ -107,7 +105,6 @@ public abstract class ServiceTest {
         //image
         imageReader = mock(ImageReader.class);
         imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
 
         //post
         postReader = mock(PostReader.class);
@@ -158,12 +155,12 @@ public abstract class ServiceTest {
         //services
         authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
         commentService = new CommentServiceImpl(commentReader, commentStore);
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore);
-        postService = new PostServiceImpl(postReader, postStore, imageStore, imageAsyncStore);
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore);
+        postService = new PostServiceImpl(postReader, postStore, imageStore);
         oAuthService = new KakaoOAuthService(kakaoAuthClient, kakaoKapiClient);
         gymService = new GymServiceImpl(gymReader, gymStore);
-        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore, imageAsyncStore);
-        userService = new UserServiceImpl(userReader, userStore, imageStore, imageAsyncStore, postStore, commentStore, reviewStore, gymStore);
+        reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore);
+        userService = new UserServiceImpl(userReader, userStore, imageStore, postStore, commentStore, reviewStore, gymStore);
         meetingService = new MeetingServiceImpl(meetingReader, meetingStore, meetingMemberReader, meetingMemberStore, crewMemberReader, userReader);
     }
 }

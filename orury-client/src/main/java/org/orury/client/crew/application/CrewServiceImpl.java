@@ -2,7 +2,6 @@ package org.orury.client.crew.application;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.AgeUtils;
@@ -48,7 +47,6 @@ public class CrewServiceImpl implements CrewService {
     private final MeetingMemberStore meetingMemberStore;
     private final UserReader userReader;
     private final ImageStore imageStore;
-    private final ImageAsyncStore imageAsyncStore;
 
 
     @Override
@@ -64,7 +62,7 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void createCrew(CrewDto crewDto, MultipartFile file) {
         validateCrewParticipationCount(crewDto.userDto().id());
-        var icon = imageAsyncStore.upload(CREW, file);
+        var icon = imageStore.upload(CREW, file);
         Crew crew = crewStore.save(crewDto.toEntity(icon));
         crewTagStore.addTags(crew, crewDto.tags());
         crewMemberStore.addCrewMember(crew.getId(), crew.getUser().getId());
@@ -131,7 +129,7 @@ public class CrewServiceImpl implements CrewService {
     public void updateCrewImage(CrewDto crewDto, MultipartFile imageFile, Long userId) {
         validateCrewCreator(crewDto.userDto().id(), userId);
         var oldImage = crewDto.icon();
-        var newImage = imageAsyncStore.upload(CREW, imageFile);
+        var newImage = imageStore.upload(CREW, imageFile);
         crewStore.save(crewDto.toEntity(newImage));
         imageStore.delete(CREW, oldImage);
     }

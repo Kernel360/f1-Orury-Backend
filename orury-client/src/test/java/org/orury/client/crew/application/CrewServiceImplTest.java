@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
@@ -57,7 +56,6 @@ class CrewServiceImplTest {
     private MeetingMemberStore meetingMemberStore;
     private UserReader userReader;
     private ImageStore imageStore;
-    private ImageAsyncStore imageAsyncStore;
 
     @BeforeEach
     void setUp() {
@@ -73,9 +71,8 @@ class CrewServiceImplTest {
         meetingMemberStore = mock(MeetingMemberStore.class);
         userReader = mock(UserReader.class);
         imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
 
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore);
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore);
     }
 
     @DisplayName("[getCrewDtoById] 크루 아이디로 크루 정보를 가져온다.")
@@ -132,7 +129,7 @@ class CrewServiceImplTest {
         given(crewApplicationReader.countByUserId(anyLong()))
                 .willReturn(applyingCrewCount);
         String icon = "크루아이콘";
-        given(imageAsyncStore.upload(S3Folder.CREW, file))
+        given(imageStore.upload(S3Folder.CREW, file))
                 .willReturn(icon);
         Crew crew = createCrew()
                 .id(crewDto.id()).build().get();
@@ -143,7 +140,7 @@ class CrewServiceImplTest {
         crewService.createCrew(crewDto, file);
 
         // then
-        then(imageAsyncStore).should(only())
+        then(imageStore).should(only())
                 .upload(any(S3Folder.class), any(MultipartFile.class));
         then(crewStore).should(only())
                 .save(any());
@@ -175,7 +172,7 @@ class CrewServiceImplTest {
                 .countByUserId(anyLong());
         then(crewApplicationReader).should(only())
                 .countByUserId(anyLong());
-        then(imageAsyncStore).shouldHaveNoInteractions();
+        then(imageStore).shouldHaveNoInteractions();
         then(crewStore).shouldHaveNoInteractions();
         then(crewTagStore).shouldHaveNoInteractions();
         then(crewMemberStore).shouldHaveNoInteractions();
@@ -291,18 +288,18 @@ class CrewServiceImplTest {
         MultipartFile file = mock(MultipartFile.class);
         Long userId = crewDto.userDto().id();
         String newImage = "크루아이콘";
-        given(imageAsyncStore.upload(S3Folder.CREW, file))
+        given(imageStore.upload(S3Folder.CREW, file))
                 .willReturn(newImage);
 
         // when
         crewService.updateCrewImage(crewDto, file, userId);
 
         // then
-        then(imageAsyncStore).should(only())
+        then(imageStore).should(times(1))
                 .upload(any(), any(MultipartFile.class));
         then(crewStore).should(only())
                 .save(any());
-        then(imageStore).should(only())
+        then(imageStore).should(times(1))
                 .delete(any(), anyString());
     }
 
@@ -319,7 +316,7 @@ class CrewServiceImplTest {
                 () -> crewService.updateCrewImage(crewDto, file, userId));
 
         assertEquals(CrewErrorCode.FORBIDDEN.getMessage(), exception.getMessage());
-        then(imageAsyncStore).shouldHaveNoInteractions();
+        then(imageStore).shouldHaveNoInteractions();
         then(crewStore).shouldHaveNoInteractions();
         then(imageStore).shouldHaveNoInteractions();
     }
