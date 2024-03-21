@@ -24,8 +24,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
-import static org.orury.domain.DomainFixtureFactory.TestUserDto.createUserDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
+import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Policy] 크루 신청 Policy 테스트")
