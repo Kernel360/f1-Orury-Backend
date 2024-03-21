@@ -19,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
-import static org.orury.domain.DomainFixtureFactory.TestCrewDto.createCrewDto;
+import static org.orury.domain.CrewDomainFixture.TestCrewDto.createCrewDto;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Policy] 크루 생성 Policy 테스트")
