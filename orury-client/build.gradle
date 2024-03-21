@@ -71,6 +71,11 @@ jacocoTestReport {
     reports {
         html.destination file("${buildDir}/jacoco/html")
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/global/config/**', '**/*Request.class', '**/*Response.class', '**/*Message.class', '**/*Controller.class', '**/OruryClientApplication.class'])
+        }))
+    }
 }
 
 test {
