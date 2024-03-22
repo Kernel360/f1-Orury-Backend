@@ -11,6 +11,7 @@ import java.util.List;
 public record CrewResponse(
         Long id,
         String name,
+        String headName,
         int memberCount,
         int capacity,
         Region region,
@@ -30,6 +31,7 @@ public record CrewResponse(
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
+                crewDto.userDto().nickname(),
                 crewDto.memberCount(),
                 crewDto.capacity(),
                 crewDto.region(),
