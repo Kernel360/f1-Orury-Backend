@@ -18,6 +18,7 @@ public record CrewResponse(
         String icon,
         CrewStatus status,
         String headProfileImage,
+        String question,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -36,6 +37,7 @@ public record CrewResponse(
                 crewDto.icon(),
                 crewDto.status(),
                 crewDto.userDto().profileImage(),
+                crewDto.question(),
                 crewDto.createdAt(),
                 crewDto.updatedAt(),
                 crewDto.tags(),
