@@ -31,9 +31,6 @@ dependencies {
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    //SSE setting
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
     //json
     implementation 'org.json:json:20231013'
 
