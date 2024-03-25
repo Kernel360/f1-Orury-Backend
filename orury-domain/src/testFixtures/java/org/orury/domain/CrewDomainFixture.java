@@ -180,4 +180,20 @@ public class CrewDomainFixture {
                     .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
         }
     }
+
+    @Getter
+    @Builder
+    public static class TestCrewTag {
+        private @Builder.Default Long id = 751814L;
+        private @Builder.Default Crew crew = TestCrew.createCrew(1489L).build().get();
+        private @Builder.Default String tag = "testTag";
+
+        public static TestCrewTag.TestCrewTagBuilder createCrewTag() {
+            return TestCrewTag.builder();
+        }
+
+        public CrewTag get() {
+            return mapper.convertValue(this, CrewTag.class);
+        }
+    }
 }

@@ -31,9 +31,6 @@ dependencies {
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    //SSE setting
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
     //json
     implementation 'org.json:json:20231013'
 
@@ -70,6 +67,11 @@ jacoco {
 jacocoTestReport {
     reports {
         html.destination file("${buildDir}/jacoco/html")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/global/config/**', '**/*Request.class', '**/*Response.class', '**/*Message.class', '**/*Controller.class', '**/OruryClientApplication.class'])
+        }))
     }
 }
 

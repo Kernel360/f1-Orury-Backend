@@ -17,7 +17,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //OAuth2, Security
-    compileOnly 'org.springframework.boot:spring-boot-starter-oauth2-client'
     compileOnly 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
 
@@ -54,6 +53,11 @@ jacoco {
 jacocoTestReport {
     reports {
         html.destination file("${buildDir}/jacoco/html")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/domain/**/domain/**/', '**/global/**', '**/base/**', '**/OruryDomainApplication.class'])
+        }))
     }
 }
 

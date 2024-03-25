@@ -8,6 +8,7 @@ import org.orury.domain.gym.domain.entity.GymLikePK;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -116,6 +117,27 @@ class GymReaderImplTest extends InfrastructureTest {
         // then
         then(gymRepository).should(times(1))
                 .findByNameContainingOrAddressContainingOrRoadAddressContaining(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("주어진 좌표 범위 내에 있는 암장 리스트를 반환한다.")
+    void when_GymsInAreaGrid_Then_ReturnGymList() {
+        // given
+        Double bottom = 37.5;
+        Double top = 37.6;
+        Double left = 127.0;
+        Double right = 127.1;
+        List<Gym> gyms = List.of(createGym(1L).build().get(), createGym(2L).build().get());
+
+        given(gymRepository.findByLatitudeBetweenAndLongitudeBetweenOrderByLikeCount(bottom, top, left, right))
+                .willReturn(gyms);
+
+        // when
+        gymReader.findGymsInAreaGrid(Map.of("bottom", bottom, "top", top, "left", left, "right", right));
+
+        // then
+        then(gymRepository).should(times(1))
+                .findByLatitudeBetweenAndLongitudeBetweenOrderByLikeCount(bottom, top, left, right);
     }
 
     @Test
