@@ -163,6 +163,10 @@ public abstract class InfrastructureTest {
         reviewRepository = mock(ReviewRepository.class);
         reviewReactionRepository = mock(ReviewReactionRepository.class);
 
+        //image
+        imageReader = mock(ImageReader.class);
+        imageStore = mock(ImageStore.class);
+
         //admin
         adminReader = new AdminReaderImpl(adminRepository);
         adminStore = new AdminStoreImpl(adminRepository);

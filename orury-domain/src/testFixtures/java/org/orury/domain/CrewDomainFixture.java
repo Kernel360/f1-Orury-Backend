@@ -157,6 +157,10 @@ public class CrewDomainFixture {
             return TestCrewApplication.builder()
                     .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
         }
+
+        public CrewApplication get() {
+            return mapper.convertValue(this, CrewApplication.class);
+        }
     }
 
     @Getter
