@@ -15,6 +15,10 @@ import org.orury.client.comment.application.CommentService;
 import org.orury.client.comment.application.CommentServiceImpl;
 import org.orury.client.crew.application.CrewService;
 import org.orury.client.crew.application.CrewServiceImpl;
+import org.orury.client.crew.application.policy.CrewApplicationPolicy;
+import org.orury.client.crew.application.policy.CrewCreatePolicy;
+import org.orury.client.crew.application.policy.CrewPolicy;
+import org.orury.client.crew.application.policy.CrewUpdatePolicy;
 import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.client.gym.application.GymService;
 import org.orury.client.gym.application.GymServiceImpl;
@@ -91,6 +95,10 @@ public abstract class ServiceTest {
     protected CrewService crewService;
     protected CrewApplicationReader crewApplicationReader;
     protected CrewApplicationStore crewApplicationStore;
+    protected CrewPolicy crewPolicy;
+    protected CrewCreatePolicy crewCreatePolicy;
+    protected CrewUpdatePolicy crewUpdatePolicy;
+    protected CrewApplicationPolicy crewApplicationPolicy;
     protected MeetingStore meetingStore;
     protected MeetingMemberStore meetingMemberStore;
     protected MeetingReader meetingReader;
@@ -128,6 +136,10 @@ public abstract class ServiceTest {
         crewMemberStore = mock(CrewMemberStore.class);
         crewApplicationReader = mock(CrewApplicationReader.class);
         crewApplicationStore = mock(CrewApplicationStore.class);
+        crewPolicy = mock(CrewPolicy.class);
+        crewCreatePolicy = mock(CrewCreatePolicy.class);
+        crewUpdatePolicy = mock(CrewUpdatePolicy.class);
+        crewApplicationPolicy = mock(CrewApplicationPolicy.class);
 
         //meeting
         meetingStore = mock(MeetingStore.class);
@@ -158,7 +170,7 @@ public abstract class ServiceTest {
         //services
         authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
         commentService = new CommentServiceImpl(commentReader, commentStore);
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore);
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
         postService = new PostServiceImpl(postReader, postStore, imageStore, imageAsyncStore);
         oAuthService = new KakaoOAuthService(kakaoAuthClient, kakaoKapiClient);
         gymService = new GymServiceImpl(gymReader, gymStore);

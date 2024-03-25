@@ -7,10 +7,7 @@ import lombok.Getter;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.dto.CrewStatus;
-import org.orury.domain.crew.domain.entity.Crew;
-import org.orury.domain.crew.domain.entity.CrewApplicationPK;
-import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
+import org.orury.domain.crew.domain.entity.*;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.orury.domain.user.domain.entity.User;
@@ -159,6 +156,10 @@ public class CrewDomainFixture {
         public static TestCrewApplication.TestCrewApplicationBuilder createCrewApplication(Long crewId, Long userId) {
             return TestCrewApplication.builder()
                     .crewApplicationPK(TestCrewApplicationPK.createCrewApplicationPK().crewId(crewId).userId(userId).build().get());
+        }
+
+        public CrewApplication get() {
+            return mapper.convertValue(this, CrewApplication.class);
         }
     }
 
