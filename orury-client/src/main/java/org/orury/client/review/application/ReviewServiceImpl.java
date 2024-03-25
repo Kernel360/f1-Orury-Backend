@@ -2,7 +2,6 @@ package org.orury.client.review.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.ReviewErrorCode;
 import org.orury.common.error.code.ReviewReactionErrorCode;
 import org.orury.common.error.exception.BusinessException;
@@ -37,7 +36,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewStore reviewStore;
     private final GymStore gymStore;
     private final ImageStore imageStore;
-    private final ImageAsyncStore imageAsyncStore;
 
     private static final int minReactionType = 1;
     private static final int maxReactionType = 5;
@@ -46,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void createReview(ReviewDto reviewDto, List<MultipartFile> files) {
         isExist(reviewDto.userDto(), reviewDto.gymDto());
-        var images = imageAsyncStore.upload(REVIEW, files);
+        var images = imageStore.upload(REVIEW, files);
         reviewStore.save(reviewDto.toEntity(images));
         gymStore.increaseReviewCountAndTotalScore(reviewDto.gymDto().id(), reviewDto.score());
     }
@@ -66,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void updateReview(ReviewDto beforeReviewDto, ReviewDto updateReviewDto, List<MultipartFile> files) {
         gymStore.updateTotalScore(beforeReviewDto.id(), beforeReviewDto.score(), updateReviewDto.score());
-        var images = imageAsyncStore.upload(REVIEW, files);
+        var images = imageStore.upload(REVIEW, files);
         reviewStore.save(updateReviewDto.toEntity(images));
         imageStore.delete(REVIEW, beforeReviewDto.images());
     }

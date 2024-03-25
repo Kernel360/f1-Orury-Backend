@@ -2,7 +2,6 @@ package org.orury.client.post.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.PostErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.global.constants.NumberConstants;
@@ -30,7 +29,6 @@ public class PostServiceImpl implements PostService {
     private final PostReader postReader;
     private final PostStore postStore;
     private final ImageStore imageStore;
-    private final ImageAsyncStore imageAsyncStore;
 
     @Override
     @Transactional(readOnly = true)
@@ -84,7 +82,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void createPost(PostDto postDto, List<MultipartFile> files) {
-        var newImages = imageAsyncStore.upload(POST, files);
+        var newImages = imageStore.upload(POST, files);
         imageStore.delete(POST, postDto.images());
         postStore.save(postDto.toEntity(newImages));
     }

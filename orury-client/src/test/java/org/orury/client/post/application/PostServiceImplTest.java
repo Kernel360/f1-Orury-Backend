@@ -46,13 +46,13 @@ class PostServiceImplTest extends ServiceTest {
         PostDto postDto = createPostDto(null, 1L);
         List<MultipartFile> files = List.of(createImagePart());
         var images = List.of("post1.png", "post2.png");
-        given(imageAsyncStore.upload(POST, files)).willReturn(images);
+        given(imageStore.upload(POST, files)).willReturn(images);
 
         // when
         postService.createPost(postDto, files);
 
         // then
-        then(imageAsyncStore).should(times(1)).upload(POST, files);
+        then(imageStore).should(times(1)).upload(POST, files);
     }
 
     @Test
@@ -68,7 +68,7 @@ class PostServiceImplTest extends ServiceTest {
 
         //then
         then(imageStore).should(times(1)).delete(POST, postDto.images());
-        then(imageAsyncStore).should(times(1)).upload(POST, files);
+        then(imageStore).should(times(1)).upload(POST, files);
         then(postStore).should(times(1)).save(postDto.toEntity(images));
     }
 

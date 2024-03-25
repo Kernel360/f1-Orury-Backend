@@ -69,7 +69,7 @@ class UserServiceImplTest extends ServiceTest {
 
         // then
         then(imageStore).should(times(1)).delete(any(S3Folder.class), anyString());
-        then(imageAsyncStore).should(times(1)).upload(any(S3Folder.class), any(MultipartFile.class));
+        then(imageStore).should(times(1)).upload(any(S3Folder.class), any(MultipartFile.class));
         then(userStore).should(times(1)).save(any());
     }
 
