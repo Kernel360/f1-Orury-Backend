@@ -19,4 +19,8 @@ public interface EmitterRepository {
     void deleteAllEmitterStartWithUserId(String userId);
 
     void deleteAllEventCacheStartWithUserId(String userId);
+
+    Map<String, SseEmitter> getAllEmitters();
+
+    Map<String, Object> getAllEvents();
 }

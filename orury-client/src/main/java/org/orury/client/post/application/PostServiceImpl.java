@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.orury.common.util.S3Folder.POST;
@@ -58,11 +57,8 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<PostDto> getHotPostDtos(Pageable pageable) {
-        return postReader.findByLikeCountGreaterThanEqualAndCreatedAtGreaterThanEqualOrderByLikeCountDescCreatedAtDesc(
-                NumberConstants.HOT_POSTS_BOUNDARY,
-                LocalDateTime.now().minusMonths(1L),
-                pageable
-        ).map(this::postDtoConverter);
+        return postReader.findByLikeCountGreaterDescAndCreatedAtDesc(pageable)
+                .map(this::postDtoConverter);
     }
 
     @Override
