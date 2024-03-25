@@ -9,7 +9,6 @@ import org.orury.client.crew.application.policy.CrewApplicationPolicy;
 import org.orury.client.crew.application.policy.CrewCreatePolicy;
 import org.orury.client.crew.application.policy.CrewPolicy;
 import org.orury.client.crew.application.policy.CrewUpdatePolicy;
-import org.orury.client.global.image.ImageAsyncStore;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
@@ -61,7 +60,6 @@ class CrewServiceImplTest {
     private MeetingMemberStore meetingMemberStore;
     private UserReader userReader;
     private ImageStore imageStore;
-    private ImageAsyncStore imageAsyncStore;
     private CrewPolicy crewPolicy;
     private CrewCreatePolicy crewCreatePolicy;
     private CrewUpdatePolicy crewUpdatePolicy;
@@ -81,14 +79,12 @@ class CrewServiceImplTest {
         meetingMemberStore = mock(MeetingMemberStore.class);
         userReader = mock(UserReader.class);
         imageStore = mock(ImageStore.class);
-        imageAsyncStore = mock(ImageAsyncStore.class);
         crewPolicy = mock(CrewPolicy.class);
         crewCreatePolicy = mock(CrewCreatePolicy.class);
         crewUpdatePolicy = mock(CrewUpdatePolicy.class);
         crewApplicationPolicy = mock(CrewApplicationPolicy.class);
 
-
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, imageAsyncStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
     }
 
     @DisplayName("[getCrewDtoById] 크루 아이디로 크루 정보를 가져온다.")
@@ -139,7 +135,7 @@ class CrewServiceImplTest {
         CrewDto crewDto = createCrewDto().build().get();
         MultipartFile file = mock(MultipartFile.class);
         String icon = "크루아이콘";
-        given(imageAsyncStore.upload(S3Folder.CREW, file))
+        given(imageStore.upload(S3Folder.CREW, file))
                 .willReturn(icon);
         Crew crew = createCrew()
                 .id(crewDto.id()).build().get();
@@ -152,7 +148,7 @@ class CrewServiceImplTest {
         // then
         then(crewCreatePolicy).should(times(1))
                 .validate(crewDto);
-        then(imageAsyncStore).should(only())
+        then(imageStore).should(only())
                 .upload(any(S3Folder.class), any(MultipartFile.class));
         then(crewStore).should(only())
                 .save(any());
@@ -290,18 +286,18 @@ class CrewServiceImplTest {
         MultipartFile file = mock(MultipartFile.class);
         Long userId = crewDto.userDto().id();
         String newImage = "크루아이콘";
-        given(imageAsyncStore.upload(S3Folder.CREW, file))
+        given(imageStore.upload(S3Folder.CREW, file))
                 .willReturn(newImage);
 
         // when
         crewService.updateCrewImage(crewDto, file, userId);
 
         // then
-        then(imageAsyncStore).should(only())
+        then(imageStore).should(times(1))
                 .upload(any(), any(MultipartFile.class));
         then(crewStore).should(only())
                 .save(any());
-        then(imageStore).should(only())
+        then(imageStore).should(times(1))
                 .delete(any(), anyString());
     }
 
