@@ -31,7 +31,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private static final String JWT_TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_HEADER_NAME = "Authorization";
 
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24L; // 1일
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
 
     // 비회원 전용 토큰
