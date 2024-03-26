@@ -168,7 +168,7 @@ public abstract class ServiceTest {
         authService = new AuthServiceImpl(userReader, userStore, jwtTokenService, oAuthServiceManager);
         commentService = new CommentServiceImpl(commentReader, commentStore);
         postService = new PostServiceImpl(postReader, postStore, imageStore);
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
+        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
         oAuthService = new KakaoOAuthService(kakaoAuthClient, kakaoKapiClient);
         gymService = new GymServiceImpl(gymReader, gymStore);
         reviewService = new ReviewServiceImpl(reviewReader, reviewStore, gymStore, imageStore);

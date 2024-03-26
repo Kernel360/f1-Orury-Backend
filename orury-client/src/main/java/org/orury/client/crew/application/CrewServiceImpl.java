@@ -40,7 +40,6 @@ public class CrewServiceImpl implements CrewService {
     private final CrewTagStore crewTagStore;
     private final CrewMemberReader crewMemberReader;
     private final CrewMemberStore crewMemberStore;
-    private final CrewApplicationReader crewApplicationReader;
     private final CrewApplicationStore crewApplicationStore;
     private final MeetingStore meetingStore;
     private final MeetingMemberStore meetingMemberStore;
