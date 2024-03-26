@@ -270,9 +270,9 @@ class CrewServiceImplTest extends ServiceTest {
                 .delete(any(), anyString());
     }
 
-    @DisplayName("[applyCrew] 크루에 가입신청을 한다.")
+    @DisplayName("[applyCrew] 가입수락이 필요한 크루면, 크루에 가입신청을 한다.")
     @Test
-    void should_ApplyCrew() {
+    void when_CrewNeedPermission_Then_ApplyCrew() {
         // given
         CrewDto crewDto = createCrewDto()
                 .id(23L)
@@ -293,8 +293,36 @@ class CrewServiceImplTest extends ServiceTest {
         // then
         then(crewApplicationPolicy).should(only())
                 .validateApplyCrew(crewDto, userDto, answer);
+        then(crewMemberStore).shouldHaveNoInteractions();
         then(crewApplicationStore).should(only())
                 .save(any(), any(), anyString());
+    }
+
+    @DisplayName("[applyCrew] 가입수락이 필요 없는 크루면, 크루에 가입한다.")
+    @Test
+    void when_CrewNeedPermission_Then_JoinCrew() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30)
+                .gender(CrewGender.ANY)
+                .permissionRequired(false).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE)
+                .birthday(LocalDate.now().minusYears(20)).build().get();
+
+        String answer = "가입신청 답변";
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewApplicationPolicy).should(only())
+                .validateApplyCrew(crewDto, userDto, answer);
+        then(crewMemberStore).should(only())
+                .addCrewMember(anyLong(), anyLong());
+        then(crewApplicationStore).shouldHaveNoInteractions();
     }
 
     @DisplayName("[withdrawApplication] 크루 가입신청을 취소한다.")
