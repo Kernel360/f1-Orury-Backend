@@ -143,7 +143,13 @@ public class CrewServiceImpl implements CrewService {
     @Transactional
     public void applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
         crewApplicationPolicy.validateApplyCrew(crewDto, userDto, answer);
-        // 크루 가입신청 저장
+
+        // 지원하는 크루가 즉시 가입인 경우
+        if (!crewDto.permissionRequired()) {
+            crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
+            return;
+        }
+
         crewApplicationStore.save(crewDto, userDto, answer);
     }
 
