@@ -1,8 +1,10 @@
 package org.orury.domain.crew.domain.dto;
 
+import org.apache.logging.log4j.util.Strings;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.global.domain.Region;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -140,7 +142,12 @@ public record CrewDto(
         );
     }
 
+    @Value("${cloud.aws.s3.default-image.crew}")
+    private static String CREW_DEFAULT_IMAGE;
+
     public Crew toEntity(String icon) {
+        if (Strings.isBlank(icon)) icon = CREW_DEFAULT_IMAGE;
+
         return Crew.of(
                 id,
                 name,
