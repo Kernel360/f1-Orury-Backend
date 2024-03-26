@@ -106,9 +106,9 @@ public class CrewController {
             @PathVariable Long crewId,
             @RequestBody(required = false) String answer,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        String applicationResult = crewFacade.applyCrew(crewId, userPrincipal.id(), answer);
+        CrewMessage result = crewFacade.applyCrew(crewId, userPrincipal.id(), answer);
 
-        return ApiResponse.of(applicationResult);
+        return ApiResponse.of(result.getMessage());
     }
 
     @Operation(summary = "크루신청 철회", description = "크루 가입신청을 철회한다.")

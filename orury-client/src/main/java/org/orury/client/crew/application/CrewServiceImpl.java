@@ -5,6 +5,7 @@ import org.orury.client.crew.application.policy.CrewApplicationPolicy;
 import org.orury.client.crew.application.policy.CrewCreatePolicy;
 import org.orury.client.crew.application.policy.CrewPolicy;
 import org.orury.client.crew.application.policy.CrewUpdatePolicy;
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.crew.domain.*;
@@ -29,8 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.orury.client.crew.interfaces.message.CrewMessage.CREW_APPLIED;
-import static org.orury.client.crew.interfaces.message.CrewMessage.CREW_IMMEDIATELY_JOINED;
 import static org.orury.common.util.S3Folder.CREW;
 
 @Service
@@ -143,17 +142,17 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional
-    public String applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
+    public CrewMessage applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
         crewApplicationPolicy.validateApplyCrew(crewDto, userDto, answer);
 
         // 지원하는 크루가 즉시 가입인 경우
         if (!crewDto.permissionRequired()) {
             crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
-            return CREW_IMMEDIATELY_JOINED.getMessage();
+            return CrewMessage.CREW_IMMEDIATELY_JOINED;
         }
 
         crewApplicationStore.save(crewDto, userDto, answer);
-        return CREW_APPLIED.getMessage();
+        return CrewMessage.CREW_APPLIED;
     }
 
     @Override

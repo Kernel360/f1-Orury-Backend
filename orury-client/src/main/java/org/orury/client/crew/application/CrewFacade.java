@@ -1,6 +1,7 @@
 package org.orury.client.crew.application;
 
 import lombok.RequiredArgsConstructor;
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -74,7 +75,7 @@ public class CrewFacade {
         crewService.deleteCrew(crewDto, userId);
     }
 
-    public String applyCrew(Long crewId, Long userId, String answer) {
+    public CrewMessage applyCrew(Long crewId, Long userId, String answer) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         UserDto userDto = userService.getUserDtoById(userId);
         return crewService.applyCrew(crewDto, userDto, answer);

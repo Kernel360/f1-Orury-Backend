@@ -1,5 +1,6 @@
 package org.orury.client.crew.application;
 
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
@@ -30,7 +31,7 @@ public interface CrewService {
 
     void deleteCrew(CrewDto crewDto, Long userId);
 
-    String applyCrew(CrewDto crewDto, UserDto userDto, String answer);
+    CrewMessage applyCrew(CrewDto crewDto, UserDto userDto, String answer);
 
     void withdrawApplication(CrewDto crewDto, Long userId);
 
