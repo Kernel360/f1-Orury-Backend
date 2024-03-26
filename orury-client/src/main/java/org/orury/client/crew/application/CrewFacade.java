@@ -1,7 +1,6 @@
 package org.orury.client.crew.application;
 
-import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
-
+import lombok.RequiredArgsConstructor;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
@@ -16,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
 
 @Component
 @RequiredArgsConstructor
@@ -54,7 +53,9 @@ public class CrewFacade {
 
         boolean isApply = crewService.existCrewMember(crewMemberPK);
 
-        return CrewResponse.of(crewDto, isApply);
+        List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+
+        return CrewResponse.of(crewDto, isApply, userImages);
     }
 
     public void updateCrewInfo(Long crewId, CrewRequest request, Long userId) {
