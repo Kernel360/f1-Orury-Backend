@@ -74,10 +74,10 @@ public class CrewFacade {
         crewService.deleteCrew(crewDto, userId);
     }
 
-    public void applyCrew(Long crewId, Long userId, String answer) {
+    public String applyCrew(Long crewId, Long userId, String answer) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         UserDto userDto = userService.getUserDtoById(userId);
-        crewService.applyCrew(crewDto, userDto, answer);
+        return crewService.applyCrew(crewDto, userDto, answer);
     }
 
     public void withdrawApplication(Long crewId, Long userId) {

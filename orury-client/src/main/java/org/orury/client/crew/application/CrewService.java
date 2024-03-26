@@ -30,7 +30,7 @@ public interface CrewService {
 
     void deleteCrew(CrewDto crewDto, Long userId);
 
-    void applyCrew(CrewDto crewDto, UserDto userDto, String answer);
+    String applyCrew(CrewDto crewDto, UserDto userDto, String answer);
 
     void withdrawApplication(CrewDto crewDto, Long userId);
 
