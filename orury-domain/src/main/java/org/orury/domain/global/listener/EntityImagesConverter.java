@@ -10,7 +10,7 @@ import org.orury.common.error.code.FileExceptionCode;
 import org.orury.common.error.exception.InfraImplException;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.global.image.ImageReader;
+import org.orury.domain.image.domain.ImageReader;
 
 import java.util.List;
 

@@ -19,7 +19,7 @@ import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
 import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
