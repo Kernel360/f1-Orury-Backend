@@ -26,6 +26,7 @@ public record GymResponse(
         Set<Map.Entry<DayOfWeek, String>> businessHours,
         boolean doingBusiness,
         boolean isLike,
+        String gymType,
         List<GymReviewStatistics.TotalReviewChart.ReviewCount> barChartData,
         List<GymReviewStatistics.MonthlyReviewChart.MonthlyReviewCount> lineChartData
 ) {
@@ -54,6 +55,7 @@ public record GymResponse(
                         .entrySet(),
                 doingBusiness,
                 isLike,
+                gymDto.gymType().getDescription(),
                 gymReviewStatistics.barChartData(),
                 gymReviewStatistics.lineChartData()
         );

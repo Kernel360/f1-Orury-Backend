@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.domain.base.db.AuditingField;
 import org.orury.domain.global.listener.GymImagesConverter;
+import org.orury.domain.gym.domain.dto.GymType;
+import org.orury.domain.gym.domain.dto.GymTypeConverter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -91,6 +93,10 @@ public class Gym extends AuditingField {
     @Column(name = "remark")
     private String remark;
 
+    @Convert(converter = GymTypeConverter.class)
+    @Column(name = "gym_type", nullable = false)
+    private GymType gymType;
+
     private Gym(
             Long id,
             String name,
@@ -117,7 +123,8 @@ public class Gym extends AuditingField {
             String homepageLink,
             String remark,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            GymType gymType
     ) {
         this.id = id;
         this.name = name;
@@ -145,6 +152,7 @@ public class Gym extends AuditingField {
         this.remark = remark;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.gymType = gymType;
     }
 
     public static Gym of(
@@ -173,7 +181,8 @@ public class Gym extends AuditingField {
             String homepageLink,
             String remark,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            GymType gymType
     ) {
         return new Gym(
                 id,
@@ -201,7 +210,8 @@ public class Gym extends AuditingField {
                 homepageLink,
                 remark,
                 createdAt,
-                updatedAt
+                updatedAt,
+                gymType
         );
     }
 }
