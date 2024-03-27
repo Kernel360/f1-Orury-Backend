@@ -80,7 +80,8 @@ public class MeetingServiceImpl implements MeetingService {
 
         List<String> userImages = otherMembers.stream()
                 .map(meetingMember -> meetingMember.getMeetingMemberPK().getUserId())
-                .map(userId -> userReader.getUserById(userId).getProfileImage())
+                .map(userReader::getUserById)
+                .map(User::getProfileImage)
                 .collect(Collectors.toCollection(LinkedList::new));
         userImages.add(0, meetingCreator.profileImage());
         return userImages;

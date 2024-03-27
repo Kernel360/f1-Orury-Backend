@@ -19,6 +19,7 @@ import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
+import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,8 @@ public class CrewServiceImpl implements CrewService {
 
         List<String> userImages = otherMembers.stream()
                 .map(crewMember -> crewMember.getCrewMemberPK().getUserId())
-                .map(userId -> userReader.getUserById(userId).getProfileImage())
+                .map(userReader::getUserById)
+                .map(User::getProfileImage)
                 .collect(Collectors.toCollection(LinkedList::new));
         userImages.add(0, crewCreator.profileImage());
         return userImages;
