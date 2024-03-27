@@ -19,7 +19,6 @@ import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
-import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.orury.common.util.S3Folder.CREW;
 
@@ -105,12 +105,11 @@ public class CrewServiceImpl implements CrewService {
         UserDto crewCreator = crewDto.userDto();
         List<CrewMember> otherMembers = crewMemberReader.getOtherCrewMembersByCrewIdMaximum(crewDto.id(), crewCreator.id(), NumberConstants.MAXIMUM_OF_CREW_THUMBNAILS - 1);
 
-        List<String> userImages = new LinkedList<>();
-        userImages.add(crewCreator.profileImage());
-        otherMembers.forEach(crewMember -> {
-            User user = userReader.getUserById(crewMember.getCrewMemberPK().getUserId());
-            userImages.add(user.getProfileImage());
-        });
+        List<String> userImages = otherMembers.stream()
+                .map(crewMember -> crewMember.getCrewMemberPK().getUserId())
+                .map(userId -> userReader.getUserById(userId).getProfileImage())
+                .collect(Collectors.toCollection(LinkedList::new));
+        userImages.add(0, crewCreator.profileImage());
         return userImages;
     }
 
