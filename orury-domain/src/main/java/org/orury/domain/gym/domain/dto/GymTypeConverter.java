@@ -1,7 +1,7 @@
 package org.orury.domain.gym.domain.dto;
 
 import jakarta.persistence.AttributeConverter;
-import org.orury.common.error.code.CrewErrorCode;
+import org.orury.common.error.code.GymErrorCode;
 import org.orury.common.error.exception.InfraImplException;
 
 import java.util.Arrays;
@@ -18,6 +18,6 @@ public class GymTypeConverter implements AttributeConverter<GymType, String> {
         return Arrays.stream(GymType.values())
                 .filter(it -> Objects.equals(it.getCode(), dbData))
                 .findFirst()
-                .orElseThrow(() -> new InfraImplException(CrewErrorCode.INVALID_GENDER));
+                .orElseThrow(() -> new InfraImplException(GymErrorCode.INVALID_GYM_TYPE));
     }
 }
