@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.orury.domain.gym.domain.dto.GymDto;
 import org.orury.domain.gym.domain.dto.GymLikeDto;
+import org.orury.domain.gym.domain.dto.GymType;
 import org.orury.domain.gym.domain.entity.Gym;
 import org.orury.domain.gym.domain.entity.GymLike;
 import org.orury.domain.gym.domain.entity.GymLikePK;
@@ -89,6 +90,7 @@ public class GymDomainFixture {
         private @Builder.Default EnumMap<DayOfWeek, String> businessHours = new EnumMap<>(DayOfWeek.class);
         private @Builder.Default String homepageLink = "gymHomepageLink";
         private @Builder.Default String remark = "gymRemark";
+        private @Builder.Default GymType gymType = GymType.BOULDERING;
 
         public static TestGymDto.TestGymDtoBuilder createGymDto() {
             return TestGymDto.builder();
