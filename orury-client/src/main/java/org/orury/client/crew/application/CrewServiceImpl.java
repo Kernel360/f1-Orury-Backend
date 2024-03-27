@@ -75,15 +75,21 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRank(Pageable pageable) {
-        return crewReader.getCrewsByRank(pageable)
-                .map(CrewDto::from);
+        Page<Crew> crews = crewReader.getCrewsByRank(pageable);
+        return crews.map(crew -> {
+            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+            return CrewDto.from(crew, tags);
+        });
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRecommend(Pageable pageable) {
-        return crewReader.getCrewsByRecommend(pageable)
-                .map(CrewDto::from);
+        Page<Crew> crews = crewReader.getCrewsByRecommend(pageable);
+        return crews.map(crew -> {
+            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+            return CrewDto.from(crew, tags);
+        });
     }
 
     @Override
