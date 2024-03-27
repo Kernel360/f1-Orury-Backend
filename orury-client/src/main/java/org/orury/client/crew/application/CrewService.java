@@ -2,7 +2,6 @@ package org.orury.client.crew.application;
 
 import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ public interface CrewService {
 
     List<String> getUserImagesByCrew(CrewDto crewDto);
 
-    boolean existCrewMember(CrewMemberPK crewMemberPK);
+    boolean existCrewMember(Long crewId, Long userId);
 
     void updateCrewInfo(CrewDto oldCrew, CrewDto newCrew, Long userId);
 

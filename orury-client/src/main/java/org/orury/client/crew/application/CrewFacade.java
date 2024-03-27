@@ -7,7 +7,6 @@ import org.orury.client.crew.interfaces.response.CrewResponse;
 import org.orury.client.crew.interfaces.response.CrewsResponse;
 import org.orury.client.user.application.UserService;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,13 +49,9 @@ public class CrewFacade {
 
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
-        CrewMemberPK crewMemberPK = CrewMemberPK.of(userId, crewId);
-
-        boolean isApply = crewService.existCrewMember(crewMemberPK);
-
+        boolean isMember = crewService.existCrewMember(crewId, userId);
         List<String> userImages = crewService.getUserImagesByCrew(crewDto);
-
-        return CrewResponse.of(crewDto, isApply, userImages);
+        return CrewResponse.of(crewDto, isMember, userImages);
     }
 
     public void updateCrewInfo(Long crewId, CrewRequest request, Long userId) {

@@ -1,14 +1,11 @@
 package org.orury.domain.crew.domain;
 
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.entity.User;
 
 import java.util.List;
 
 public interface CrewMemberReader {
-    boolean existsByCrewMemberPK(CrewMemberPK crewMemberPK);
-
     boolean existsByCrewIdAndUserId(Long crewId, Long userId);
 
     int countByUserId(Long userId);

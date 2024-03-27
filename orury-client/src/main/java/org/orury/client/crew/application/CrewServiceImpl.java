@@ -12,7 +12,6 @@ import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
@@ -117,8 +116,8 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existCrewMember(CrewMemberPK crewMemberPK) {
-        return crewMemberReader.existsByCrewMemberPK(crewMemberPK);
+    public boolean existCrewMember(Long crewId, Long userId) {
+        return crewMemberReader.existsByCrewIdAndUserId(crewId, userId);
     }
 
     @Override

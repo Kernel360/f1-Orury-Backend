@@ -59,8 +59,7 @@ public class CrewController {
         return ApiResponse.of(CrewMessage.CREWS_READ.getMessage(), pageResponse);
     }
 
-    @Operation(summary = "크루 상세 조회", description = "크루를 상세 조회한다. 크루 가입 여부에 따라 가입o-> 크루 일정 조회/ 가입x-> 크루 소개글, 크루 가입 버튼이 뜬다." +
-            "가입 여부에 따른 API 호출은 어디에서 할지 프론트와 상의해야함.")
+    @Operation(summary = "크루 상세 조회", description = "크루를 상세 조회한다.")
     @GetMapping("/{crewId}")
     public ApiResponse getCrewByCrewId(@PathVariable Long crewId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         CrewResponse response = crewFacade.getCrewByCrewId(userPrincipal.id(), crewId);

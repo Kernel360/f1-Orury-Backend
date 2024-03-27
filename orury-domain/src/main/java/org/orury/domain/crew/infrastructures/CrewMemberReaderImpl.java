@@ -3,7 +3,6 @@ package org.orury.domain.crew.infrastructures;
 import lombok.RequiredArgsConstructor;
 import org.orury.domain.crew.domain.CrewMemberReader;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.entity.User;
 import org.orury.domain.user.infrastucture.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -16,11 +15,6 @@ import java.util.List;
 public class CrewMemberReaderImpl implements CrewMemberReader {
     private final CrewMemberRepository crewMemberRepository;
     private final UserRepository userRepository;
-
-    @Override
-    public boolean existsByCrewMemberPK(CrewMemberPK crewMemberPK) {
-        return crewMemberRepository.existsById(crewMemberPK);
-    }
 
     @Override
     public boolean existsByCrewIdAndUserId(Long crewId, Long userId) {
