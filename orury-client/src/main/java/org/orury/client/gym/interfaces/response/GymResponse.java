@@ -3,10 +3,12 @@ package org.orury.client.gym.interfaces.response;
 import org.orury.domain.global.constants.Constants;
 import org.orury.domain.gym.domain.dto.GymDto;
 
-import java.time.DayOfWeek;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public record GymResponse(
         Long id,
@@ -23,7 +25,7 @@ public record GymResponse(
         String instagramLink,
         String homepageLink,
         String settingDay,
-        Set<Map.Entry<DayOfWeek, String>> businessHours,
+        Set<Map.Entry<String, String>> businessHours,
         boolean doingBusiness,
         boolean isLike,
         String gymType,
@@ -36,6 +38,10 @@ public record GymResponse(
             boolean isLike,
             GymReviewStatistics gymReviewStatistics
     ) {
+        Set<Map.Entry<String, String>> koreanBusinessHours = gymDto.businessHours().entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey().getDisplayName(TextStyle.NARROW, Locale.KOREAN), entry.getValue()))
+                .collect(Collectors.toSet());
+
         return new GymResponse(
                 gymDto.id(),
                 gymDto.name(),
@@ -51,8 +57,7 @@ public record GymResponse(
                 gymDto.instagramLink(),
                 gymDto.homepageLink(),
                 gymDto.settingDay(),
-                gymDto.businessHours()
-                        .entrySet(),
+                koreanBusinessHours,
                 doingBusiness,
                 isLike,
                 gymDto.gymType().getDescription(),
