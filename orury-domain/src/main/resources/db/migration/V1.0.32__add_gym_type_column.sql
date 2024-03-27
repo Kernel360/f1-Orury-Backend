@@ -1,0 +1,2 @@
+ALTER TABLE `gym`
+    ADD COLUMN gym_type VARCHAR(10) NOT NULL;

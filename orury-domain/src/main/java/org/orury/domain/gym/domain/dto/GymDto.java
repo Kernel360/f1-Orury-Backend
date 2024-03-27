@@ -31,7 +31,8 @@ public record GymDto(
         LocalDateTime updatedAt,
         EnumMap<DayOfWeek, String> businessHours,
         String homepageLink,
-        String remark
+        String remark,
+        GymType gymType
 ) {
     public static GymDto of(
             Long id,
@@ -59,7 +60,8 @@ public record GymDto(
             String serviceSat,
             String serviceSun,
             String homepageLink,
-            String remark
+            String remark,
+            GymType gymType
     ) {
         return new GymDto(
                 id,
@@ -81,7 +83,8 @@ public record GymDto(
                 updatedAt,
                 createBusinessHoursMap(serviceMon, serviceTue, serviceWed, serviceThu, serviceFri, serviceSat, serviceSun),
                 homepageLink,
-                remark
+                remark,
+                gymType
         );
     }
 
@@ -112,7 +115,8 @@ public record GymDto(
                 this.homepageLink,
                 this.remark,
                 this.createdAt,
-                this.updatedAt
+                this.updatedAt,
+                this.gymType
         );
     }
 
@@ -143,7 +147,8 @@ public record GymDto(
                 entity.getServiceSat(),
                 entity.getServiceSun(),
                 entity.getHomepageLink(),
-                entity.getRemark()
+                entity.getRemark(),
+                entity.getGymType()
         );
     }
 
@@ -174,7 +179,8 @@ public record GymDto(
                 entity.getServiceSat(),
                 entity.getServiceSun(),
                 entity.getHomepageLink(),
-                entity.getRemark()
+                entity.getRemark(),
+                entity.getGymType()
         );
     }
 
