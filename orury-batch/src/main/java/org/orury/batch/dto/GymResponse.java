@@ -70,6 +70,7 @@ public record GymResponse(
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }
