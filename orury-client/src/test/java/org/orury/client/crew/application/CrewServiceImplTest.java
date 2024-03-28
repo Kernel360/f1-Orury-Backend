@@ -1,28 +1,18 @@
 package org.orury.client.crew.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.orury.client.crew.application.policy.CrewApplicationPolicy;
-import org.orury.client.crew.application.policy.CrewCreatePolicy;
-import org.orury.client.crew.application.policy.CrewPolicy;
-import org.orury.client.crew.application.policy.CrewUpdatePolicy;
+import org.orury.client.config.ServiceTest;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageStore;
-import org.orury.domain.meeting.domain.MeetingMemberStore;
-import org.orury.domain.meeting.domain.MeetingStore;
-import org.orury.domain.user.domain.UserReader;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,46 +36,7 @@ import static org.orury.domain.UserDomainFixture.TestUserDto.createUserDto;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[Service] 크루 ServiceImpl 테스트")
 @ActiveProfiles("test")
-class CrewServiceImplTest {
-    private CrewServiceImpl crewService;
-    private CrewReader crewReader;
-    private CrewStore crewStore;
-    private CrewTagReader crewTagReader;
-    private CrewTagStore crewTagStore;
-    private CrewMemberReader crewMemberReader;
-    private CrewMemberStore crewMemberStore;
-    private CrewApplicationReader crewApplicationReader;
-    private CrewApplicationStore crewApplicationStore;
-    private MeetingStore meetingStore;
-    private MeetingMemberStore meetingMemberStore;
-    private UserReader userReader;
-    private ImageStore imageStore;
-    private CrewPolicy crewPolicy;
-    private CrewCreatePolicy crewCreatePolicy;
-    private CrewUpdatePolicy crewUpdatePolicy;
-    private CrewApplicationPolicy crewApplicationPolicy;
-
-    @BeforeEach
-    void setUp() {
-        crewReader = mock(CrewReader.class);
-        crewStore = mock(CrewStore.class);
-        crewTagReader = mock(CrewTagReader.class);
-        crewTagStore = mock(CrewTagStore.class);
-        crewMemberReader = mock(CrewMemberReader.class);
-        crewMemberStore = mock(CrewMemberStore.class);
-        crewApplicationReader = mock(CrewApplicationReader.class);
-        crewApplicationStore = mock(CrewApplicationStore.class);
-        meetingStore = mock(MeetingStore.class);
-        meetingMemberStore = mock(MeetingMemberStore.class);
-        userReader = mock(UserReader.class);
-        imageStore = mock(ImageStore.class);
-        crewPolicy = mock(CrewPolicy.class);
-        crewCreatePolicy = mock(CrewCreatePolicy.class);
-        crewUpdatePolicy = mock(CrewUpdatePolicy.class);
-        crewApplicationPolicy = mock(CrewApplicationPolicy.class);
-
-        crewService = new CrewServiceImpl(crewReader, crewStore, crewTagReader, crewTagStore, crewMemberReader, crewMemberStore, crewApplicationReader, crewApplicationStore, meetingStore, meetingMemberStore, userReader, imageStore, crewPolicy, crewCreatePolicy, crewUpdatePolicy, crewApplicationPolicy);
-    }
+class CrewServiceImplTest extends ServiceTest {
 
     @DisplayName("[getCrewDtoById] 크루 아이디로 크루 정보를 가져온다.")
     @Test
@@ -212,6 +163,7 @@ class CrewServiceImplTest {
     void should_GetUserImagesByCrew() {
         // given
         CrewDto crewDto = createCrewDto().build().get();
+        int maximumCount = 4;
         List<CrewMember> otherMembers = List.of(
                 createCrewMember(crewDto.id(), 1L).build().get(),
                 createCrewMember(crewDto.id(), 2L).build().get(),
@@ -227,7 +179,7 @@ class CrewServiceImplTest {
                 );
 
         // when
-        List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+        List<String> userImages = crewService.getUserImagesByCrew(crewDto, maximumCount);
 
         // then
         assertEquals(1 + otherMembers.size(), userImages.size());
@@ -242,17 +194,18 @@ class CrewServiceImplTest {
     @Test
     void should_ExistCrewMember() {
         // given
-        CrewMemberPK crewMemberPK = CrewMemberPK.of(1L, 1L);
-        given(crewMemberReader.existsByCrewMemberPK(crewMemberPK))
+        Long crewId = 148L;
+        Long userId = 26729L;
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
 
         // when
-        boolean isExist = crewService.existCrewMember(crewMemberPK);
+        boolean isExist = crewService.existCrewMember(crewId, userId);
 
         // then
         assertTrue(isExist);
         then(crewMemberReader).should(only())
-                .existsByCrewMemberPK(any());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
     }
 
     @DisplayName("[updateCrewInfo] 크루 정보를 업데이트한다.")
@@ -318,9 +271,9 @@ class CrewServiceImplTest {
                 .delete(any(), anyString());
     }
 
-    @DisplayName("[applyCrew] 크루에 가입신청을 한다.")
+    @DisplayName("[applyCrew] 가입수락이 필요한 크루면, 크루에 가입신청을 한다.")
     @Test
-    void should_ApplyCrew() {
+    void when_CrewNeedPermission_Then_ApplyCrew() {
         // given
         CrewDto crewDto = createCrewDto()
                 .id(23L)
@@ -341,8 +294,36 @@ class CrewServiceImplTest {
         // then
         then(crewApplicationPolicy).should(only())
                 .validateApplyCrew(crewDto, userDto, answer);
+        then(crewMemberStore).shouldHaveNoInteractions();
         then(crewApplicationStore).should(only())
                 .save(any(), any(), anyString());
+    }
+
+    @DisplayName("[applyCrew] 가입수락이 필요 없는 크루면, 크루에 가입한다.")
+    @Test
+    void when_CrewNeedPermission_Then_JoinCrew() {
+        // given
+        CrewDto crewDto = createCrewDto()
+                .id(23L)
+                .minAge(15)
+                .maxAge(30)
+                .gender(CrewGender.ANY)
+                .permissionRequired(false).build().get();
+        UserDto userDto = createUserDto()
+                .gender(NumberConstants.MALE)
+                .birthday(LocalDate.now().minusYears(20)).build().get();
+
+        String answer = "가입신청 답변";
+
+        // when
+        crewService.applyCrew(crewDto, userDto, answer);
+
+        // then
+        then(crewApplicationPolicy).should(only())
+                .validateApplyCrew(crewDto, userDto, answer);
+        then(crewMemberStore).should(only())
+                .addCrewMember(anyLong(), anyLong());
+        then(crewApplicationStore).shouldHaveNoInteractions();
     }
 
     @DisplayName("[withdrawApplication] 크루 가입신청을 취소한다.")

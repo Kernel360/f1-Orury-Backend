@@ -25,9 +25,10 @@ public record CrewResponse(
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         LocalDateTime updatedAt,
         List<String> tags,
-        boolean isMember
+        boolean isMember,
+        List<String> userImages
 ) {
-    public static CrewResponse of(CrewDto crewDto, boolean isMember) {
+    public static CrewResponse of(CrewDto crewDto, boolean isMember, List<String> userImages) {
         return new CrewResponse(
                 crewDto.id(),
                 crewDto.name(),
@@ -43,7 +44,8 @@ public record CrewResponse(
                 crewDto.createdAt(),
                 crewDto.updatedAt(),
                 crewDto.tags(),
-                isMember
+                isMember,
+                userImages
         );
     }
 }

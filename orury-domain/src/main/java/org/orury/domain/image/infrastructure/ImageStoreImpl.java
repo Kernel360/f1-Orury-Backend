@@ -1,4 +1,4 @@
-package org.orury.domain.post.infrastructure;
+package org.orury.domain.image.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -11,7 +11,7 @@ import org.orury.common.error.exception.FileException;
 import org.orury.common.util.ImageUrlConverter;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.image.domain.ImageStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -32,8 +32,11 @@ public class ImageStoreImpl implements ImageStore {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.default-image}")
-    private String defaultImage;
+    @Value("${cloud.aws.s3.default-image.user}")
+    private String USER_DEFAULT_IMAGE;
+
+    @Value("${cloud.aws.s3.default-image.crew}")
+    private String CREW_DEFAULT_IMAGE;
 
     @Override
     public List<String> upload(S3Folder domain, List<MultipartFile> files) {
@@ -90,7 +93,8 @@ public class ImageStoreImpl implements ImageStore {
     @Override
     public void delete(S3Folder domain, String profile) {
         var image = ImageUtil.splitUrlToImage(profile);
-        if (StringUtils.equals(image, defaultImage)) return;
+        if (StringUtils.equals(image, USER_DEFAULT_IMAGE)) return;
+        if (StringUtils.equals(image, CREW_DEFAULT_IMAGE)) return;
         asyncTaskExecutor.submit(() -> deleteS3Image(domain, image));
     }
 

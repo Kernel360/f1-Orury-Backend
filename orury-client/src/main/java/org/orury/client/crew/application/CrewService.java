@@ -1,7 +1,7 @@
 package org.orury.client.crew.application;
 
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +20,9 @@ public interface CrewService {
 
     Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable);
 
-    List<String> getUserImagesByCrew(CrewDto crewDto);
+    List<String> getUserImagesByCrew(CrewDto crewDto, int maximumCount);
 
-    boolean existCrewMember(CrewMemberPK crewMemberPK);
+    boolean existCrewMember(Long crewId, Long userId);
 
     void updateCrewInfo(CrewDto oldCrew, CrewDto newCrew, Long userId);
 
@@ -30,7 +30,7 @@ public interface CrewService {
 
     void deleteCrew(CrewDto crewDto, Long userId);
 
-    void applyCrew(CrewDto crewDto, UserDto userDto, String answer);
+    CrewMessage applyCrew(CrewDto crewDto, UserDto userDto, String answer);
 
     void withdrawApplication(CrewDto crewDto, Long userId);
 

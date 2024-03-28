@@ -11,6 +11,7 @@ public enum CrewMessage {
     CREW_IMAGE_UPDATED("크루 이미지가 변경되었습니다."),
     CREW_DELETED("크루가 삭제됐습니다."),
     CREW_APPLIED("크루에 가입신청했습니다."),
+    CREW_IMMEDIATELY_JOINED("크루에 바로 가입했습니다."),
     APPLICATION_WITHDRAWN("크루 신청을 철회했습니다."),
     APPLICATION_APPROVED("크루 신청을 승인했습니다."),
     APPLICATION_DISAPPROVED("크루 신청을 거절했습니다."),

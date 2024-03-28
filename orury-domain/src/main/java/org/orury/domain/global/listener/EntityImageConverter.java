@@ -5,7 +5,7 @@ import jakarta.persistence.Converter;
 import org.orury.common.config.BeanUtils;
 import org.orury.common.util.ImageUtil;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.global.image.ImageReader;
+import org.orury.domain.image.domain.ImageReader;
 
 @Converter
 public abstract class EntityImageConverter implements AttributeConverter<String, String> {

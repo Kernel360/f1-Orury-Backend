@@ -1,4 +1,4 @@
-package org.orury.domain.global.image;
+package org.orury.domain.image.domain;
 
 import org.orury.common.util.S3Folder;
 

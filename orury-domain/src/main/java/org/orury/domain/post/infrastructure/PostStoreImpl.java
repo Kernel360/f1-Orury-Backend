@@ -3,7 +3,7 @@ package org.orury.domain.post.infrastructure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.orury.common.util.S3Folder;
-import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.post.domain.PostStore;
 import org.orury.domain.post.domain.entity.Post;
 import org.orury.domain.post.domain.entity.PostLike;

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.orury.domain.config.InfrastructureTest;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.entity.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,17 +23,6 @@ import static org.orury.domain.CrewDomainFixture.TestCrewMember.createCrewMember
 @DisplayName("[Reader] 크루멤버 ReaderImpl 테스트")
 @ActiveProfiles("test")
 class CrewMemberReaderImplTest extends InfrastructureTest {
-
-    @DisplayName("크루멤버PK를 받아, 크루멤버를 조회한다.")
-    @Test
-    void findCrewMemberByCrewMemberPK() {
-        // given & when
-        crewMemberReader.existsByCrewMemberPK(mock(CrewMemberPK.class));
-
-        // then
-        then(crewMemberRepository).should(only())
-                .existsById(any(CrewMemberPK.class));
-    }
 
     @DisplayName("크루id와 멤버id를 받아, 크루멤버를 조회한다.")
     @Test

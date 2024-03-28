@@ -17,10 +17,6 @@ springdoc:
 spring:
   profiles:
     default: dev
-  mvc:
-    cors:
-      allowed-origins: "*"
-      allowed-methods: "GET, POST, PUT, DELETE"
   application.name: orury-client
   datasource:
     #    url: ${LOCAL_DB_NAME}
@@ -52,7 +48,9 @@ cloud:
   aws:
     s3:
       bucket: ENC(DWaoEy70NtH+lhLIr08FR4qd/T11UK+X)
-      default-image: default-user-profile
+      default-image:
+        user: default-user-profile
+        crew: default-crew-icon
       url: https://d3rzoqirccqyht.cloudfront.net/
 
     credentials:

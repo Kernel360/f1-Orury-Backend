@@ -5,15 +5,14 @@ import org.orury.client.crew.application.policy.CrewApplicationPolicy;
 import org.orury.client.crew.application.policy.CrewCreatePolicy;
 import org.orury.client.crew.application.policy.CrewPolicy;
 import org.orury.client.crew.application.policy.CrewUpdatePolicy;
+import org.orury.client.crew.interfaces.message.CrewMessage;
 import org.orury.common.error.code.CrewErrorCode;
 import org.orury.common.error.exception.BusinessException;
 import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
-import org.orury.domain.global.constants.NumberConstants;
-import org.orury.domain.global.image.ImageStore;
+import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
 import org.orury.domain.user.domain.UserReader;
@@ -28,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.orury.common.util.S3Folder.CREW;
 
@@ -40,7 +40,6 @@ public class CrewServiceImpl implements CrewService {
     private final CrewTagStore crewTagStore;
     private final CrewMemberReader crewMemberReader;
     private final CrewMemberStore crewMemberStore;
-    private final CrewApplicationReader crewApplicationReader;
     private final CrewApplicationStore crewApplicationStore;
     private final MeetingStore meetingStore;
     private final MeetingMemberStore meetingMemberStore;
@@ -75,15 +74,21 @@ public class CrewServiceImpl implements CrewService {
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRank(Pageable pageable) {
-        return crewReader.getCrewsByRank(pageable)
-                .map(CrewDto::from);
+        Page<Crew> crews = crewReader.getCrewsByRank(pageable);
+        return crews.map(crew -> {
+            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+            return CrewDto.from(crew, tags);
+        });
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<CrewDto> getCrewDtosByRecommend(Pageable pageable) {
-        return crewReader.getCrewsByRecommend(pageable)
-                .map(CrewDto::from);
+        Page<Crew> crews = crewReader.getCrewsByRecommend(pageable);
+        return crews.map(crew -> {
+            List<String> tags = crewTagReader.getTagsByCrewId(crew.getId());
+            return CrewDto.from(crew, tags);
+        });
     }
 
     @Override
@@ -95,23 +100,23 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getUserImagesByCrew(CrewDto crewDto) {
+    public List<String> getUserImagesByCrew(CrewDto crewDto, int maximumCount) {
         UserDto crewCreator = crewDto.userDto();
-        List<CrewMember> otherMembers = crewMemberReader.getOtherCrewMembersByCrewIdMaximum(crewDto.id(), crewCreator.id(), NumberConstants.MAXIMUM_OF_CREW_THUMBNAILS - 1);
+        List<CrewMember> otherMembers = crewMemberReader.getOtherCrewMembersByCrewIdMaximum(crewDto.id(), crewCreator.id(), maximumCount - 1);
 
-        List<String> userImages = new LinkedList<>();
-        userImages.add(crewCreator.profileImage());
-        otherMembers.forEach(crewMember -> {
-            User user = userReader.getUserById(crewMember.getCrewMemberPK().getUserId());
-            userImages.add(user.getProfileImage());
-        });
+        List<String> userImages = otherMembers.stream()
+                .map(crewMember -> crewMember.getCrewMemberPK().getUserId())
+                .map(userReader::getUserById)
+                .map(User::getProfileImage)
+                .collect(Collectors.toCollection(LinkedList::new));
+        userImages.add(0, crewCreator.profileImage());
         return userImages;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existCrewMember(CrewMemberPK crewMemberPK) {
-        return crewMemberReader.existsByCrewMemberPK(crewMemberPK);
+    public boolean existCrewMember(Long crewId, Long userId) {
+        return crewMemberReader.existsByCrewIdAndUserId(crewId, userId);
     }
 
     @Override
@@ -142,10 +147,17 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional
-    public void applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
+    public CrewMessage applyCrew(CrewDto crewDto, UserDto userDto, String answer) {
         crewApplicationPolicy.validateApplyCrew(crewDto, userDto, answer);
-        // 크루 가입신청 저장
+
+        // 지원하는 크루가 즉시 가입인 경우
+        if (!crewDto.permissionRequired()) {
+            crewMemberStore.addCrewMember(crewDto.id(), userDto.id());
+            return CrewMessage.CREW_IMMEDIATELY_JOINED;
+        }
+
         crewApplicationStore.save(crewDto, userDto, answer);
+        return CrewMessage.CREW_APPLIED;
     }
 
     @Override

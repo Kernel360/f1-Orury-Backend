@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,7 +54,7 @@ class CrewFacadeTest extends FacadeTest {
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByRank(any()))
                 .willReturn(crewDtoPage);
-        given(crewService.getUserImagesByCrew(any(CrewDto.class)))
+        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
                 .willReturn(mock(List.class));
 
         // when
@@ -65,7 +64,7 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtosByRank(any());
         then(crewService).should(times(crewDtos.size()))
-                .getUserImagesByCrew(any());
+                .getUserImagesByCrew(any(), anyInt());
     }
 
     @DisplayName("페이지번호를 받으면, 크루추천에 따른 크루 목록을 반환한다.")
@@ -77,7 +76,7 @@ class CrewFacadeTest extends FacadeTest {
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByRecommend(any()))
                 .willReturn(crewDtoPage);
-        given(crewService.getUserImagesByCrew(any(CrewDto.class)))
+        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
                 .willReturn(mock(List.class));
 
         // when
@@ -87,7 +86,7 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtosByRecommend(any());
         then(crewService).should(times(crewDtos.size()))
-                .getUserImagesByCrew(any());
+                .getUserImagesByCrew(any(), anyInt());
     }
 
     @DisplayName("페이지번호를 받으면, 유저id에 따른 크루 목록을 반환한다.")
@@ -100,7 +99,7 @@ class CrewFacadeTest extends FacadeTest {
         Page<CrewDto> crewDtoPage = new PageImpl<>(crewDtos, PageRequest.of(page, 10), 2);
         given(crewService.getCrewDtosByUserId(anyLong(), any()))
                 .willReturn(crewDtoPage);
-        given(crewService.getUserImagesByCrew(any(CrewDto.class)))
+        given(crewService.getUserImagesByCrew(any(CrewDto.class), anyInt()))
                 .willReturn(mock(List.class));
 
         // when
@@ -110,7 +109,7 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtosByUserId(anyLong(), any());
         then(crewService).should(times(crewDtos.size()))
-                .getUserImagesByCrew(any());
+                .getUserImagesByCrew(any(), anyInt());
     }
 
     @DisplayName("유저id, 크루id를 받으면, 크루정보를 반환한다.")
@@ -121,7 +120,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(createCrewDto(crewId).build().get());
-        given(crewService.existCrewMember(any(CrewMemberPK.class)))
+        given(crewService.existCrewMember(anyLong(), anyLong()))
                 .willReturn(anyBoolean());
 
         // when
@@ -131,7 +130,7 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtoById(anyLong());
         then(crewService).should(times(1))
-                .existCrewMember(any());
+                .existCrewMember(anyLong(), anyLong());
     }
 
     @DisplayName("크루id, 크루정보Request, 유저id를 받으면, 크루정보를 업데이트한다.")

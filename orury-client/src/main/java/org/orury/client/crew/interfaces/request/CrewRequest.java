@@ -46,6 +46,10 @@ public record CrewRequest(
         @Size(min = 1, max = 3, message = "태그는 최소 1개, 최대 3개까지만 추가할 수 있습니다.")
         List<@Size(min = 1, max = 6, message = "태그 길이는 공백 포함 6글자 이내여야 합니다.") String> tags
 ) {
+    public CrewRequest {
+        if (!permissionRequired) answerRequired = false; // permissionRequired가 false인 경우 answerRequired도 false로 설정
+    }
+
     public static CrewRequest of(
             String name,
             int capacity,
