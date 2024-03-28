@@ -163,6 +163,7 @@ class CrewServiceImplTest extends ServiceTest {
     void should_GetUserImagesByCrew() {
         // given
         CrewDto crewDto = createCrewDto().build().get();
+        int maximumCount = 4;
         List<CrewMember> otherMembers = List.of(
                 createCrewMember(crewDto.id(), 1L).build().get(),
                 createCrewMember(crewDto.id(), 2L).build().get(),
@@ -178,7 +179,7 @@ class CrewServiceImplTest extends ServiceTest {
                 );
 
         // when
-        List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+        List<String> userImages = crewService.getUserImagesByCrew(crewDto, maximumCount);
 
         // then
         assertEquals(1 + otherMembers.size(), userImages.size());
