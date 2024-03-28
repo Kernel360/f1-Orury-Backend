@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.orury.client.config.FacadeTest;
 import org.orury.client.crew.interfaces.request.CrewRequest;
 import org.orury.domain.crew.domain.dto.CrewDto;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -121,7 +120,7 @@ class CrewFacadeTest extends FacadeTest {
         Long crewId = 3L;
         given(crewService.getCrewDtoById(anyLong()))
                 .willReturn(createCrewDto(crewId).build().get());
-        given(crewService.existCrewMember(any(CrewMemberPK.class)))
+        given(crewService.existCrewMember(anyLong(), anyLong()))
                 .willReturn(anyBoolean());
 
         // when
@@ -131,7 +130,7 @@ class CrewFacadeTest extends FacadeTest {
         then(crewService).should(times(1))
                 .getCrewDtoById(anyLong());
         then(crewService).should(times(1))
-                .existCrewMember(any());
+                .existCrewMember(anyLong(), anyLong());
     }
 
     @DisplayName("크루id, 크루정보Request, 유저id를 받으면, 크루정보를 업데이트한다.")

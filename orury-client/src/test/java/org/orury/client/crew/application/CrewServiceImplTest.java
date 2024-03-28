@@ -12,7 +12,6 @@ import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.dto.CrewGender;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.crew.domain.entity.CrewMemberPK;
 import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.user.domain.dto.UserDto;
 import org.springframework.data.domain.PageImpl;
@@ -194,17 +193,18 @@ class CrewServiceImplTest extends ServiceTest {
     @Test
     void should_ExistCrewMember() {
         // given
-        CrewMemberPK crewMemberPK = CrewMemberPK.of(1L, 1L);
-        given(crewMemberReader.existsByCrewMemberPK(crewMemberPK))
+        Long crewId = 148L;
+        Long userId = 26729L;
+        given(crewMemberReader.existsByCrewIdAndUserId(crewId, userId))
                 .willReturn(true);
 
         // when
-        boolean isExist = crewService.existCrewMember(crewMemberPK);
+        boolean isExist = crewService.existCrewMember(crewId, userId);
 
         // then
         assertTrue(isExist);
         then(crewMemberReader).should(only())
-                .existsByCrewMemberPK(any());
+                .existsByCrewIdAndUserId(anyLong(), anyLong());
     }
 
     @DisplayName("[updateCrewInfo] 크루 정보를 업데이트한다.")
