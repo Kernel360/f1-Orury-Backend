@@ -12,7 +12,6 @@ import org.orury.domain.crew.domain.*;
 import org.orury.domain.crew.domain.dto.CrewDto;
 import org.orury.domain.crew.domain.entity.Crew;
 import org.orury.domain.crew.domain.entity.CrewMember;
-import org.orury.domain.global.constants.NumberConstants;
 import org.orury.domain.image.domain.ImageStore;
 import org.orury.domain.meeting.domain.MeetingMemberStore;
 import org.orury.domain.meeting.domain.MeetingStore;
@@ -101,9 +100,9 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getUserImagesByCrew(CrewDto crewDto) {
+    public List<String> getUserImagesByCrew(CrewDto crewDto, int maximumCount) {
         UserDto crewCreator = crewDto.userDto();
-        List<CrewMember> otherMembers = crewMemberReader.getOtherCrewMembersByCrewIdMaximum(crewDto.id(), crewCreator.id(), NumberConstants.MAXIMUM_OF_CREW_THUMBNAILS - 1);
+        List<CrewMember> otherMembers = crewMemberReader.getOtherCrewMembersByCrewIdMaximum(crewDto.id(), crewCreator.id(), maximumCount - 1);
 
         List<String> userImages = otherMembers.stream()
                 .map(crewMember -> crewMember.getCrewMemberPK().getUserId())

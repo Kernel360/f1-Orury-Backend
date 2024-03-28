@@ -20,7 +20,7 @@ public interface CrewService {
 
     Page<CrewDto> getCrewDtosByUserId(Long userId, Pageable pageable);
 
-    List<String> getUserImagesByCrew(CrewDto crewDto);
+    List<String> getUserImagesByCrew(CrewDto crewDto, int maximumCount);
 
     boolean existCrewMember(Long crewId, Long userId);
 

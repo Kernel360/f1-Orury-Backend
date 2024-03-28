@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.orury.domain.global.constants.NumberConstants.CREW_PAGINATION_SIZE;
+import static org.orury.domain.global.constants.NumberConstants.*;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class CrewFacade {
     public CrewResponse getCrewByCrewId(Long userId, Long crewId) {
         CrewDto crewDto = crewService.getCrewDtoById(crewId);
         boolean isMember = crewService.existCrewMember(crewId, userId);
-        List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+        List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_DETAIL_THUMBNAILS);
         return CrewResponse.of(crewDto, isMember, userImages);
     }
 
@@ -103,7 +103,7 @@ public class CrewFacade {
 
     private Page<CrewsResponse> convertCrewDtosToCrewsResponses(Page<CrewDto> crewDtos) {
         return crewDtos.map(crewDto -> {
-            List<String> userImages = crewService.getUserImagesByCrew(crewDto);
+            List<String> userImages = crewService.getUserImagesByCrew(crewDto, MAXIMUM_OF_CREW_LIST_THUMBNAILS);
             return CrewsResponse.of(crewDto, userImages);
         });
     }
